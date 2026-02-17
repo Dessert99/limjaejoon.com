@@ -1,1 +1,313 @@
 @import 'tailwindcss';
+
+/* 전역 컬러 토큰: 딥블랙 베이스 + 단일 블루 액센트 */
+:root {
+  --bg: #000000;
+  --panel: #0b0b0d;
+  --panel-2: #111114;
+  --line: #26272b;
+  --line-strong: #3a3b42;
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --accent: #3b82f6;
+}
+
+/* 모든 요소에 동일한 box model 규칙 적용 */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Pretendard', 'SUIT', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+}
+
+/* 텍스트 드래그 색상 */
+::selection {
+  background: rgba(59, 130, 246, 0.35);
+  color: #ffffff;
+}
+
+/* 코드 폰트 통일 */
+pre,
+code {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+}
+
+/* Live Preview 컨테이너 공통 스타일 */
+.preview-canvas {
+  display: flex;
+  min-height: 320px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-2);
+  padding: 14px;
+  overflow: auto;
+}
+
+/* Live Preview 아이템 공통 스타일 */
+.preview-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  min-height: 64px;
+  border: 1px solid #2e3238;
+  border-radius: 10px;
+  background: #17191e;
+  color: #f4f4f5;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+/* box model 비교형 미리보기 레이아웃 */
+.box-model-preview-canvas {
+  display: block;
+}
+
+.box-model-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+}
+
+.box-model-legend-item {
+  border: 1px solid var(--line-strong);
+  border-radius: 9999px;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.66rem;
+  color: #d4d4d8;
+}
+
+.box-model-legend-border {
+  background: rgba(59, 130, 246, 0.14);
+}
+
+.box-model-legend-padding {
+  background: rgba(56, 189, 248, 0.14);
+}
+
+.box-model-legend-content {
+  background: rgba(34, 197, 94, 0.14);
+}
+
+.box-model-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(2, minmax(240px, 1fr));
+}
+
+.box-model-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #09090b;
+  padding: 0.75rem;
+}
+
+.box-model-card-title {
+  margin: 0 0 0.45rem 0;
+  font-size: 0.76rem;
+  color: #e4e4e7;
+  text-transform: lowercase;
+}
+
+.box-model-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 168px;
+  overflow-x: auto;
+  padding: 0.45rem;
+}
+
+.box-model-border-layer {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  background: rgba(59, 130, 246, 0.14);
+}
+
+.box-model-padding-layer {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  background: rgba(56, 189, 248, 0.14);
+}
+
+.box-model-content-layer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #4ade80;
+  background: rgba(34, 197, 94, 0.16);
+  color: #eafff1;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.box-model-meta {
+  margin: 0.6rem 0 0 0;
+  font-size: 0.67rem;
+  color: #a1a1aa;
+}
+
+/* 스니펫 상단 핵심 정보 박스 */
+.snippet-info-panel {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(24, 24, 27, 0.55);
+  padding: 0.65rem 0.75rem;
+}
+
+.snippet-info-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.snippet-info-label {
+  color: #93c5fd;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.snippet-info-value {
+  color: #d4d4d8;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+/* 코드 블록(HTML/CSS) 공통 박스 */
+.code-block {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0a0a0c;
+}
+
+/* 코드 블록 상단 라벨 */
+.code-block-head {
+  border-bottom: 1px solid var(--line);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+/* 코드 본문(pre) */
+.code-block-pre {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+
+/* Prism 기본 색상 초기화 */
+code[class*='language-'],
+pre[class*='language-'] {
+  color: #f5f5f7;
+  text-shadow: none;
+  background: transparent;
+}
+
+/* Prism 토큰 색상(주석/구두점/태그 등) */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #7a7f8a;
+}
+
+.token.punctuation {
+  color: #d4d4d8;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #93c5fd;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #86efac;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #f9a8d4;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #c4b5fd;
+}
+
+.token.function,
+.token.class-name {
+  color: #fcd34d;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #fdba74;
+}
+
+.token.important,
+.token.bold {
+  font-weight: 700;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+/* 모바일에서 Preview 요소 크기 조절 */
+@media (max-width: 768px) {
+  .preview-canvas {
+    min-height: 260px;
+  }
+
+  .preview-item {
+    min-width: 58px;
+    min-height: 58px;
+    font-size: 0.8rem;
+  }
+
+  .box-model-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .snippet-info-row {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+}
