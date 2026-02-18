@@ -1,6 +1,6 @@
 'use client';
 
-import { HighlightedCode } from '@/components/handbook/code/HighlightedCode';
+import { HighlightedCode } from '@/features/handbook/components/code/HighlightedCode';
 
 interface CodeBlockProps {
   title: 'HTML' | 'CSS';

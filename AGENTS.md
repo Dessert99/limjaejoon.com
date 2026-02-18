@@ -12,23 +12,29 @@
 
 ## 아키텍처 방향 (중요)
 
-- 기존 `lib/*` 중심 구조를 점진적으로 `features/*`, `domains/*` 중심으로 전환한다.
-- 다만 대규모 이동 리스크를 줄이기 위해 **점진 마이그레이션**을 적용한다.
+- 구조 기준은 `features/*` 중심으로 통일한다.
+- handbook 관련 코드는 `features/handbook/*` 내부에 응집한다.
+- `domain` 폴더 이름은 사용하지 않는다.
+- 교차 feature 공통화가 필요할 때만 `shared/*`로 승격한다.
+- `domains/*`를 별도 최상위 폴더로 강제하지 않는다.
 
 ### 권장 디렉터리 모델
 
 - `app/*`: 라우팅/페이지 조합 (App Router)
-- `features/*`: 사용자 기능 단위 UI + 기능 훅 + feature 전용 로직
-- `domains/*`: 도메인 모델/타입/순수 비즈니스 규칙
-- `shared/*` (또는 최소 `lib/shared/*`): 공용 유틸, 프레임워크 비의존 함수
+- `features/*`: 기능 단위 UI + 상태 + 데이터 + 계산 로직
+- `shared/*`: 공용 유틸/공용 타입/재사용 로직
 
-### handbook의 목표 구조
+### handbook 목표 구조
 
-1. `features/handbook/*`: 섹션 UI, 상호작용 훅, feature 조합
-2. `domains/handbook/*`: snippet/category 타입, content 스키마, preview 계산 규칙
-3. `shared/*`: 공용 스타일 유틸/문자열 유틸 등 재사용 코드
+1. `features/handbook/components/*`: UI 표현/섹션 조합
+2. `features/handbook/hooks/*`: 상호작용 상태
+3. `features/handbook/content/*`: 스니펫/카테고리 콘텐츠
+4. `features/handbook/preview/*`: 미리보기 스타일 계산
+5. `features/handbook/css/*`: 코드 패널용 CSS 문자열 계산
+6. `features/handbook/{types.ts,data.ts}`: 타입/조회 유틸
+7. `features/handbook/{boxModel/*,shadow/*}`: 계산 보조 유틸
 
-## 마이그레이션 원칙 (`lib` → `features/domain`)
+## 마이그레이션 원칙 (`lib` → `features/handbook`)
 
 - 한 번에 전체 이동하지 않는다.
 - 기능 단위로 "복사 → 참조 전환 → 안정화 → 기존 경로 제거" 순서로 옮긴다.
@@ -36,21 +42,22 @@
 
 ### 권장 순서
 
-1. `lib/handbook/types.ts` → `domains/handbook/types.ts`
-2. `lib/handbook/content/*` → `domains/handbook/content/*`
-3. `lib/handbook/preview/*` → `domains/handbook/preview/*`
-4. `hooks/useSnippetPlayground.ts` → `features/handbook/hooks/*`
-5. `components/handbook/*` → `features/handbook/components/*`
-6. 페이지(`app/*`) import를 새 경로로 교체
-7. 마지막에 `lib/handbook/*` 제거
+1. `lib/handbook/types.ts` → `features/handbook/types.ts`
+2. `lib/handbook/content/*` → `features/handbook/content/*`
+3. `lib/handbook/preview/*` → `features/handbook/preview/*`
+4. `lib/handbook/css/*`, `lib/handbook/data.ts`, `lib/handbook/{boxModel,shadow}/*` → `features/handbook/*` 하위 적절 위치
+5. `hooks/useSnippetPlayground.ts` → `features/handbook/hooks/*`
+6. `components/handbook/*` → `features/handbook/components/*`
+7. 페이지(`app/*`) import를 새 경로로 교체한 뒤 기존 경로 제거
 
 ## 핵심 설계 원칙
 
 ### 1) 단일 책임 원리 (SRP)
 
 - `app/*`: 조합과 라우팅만 담당
-- `features/*`: 사용자 상호작용/뷰 조합 담당
-- `domains/*`: 비즈니스 규칙/계산/타입 담당
+- `features/handbook/components/*`: 사용자 상호작용/뷰 렌더링 담당
+- `features/handbook/hooks/*`: 상태 관리 담당
+- `features/handbook/content|preview|css|types|data`: 콘텐츠/계산/타입 담당
 - UI 컴포넌트는 렌더링 책임만 가지며 계산 로직을 최소화
 
 ### 2) 유지보수성
@@ -62,7 +69,8 @@
 ### 3) 확장성
 
 - 블로그/포트폴리오 기능 추가 시 handbook과 결합하지 않고 feature를 분리한다.
-- 도메인 타입은 feature 전반에서 재사용하고 중복 타입 생성을 피한다.
+- 타입/로직은 우선 feature 내부에서 재사용하고 중복 생성을 피한다.
+- 교차 feature 재사용이 확인되면 `shared/*`로 승격한다.
 
 ### 4) 주석
 
@@ -73,12 +81,16 @@
 
 - `app/page.tsx`: 홈 페이지 조합
 - `app/category/[slug]/page.tsx`: handbook 카테고리 페이지 조합
-- `components/handbook/*`: (현재) handbook UI 표현 컴포넌트
+- `components/handbook/*`: (현재) handbook UI 컴포넌트
 - `hooks/useSnippetPlayground.ts`: (현재) handbook 상호작용 상태
-- `lib/handbook/content/*`: (현재) 교육 콘텐츠 데이터
-- `lib/handbook/preview/engine.ts`: (현재) 미리보기 스타일 계산 엔진
-- `lib/handbook/types.ts`: (현재) 도메인 타입
-- `features/*`, `domains/*`: (목표) 신규/이관 코드는 우선 배치
+- `lib/handbook/*`: (현재) 타입/콘텐츠/엔진/유틸
+- `features/handbook/components/*`: (목표) handbook UI 컴포넌트
+- `features/handbook/hooks/*`: (목표) handbook 상호작용 상태
+- `features/handbook/content/*`: (목표) 교육 콘텐츠 데이터
+- `features/handbook/preview/*`: (목표) 미리보기 스타일 계산 엔진
+- `features/handbook/css/*`: (목표) 코드 패널 CSS 계산 엔진
+- `features/handbook/{types.ts,data.ts}`: (목표) 도메인 타입/조회
+- `features/handbook/{boxModel/*,shadow/*}`: (목표) 계산 보조 유틸
 
 ## Next.js 가이드
 
@@ -97,7 +109,7 @@
 ## 코드 품질 규칙
 
 - UI 텍스트는 초심자 관점에서 짧고 명확하게 작성한다.
-- 컴포넌트 props는 도메인 타입을 재사용한다.
+- 컴포넌트 props는 feature 내부 타입을 재사용한다.
 - 변경 시 최소 검증:
 
 1. `npm run lint`
@@ -106,10 +118,11 @@
 
 ## 문서화 규칙
 
-- 구현 변경 시 `docs/*` 문서도 함께 업데이트한다.
-- 특히 handbook은 아래 문서를 기준으로 동기화한다.
-  - `docs/snippet-maintenance-guide.md`
-  - `docs/tech-stack.md`
+- handbook 구현 변경 시 `features/handbook/docs/*` 문서를 함께 업데이트한다.
+- handbook 문서는 아래 3개를 단일 기준 문서로 유지한다.
+  - `features/handbook/docs/type-usage-guide.md`
+  - `features/handbook/docs/preview-implementation-guide.md`
+  - `features/handbook/docs/maintenance-extension-guide.md`
 
 ## 향후 개선 백로그
 

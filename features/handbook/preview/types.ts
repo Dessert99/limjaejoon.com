@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 
-import type { PreviewPresetKey, PreviewTarget } from '@/lib/handbook/types';
+import type { PreviewPresetKey, PreviewTarget } from '@/features/handbook/types';
 
 // 특정 토큰이 container/item에 덮어쓸 스타일 조각입니다.
 export type PreviewStylePatch = Partial<Record<PreviewTarget, CSSProperties>>;

@@ -1,6 +1,6 @@
 'use client';
 
-import type { SnippetControl } from '@/lib/handbook/types';
+import type { SnippetControl } from '@/features/handbook/types';
 
 interface ControlsPanelProps {
   controls: SnippetControl[];

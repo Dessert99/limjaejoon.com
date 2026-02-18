@@ -1,5 +1,5 @@
-import type { SnippetControl } from '@/lib/handbook/types';
-import { composeBoxShadow } from '@/lib/handbook/shadow/compose';
+import type { SnippetControl } from '@/features/handbook/types';
+import { composeBoxShadow } from '@/features/handbook/shadow/compose';
 
 // 정규식 특수문자를 이스케이프해서 안전한 패턴으로 바꿉니다.
 const escapeRegExp = (value: string): string => {

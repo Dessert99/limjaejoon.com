@@ -1,5 +1,5 @@
-import { handbookContent } from '@/lib/handbook/content';
-import type { CategorySlug, HandbookCategory } from '@/lib/handbook/types';
+import { handbookContent } from '@/features/handbook/content';
+import type { CategorySlug, HandbookCategory } from '@/features/handbook/types';
 
 // 홈/상세에서 공통으로 사용하는 카테고리 목록입니다.
 export const handbookCategories: HandbookCategory[] = handbookContent;

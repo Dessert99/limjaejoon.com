@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import type { HandbookCategory } from '@/lib/handbook/types';
+import type { HandbookCategory } from '@/features/handbook/types';
 
 interface CategoryCardProps {
   category: HandbookCategory;

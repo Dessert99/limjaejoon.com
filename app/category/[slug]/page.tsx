@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { SnippetSection } from '@/components/handbook/SnippetSection';
-import { categorySlugs, getCategoryBySlug } from '@/lib/handbook/data';
+import { SnippetSection } from '@/features/handbook/components/SnippetSection';
+import { categorySlugs, getCategoryBySlug } from '@/features/handbook/data';
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;

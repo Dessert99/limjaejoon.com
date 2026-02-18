@@ -1,6 +1,6 @@
 'use client';
 
-import { CodeBlock } from '@/components/handbook/code/CodeBlock';
+import { CodeBlock } from '@/features/handbook/components/code/CodeBlock';
 
 interface CodePanelProps {
   htmlCode: string;

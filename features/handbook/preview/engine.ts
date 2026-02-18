@@ -4,9 +4,9 @@ import type {
   PreviewPresetStyleMap,
   PreviewStyleTokenMap,
   ResolvedPreviewStyles,
-} from '@/lib/handbook/preview/types';
-import { composeBoxShadow } from '@/lib/handbook/shadow/compose';
-import type { HandbookSnippet, PreviewTarget } from '@/lib/handbook/types';
+} from '@/features/handbook/preview/types';
+import { composeBoxShadow } from '@/features/handbook/shadow/compose';
+import type { HandbookSnippet, PreviewTarget } from '@/features/handbook/types';
 
 // 계산 시작 시 사용할 빈 스타일 객체입니다.
 const emptyStyles = (): ResolvedPreviewStyles => ({

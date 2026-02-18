@@ -2,9 +2,9 @@
 
 import type { CSSProperties } from 'react';
 
-import { BoxModelComparePreview } from '@/components/handbook/preview/BoxModelComparePreview';
-import type { HandbookSnippet } from '@/lib/handbook/types';
-import type { ResolvedPreviewStyles } from '@/lib/handbook/preview/types';
+import { BoxModelComparePreview } from '@/features/handbook/components/preview/BoxModelComparePreview';
+import type { HandbookSnippet } from '@/features/handbook/types';
+import type { ResolvedPreviewStyles } from '@/features/handbook/preview/types';
 
 interface PreviewPanelProps {
   snippet: HandbookSnippet;

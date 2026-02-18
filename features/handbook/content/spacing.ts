@@ -2,7 +2,7 @@ import type {
   HandbookCategory,
   SnippetControl,
   SnippetControlOption,
-} from '@/lib/handbook/types';
+} from '@/features/handbook/types';
 
 // control option(버튼 옵션) 생성 헬퍼입니다.
 const option = (

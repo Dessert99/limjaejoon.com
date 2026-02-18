@@ -2,8 +2,8 @@
 
 import type { CSSProperties } from 'react';
 
-import { resolveBoxModelMetrics } from '@/lib/handbook/boxModel/metrics';
-import type { ResolvedPreviewStyles } from '@/lib/handbook/preview/types';
+import { resolveBoxModelMetrics } from '@/features/handbook/boxModel/metrics';
+import type { ResolvedPreviewStyles } from '@/features/handbook/preview/types';
 
 interface BoxModelComparePreviewProps {
   previewStyles: ResolvedPreviewStyles;

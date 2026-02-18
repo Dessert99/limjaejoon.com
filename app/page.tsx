@@ -1,5 +1,5 @@
-import { CategoryCard } from '@/components/handbook/CategoryCard';
-import { handbookCategories } from '@/lib/handbook/data';
+import { CategoryCard } from '@/features/handbook/components/CategoryCard';
+import { handbookCategories } from '@/features/handbook/data';
 
 // 홈 페이지: 카테고리 목록을 보여주는 진입점입니다.
 export default function Home() {

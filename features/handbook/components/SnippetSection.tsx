@@ -2,13 +2,13 @@
 
 import { useMemo } from 'react';
 
-import { CodePanel } from '@/components/handbook/CodePanel';
-import { ControlsPanel } from '@/components/handbook/ControlsPanel';
-import { PreviewPanel } from '@/components/handbook/PreviewPanel';
-import { useSnippetPlayground } from '@/hooks/useSnippetPlayground';
-import { computeDisplayCssCode } from '@/lib/handbook/css/engine';
-import { computePreviewStyles } from '@/lib/handbook/preview/engine';
-import type { HandbookSnippet } from '@/lib/handbook/types';
+import { CodePanel } from '@/features/handbook/components/CodePanel';
+import { ControlsPanel } from '@/features/handbook/components/ControlsPanel';
+import { PreviewPanel } from '@/features/handbook/components/PreviewPanel';
+import { useSnippetPlayground } from '@/features/handbook/hooks/useSnippetPlayground';
+import { computeDisplayCssCode } from '@/features/handbook/css/engine';
+import { computePreviewStyles } from '@/features/handbook/preview/engine';
+import type { HandbookSnippet } from '@/features/handbook/types';
 
 interface SnippetSectionProps {
   snippet: HandbookSnippet;
