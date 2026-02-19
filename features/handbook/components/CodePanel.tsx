@@ -13,7 +13,7 @@ interface CodePanelProps {
 // 스니펫의 HTML/CSS 코드를 표시합니다.
 export function CodePanel({ htmlCode, cssCode }: CodePanelProps) {
   return (
-    <section className='space-y-3 rounded-2xl border border-zinc-800 bg-zinc-950 p-4'>
+    <section className='surface-dark space-y-3 p-4'>
       <h3 className='text-sm font-semibold text-zinc-100'>코드</h3>
 
       {/* HTML 코드를 첫 번째 블록으로 렌더합니다. */}

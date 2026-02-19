@@ -80,7 +80,7 @@ handbook 관련 코드는 모두 `features/handbook/*` 아래에 둔다.
 2. `features/handbook/content/<new>.ts` 생성
 3. `features/handbook/content/index.ts` 등록
 4. `features/handbook/categoryRepository.ts`의 `categoryMap` 등록
-5. `app/category/[slug]/page.tsx`에서 SSG/404 동작 확인
+5. `app/handbook/[slug]/page.tsx`에서 SSG/404 동작 확인
 
 ## 4-3. 새 preview variant 추가
 
@@ -161,7 +161,7 @@ npm run build
 
 수동 확인 경로:
 
-- `/category/flex`
-- `/category/grid`
-- `/category/border-box`
-- `/category/spacing`
+- `/handbook/flex`
+- `/handbook/grid`
+- `/handbook/border-box`
+- `/handbook/spacing`

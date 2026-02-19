@@ -151,7 +151,7 @@ interface PreviewPreset {
 1. `npm run lint`
 2. `npm run build`
 3. 수동 확인:
-   - `/category/flex`
-   - `/category/grid`
-   - `/category/border-box`
-   - `/category/spacing`
+   - `/handbook/flex`
+   - `/handbook/grid`
+   - `/handbook/border-box`
+   - `/handbook/spacing`

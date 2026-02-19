@@ -46,7 +46,7 @@ export function PreviewPanel({ snippet, selectedTokens, previewStyles }: Preview
   });
 
   return (
-    <section className='space-y-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-4'>
+    <section className='surface-dark space-y-4 p-4'>
       <h3 className='text-sm font-semibold text-zinc-100'>실시간 미리보기</h3>
 
       <div className='flex flex-wrap gap-2'>
@@ -54,7 +54,7 @@ export function PreviewPanel({ snippet, selectedTokens, previewStyles }: Preview
         {activeControls.map((item) => (
           <span
             key={item.id}
-            className='rounded-full border border-zinc-700 bg-zinc-900 px-2.5 py-1 text-[11px] text-zinc-300'>
+            className='rounded-full border border-zinc-600 bg-zinc-800 px-2.5 py-1 text-[11px] text-zinc-300'>
             {item.label}: {item.value}
           </span>
         ))}

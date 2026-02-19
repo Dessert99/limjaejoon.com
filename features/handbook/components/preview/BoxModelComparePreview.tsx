@@ -89,9 +89,6 @@ export function BoxModelComparePreview({
                   </div>
                 </div>
               </div>
-
-              <br />
-              <br />
             </article>
           );
         })}
