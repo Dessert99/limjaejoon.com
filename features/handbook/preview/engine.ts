@@ -8,53 +8,91 @@ import type {
 import { composeBoxShadow } from '@/features/handbook/shadow/compose';
 import type { HandbookSnippet, PreviewTarget } from '@/features/handbook/types';
 
-// 계산 시작 시 사용할 빈 스타일 객체입니다.
-const emptyStyles = (): ResolvedPreviewStyles => ({
-  container: {},
-  itemA: {},
-  itemB: {},
-  itemC: {},
-});
+// shadow 조합 컨트롤 id를 상수로 분리해 오타를 방지합니다.
+const SHADOW_DIRECTION_CONTROL_ID = 'shadow-direction';
+// shadow blur 컨트롤 id를 상수로 분리해 오타를 방지합니다.
+const SHADOW_BLUR_CONTROL_ID = 'shadow-blur';
+// shadow 색상 컨트롤 id를 상수로 분리해 오타를 방지합니다.
+const SHADOW_COLOR_CONTROL_ID = 'shadow-color';
 
-// 이전 스타일에 다음 스타일을 덮어씌우는 병합 함수입니다.
+// 계산 시작 시 사용할 빈 스타일 객체를 생성합니다.
+const emptyStyles = (): ResolvedPreviewStyles => {
+  // 컨테이너 스타일 초기값을 빈 객체로 둡니다.
+  const container: CSSProperties = {};
+  // 첫 번째 아이템 스타일 초기값을 빈 객체로 둡니다.
+  const itemA: CSSProperties = {};
+  // 두 번째 아이템 스타일 초기값을 빈 객체로 둡니다.
+  const itemB: CSSProperties = {};
+  // 세 번째 아이템 스타일 초기값을 빈 객체로 둡니다.
+  const itemC: CSSProperties = {};
+
+  // 초기화된 스타일 묶음을 반환합니다.
+  return {
+    container,
+    itemA,
+    itemB,
+    itemC,
+  };
+};
+
+// 이전 스타일(prev)에 다음 스타일(next)를 덮어씌워 병합합니다.
 const mergeStyle = (
   prev: CSSProperties,
   next: CSSProperties | undefined
-): CSSProperties => ({
-  ...prev,
-  ...(next ?? {}),
-});
+): CSSProperties => {
+  // next가 없을 때도 안전하게 병합되도록 fallback 빈 객체를 준비합니다.
+  const safeNext = next ?? {};
 
-// 패치 1개를 container/item 스타일에 적용합니다.
+  // prev를 기준으로 safeNext를 덮어 최종 스타일을 만듭니다.
+  return {
+    ...prev,
+    ...safeNext,
+  };
+};
+
+// 패치 1개를 container/item 스타일에 적용해 새 스타일 객체를 반환합니다.
 const applyPatch = (
   styles: ResolvedPreviewStyles,
   patch?: Partial<Record<PreviewTarget, CSSProperties>>
 ) => {
+  // patch가 없으면 기존 스타일을 그대로 반환합니다.
   if (!patch) {
     return styles;
   }
 
+  // container 스타일에 patch.container를 덮어씌웁니다.
+  const container = mergeStyle(styles.container, patch.container);
+  // itemA 스타일에 patch.itemA를 덮어씌웁니다.
+  const itemA = mergeStyle(styles.itemA, patch.itemA);
+  // itemB 스타일에 patch.itemB를 덮어씌웁니다.
+  const itemB = mergeStyle(styles.itemB, patch.itemB);
+  // itemC 스타일에 patch.itemC를 덮어씌웁니다.
+  const itemC = mergeStyle(styles.itemC, patch.itemC);
+
+  // 병합된 결과를 새 객체로 반환합니다.
   return {
-    container: mergeStyle(styles.container, patch.container),
-    itemA: mergeStyle(styles.itemA, patch.itemA),
-    itemB: mergeStyle(styles.itemB, patch.itemB),
-    itemC: mergeStyle(styles.itemC, patch.itemC),
+    container,
+    itemA,
+    itemB,
+    itemC,
   };
 };
 
-// 특정 control의 현재 활성 styleToken을 찾습니다.
-const getActiveToken = (
+// 컨트롤 기본값과 사용자 선택값을 합쳐 "현재 활성 token 집합"을 먼저 확정합니다.
+// 이후 계산 단계는 이 확정본만 읽어 중복 조회를 줄이고 의도를 명확히 유지합니다.
+const resolveActiveTokens = (
   snippet: HandbookSnippet,
-  selectedTokens: Record<string, string>,
-  controlId: string
-): string | undefined => {
-  const control = snippet.controls.find((item) => item.id === controlId);
+  selectedTokens: Record<string, string>
+): Record<string, string> => {
+  // 모든 컨트롤을 순회해 id -> active token 매핑을 누적합니다.
+  return snippet.controls.reduce<Record<string, string>>((acc, control) => {
+    // 사용자가 선택한 token이 있으면 그 값을 사용합니다.
+    // 없으면 control 기본 token을 사용합니다.
+    acc[control.id] = selectedTokens[control.id] ?? control.defaultStyleToken;
 
-  if (!control) {
-    return undefined;
-  }
-
-  return selectedTokens[control.id] ?? control.defaultStyleToken;
+    // 다음 컨트롤 누적을 위해 acc를 반환합니다.
+    return acc;
+  }, {});
 };
 
 // 스니펫별 기본 미리보기 스타일 프리셋입니다.
@@ -301,6 +339,7 @@ const presetStyleMap: PreviewPresetStyleMap = {
 
 // 버튼 클릭으로 바뀌는 styleToken별 스타일 패치입니다.
 const previewStyleTokenMap: PreviewStyleTokenMap = {
+  // Flex 축/정렬 기본 조작 토큰입니다.
   'flex-direction-row': { container: { flexDirection: 'row' } },
   'flex-direction-column': { container: { flexDirection: 'column' } },
   'justify-start': { container: { justifyContent: 'flex-start' } },
@@ -333,6 +372,7 @@ const previewStyleTokenMap: PreviewStyleTokenMap = {
   'align-self-end': { itemA: { alignSelf: 'flex-end' } },
   'align-self-stretch': { itemA: { alignSelf: 'stretch' } },
 
+  // Grid 컬럼/간격/span/auto-fit 토큰입니다.
   'grid-cols-2': {
     container: { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' },
   },
@@ -357,6 +397,7 @@ const previewStyleTokenMap: PreviewStyleTokenMap = {
     container: { gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' },
   },
 
+  // Box model(테두리/반지름/그림자) 토큰입니다.
   'border-width-0': { itemA: { borderWidth: '0px' } },
   'border-width-1': { itemA: { borderWidth: '1px' } },
   'border-width-5': { itemA: { borderWidth: '5px' } },
@@ -433,6 +474,7 @@ const previewStyleTokenMap: PreviewStyleTokenMap = {
     itemB: { borderWidth: '10px' },
   },
 
+  // Spacing(여백/축/gap-vs-margin) 토큰입니다.
   'margin-0': { itemA: { margin: '0px' } },
   'margin-12': { itemA: { margin: '12px' } },
   'margin-24': { itemA: { margin: '24px' } },
@@ -463,36 +505,40 @@ export const computePreviewStyles = (
   snippet: HandbookSnippet,
   selectedTokens: Record<string, string>
 ): ResolvedPreviewStyles => {
+  // 기본값+선택값이 반영된 활성 token 표를 먼저 확정합니다.
+  const activeTokens = resolveActiveTokens(snippet, selectedTokens);
+
+  // 빈 스타일에서 계산을 시작합니다.
   let styles = emptyStyles();
+
+  // 스니펫 preset의 기본 스타일을 1차 반영합니다.
   styles = applyPatch(styles, presetStyleMap[snippet.previewPreset.presetKey]);
 
+  // 모든 컨트롤을 순회하면서 현재 활성 token 패치를 순차 적용합니다.
   for (const control of snippet.controls) {
-    const activeToken = selectedTokens[control.id] ?? control.defaultStyleToken;
+    // 현재 control의 활성 token을 조회합니다.
+    const activeToken = activeTokens[control.id];
+
+    // token에 대응하는 스타일 패치를 styles에 반영합니다.
     styles = applyPatch(styles, previewStyleTokenMap[activeToken]);
   }
 
   // box-shadow 상세 조합(방향/blur/색상) 컨트롤이 있으면 최종 값을 재계산합니다.
-  const shadowDirectionToken = getActiveToken(
-    snippet,
-    selectedTokens,
-    'shadow-direction'
-  );
-  const shadowBlurToken = getActiveToken(
-    snippet,
-    selectedTokens,
-    'shadow-blur'
-  );
-  const shadowColorToken = getActiveToken(
-    snippet,
-    selectedTokens,
-    'shadow-color'
-  );
+  // 방향 토큰을 조회합니다.
+  const shadowDirectionToken = activeTokens[SHADOW_DIRECTION_CONTROL_ID];
+  // blur 토큰을 조회합니다.
+  const shadowBlurToken = activeTokens[SHADOW_BLUR_CONTROL_ID];
+  // 색상 토큰을 조회합니다.
+  const shadowColorToken = activeTokens[SHADOW_COLOR_CONTROL_ID];
 
+  // 그림자 3요소가 모두 존재할 때만 box-shadow를 최종 조합합니다.
   if (shadowDirectionToken && shadowBlurToken && shadowColorToken) {
+    // 기존 styles를 유지하면서 itemA의 boxShadow만 최종 조합값으로 덮어씌웁니다.
     styles = {
       ...styles,
       itemA: {
         ...styles.itemA,
+        // 분리된 3개 토큰을 하나의 실제 box-shadow 문자열로 합성합니다.
         boxShadow: composeBoxShadow(
           shadowDirectionToken,
           shadowBlurToken,
@@ -502,5 +548,6 @@ export const computePreviewStyles = (
     };
   }
 
+  // 최종 계산된 미리보기 스타일 묶음을 반환합니다.
   return styles;
 };

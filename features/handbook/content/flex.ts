@@ -1,3 +1,4 @@
+// handbook 공통 타입(카테고리/컨트롤/옵션)을 가져옵니다.
 import type {
   HandbookCategory,
   SnippetControl,
@@ -11,9 +12,13 @@ const option = (
   styleToken: string,
   cssDeclarations?: SnippetControlOption['cssDeclarations']
 ): SnippetControlOption => ({
+  // 옵션 고유 id를 저장합니다.
   id,
+  // UI 버튼 라벨을 저장합니다.
   label,
+  // preview/css 엔진이 해석할 style token을 저장합니다.
   styleToken,
+  // 코드 패널 교체용 CSS 선언 목록을 저장합니다.
   cssDeclarations,
 });
 
@@ -25,21 +30,33 @@ const control = (
   defaultStyleToken: string,
   options: SnippetControlOption[]
 ): SnippetControl => ({
+  // control 고유 id를 저장합니다.
   id,
+  // control UI 제목을 저장합니다.
   label,
+  // 이 control이 주로 영향을 주는 target을 저장합니다.
   target,
+  // 초기 렌더에서 선택될 token을 저장합니다.
   defaultStyleToken,
+  // 버튼 옵션 배열을 저장합니다.
   options,
 });
 
 // Flex 카테고리 학습 데이터입니다.
 export const flexCategory: HandbookCategory = {
+  // 라우팅 slug를 정의합니다.
   slug: 'flex',
+  // 카테고리 제목을 정의합니다.
   title: 'Flex',
+  // 의도 힌트 문구를 정의합니다.
   intentHint: '좌우, 세로 정렬하기',
+  // 사용자 질문형 안내 문구를 정의합니다.
   questionPrompt: '요소를 좌우로 배치하거나 세로로 나열하고 싶다',
+  // 카테고리 설명 문구를 정의합니다.
   description: '컨테이너 정렬부터 아이템 제어까지 Flex 핵심을 단계별로 학습합니다.',
+  // 난이도 레벨을 정의합니다.
   level: 'beginner',
+  // 스니펫 목록을 정의합니다.
   snippets: [
     // 1) flex-direction: 가로/세로 배치 전환
     {

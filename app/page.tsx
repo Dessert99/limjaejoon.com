@@ -1,5 +1,7 @@
+// 홈 카드 UI를 그리는 컴포넌트를 가져옵니다.
 import { CategoryCard } from '@/features/handbook/components/CategoryCard';
-import { handbookCategories } from '@/features/handbook/data';
+// 홈에서 사용할 카테고리 데이터 배열을 가져옵니다.
+import { handbookCategories } from '@/features/handbook/categoryRepository';
 
 // 홈 페이지: 카테고리 목록을 보여주는 진입점입니다.
 export default function Home() {
@@ -20,7 +22,9 @@ export default function Home() {
 
       {/* 카테고리 카드 그리드 */}
       <section className='mt-8 grid gap-4 md:grid-cols-2'>
+        {/* 카테고리 데이터 배열을 순회해 카드 컴포넌트로 렌더합니다. */}
         {handbookCategories.map((category) => (
+          // 각 카드는 slug를 key로 사용해 안정적인 리스트 렌더를 유지합니다.
           <CategoryCard
             key={category.slug}
             category={category}

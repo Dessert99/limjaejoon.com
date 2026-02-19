@@ -14,7 +14,7 @@ handbook 관련 코드는 모두 `features/handbook/*` 아래에 둔다.
 - `content/*`: 학습 콘텐츠 데이터
 - `preview/*`: 미리보기 계산 엔진
 - `css/*`: 코드 패널 문자열 계산
-- `types.ts`, `data.ts`: 타입/조회
+- `types.ts`, `categoryRepository.ts`: 타입/조회
 - `boxModel/*`, `shadow/*`: 계산 보조 유틸
 - `docs/*`: handbook 전용 문서
 
@@ -79,7 +79,7 @@ handbook 관련 코드는 모두 `features/handbook/*` 아래에 둔다.
 1. `features/handbook/types.ts`의 `CategorySlug` 확장
 2. `features/handbook/content/<new>.ts` 생성
 3. `features/handbook/content/index.ts` 등록
-4. `features/handbook/data.ts`의 `categoryMap` 등록
+4. `features/handbook/categoryRepository.ts`의 `categoryMap` 등록
 5. `app/category/[slug]/page.tsx`에서 SSG/404 동작 확인
 
 ## 4-3. 새 preview variant 추가
@@ -132,7 +132,7 @@ handbook 관련 코드는 모두 `features/handbook/*` 아래에 둔다.
 
 예방:
 
-- 새 카테고리 작업 시 `types.ts -> content/index.ts -> data.ts` 순서를 고정
+- 새 카테고리 작업 시 `types.ts -> content/index.ts -> categoryRepository.ts` 순서를 고정
 
 ### 리스크 3: 학습 의도와 초기 미리보기 불일치
 

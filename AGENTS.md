@@ -1,133 +1,95 @@
-## 프로젝트 목적
+# AGENTS.md — 학습 중심 개발/문서/주석 가이드
 
-- 이 프로젝트는 **개인 블로그 플랫폼**이다.
-- `handbook`은 여러 기능 중 하나이며, 이후 `blog`, `portfolio`, `about`, `lab` 같은 섹션으로 확장한다.
-- 핵심 목표는 "콘텐츠(글/프로젝트) + 인터랙티브 학습(핸드북)"을 하나의 일관된 경험으로 제공하는 것이다.
+## 0. 프로젝트 목적 (최우선)
 
-## 현재 범위
+- 이 프로젝트의 1차 목적은 서비스 상용화가 아니다.
+- 핵심 목표는 내가 Next.js(App Router), React, TypeScript, 아키텍처 설계를 깊이 이해하는 것이다.
+- 모든 코드는 "동작"뿐 아니라 "왜 이렇게 작성했는지"를 학습 가능한 형태로 남긴다.
 
-- 구현 완료 범위(1차): HTML/CSS 인터랙티브 핸드북
-- 상세 페이지 레이아웃: 좌측 `코드` + 우측 `실시간 미리보기` + `속성 테스트`
-- 미리보기 엔진: 클래스 문자열 조합이 아닌 `인라인 스타일 엔진`
+---
 
-## 아키텍처 방향 (중요)
+## 1. 아키텍처 원칙
 
-- 구조 기준은 `features/*` 중심으로 통일한다.
-- handbook 관련 코드는 `features/handbook/*` 내부에 응집한다.
-- `domain` 폴더 이름은 사용하지 않는다.
-- 교차 feature 공통화가 필요할 때만 `shared/*`로 승격한다.
-- `domains/*`를 별도 최상위 폴더로 강제하지 않는다.
+### 1) 디렉터리 규칙
 
-### 권장 디렉터리 모델
-
-- `app/*`: 라우팅/페이지 조합 (App Router)
+- `app/*`: 라우팅과 페이지 조합 담당 (가능하면 Server Component 유지)
 - `features/*`: 기능 단위 UI + 상태 + 데이터 + 계산 로직
-- `shared/*`: 공용 유틸/공용 타입/재사용 로직
+- `shared/*`: 여러 feature에서 반복 재사용이 명확할 때만 승격
 
-### handbook 목표 구조
+### 2) 의존성 방향
 
-1. `features/handbook/components/*`: UI 표현/섹션 조합
-2. `features/handbook/hooks/*`: 상호작용 상태
-3. `features/handbook/content/*`: 스니펫/카테고리 콘텐츠
-4. `features/handbook/preview/*`: 미리보기 스타일 계산
-5. `features/handbook/css/*`: 코드 패널용 CSS 문자열 계산
-6. `features/handbook/{types.ts,data.ts}`: 타입/조회 유틸
-7. `features/handbook/{boxModel/*,shadow/*}`: 계산 보조 유틸
+- 기본 의존성: `app -> features -> shared`
+- feature 간 직접 참조는 최소화하고, 반복 시 `shared`로 정리한다.
 
-## 마이그레이션 원칙 (`lib` → `features/handbook`)
+---
 
-- 한 번에 전체 이동하지 않는다.
-- 기능 단위로 "복사 → 참조 전환 → 안정화 → 기존 경로 제거" 순서로 옮긴다.
-- 경로 이동 시 import만 바꾸지 말고 책임도 함께 정리한다.
+## 2. Next.js(App Router) 운용 규칙
 
-### 권장 순서
-
-1. `lib/handbook/types.ts` → `features/handbook/types.ts`
-2. `lib/handbook/content/*` → `features/handbook/content/*`
-3. `lib/handbook/preview/*` → `features/handbook/preview/*`
-4. `lib/handbook/css/*`, `lib/handbook/data.ts`, `lib/handbook/{boxModel,shadow}/*` → `features/handbook/*` 하위 적절 위치
-5. `hooks/useSnippetPlayground.ts` → `features/handbook/hooks/*`
-6. `components/handbook/*` → `features/handbook/components/*`
-7. 페이지(`app/*`) import를 새 경로로 교체한 뒤 기존 경로 제거
-
-## 핵심 설계 원칙
-
-### 1) 단일 책임 원리 (SRP)
-
-- `app/*`: 조합과 라우팅만 담당
-- `features/handbook/components/*`: 사용자 상호작용/뷰 렌더링 담당
-- `features/handbook/hooks/*`: 상태 관리 담당
-- `features/handbook/content|preview|css|types|data`: 콘텐츠/계산/타입 담당
-- UI 컴포넌트는 렌더링 책임만 가지며 계산 로직을 최소화
-
-### 2) 유지보수성
-
-- 카테고리/스니펫 추가 시 콘텐츠 파일 수정만으로 확장 가능해야 한다.
-- 스타일 토큰(`styleToken`) 해석은 엔진에서만 수행한다.
-- 공통 UI(색상/경계/코드 하이라이트)는 `app/globals.css`에서 중앙 관리한다.
-
-### 3) 확장성
-
-- 블로그/포트폴리오 기능 추가 시 handbook과 결합하지 않고 feature를 분리한다.
-- 타입/로직은 우선 feature 내부에서 재사용하고 중복 생성을 피한다.
-- 교차 feature 재사용이 확인되면 `shared/*`로 승격한다.
-
-### 4) 주석
-
-- 초심자/미래 유지보수자를 위해 "왜 이렇게 동작하는지" 중심 주석을 충분히 남긴다.
-- 단순 대입 설명 주석은 지양하고, 분기/병합/예외 의도 위주로 작성한다.
-
-## 디렉터리 책임 (현재 + 전환 기준)
-
-- `app/page.tsx`: 홈 페이지 조합
-- `app/category/[slug]/page.tsx`: handbook 카테고리 페이지 조합
-- `components/handbook/*`: (현재) handbook UI 컴포넌트
-- `hooks/useSnippetPlayground.ts`: (현재) handbook 상호작용 상태
-- `lib/handbook/*`: (현재) 타입/콘텐츠/엔진/유틸
-- `features/handbook/components/*`: (목표) handbook UI 컴포넌트
-- `features/handbook/hooks/*`: (목표) handbook 상호작용 상태
-- `features/handbook/content/*`: (목표) 교육 콘텐츠 데이터
-- `features/handbook/preview/*`: (목표) 미리보기 스타일 계산 엔진
-- `features/handbook/css/*`: (목표) 코드 패널 CSS 계산 엔진
-- `features/handbook/{types.ts,data.ts}`: (목표) 도메인 타입/조회
-- `features/handbook/{boxModel/*,shadow/*}`: (목표) 계산 보조 유틸
-
-## Next.js 가이드
-
-- App Router 기준으로 페이지는 가능하면 Server Component를 유지한다.
-- 사용자 상호작용이 필요한 부분만 `use client`를 사용한다.
+- 페이지/레이아웃은 기본적으로 Server Component를 우선한다.
+- 사용자 상호작용이 필요한 최소 범위에만 `use client`를 사용한다.
 - 동적 세그먼트는 `generateStaticParams`를 우선 검토한다.
 - 존재하지 않는 slug는 `notFound()`로 처리한다.
+- 데이터 책임은 가능한 서버에 두고, 클라이언트는 상호작용 중심으로 제한한다.
 
-## Tailwind/CSS 가이드
+---
 
-- 레이아웃/간격/타이포는 Tailwind 유틸리티 우선
-- 코드 하이라이트/미리보기 베이스 스타일은 `globals.css`에 공통 정의
-- 색상은 딥블랙 팔레트 중심(`#000`, `#111`, `#1a1a1a`, `#2a2a2a`)
-- 액센트 컬러는 단일 블루 계열 유지
+## 3. 코드 품질 규칙
 
-## 코드 품질 규칙
+- 코드는 "짧고 명확하게"보다 "이해 가능한 근거가 남는지"를 우선한다.
+- 타입은 가까운 feature 내부에서 먼저 재사용한다.
+- 변경 후 최소 검증:
+  1. `npm run lint`
+  2. `npm run build`
 
-- UI 텍스트는 초심자 관점에서 짧고 명확하게 작성한다.
-- 컴포넌트 props는 feature 내부 타입을 재사용한다.
-- 변경 시 최소 검증:
+---
 
-1. `npm run lint`
-2. `npm run build`
-3. handbook 주요 카테고리 수동 확인(Flex/Grid/Box/Spacing)
+## 4. 주석 규칙 (학습 목적 최우선)
 
-## 문서화 규칙
+### 4.1 인라인 주석 — 기본 강제
 
-- handbook 구현 변경 시 `features/handbook/docs/*` 문서를 함께 업데이트한다.
-- handbook 문서는 아래 3개를 단일 기준 문서로 유지한다.
-  - `features/handbook/docs/type-usage-guide.md`
-  - `features/handbook/docs/preview-implementation-guide.md`
-  - `features/handbook/docs/maintenance-extension-guide.md`
+- 코드 이해를 위해 인라인 코드마다 주석을 단다.
+- 선언/할당/분기/반복/반환 등 모든 실행 단위에 주석을 붙인다.
+- 주석은 해당 코드 바로 위에 작성한다.
+- 원칙:
+  - 무엇을 하는지(What)
+  - 왜 필요한지(Why)
+  - 다른 선택지가 있다면 왜 현재 선택을 했는지(Trade-off, 필요할 때만)
 
-## 향후 개선 백로그
+### 4.2 파일 헤더 주석 — 권장
 
-- handbook 난이도/학습 경로(입문 → 응용) 표시
-- 미리보기 상태 URL 공유
-- 키보드 접근성 강화
-- 다국어(ko/en) 콘텐츠 분리
-- 블로그 글/포트폴리오 데이터 모델 분리 및 검색 기능
+- 의미 있는 파일(컴포넌트/훅/유틸/라우트)에는 파일 상단 헤더를 작성한다.
+- 최소 포함 항목:
+  - 파일 책임(한 문장)
+  - 입력/처리/출력 요약
+  - Server/Client 성격과 선택 이유
+
+### 4.3 문법 설명
+
+- TS/React/Next 문법이 등장하면 주석으로 짧게 사용법을 남긴다.
+- 같은 개념이 반복돼도 학습 목적상 필요한 범위에서는 중복 설명을 허용한다.
+
+---
+
+## 5. 문서화 규칙
+
+- 문서는 "협업 인수인계"보다 "내가 다시 읽었을 때 빠르게 복기 가능한가"를 기준으로 작성한다.
+- 중요한 선택(렌더링 전략, 상태 구조, 디렉터리 설계)은 짧게라도 문서로 남긴다.
+- 파일/폴더 구조 변경 시, 변경 이유와 기대 효과를 함께 기록한다.
+
+---
+
+## 6. Tailwind/CSS 가이드
+
+- 레이아웃/간격/타이포는 Tailwind 유틸리티를 우선한다.
+- 공통 스타일(코드 하이라이트/미리보기 베이스)은 `app/globals.css`에 둔다.
+- 색상은 프로젝트 톤을 유지하되, 학습 실험을 위해 제한적인 변형은 허용한다.
+
+---
+
+## 7. 과한 엔지니어링 방지
+
+- 복잡한 추상화는 "학습 효과"가 명확할 때만 도입한다.
+- 새로운 라이브러리 추가 전 확인:
+  1. 내장 API로 해결 가능한가?
+  2. 기존 코드로 해결 가능한가?
+  3. 그래도 필요하면 학습 목적과 도입 이유를 기록한다.

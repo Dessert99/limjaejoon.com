@@ -1,3 +1,4 @@
+// Prettier 설정 객체를 CommonJS 방식으로 내보냅니다.
 module.exports = {
   // === Base (모든 프로젝트 공통) ===
 

@@ -1,3 +1,4 @@
+// handbook 공통 타입(카테고리/컨트롤/옵션)을 가져옵니다.
 import type {
   HandbookCategory,
   SnippetControl,
@@ -11,9 +12,13 @@ const option = (
   styleToken: string,
   cssDeclarations?: SnippetControlOption['cssDeclarations']
 ): SnippetControlOption => ({
+  // 옵션 고유 id를 저장합니다.
   id,
+  // UI 버튼 라벨을 저장합니다.
   label,
+  // preview/css 엔진이 해석할 style token을 저장합니다.
   styleToken,
+  // 코드 패널 교체용 CSS 선언 목록을 저장합니다.
   cssDeclarations,
 });
 
@@ -25,21 +30,33 @@ const control = (
   defaultStyleToken: string,
   options: SnippetControlOption[]
 ): SnippetControl => ({
+  // control 고유 id를 저장합니다.
   id,
+  // control UI 제목을 저장합니다.
   label,
+  // 이 control이 주로 영향을 주는 target을 저장합니다.
   target,
+  // 초기 렌더에서 선택될 token을 저장합니다.
   defaultStyleToken,
+  // 버튼 옵션 배열을 저장합니다.
   options,
 });
 
 // Box 카테고리 학습 데이터입니다.
 export const boxCategory: HandbookCategory = {
+  // 라우팅 slug를 정의합니다.
   slug: 'border-box',
+  // 카테고리 제목을 정의합니다.
   title: 'Box',
+  // 의도 힌트 문구를 정의합니다.
   intentHint: '박스 디자인 바꾸기',
+  // 사용자 질문형 안내 문구를 정의합니다.
   questionPrompt: '카드 박스의 테두리, 둥글기, 그림자를 바꾸고 싶다',
+  // 카테고리 설명 문구를 정의합니다.
   description: '테두리와 그림자, 박스 크기 계산 방식을 실습합니다.',
+  // 난이도 레벨을 정의합니다.
   level: 'beginner',
+  // 스니펫 목록을 정의합니다.
   snippets: [
     // 1) border-width + border-style 비교
     {

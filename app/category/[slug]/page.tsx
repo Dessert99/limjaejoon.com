@@ -1,13 +1,22 @@
+// 카테고리 페이지 상단의 '홈으로' 이동 링크를 위해 사용합니다.
 import Link from 'next/link';
+// 허용되지 않은 slug 접근 시 404 처리하기 위해 사용합니다.
 import { notFound } from 'next/navigation';
 
-import { SnippetSection } from '@/features/handbook/components/SnippetSection';
-import { categorySlugs, getCategoryBySlug } from '@/features/handbook/data';
+import {
+  SnippetSection,
+  SnippetSectionFooter,
+  SnippetSectionHeader,
+  SnippetSectionPanels,
+} from '@/features/handbook/components/SnippetSection';
+import { categorySlugs, handbookCategories } from '@/features/handbook/categoryRepository';
 
 interface CategoryPageProps {
+  // App Router에서 전달하는 동적 라우트 파라미터 Promise 입니다.
   params: Promise<{ slug: string }>;
 }
 
+// 빌드 시 이 함수를 실행해서 배열(카테고리)을 받는다. 이거로 각 항목마다 CategoryPage를 호출해서 HTML/RSC결과를 생성한다.
 export function generateStaticParams() {
   // 카테고리 페이지를 SSG로 미리 생성하기 위한 slug 목록입니다.
   return categorySlugs.map((slug) => ({ slug }));
@@ -15,8 +24,11 @@ export function generateStaticParams() {
 
 // 카테고리 상세 페이지: 선택한 카테고리의 스니펫 목록을 렌더합니다.
 export default async function CategoryPage({ params }: CategoryPageProps) {
+  // params Promise를 해제해 현재 경로의 slug 값을 얻습니다.
   const { slug } = await params;
-  const category = getCategoryBySlug(slug);
+
+  // 해당하는 카테고리 찾기
+  const category = handbookCategories.find((item) => item.slug === slug);
 
   if (!category) {
     // 허용되지 않은 slug는 404로 처리합니다.
@@ -50,11 +62,16 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
       {/* 카테고리별 스니펫 카드 목록 */}
       <section className='space-y-5'>
+        {/* 현재 카테고리에 포함된 스니펫을 순회해 학습 섹션을 렌더합니다. */}
         {category.snippets.map((snippet) => (
+          // 클라이언트 컴포넌트
           <SnippetSection
             key={snippet.id}
-            snippet={snippet}
-          />
+            snippet={snippet}>
+            <SnippetSectionHeader />
+            <SnippetSectionPanels />
+            <SnippetSectionFooter />
+          </SnippetSection>
         ))}
       </section>
     </main>

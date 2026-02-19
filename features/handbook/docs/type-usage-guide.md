@@ -78,7 +78,7 @@ interface PreviewPreset {
 ## 4) 실제 사용 지점
 
 - 콘텐츠 정의: `features/handbook/content/*.ts`
-- 카테고리 조회: `features/handbook/data.ts`
+- 카테고리 조회: `features/handbook/categoryRepository.ts`
 - 상태 타입 사용: `features/handbook/hooks/useSnippetPlayground.ts`
 - UI props 타입 사용:
   - `features/handbook/components/CategoryCard.tsx`
@@ -93,7 +93,7 @@ interface PreviewPreset {
 1. `features/handbook/types.ts`의 `CategorySlug`에 slug 추가
 2. `features/handbook/content/<new>.ts` 생성
 3. `features/handbook/content/index.ts`에 등록
-4. `features/handbook/data.ts`의 `categoryMap`에 slug 매핑 추가
+4. `features/handbook/categoryRepository.ts`의 `categoryMap`에 slug 매핑 추가
 
 ### 5-2. 새 preset 추가
 

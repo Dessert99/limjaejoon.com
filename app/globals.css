@@ -19,14 +19,20 @@
 
 html,
 body {
+  /* 브라우저 기본 여백을 제거해 레이아웃 계산을 단순화합니다. */
   margin: 0;
+  /* 브라우저 기본 안쪽 여백을 제거해 시작 기준을 통일합니다. */
   padding: 0;
 }
 
 body {
+  /* 전체 페이지의 최소 높이를 뷰포트 높이로 고정합니다. */
   min-height: 100vh;
+  /* 루트 배경색 토큰을 body에 적용합니다. */
   background: var(--bg);
+  /* 루트 텍스트 색상 토큰을 body에 적용합니다. */
   color: var(--text);
+  /* 한글/코드 혼합 환경에서 가독성이 좋은 폰트 스택을 적용합니다. */
   font-family: 'Pretendard', 'SUIT', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
 }
 
@@ -74,9 +80,13 @@ code {
 }
 
 .box-model-legend {
+  /* 레전드 칩들을 가로로 배치합니다. */
   display: flex;
+  /* 칩이 좁은 화면에서 줄바꿈되도록 허용합니다. */
   flex-wrap: wrap;
+  /* 칩 간격을 일정하게 유지합니다. */
   gap: 0.45rem;
+  /* 레전드와 본문 사이 여백을 확보합니다. */
   margin-bottom: 0.9rem;
 }
 
@@ -101,8 +111,11 @@ code {
 }
 
 .box-model-grid {
+  /* 비교 카드들을 grid 컨테이너로 배치합니다. */
   display: grid;
+  /* 카드 사이 간격을 지정합니다. */
   gap: 0.8rem;
+  /* 데스크톱에서 2열 비교 레이아웃을 유지합니다. */
   grid-template-columns: repeat(2, minmax(240px, 1fr));
 }
 
@@ -121,11 +134,15 @@ code {
 }
 
 .box-model-stage {
+  /* 비교 박스를 중앙에 배치하기 위해 flex를 사용합니다. */
   display: flex;
   align-items: center;
   justify-content: center;
+  /* 비교 영역 최소 높이를 고정해 점프를 줄입니다. */
   min-height: 168px;
+  /* 콘텐츠가 넘칠 때 가로 스크롤을 허용합니다. */
   overflow-x: auto;
+  /* 카드 내부 여백을 부여합니다. */
   padding: 0.45rem;
 }
 

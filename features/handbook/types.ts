@@ -28,7 +28,9 @@ export type PreviewPresetKey =
   | 'spacing-gap-vs-margin';
 
 export interface SnippetControlOption {
+  // 옵션 고유 식별자입니다.
   id: string;
+  // 버튼에 표시할 라벨입니다.
   label: string;
   // preview 엔진에서 해석하는 의미 기반 토큰입니다.
   styleToken: string;
@@ -40,7 +42,9 @@ export interface SnippetControlOption {
 }
 
 export interface SnippetControl {
+  // control 그룹 고유 식별자입니다.
   id: string;
+  // UI에 표시할 control 제목입니다.
   label: string;
   // 이 control이 주로 다루는 대상(설명용 메타)입니다.
   target: PreviewTarget;
@@ -54,14 +58,19 @@ export interface PreviewPreset {
   presetKey: PreviewPresetKey;
   // 미리보기 렌더 변형(기본/비교형)입니다.
   variant?: 'default' | 'box-model-compare';
+  // 미리보기에 렌더할 아이템 수입니다.
   itemCount?: number;
+  // 미리보기 아이템 텍스트 라벨 목록입니다.
   itemLabels?: string[];
 }
 
 // 학습 카드 1개(스니펫)의 데이터 구조입니다.
 export interface HandbookSnippet {
+  // 스니펫 고유 id 입니다.
   id: string;
+  // 카드 제목입니다.
   title: string;
+  // 학습 목표 설명입니다.
   learningGoal: string;
   // 핵심 개념을 한 줄로 요약합니다.
   conceptSummary?: string;
@@ -69,20 +78,32 @@ export interface HandbookSnippet {
   commonMistake?: string;
   // 실무에서 어디에 쓰는지 짧은 힌트입니다.
   useCaseHint?: string;
+  // 코드 패널에 표시할 HTML 문자열입니다.
   htmlCode: string;
+  // 코드 패널에 표시할 CSS 문자열입니다.
   cssCode: string;
+  // 속성 버튼 그룹 목록입니다.
   controls: SnippetControl[];
+  // 참고할 MDN 링크 목록입니다.
   mdnLinks: Array<{ label: string; href: string }>;
+  // 미리보기 엔진 기본 설정입니다.
   previewPreset: PreviewPreset;
 }
 
 // 카테고리 1개에 대한 메타/콘텐츠 구조입니다.
 export interface HandbookCategory {
+  // 라우팅에 사용하는 slug 입니다.
   slug: CategorySlug;
+  // 카테고리 제목입니다.
   title: string;
+  // 카테고리 의도를 짧게 보여주는 문구입니다.
   intentHint: string;
+  // 사용자 질문 형태의 안내 문구입니다.
   questionPrompt: string;
+  // 카테고리 상세 설명입니다.
   description: string;
+  // 난이도 레벨입니다.
   level: 'beginner';
+  // 카테고리에 속한 스니펫 목록입니다.
   snippets: HandbookSnippet[];
 }

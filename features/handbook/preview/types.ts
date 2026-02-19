@@ -1,5 +1,7 @@
+// React 인라인 스타일 타입입니다.
 import type { CSSProperties } from 'react';
 
+// handbook 공통 타입(프리셋 키/타겟)을 가져옵니다.
 import type { PreviewPresetKey, PreviewTarget } from '@/features/handbook/types';
 
 // 특정 토큰이 container/item에 덮어쓸 스타일 조각입니다.
