@@ -69,7 +69,7 @@ function SnippetSection({ snippet, children }: SnippetSectionProps) {
         displayCssCode,
       }}>
       {/* children은 레이아웃 슬롯이고, 실제 데이터 전달은 Context가 담당합니다. */}
-      <article className='rounded-3xl border border-zinc-800 bg-zinc-900/30 p-4 md:p-6'>
+      <article className='surface-card p-4 md:p-6'>
         {children}
       </article>
     </SnippetSectionContext.Provider>
@@ -81,8 +81,8 @@ function SnippetSectionHeader() {
 
   return (
     <header className='mb-5'>
-      <h2 className='text-xl font-semibold text-zinc-100'>{snippet.title}</h2>
-      <p className='mt-2 text-sm leading-6 text-zinc-300'>
+      <h2 className='text-xl font-semibold text-(--text-primary)'>{snippet.title}</h2>
+      <p className='mt-2 text-sm leading-6 text-(--text-secondary)'>
         {snippet.learningGoal}
       </p>
 
@@ -184,7 +184,7 @@ function SnippetSectionFooter() {
           href={link.href}
           target='_blank'
           rel='noreferrer'
-          className='rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 transition hover:border-blue-500 hover:text-blue-100'>
+          className='inline-flex rounded-[10px] border border-(--line-soft) bg-(--bg-soft) px-3 py-1.5 text-xs font-medium text-(--text-secondary) transition-colors hover:border-(--line-strong) hover:text-(--accent-green-strong)'>
           MDN: {link.label}
         </a>
       ))}

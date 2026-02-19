@@ -15,14 +15,14 @@ interface ControlsPanelProps {
 // 속성 토글 버튼을 렌더합니다.
 export function ControlsPanel({ controls, selectedTokens, onSelectToken }: ControlsPanelProps) {
   return (
-    <section className='space-y-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-4'>
-      <h3 className='text-sm font-semibold text-zinc-100'>속성 테스트</h3>
+    <section className='surface-subtle space-y-4 p-4'>
+      <h3 className='text-sm font-semibold text-(--text-primary)'>속성 테스트</h3>
 
       <div className='space-y-4'>
         {/* 각 control 그룹(예: gap, align-items)을 순회합니다. */}
         {controls.map((control) => (
           <div key={control.id}>
-            <p className='mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-zinc-400'>
+            <p className='mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)'>
               {control.label}
             </p>
             <div className='flex flex-wrap gap-2'>
@@ -37,11 +37,12 @@ export function ControlsPanel({ controls, selectedTokens, onSelectToken }: Contr
                     type='button'
                     aria-pressed={isActive}
                     onClick={() => onSelectToken(control.id, option.styleToken)}
-                    className={`rounded-lg border px-3 py-1.5 text-xs transition ${
+                    className={[
+                      'rounded-[10px] border px-3 py-1.5 text-xs font-medium transition-colors',
                       isActive
-                        ? 'border-blue-500 bg-blue-500/15 text-blue-100'
-                        : 'border-zinc-700 text-zinc-300 hover:border-zinc-500 hover:text-zinc-100'
-                    }`}>
+                        ? 'border-(--line-strong) bg-(--accent-green-soft) text-(--accent-green-strong)'
+                        : 'border-(--line-soft) bg-(--bg-elevated) text-(--text-secondary) hover:border-(--line-strong)',
+                    ].join(' ')}>
                     {option.label}
                   </button>
                 );
