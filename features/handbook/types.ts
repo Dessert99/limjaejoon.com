@@ -98,13 +98,3 @@ export interface HandbookCategory {
   // 카테고리에 속한 스니펫 목록입니다.
   snippets: HandbookSnippet[];
 }
-
-// 핸드북 홈 화면에서 요약 노출하는 카테고리 메타 구조입니다.
-export interface HandbookHubCategory {
-  // 카드 고유 식별자입니다.
-  id: 'html' | 'css' | 'javascript' | 'typescript';
-  // 카드 상단에 표시할 카테고리 이름입니다.
-  title: 'HTML' | 'CSS' | 'JAVASCRIPT' | 'TYPESCRIPT';
-  // 카테고리에서 주로 다룰 학습 범위 설명입니다.
-  summary: string;
-}
