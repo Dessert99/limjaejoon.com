@@ -1,7 +1,7 @@
 'use client';
 
 // 스니펫 속성 제어 타입을 props 정의에 사용합니다.
-import type { SnippetControl } from '@/features/handbook/types';
+import type { SnippetControl } from '@/features/handbook/css/types';
 
 interface ControlsPanelProps {
   // 현재 스니펫에 노출할 제어 그룹 목록입니다.

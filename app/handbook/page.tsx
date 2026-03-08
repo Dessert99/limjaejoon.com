@@ -1,7 +1,7 @@
-import { CssCard } from '@/features/handbook/components/flip/CssCard';
-import { HtmlCard } from '@/features/handbook/components/flip/HtmlCard';
-import { JsCard } from '@/features/handbook/components/flip/JsCard';
-import { TsCard } from '@/features/handbook/components/flip/TsCard';
+import { CssCard } from '@/features/handbook/css/components/CssCard';
+import { HtmlCard } from '@/features/handbook/html/components/HtmlCard';
+import { JsCard } from '@/features/handbook/js/components/JsCard';
+import { TsCard } from '@/features/handbook/ts/components/TsCard';
 
 export default function HandbookPage() {
   return (

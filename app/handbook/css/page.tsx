@@ -2,7 +2,7 @@
 import Link from 'next/link';
 
 // 기존 CSS 학습 카테고리 데이터를 재사용합니다.
-import { handbookCategories } from '@/features/handbook/categoryRepository';
+import { handbookCategories } from '@/features/handbook/css/categoryRepository';
 
 // CSS 핸드북 목록 페이지: 세부 slug 진입용 주제 카드를 제공합니다.
 export default function HandbookCssPage() {
@@ -35,8 +35,7 @@ export default function HandbookCssPage() {
               </span>
             </h2>
 
-            <p className='mt-3 text-sm leading-6 text-text-secondary'>{category.questionPrompt}</p>
-            <p className='mt-2 text-sm leading-6 text-text-muted'>{category.description}</p>
+            <p className='mt-3 text-sm leading-6 text-text-muted'>{category.description}</p>
 
             <p className='mt-5 text-xs text-text-muted'>
               스니펫{' '}

@@ -1,7 +1,7 @@
 // control 타입을 입력으로 받아 CSS 표시 문자열을 계산합니다.
-import type { SnippetControl } from '@/features/handbook/types';
+import type { SnippetControl } from '@/features/handbook/css/types';
 // shadow 3요소를 실제 box-shadow 문자열로 합성하는 유틸입니다.
-import { composeBoxShadow } from '@/features/handbook/shadow/compose';
+import { composeBoxShadow } from '@/features/handbook/css/shadow/compose';
 
 // shadow 방향 control id 상수입니다.
 const SHADOW_DIRECTION_CONTROL_ID = 'shadow-direction';
