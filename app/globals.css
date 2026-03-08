@@ -1,392 +1,45 @@
 @import 'tailwindcss';
 
 /* 다크 기반 디자인 시스템 토큰 */
-:root {
+@theme {
   /* 페이지 배경 */
-  --bg-page: #121212;
+  --color-bg-page: #121212; /* 거의 검정에 가까운 다크 그레이 */
   /* 기본 카드/패널 배경 */
-  --bg-surface: #121212;
+  --color-bg-surface: #121212; /* 거의 검정에 가까운 다크 그레이 */
   /* 강조 카드/팝오버 배경 */
-  --bg-elevated: #1a1a1a;
+  --color-bg-elevated: #1a1a1a; /* 살짝 밝은 다크 그레이 */
   /* 보조 배경 */
-  --bg-soft: #2a2a2a;
+  --color-bg-soft: #2a2a2a; /* 중간 톤 다크 그레이 */
 
   /* 텍스트 */
-  --text-primary: #f5f5f5;
-  --text-secondary: #d4d4d8;
-  --text-muted: #a1a1aa;
+  --color-text-primary: #f5f5f5; /* 거의 흰색 */
+  --color-text-secondary: #d4d4d8; /* 밝은 쿨 그레이 */
+  --color-text-muted: #a1a1aa; /* 중간 밝기 쿨 그레이 */
 
   /* 경계선 */
-  --line-soft: #303030;
-  --line-strong: #4a4a4a;
+  --color-line-soft: #303030; /* 어두운 그레이 */
+  --color-line-strong: #4a4a4a; /* line-soft보다 밝은 그레이 */
 
   /* 브랜드 포인트 */
-  --accent-green: #eb6900;
-  --accent-green-strong: #eb6900;
-  --accent-green-soft: rgba(235, 105, 0, 0.2);
-
-  /* 모서리 */
-  --radius-sm: 10px;
-  --radius-md: 12px;
-  --radius-lg: 14px;
+  --color-accent-strong: #eb6900; /* 비비드 오렌지 */
+  --color-accent-soft: rgba(235, 105, 0, 0.2); /* 오렌지 20% 투명도 */
 
   /* 그림자 */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.24);
-  --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.36);
-
-  /* 모션 */
-  --motion-fast: 160ms;
-  --motion-normal: 220ms;
-
-  /* 검색바 최대 너비 */
-  --search-compact-max: 520px;
-  --search-expanded-max: 960px;
+  --shadow-card-sm: 0 1px 3px rgba(0, 0, 0, 0.24);
+  --shadow-card-md: 0 10px 28px rgba(0, 0, 0, 0.36);
 }
 
-/* 모든 요소에 동일한 box model 규칙 적용 */
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  /* 브라우저 기본 여백을 제거해 레이아웃 계산을 단순화합니다. */
-  margin: 0;
-  /* 브라우저 기본 안쪽 여백을 제거해 시작 기준을 통일합니다. */
-  padding: 0;
-}
-
-body {
-  /* 전체 페이지의 최소 높이를 뷰포트 높이로 고정합니다. */
-  min-height: 100vh;
-  /* 루트 배경색 토큰을 body에 적용합니다. */
-  background: var(--bg-page);
-  /* 루트 텍스트 색상 토큰을 body에 적용합니다. */
-  color: var(--text-primary);
-  /* 한글/코드 혼합 환경에서 가독성이 좋은 폰트 스택을 적용합니다. */
-  font-family:
-    'Pretendard', 'SUIT', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-}
-
-/* 링크 기본 색상을 부모 텍스트색과 동일하게 맞춥니다. */
-a {
-  color: inherit;
-}
-
-/* 텍스트 드래그 색상 */
-::selection {
-  background: rgba(235, 105, 0, 0.35);
-  color: #fff7ed;
-}
-
-/* 코드 폰트 통일 */
-pre,
-code {
-  font-family:
-    'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
-}
-
-/* 라이트 카드 표면 공통 스타일 */
-.surface-card {
-  border: 1px solid var(--line-soft);
+/* 라이트 카드 표면 공통 유틸리티입니다. */
+@utility surface-card {
+  border: 1px solid var(--color-line-soft);
   border-radius: var(--radius-lg);
-  background: var(--bg-surface);
-  box-shadow: var(--shadow-sm);
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-card-sm);
 }
 
-/* 라이트 보조 카드 표면 공통 스타일 */
-.surface-subtle {
-  border: 1px solid var(--line-soft);
+/* 라이트 보조 카드 표면 공통 유틸리티입니다. */
+@utility surface-subtle {
+  border: 1px solid var(--color-line-soft);
   border-radius: var(--radius-md);
-  background: var(--bg-soft);
-}
-
-/* 다크 코드/프리뷰 패널 공통 스타일 */
-.surface-dark {
-  border: 1px solid #2b3242;
-  border-radius: var(--radius-md);
-  background: #11131a;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-}
-
-/* Live Preview 컨테이너 공통 스타일 */
-.preview-canvas {
-  display: flex;
-  min-height: 320px;
-  border: 1px solid #31384a;
-  border-radius: var(--radius-md);
-  background: #171a23;
-  padding: 14px;
-  overflow: auto;
-}
-
-/* Live Preview 아이템 공통 스타일 */
-.preview-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 64px;
-  min-height: 64px;
-  border: 1px solid #3a4256;
-  border-radius: var(--radius-sm);
-  background: #202636;
-  color: #f8fafc;
-  font-size: 0.86rem;
-  font-weight: 700;
-}
-
-/* box model 비교형 미리보기 레이아웃 */
-.box-model-preview-canvas {
-  display: block;
-}
-
-.box-model-legend {
-  /* 레전드 칩들을 가로로 배치합니다. */
-  display: flex;
-  /* 칩이 좁은 화면에서 줄바꿈되도록 허용합니다. */
-  flex-wrap: wrap;
-  /* 칩 간격을 일정하게 유지합니다. */
-  gap: 0.45rem;
-  /* 레전드와 본문 사이 여백을 확보합니다. */
-  margin-bottom: 0.9rem;
-}
-
-.box-model-legend-item {
-  border: 1px solid #4f5b79;
-  border-radius: 9999px;
-  padding: 0.15rem 0.55rem;
-  font-size: 0.66rem;
-  color: #dbe3ff;
-}
-
-.box-model-legend-border {
-  background: rgba(59, 130, 246, 0.2);
-}
-
-.box-model-legend-padding {
-  background: rgba(56, 189, 248, 0.2);
-}
-
-.box-model-legend-content {
-  background: rgba(34, 197, 94, 0.2);
-}
-
-.box-model-grid {
-  /* 비교 카드들을 grid 컨테이너로 배치합니다. */
-  display: grid;
-  /* 카드 사이 간격을 지정합니다. */
-  gap: 0.8rem;
-  /* 데스크톱에서 2열 비교 레이아웃을 유지합니다. */
-  grid-template-columns: repeat(2, minmax(240px, 1fr));
-}
-
-.box-model-card {
-  border: 1px solid #343b4f;
-  border-radius: var(--radius-md);
-  background: #0d1018;
-  padding: 0.75rem;
-}
-
-.box-model-card-title {
-  margin: 0 0 0.45rem 0;
-  font-size: 0.76rem;
-  color: #e5e7eb;
-  text-transform: lowercase;
-}
-
-.box-model-stage {
-  /* 비교 박스를 중앙에 배치하기 위해 flex를 사용합니다. */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* 비교 영역 최소 높이를 고정해 점프를 줄입니다. */
-  min-height: 168px;
-  /* 콘텐츠가 넘칠 때 가로 스크롤을 허용합니다. */
-  overflow-x: auto;
-  /* 카드 내부 여백을 부여합니다. */
-  padding: 0.45rem;
-}
-
-.box-model-border-layer {
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  background: rgba(59, 130, 246, 0.18);
-}
-
-.box-model-padding-layer {
-  width: 100%;
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  background: rgba(56, 189, 248, 0.18);
-}
-
-.box-model-content-layer {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px dashed #86efac;
-  background: rgba(34, 197, 94, 0.18);
-  color: #f0fdf4;
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.box-model-meta {
-  margin: 0.6rem 0 0 0;
-  font-size: 0.67rem;
-  color: #94a3b8;
-}
-
-/* 스니펫 상단 핵심 정보 박스 */
-.snippet-info-panel {
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-md);
-  background: var(--bg-soft);
-  padding: 0.65rem 0.75rem;
-}
-
-.snippet-info-row {
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 0.45rem;
-  margin: 0;
-}
-
-.snippet-info-label {
-  color: var(--accent-green-strong);
-  font-size: 0.72rem;
-  font-weight: 600;
-}
-
-.snippet-info-value {
-  color: var(--text-secondary);
-  font-size: 0.76rem;
-  line-height: 1.5;
-}
-
-/* 코드 블록(HTML/CSS) 공통 박스 */
-.code-block {
-  border: 1px solid #2e3445;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: #0f121a;
-}
-
-/* 코드 블록 상단 라벨 */
-.code-block-head {
-  border-bottom: 1px solid #2e3445;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #9ca3af;
-  background: #171b27;
-}
-
-/* 코드 본문(pre) */
-.code-block-pre {
-  margin: 0;
-  padding: 0.85rem 1rem;
-  overflow-x: auto;
-  font-size: 0.78rem;
-  line-height: 1.65;
-}
-
-/* Prism 기본 색상 초기화 */
-code[class*='language-'],
-pre[class*='language-'] {
-  color: #f8fafc;
-  text-shadow: none;
-  background: transparent;
-}
-
-/* Prism 토큰 색상(주석/구두점/태그 등) */
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-  color: #94a3b8;
-}
-
-.token.punctuation {
-  color: #e2e8f0;
-}
-
-.token.property,
-.token.tag,
-.token.boolean,
-.token.number,
-.token.constant,
-.token.symbol,
-.token.deleted {
-  color: #93c5fd;
-}
-
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin,
-.token.inserted {
-  color: #86efac;
-}
-
-.token.operator,
-.token.entity,
-.token.url,
-.language-css .token.string,
-.style .token.string {
-  color: #f9a8d4;
-}
-
-.token.atrule,
-.token.attr-value,
-.token.keyword {
-  color: #c4b5fd;
-}
-
-.token.function,
-.token.class-name {
-  color: #fcd34d;
-}
-
-.token.regex,
-.token.important,
-.token.variable {
-  color: #fdba74;
-}
-
-.token.important,
-.token.bold {
-  font-weight: 700;
-}
-
-.token.italic {
-  font-style: italic;
-}
-
-/* 모바일에서 Preview 요소 크기 조절 */
-@media (max-width: 768px) {
-  .preview-canvas {
-    min-height: 260px;
-  }
-
-  .preview-item {
-    min-width: 58px;
-    min-height: 58px;
-    font-size: 0.8rem;
-  }
-
-  .box-model-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .snippet-info-row {
-    grid-template-columns: 1fr;
-    gap: 0.2rem;
-  }
+  background: var(--color-bg-soft);
 }

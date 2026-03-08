@@ -21,7 +21,6 @@ export type PreviewPresetKey =
   | 'box-border-style'
   | 'box-radius'
   | 'box-shadow'
-  | 'box-sizing'
   | 'spacing-margin'
   | 'spacing-padding'
   | 'spacing-axis'
@@ -56,8 +55,6 @@ export interface SnippetControl {
 export interface PreviewPreset {
   // preview 엔진의 기본 스타일 세트를 식별합니다.
   presetKey: PreviewPresetKey;
-  // 미리보기 렌더 변형(기본/비교형)입니다.
-  variant?: 'default' | 'box-model-compare';
   // 미리보기에 렌더할 아이템 수입니다.
   itemCount?: number;
   // 미리보기 아이템 텍스트 라벨 목록입니다.
@@ -72,12 +69,6 @@ export interface HandbookSnippet {
   title: string;
   // 학습 목표 설명입니다.
   learningGoal: string;
-  // 핵심 개념을 한 줄로 요약합니다.
-  conceptSummary?: string;
-  // 초심자가 자주 하는 실수 포인트입니다.
-  commonMistake?: string;
-  // 실무에서 어디에 쓰는지 짧은 힌트입니다.
-  useCaseHint?: string;
   // 코드 패널에 표시할 HTML 문자열입니다.
   htmlCode: string;
   // 코드 패널에 표시할 CSS 문자열입니다.
@@ -106,4 +97,14 @@ export interface HandbookCategory {
   level: 'beginner';
   // 카테고리에 속한 스니펫 목록입니다.
   snippets: HandbookSnippet[];
+}
+
+// 핸드북 홈 화면에서 요약 노출하는 카테고리 메타 구조입니다.
+export interface HandbookHubCategory {
+  // 카드 고유 식별자입니다.
+  id: 'html' | 'css' | 'javascript' | 'typescript';
+  // 카드 상단에 표시할 카테고리 이름입니다.
+  title: 'HTML' | 'CSS' | 'JAVASCRIPT' | 'TYPESCRIPT';
+  // 카테고리에서 주로 다룰 학습 범위 설명입니다.
+  summary: string;
 }

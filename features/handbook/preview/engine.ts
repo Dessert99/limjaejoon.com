@@ -257,33 +257,6 @@ const presetStyleMap: PreviewPresetStyleMap = {
       border: '1px solid #374151',
     },
   },
-  'box-sizing': {
-    container: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-      gap: '20px',
-      flexWrap: 'wrap',
-    },
-    itemA: {
-      width: '180px',
-      minHeight: '92px',
-      padding: '20px',
-      borderWidth: '6px',
-      borderStyle: 'solid',
-      borderColor: '#60a5fa',
-      boxSizing: 'content-box',
-    },
-    itemB: {
-      width: '180px',
-      minHeight: '92px',
-      padding: '20px',
-      borderWidth: '6px',
-      borderStyle: 'solid',
-      borderColor: '#60a5fa',
-      boxSizing: 'border-box',
-    },
-  },
   'spacing-margin': {
     container: {
       display: 'flex',
@@ -455,25 +428,6 @@ const previewStyleTokenMap: PreviewStyleTokenMap = {
   'shadow-color-yellow': {
     itemA: { boxShadow: '0 8px 18px rgba(250, 204, 21, 0.45)' },
   },
-  'box-width-140': { itemA: { width: '140px' }, itemB: { width: '140px' } },
-  'box-width-180': { itemA: { width: '180px' }, itemB: { width: '180px' } },
-  'box-width-220': { itemA: { width: '220px' }, itemB: { width: '220px' } },
-  'box-padding-8': { itemA: { padding: '8px' }, itemB: { padding: '8px' } },
-  'box-padding-20': { itemA: { padding: '20px' }, itemB: { padding: '20px' } },
-  'box-padding-32': { itemA: { padding: '32px' }, itemB: { padding: '32px' } },
-  'box-border-width-2': {
-    itemA: { borderWidth: '2px' },
-    itemB: { borderWidth: '2px' },
-  },
-  'box-border-width-6': {
-    itemA: { borderWidth: '6px' },
-    itemB: { borderWidth: '6px' },
-  },
-  'box-border-width-10': {
-    itemA: { borderWidth: '10px' },
-    itemB: { borderWidth: '10px' },
-  },
-
   // Spacing(여백/축/gap-vs-margin) 토큰입니다.
   'margin-0': { itemA: { margin: '0px' } },
   'margin-12': { itemA: { margin: '12px' } },

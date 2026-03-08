@@ -4,6 +4,4 @@ export interface NavItem {
   label: string;
   // 클릭 시 이동할 경로입니다.
   href: string;
-  // 현재 경로와 메뉴를 매칭할 규칙입니다.
-  matchMode: 'exact' | 'prefix';
 }

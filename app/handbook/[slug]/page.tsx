@@ -3,12 +3,7 @@ import Link from 'next/link';
 // 허용되지 않은 slug 접근 시 404 처리하기 위해 사용합니다.
 import { notFound } from 'next/navigation';
 
-import {
-  SnippetSection,
-  SnippetSectionFooter,
-  SnippetSectionHeader,
-  SnippetSectionPanels,
-} from '@/features/handbook/components/SnippetSection';
+import { SnippetSection } from '@/features/handbook/components/SnippetSection';
 import { categorySlugs, handbookCategories } from '@/features/handbook/categoryRepository';
 
 interface HandbookCategoryPageProps {
@@ -35,45 +30,41 @@ export default async function HandbookCategoryPage({ params }: HandbookCategoryP
   }
 
   return (
-    <main className='mx-auto min-h-screen w-full max-w-[1200px] px-4 py-10 md:px-6'>
+    <main className='mx-auto min-h-screen w-full max-w-7xl px-4 py-10 md:px-6'>
       <div className='mb-4 flex flex-wrap items-center gap-4'>
         <Link
           href='/'
-          className='text-sm font-medium text-(--text-muted) transition-colors hover:text-(--text-primary)'>
+          className='text-sm font-medium text-text-muted transition-colors hover:text-text-primary'>
           ← 홈으로
         </Link>
         <Link
           href='/handbook'
-          className='text-sm font-medium text-(--text-muted) transition-colors hover:text-(--accent-green-strong)'>
+          className='text-sm font-medium text-text-muted transition-colors hover:text-accent-strong'>
           핸드북 목록
         </Link>
       </div>
 
       <header className='surface-card mb-8 p-6 md:p-8'>
-        <p className='text-xs font-semibold uppercase tracking-[0.2em] text-(--accent-green-strong)'>
+        <p className='text-xs font-semibold uppercase tracking-widest text-accent-strong'>
           Category
         </p>
-        <h1 className='mt-3 text-3xl font-semibold text-(--text-primary) md:text-4xl'>
+        <h1 className='mt-3 text-3xl font-semibold text-text-primary md:text-4xl'>
           {category.title}
-          <span className='ml-2 text-xl font-medium text-(--text-muted)'>
+          <span className='ml-2 text-xl font-medium text-text-muted'>
             ({category.intentHint})
           </span>
         </h1>
-        <p className='mt-3 text-sm leading-7 text-(--text-secondary)'>{category.questionPrompt}</p>
+        <p className='mt-3 text-sm leading-7 text-text-secondary'>{category.questionPrompt}</p>
       </header>
 
       {/* 카테고리별 스니펫 카드 목록 */}
       <section className='space-y-5'>
         {/* 현재 카테고리에 포함된 스니펫을 순회해 학습 섹션을 렌더합니다. */}
         {category.snippets.map((snippet) => (
-          // 스니펫별 인터랙션/미리보기를 묶는 클라이언트 컴포넌트를 렌더합니다.
           <SnippetSection
             key={snippet.id}
-            snippet={snippet}>
-            <SnippetSectionHeader />
-            <SnippetSectionPanels />
-            <SnippetSectionFooter />
-          </SnippetSection>
+            snippet={snippet}
+          />
         ))}
       </section>
     </main>

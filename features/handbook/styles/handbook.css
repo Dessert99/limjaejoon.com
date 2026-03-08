@@ -1,0 +1,148 @@
+/* 핸드북 다크 카드 표면 공통 스타일 */
+.surface-dark {
+  border: 1px solid #2b3242;
+  border-radius: var(--radius-md);
+  background: #11131a;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+/* Live Preview 컨테이너 공통 스타일 */
+.preview-canvas {
+  display: flex;
+  min-height: 320px;
+  border: 1px solid #31384a;
+  border-radius: var(--radius-md);
+  background: #171a23;
+  padding: 14px;
+  overflow: auto;
+}
+
+/* Live Preview 아이템 공통 스타일 */
+.preview-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  min-height: 64px;
+  border: 1px solid #3a4256;
+  border-radius: var(--radius-sm);
+  background: #202636;
+  color: #f8fafc;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+/* 코드 블록(HTML/CSS) 공통 박스 */
+.code-block {
+  border: 1px solid #2e3445;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #0f121a;
+}
+
+/* 코드 블록 상단 라벨 */
+.code-block-head {
+  border-bottom: 1px solid #2e3445;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #9ca3af;
+  background: #171b27;
+}
+
+/* 코드 본문(pre) */
+.code-block-pre {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+
+/* Prism 기본 색상 초기화 */
+code[class*='language-'],
+pre[class*='language-'] {
+  color: #f8fafc;
+  text-shadow: none;
+  background: transparent;
+}
+
+/* Prism 토큰 색상(주석/구두점/태그 등) */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #94a3b8;
+}
+
+.token.punctuation {
+  color: #e2e8f0;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #93c5fd;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #86efac;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #f9a8d4;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #c4b5fd;
+}
+
+.token.function,
+.token.class-name {
+  color: #fcd34d;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #fdba74;
+}
+
+.token.important,
+.token.bold {
+  font-weight: 700;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+/* 모바일에서 Preview 요소 크기 조절 */
+@media (max-width: 768px) {
+  .preview-canvas {
+    min-height: 260px;
+  }
+
+  .preview-item {
+    min-width: 58px;
+    min-height: 58px;
+    font-size: 0.8rem;
+  }
+
+}

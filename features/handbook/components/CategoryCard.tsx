@@ -15,24 +15,24 @@ export function CategoryCard({ category }: CategoryCardProps) {
     // 카테고리 slug를 handbook 하위 경로에 붙여 상세 페이지로 이동시킵니다.
     <Link
       href={`/handbook/${category.slug}`}
-      className='group surface-card flex h-full flex-col p-5 transition-shadow duration-200 hover:shadow-(--shadow-md)'>
-      <h2 className='mt-1 text-2xl font-semibold text-(--text-primary)'>
-        {category.title}{' '}
-        <span className='text-base font-medium text-(--text-muted)'>
+      className='group surface-card flex h-full flex-col p-5 transition-shadow duration-200 hover:shadow-card-md'>
+      <h2 className='mt-1 text-2xl font-semibold text-text-primary'>
+        {category.title}
+        <span className='text-base font-medium text-text-muted'>
           ({category.intentHint})
         </span>
       </h2>
 
-      <p className='mt-3 text-sm leading-6 text-(--text-secondary)'>
+      <p className='mt-3 text-sm leading-6 text-text-secondary'>
         {category.questionPrompt}
       </p>
-      <p className='mt-2 text-sm leading-6 text-(--text-muted)'>
+      <p className='mt-2 text-sm leading-6 text-text-muted'>
         {category.description}
       </p>
 
-      <p className='mt-5 text-xs text-(--text-muted)'>
+      <p className='mt-5 text-xs text-text-muted'>
         스니펫{' '}
-        <span className='font-semibold text-(--accent-green-strong)'>
+        <span className='font-semibold text-accent-strong'>
           {category.snippets.length}개
         </span>
       </p>

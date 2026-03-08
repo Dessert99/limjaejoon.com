@@ -16,13 +16,13 @@ interface ControlsPanelProps {
 export function ControlsPanel({ controls, selectedTokens, onSelectToken }: ControlsPanelProps) {
   return (
     <section className='surface-subtle space-y-4 p-4'>
-      <h3 className='text-sm font-semibold text-(--text-primary)'>속성 테스트</h3>
+      <h3 className='text-sm font-semibold text-text-primary'>속성 테스트</h3>
 
       <div className='space-y-4'>
         {/* 각 control 그룹(예: gap, align-items)을 순회합니다. */}
         {controls.map((control) => (
           <div key={control.id}>
-            <p className='mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)'>
+            <p className='mb-2 text-xs font-semibold uppercase tracking-widest text-text-muted'>
               {control.label}
             </p>
             <div className='flex flex-wrap gap-2'>
@@ -38,10 +38,10 @@ export function ControlsPanel({ controls, selectedTokens, onSelectToken }: Contr
                     aria-pressed={isActive}
                     onClick={() => onSelectToken(control.id, option.styleToken)}
                     className={[
-                      'rounded-[10px] border px-3 py-1.5 text-xs font-medium transition-colors',
+                      'rounded-xl border px-3 py-1.5 text-xs font-medium transition-colors',
                       isActive
-                        ? 'border-(--line-strong) bg-(--accent-green-soft) text-(--accent-green-strong)'
-                        : 'border-(--line-soft) bg-(--bg-elevated) text-(--text-secondary) hover:border-(--line-strong)',
+                        ? 'border-line-strong bg-accent-soft text-accent-strong'
+                        : 'border-line-soft bg-bg-elevated text-text-secondary hover:border-line-strong',
                     ].join(' ')}>
                     {option.label}
                   </button>

@@ -1,0 +1,13 @@
+// 핸드북 라우트 하위 전역 스타일을 로드합니다.
+import '@/features/handbook/styles/handbook.css';
+
+interface HandbookLayoutProps {
+  // 핸드북 하위 페이지 콘텐츠를 받습니다.
+  children: React.ReactNode;
+}
+
+// 핸드북 세그먼트 전용 레이아웃입니다.
+export default function HandbookLayout({ children }: HandbookLayoutProps) {
+  // 핸드북 페이지 콘텐츠를 그대로 렌더합니다.
+  return children;
+}

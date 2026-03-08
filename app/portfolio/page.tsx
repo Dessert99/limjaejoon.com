@@ -41,7 +41,7 @@ const techStackItems: TechStackItem[] = [
     // React 공식 브랜드 아이콘을 사용합니다.
     icon: SiReact,
     // React 브랜드 컬러를 적용해 즉시 식별되도록 구성합니다.
-    iconColorClass: 'text-[#61DAFB]',
+    iconColorClass: 'text-sky-400',
   },
   {
     // React Native 카드 식별자입니다.
@@ -51,7 +51,7 @@ const techStackItems: TechStackItem[] = [
     // 요청사항에 맞춰 React 아이콘을 재사용하고 텍스트로 Native를 구분합니다.
     icon: SiReact,
     // React Native도 React 계열 브랜드 톤을 유지합니다.
-    iconColorClass: 'text-[#7DD3FC]',
+    iconColorClass: 'text-sky-300',
   },
   {
     // Expo 카드 식별자입니다.
@@ -89,42 +89,42 @@ const activityGroups: ActivityGroup[] = [
 export default function PortfolioPage() {
   return (
     // 본문 폭을 제한해 가독성을 유지하고 반응형 여백을 적용합니다.
-    <main className='mx-auto min-h-screen w-full max-w-[1200px] px-4 py-10 md:px-6'>
+    <main className='mx-auto min-h-screen w-full max-w-7xl px-4 py-10 md:px-6'>
       {/* 페이지의 시맨틱 제목을 노출합니다. */}
-      <h1 className='text-3xl font-semibold tracking-tight text-(--text-primary) md:text-4xl'>
+      <h1 className='text-3xl font-semibold tracking-tight text-text-primary md:text-4xl'>
         포트폴리오
       </h1>
 
       {/* 상단 히어로에서 프로필 핵심 정보를 먼저 전달합니다. */}
       <section className='surface-card mt-6 p-6 md:p-8'>
         {/* 모바일 우선 1열, 데스크톱 2열로 전환해 정보 우선순위를 유지합니다. */}
-        <div className='grid gap-6 md:grid-cols-[140px_minmax(0,1fr)] md:items-center'>
+        <div className='grid gap-6 md:grid-cols-5 md:items-center'>
           {/* 프로필 로고 이미지를 고정 크기로 표시해 시각적 기준점을 만듭니다. */}
-          <div className='justify-self-start overflow-hidden rounded-2xl border border-(--line-soft) bg-(--bg-soft)'>
+          <div className='justify-self-start overflow-hidden rounded-2xl border border-line-soft bg-bg-soft md:col-span-1'>
             <Image
               // 사용자가 지정한 로고 파일 경로를 그대로 사용합니다.
               src='/images/logo.png'
               // 이미지 의미를 설명하는 대체 텍스트입니다.
               alt='포트폴리오 프로필 로고'
               // 레이아웃 안정성을 위해 고정 너비를 지정합니다.
-              width={140}
+              width={144}
               // 레이아웃 안정성을 위해 고정 높이를 지정합니다.
-              height={140}
+              height={144}
               // 박스를 채우도록 cover 모드를 적용합니다.
-              className='h-[140px] w-[140px] object-cover'
+              className='h-36 w-36 object-cover'
               // 히어로 핵심 이미지라 우선 로딩합니다.
               priority
             />
           </div>
 
           {/* 텍스트 정보 묶음을 세로로 배치해 읽기 흐름을 단순화합니다. */}
-          <div>
+          <div className='md:col-span-4'>
             {/* 섹션 레이블을 추가해 페이지 목적을 즉시 인지하도록 돕습니다. */}
-            <p className='text-xs font-semibold uppercase tracking-[0.2em] text-(--accent-green-strong)'>
+            <p className='text-xs font-semibold uppercase tracking-widest text-accent-strong'>
               Portfolio Profile
             </p>
             {/* 학교명을 핵심 아이덴티티로 강조합니다. */}
-            <p className='mt-3 text-2xl font-semibold text-(--text-primary) md:text-3xl'>
+            <p className='mt-3 text-2xl font-semibold text-text-primary md:text-3xl'>
               프론트엔드 개발자 임재준
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function PortfolioPage() {
         {/* 기술 스택 카드 영역입니다. */}
         <article className='surface-card p-6'>
           {/* 섹션 제목을 노출합니다. */}
-          <h2 className='text-xl font-semibold text-(--text-primary)'>
+          <h2 className='text-xl font-semibold text-text-primary'>
             기술 스택
           </h2>
           {/* 기술 카드 목록 간격을 설정합니다. */}
@@ -152,7 +152,7 @@ export default function PortfolioPage() {
                   key={stack.id}
                   className='surface-subtle flex items-center gap-3 p-4'>
                   {/* 아이콘 배경 칩을 둬 시인성을 높입니다. */}
-                  <span className='inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-(--line-soft) bg-(--bg-elevated)'>
+                  <span className='inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line-soft bg-bg-elevated'>
                     <StackIcon
                       // 아이콘은 장식 요소이므로 스크린 리더에서 제외합니다.
                       aria-hidden='true'
@@ -162,7 +162,7 @@ export default function PortfolioPage() {
                   </span>
 
                   {/* 기술 이름을 카드 제목으로 표시합니다. */}
-                  <strong className='block text-sm font-semibold text-(--text-primary) md:text-base'>
+                  <strong className='block text-sm font-semibold text-text-primary md:text-base'>
                     {stack.name}
                   </strong>
                 </li>
@@ -174,7 +174,7 @@ export default function PortfolioPage() {
         {/* 활동 카드 영역입니다. */}
         <article className='surface-card p-6'>
           {/* 섹션 제목을 노출합니다. */}
-          <h2 className='text-xl font-semibold text-(--text-primary)'>활동</h2>
+          <h2 className='text-xl font-semibold text-text-primary'>활동</h2>
           {/* 단체별 활동 그룹 간 간격을 설정합니다. */}
           <div className='mt-4 space-y-4'>
             {/* 단체 데이터를 카드형 블록으로 렌더링합니다. */}
@@ -183,7 +183,7 @@ export default function PortfolioPage() {
                 key={group.id}
                 className='surface-subtle p-4'>
                 {/* 단체명을 강조 텍스트로 노출합니다. */}
-                <h3 className='text-sm font-semibold uppercase tracking-[0.08em] text-(--accent-green-strong)'>
+                <h3 className='text-sm font-semibold uppercase tracking-widest text-accent-strong'>
                   {group.organization}
                 </h3>
                 {/* 역할 목록을 불릿으로 표시해 이력 구분을 명확히 합니다. */}
@@ -192,7 +192,7 @@ export default function PortfolioPage() {
                   {group.roles.map((role) => (
                     <li
                       key={role}
-                      className='text-sm text-(--text-secondary) md:text-base'>
+                      className='text-sm text-text-secondary md:text-base'>
                       {role}
                     </li>
                   ))}

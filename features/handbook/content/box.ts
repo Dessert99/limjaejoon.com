@@ -53,7 +53,7 @@ export const boxCategory: HandbookCategory = {
   // 사용자 질문형 안내 문구를 정의합니다.
   questionPrompt: '카드 박스의 테두리, 둥글기, 그림자를 바꾸고 싶다',
   // 카테고리 설명 문구를 정의합니다.
-  description: '테두리와 그림자, 박스 크기 계산 방식을 실습합니다.',
+  description: '테두리와 둥근 모서리, 그림자를 실습합니다.',
   // 난이도 레벨을 정의합니다.
   level: 'beginner',
   // 스니펫 목록을 정의합니다.
@@ -248,75 +248,6 @@ export const boxCategory: HandbookCategory = {
       previewPreset: {
         presetKey: 'box-shadow',
         itemCount: 1,
-      },
-    },
-    // 4) box-sizing 계산 방식 비교
-    {
-      id: 'box-sizing',
-      title: '크기 계산 방식',
-      learningGoal: 'content-box와 border-box를 같은 조건에서 나란히 비교합니다.',
-      htmlCode:
-        '<div class="sample content-box">content-box</div>\n<div class="sample border-box">border-box</div>',
-      cssCode:
-        '/* 1. 두 박스 공통 조건 */\n.sample {\n  width: 180px;\n  padding: 20px;\n  border-width: 6px;\n  border-style: solid;\n  border-color: #60a5fa;\n}\n\n/* 2. width가 content만 의미 */\n.content-box {\n  box-sizing: content-box;\n}\n\n/* 3. width 안에 padding/border 포함 */\n.border-box {\n  box-sizing: border-box;\n}',
-      controls: [
-        control('box-width', '기준 width', 'itemA', 'box-width-180', [
-          option('width140', '140px', 'box-width-140', [
-            { property: 'width', value: '140px' },
-          ]),
-          option('width180', '180px', 'box-width-180', [
-            { property: 'width', value: '180px' },
-          ]),
-          option('width220', '220px', 'box-width-220', [
-            { property: 'width', value: '220px' },
-          ]),
-        ]),
-        control('box-padding', 'padding', 'itemA', 'box-padding-20', [
-          option('padding8', '8px', 'box-padding-8', [
-            { property: 'padding', value: '8px' },
-          ]),
-          option('padding20', '20px', 'box-padding-20', [
-            { property: 'padding', value: '20px' },
-          ]),
-          option('padding32', '32px', 'box-padding-32', [
-            { property: 'padding', value: '32px' },
-          ]),
-        ]),
-        control('box-border-width', 'border-width', 'itemA', 'box-border-width-6', [
-          option('border2', '2px', 'box-border-width-2', [
-            { property: 'border-width', value: '2px' },
-          ]),
-          option('border6', '6px', 'box-border-width-6', [
-            { property: 'border-width', value: '6px' },
-          ]),
-          option('border10', '10px', 'box-border-width-10', [
-            { property: 'border-width', value: '10px' },
-          ]),
-        ]),
-      ],
-      mdnLinks: [
-        {
-          label: 'width',
-          href: 'https://developer.mozilla.org/docs/Web/CSS/width',
-        },
-        {
-          label: 'padding',
-          href: 'https://developer.mozilla.org/docs/Web/CSS/padding',
-        },
-        {
-          label: 'border-width',
-          href: 'https://developer.mozilla.org/docs/Web/CSS/border-width',
-        },
-        {
-          label: 'box-sizing',
-          href: 'https://developer.mozilla.org/docs/Web/CSS/box-sizing',
-        },
-      ],
-      previewPreset: {
-        presetKey: 'box-sizing',
-        variant: 'box-model-compare',
-        itemCount: 2,
-        itemLabels: ['content-box', 'border-box'],
       },
     },
   ],
