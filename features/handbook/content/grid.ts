@@ -3,7 +3,7 @@ import type {
   HandbookCategory,
   SnippetControl,
   SnippetControlOption,
-} from '@/features/handbook/css/types';
+} from '@/features/handbook/types';
 
 // control option(버튼 옵션) 생성 헬퍼입니다.
 const option = (
@@ -50,14 +50,19 @@ export const gridCategory: HandbookCategory = {
   title: 'Grid',
   // 의도 힌트 문구를 정의합니다.
   intentHint: '갤러리 모양 만들기',
+  // 사용자 질문형 안내 문구를 정의합니다.
+  questionPrompt: '카드 목록을 격자(갤러리)로 만들고 싶다',
   // 카테고리 설명 문구를 정의합니다.
   description: '2차원 배치가 필요한 카드/갤러리 레이아웃을 빠르게 만듭니다.',
+  // 난이도 레벨을 정의합니다.
+  level: 'beginner',
   // 스니펫 목록을 정의합니다.
   snippets: [
     // 1) 열 개수 변경
     {
       id: 'grid-columns',
       title: '열 개수 바꾸기',
+      learningGoal: 'grid-template-columns로 열 수를 조절합니다.',
       htmlCode:
         '<div class="gallery">\n  <div class="card">A</div>\n  <div class="card">B</div>\n  <div class="card">C</div>\n</div>',
       cssCode:
@@ -89,6 +94,7 @@ export const gridCategory: HandbookCategory = {
     {
       id: 'grid-gap',
       title: '카드 사이 간격',
+      learningGoal: 'gap 값으로 카드 간격을 조절합니다.',
       htmlCode:
         '<div class="gallery">\n  <div class="card">A</div>\n  <div class="card">B</div>\n  <div class="card">C</div>\n</div>',
       cssCode: '/* 1. Grid 간격 지정 */\n.gallery {\n  display: grid;\n  gap: 8px;\n}',
@@ -112,6 +118,7 @@ export const gridCategory: HandbookCategory = {
     {
       id: 'grid-span',
       title: '대표 카드 크게 만들기',
+      learningGoal: 'grid-column: span N 으로 특정 카드를 더 크게 만듭니다.',
       htmlCode:
         '<div class="gallery">\n  <!-- 대표 카드 -->\n  <div class="card featured">A</div>\n  <div class="card">B</div>\n  <div class="card">C</div>\n</div>',
       cssCode: '/* 1. featured 카드가 여러 열 차지 */\n.featured {\n  grid-column: span 2;\n}',
@@ -142,6 +149,7 @@ export const gridCategory: HandbookCategory = {
     {
       id: 'grid-autofit',
       title: '반응형 갤러리 패턴',
+      learningGoal: 'auto-fit + minmax 패턴으로 폭에 따라 자동 열 배치를 만듭니다.',
       htmlCode:
         '<div class="gallery">\n  <div class="card">A</div>\n  <div class="card">B</div>\n  <div class="card">C</div>\n</div>',
       cssCode:

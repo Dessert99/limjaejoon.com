@@ -3,7 +3,7 @@ import type {
   HandbookCategory,
   SnippetControl,
   SnippetControlOption,
-} from '@/features/handbook/css/types';
+} from '@/features/handbook/types';
 
 // control option(버튼 옵션) 생성 헬퍼입니다.
 const option = (
@@ -50,14 +50,19 @@ export const boxCategory: HandbookCategory = {
   title: 'Box',
   // 의도 힌트 문구를 정의합니다.
   intentHint: '박스 디자인 바꾸기',
+  // 사용자 질문형 안내 문구를 정의합니다.
+  questionPrompt: '카드 박스의 테두리, 둥글기, 그림자를 바꾸고 싶다',
   // 카테고리 설명 문구를 정의합니다.
   description: '테두리와 둥근 모서리, 그림자를 실습합니다.',
+  // 난이도 레벨을 정의합니다.
+  level: 'beginner',
   // 스니펫 목록을 정의합니다.
   snippets: [
     // 1) border-width + border-style 비교
     {
       id: 'box-border-style',
       title: '테두리 스타일',
+      learningGoal: '테두리 두께와 모양 값을 조합해 카드 인상을 비교합니다.',
       htmlCode: '<div class="box">\n  <!-- 카드 박스 -->\n  Box Design\n</div>',
       cssCode:
         '/* 1. 테두리 두께 */\n.box {\n  border-width: 1px;\n\n  /* 2. 테두리 모양 */\n  border-style: solid;\n}',
@@ -128,6 +133,7 @@ export const boxCategory: HandbookCategory = {
     {
       id: 'box-radius',
       title: '모서리 둥글기',
+      learningGoal: 'border-radius 값으로 카드 인상을 바꿉니다.',
       htmlCode: '<div class="box">\n  Radius Sample\n</div>',
       cssCode: '/* 1. 모서리 둥글기 */\n.box {\n  border-radius: 16px;\n}',
       controls: [
@@ -158,6 +164,7 @@ export const boxCategory: HandbookCategory = {
     {
       id: 'box-shadow',
       title: '그림자 깊이',
+      learningGoal: '방향, blur, 색상을 조합해 그림자를 세밀하게 조절합니다.',
       htmlCode: '<div class="box">\n  Shadow Sample\n</div>',
       cssCode:
         '/* 1. 그림자: x y blur color */\n.box {\n  box-shadow: 0 8px 18px rgba(255, 255, 255, 0.28);\n}',

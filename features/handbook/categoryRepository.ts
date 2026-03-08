@@ -1,13 +1,13 @@
 // Box 카테고리 데이터를 가져옵니다.
-import { boxCategory } from '@/features/handbook/css/content/box';
+import { boxCategory } from '@/features/handbook/content/box';
 // Flex 카테고리 데이터를 가져옵니다.
-import { flexCategory } from '@/features/handbook/css/content/flex';
+import { flexCategory } from '@/features/handbook/content/flex';
 // Grid 카테고리 데이터를 가져옵니다.
-import { gridCategory } from '@/features/handbook/css/content/grid';
+import { gridCategory } from '@/features/handbook/content/grid';
 // Spacing 카테고리 데이터를 가져옵니다.
-import { spacingCategory } from '@/features/handbook/css/content/spacing';
+import { spacingCategory } from '@/features/handbook/content/spacing';
 // 카테고리 배열 타입을 명시하기 위해 사용합니다.
-import type { HandbookCategory } from '@/features/handbook/css/types';
+import type { HandbookCategory } from '@/features/handbook/types';
 
 // 홈에서 사용하는 카테고리 목록
 export const handbookCategories: HandbookCategory[] = [

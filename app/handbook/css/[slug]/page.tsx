@@ -3,8 +3,8 @@ import Link from 'next/link';
 // 허용되지 않은 slug 접근 시 404 처리하기 위해 사용합니다.
 import { notFound } from 'next/navigation';
 
-import { SnippetSection } from '@/features/handbook/css/components/SnippetSection';
-import { categorySlugs, handbookCategories } from '@/features/handbook/css/categoryRepository';
+import { SnippetSection } from '@/features/handbook/components/SnippetSection';
+import { categorySlugs, handbookCategories } from '@/features/handbook/categoryRepository';
 
 interface HandbookCssCategoryPageProps {
   // App Router에서 전달하는 동적 라우트 파라미터 Promise 입니다.
@@ -56,7 +56,7 @@ export default async function HandbookCssCategoryPage({
             ({category.intentHint})
           </span>
         </h1>
-        <p className='mt-3 text-sm leading-7 text-text-secondary'>{category.description}</p>
+        <p className='mt-3 text-sm leading-7 text-text-secondary'>{category.questionPrompt}</p>
       </header>
 
       {/* 카테고리별 스니펫 카드 목록 */}

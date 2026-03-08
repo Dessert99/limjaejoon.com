@@ -1,12 +1,12 @@
 'use client';
 
-import { CodePanel } from '@/features/handbook/css/components/CodePanel';
-import { ControlsPanel } from '@/features/handbook/css/components/ControlsPanel';
-import { PreviewPanel } from '@/features/handbook/css/components/PreviewPanel';
+import { CodePanel } from '@/features/handbook/components/CodePanel';
+import { ControlsPanel } from '@/features/handbook/components/ControlsPanel';
+import { PreviewPanel } from '@/features/handbook/components/PreviewPanel';
 import { computeDisplayCssCode } from '@/features/handbook/css/engine';
-import { useSnippetPlayground } from '@/features/handbook/css/hooks/useSnippetPlayground';
-import { computePreviewStyles } from '@/features/handbook/css/preview/engine';
-import type { HandbookSnippet } from '@/features/handbook/css/types';
+import { useSnippetPlayground } from '@/features/handbook/hooks/useSnippetPlayground';
+import { computePreviewStyles } from '@/features/handbook/preview/engine';
+import type { HandbookSnippet } from '@/features/handbook/types';
 import { useMemo } from 'react';
 
 interface SnippetSectionProps {
@@ -33,6 +33,7 @@ export function SnippetSection({ snippet }: SnippetSectionProps) {
     <article className='surface-card p-4 md:p-6'>
       <header className='mb-5'>
         <h2 className='text-xl font-semibold text-text-primary'>{snippet.title}</h2>
+        <p className='mt-2 text-sm leading-6 text-text-secondary'>{snippet.learningGoal}</p>
       </header>
 
       <div className='grid gap-4 md:grid-cols-2'>

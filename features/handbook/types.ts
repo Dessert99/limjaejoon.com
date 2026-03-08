@@ -67,6 +67,8 @@ export interface HandbookSnippet {
   id: string;
   // 카드 제목입니다.
   title: string;
+  // 학습 목표 설명입니다.
+  learningGoal: string;
   // 코드 패널에 표시할 HTML 문자열입니다.
   htmlCode: string;
   // 코드 패널에 표시할 CSS 문자열입니다.
@@ -87,8 +89,12 @@ export interface HandbookCategory {
   title: string;
   // 카테고리 의도를 짧게 보여주는 문구입니다.
   intentHint: string;
+  // 사용자 질문 형태의 안내 문구입니다.
+  questionPrompt: string;
   // 카테고리 상세 설명입니다.
   description: string;
+  // 난이도 레벨입니다.
+  level: 'beginner';
   // 카테고리에 속한 스니펫 목록입니다.
   snippets: HandbookSnippet[];
 }

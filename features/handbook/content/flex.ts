@@ -3,7 +3,7 @@ import type {
   HandbookCategory,
   SnippetControl,
   SnippetControlOption,
-} from '@/features/handbook/css/types';
+} from '@/features/handbook/types';
 
 // control option(버튼 옵션) 생성 헬퍼입니다.
 const option = (
@@ -50,14 +50,19 @@ export const flexCategory: HandbookCategory = {
   title: 'Flex',
   // 의도 힌트 문구를 정의합니다.
   intentHint: '좌우, 세로 정렬하기',
+  // 사용자 질문형 안내 문구를 정의합니다.
+  questionPrompt: '요소를 좌우로 배치하거나 세로로 나열하고 싶다',
   // 카테고리 설명 문구를 정의합니다.
   description: '컨테이너 정렬부터 아이템 제어까지 Flex 핵심을 단계별로 학습합니다.',
+  // 난이도 레벨을 정의합니다.
+  level: 'beginner',
   // 스니펫 목록을 정의합니다.
   snippets: [
     // 1) flex-direction: 가로/세로 배치 전환
     {
       id: 'flex-direction',
       title: '가로 배치 vs 세로 배치',
+      learningGoal: 'flex-direction으로 박스 흐름 방향을 바꿉니다.',
       htmlCode:
         '<div class="container">\n  <!-- 1. 첫 번째 박스 -->\n  <div class="item">A</div>\n  <!-- 2. 두 번째 박스 -->\n  <div class="item">B</div>\n  <!-- 3. 세 번째 박스 -->\n  <div class="item">C</div>\n</div>',
       cssCode:
@@ -86,6 +91,7 @@ export const flexCategory: HandbookCategory = {
     {
       id: 'flex-justify-content',
       title: '가로축 정렬 위치',
+      learningGoal: 'justify-content로 요소를 시작/중앙/양끝으로 배치합니다.',
       htmlCode:
         '<div class="container">\n  <div class="item">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
       cssCode:
@@ -117,6 +123,7 @@ export const flexCategory: HandbookCategory = {
     {
       id: 'flex-align-items',
       title: '세로축 정렬 맞추기',
+      learningGoal: 'align-items로 세로축 정렬 위치를 바꿉니다.',
       htmlCode:
         '<div class="container">\n  <div class="item">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
       cssCode:
@@ -148,6 +155,7 @@ export const flexCategory: HandbookCategory = {
     {
       id: 'flex-wrap-gap',
       title: '줄바꿈, 간격, 줄 그룹 정렬',
+      learningGoal: 'flex-wrap과 gap, align-content를 같이 바꿔 멀티라인 정렬을 이해합니다.',
       htmlCode:
         '<div class="container">\n  <div class="item">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n  <div class="item">D</div>\n  <div class="item">E</div>\n  <div class="item">F</div>\n  <div class="item">G</div>\n  <div class="item">H</div>\n  <div class="item">I</div>\n</div>',
       cssCode:
@@ -201,6 +209,7 @@ export const flexCategory: HandbookCategory = {
     {
       id: 'flex-grow',
       title: '남는 공간 분배 (flex-grow)',
+      learningGoal: 'flex-grow 값으로 item A가 남는 공간을 얼마나 가져갈지 비교합니다.',
       htmlCode:
         '<div class="container">\n  <div class="item item-a">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
       cssCode:
@@ -232,6 +241,7 @@ export const flexCategory: HandbookCategory = {
     {
       id: 'flex-shrink',
       title: '공간이 부족할 때 축소 (flex-shrink)',
+      learningGoal: '컨테이너 폭이 좁을 때 item A의 shrink 비율 변화를 확인합니다.',
       htmlCode:
         '<div class="container">\n  <div class="item item-a">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
       cssCode:
@@ -263,6 +273,7 @@ export const flexCategory: HandbookCategory = {
     {
       id: 'flex-basis',
       title: '기본 크기 기준 (flex-basis)',
+      learningGoal: 'item A의 시작 너비를 flex-basis로 바꿔 배치 차이를 확인합니다.',
       htmlCode:
         '<div class="container">\n  <div class="item item-a">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
       cssCode:
@@ -294,6 +305,7 @@ export const flexCategory: HandbookCategory = {
     {
       id: 'flex-order-self',
       title: '순서 변경 + 개별 정렬',
+      learningGoal: 'item A만 순서를 바꾸거나 교차축 정렬을 다르게 적용합니다.',
       htmlCode:
         '<div class="container">\n  <div class="item item-a">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
       cssCode:

@@ -1,7 +1,7 @@
 'use client';
 
 // Prism 하이라이트 렌더를 담당하는 하위 컴포넌트입니다.
-import { HighlightedCode } from '@/features/handbook/css/components/code/HighlightedCode';
+import { HighlightedCode } from '@/features/handbook/components/code/HighlightedCode';
 
 interface CodeBlockProps {
   // 블록 상단 라벨 텍스트입니다.

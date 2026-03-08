@@ -1,4 +1,4 @@
-import { FlipNavCard } from '@/features/handbook/shared/components/flip/FlipNavCard';
+import { FlipNavCard } from '@/features/handbook/components/flip/FlipNavCard';
 
 import { SiHtml5 } from 'react-icons/si';
 
