@@ -3,7 +3,7 @@ import type {
   HandbookCategory,
   SnippetControl,
   SnippetControlOption,
-} from '@/features/handbook/types';
+} from '@/features/handbook/css/types';
 
 // control option(버튼 옵션) 생성 헬퍼입니다.
 const option = (
@@ -50,19 +50,14 @@ export const spacingCategory: HandbookCategory = {
   title: 'Spacing',
   // 의도 힌트 문구를 정의합니다.
   intentHint: '여백 간격 다듬기',
-  // 사용자 질문형 안내 문구를 정의합니다.
-  questionPrompt: '요소 사이 간격을 보기 좋게 조절하고 싶다',
   // 카테고리 설명 문구를 정의합니다.
   description: 'margin/padding과 gap을 어떻게 나눠 쓰는지 익힙니다.',
-  // 난이도 레벨을 정의합니다.
-  level: 'beginner',
   // 스니펫 목록을 정의합니다.
   snippets: [
     // 1) margin 값 변경
     {
       id: 'spacing-margin',
       title: '바깥 여백 margin',
-      learningGoal: 'margin 값으로 요소 바깥 간격을 조절합니다.',
       htmlCode:
         '<div class="container">\n  <div class="item item-a">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
       cssCode: '/* 1. item-a 바깥 여백 */\n.item-a {\n  margin: 12px;\n}',
@@ -93,7 +88,6 @@ export const spacingCategory: HandbookCategory = {
     {
       id: 'spacing-padding',
       title: '안쪽 여백 padding',
-      learningGoal: 'padding 값으로 내용과 테두리 사이 간격을 조절합니다.',
       htmlCode: '<div class="box">\n  Padding Sample\n</div>',
       cssCode: '/* 1. 안쪽 여백 */\n.box {\n  padding: 16px;\n}',
       controls: [

@@ -4,9 +4,12 @@ import type {
   PreviewPresetStyleMap,
   PreviewStyleTokenMap,
   ResolvedPreviewStyles,
-} from '@/features/handbook/preview/types';
-import { composeBoxShadow } from '@/features/handbook/shadow/compose';
-import type { HandbookSnippet, PreviewTarget } from '@/features/handbook/types';
+} from '@/features/handbook/css/preview/types';
+import { composeBoxShadow } from '@/features/handbook/css/shadow/compose';
+import type {
+  HandbookSnippet,
+  PreviewTarget,
+} from '@/features/handbook/css/types';
 
 // shadow 조합 컨트롤 id를 상수로 분리해 오타를 방지합니다.
 const SHADOW_DIRECTION_CONTROL_ID = 'shadow-direction';

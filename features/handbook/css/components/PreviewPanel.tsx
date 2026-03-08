@@ -1,9 +1,9 @@
 'use client';
 
 // 스니펫 데이터 타입입니다.
-import type { HandbookSnippet } from '@/features/handbook/types';
+import type { HandbookSnippet } from '@/features/handbook/css/types';
 // preview 엔진 계산 결과 타입입니다.
-import type { ResolvedPreviewStyles } from '@/features/handbook/preview/types';
+import type { ResolvedPreviewStyles } from '@/features/handbook/css/preview/types';
 
 interface PreviewPanelProps {
   // 현재 렌더 중인 스니펫 데이터입니다.

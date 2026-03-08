@@ -1,7 +1,7 @@
 'use client';
 
 // HTML/CSS 코드 블록 공통 렌더 컴포넌트를 가져옵니다.
-import { CodeBlock } from '@/features/handbook/components/code/CodeBlock';
+import { CodeBlock } from '@/features/handbook/css/components/code/CodeBlock';
 
 interface CodePanelProps {
   // 현재 스니펫의 HTML 코드 문자열입니다.

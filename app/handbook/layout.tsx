@@ -1,7 +1,9 @@
 // 핸드북 라우트 하위 전역 스타일을 로드합니다.
-import '@/features/handbook/styles/handbook.css';
+import '@/features/handbook/css/styles/handbook.css';
+// CSS 카테고리 카드 전용 스타일을 로드합니다.
+import '@/features/handbook/css/styles/cssCard.css';
 // 핸드북 플립 카드 전용 스타일을 로드합니다.
-import '@/features/handbook/components/flip/flip.css';
+import '@/features/handbook/shared/styles/flip.css';
 
 interface HandbookLayoutProps {
   // 핸드북 하위 페이지 콘텐츠를 받습니다.

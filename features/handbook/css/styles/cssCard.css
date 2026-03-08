@@ -1,0 +1,63 @@
+/* CSS 카테고리 목록을 auto-fit 반응형 그리드로 배치합니다. */
+.css-topic-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* CSS 주제 카드를 글래스 패널 형태로 구성합니다. */
+.css-topic-card {
+  position: relative;
+  display: flex;
+  min-height: 164px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.65rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+    rgba(18, 18, 18, 0.65);
+  padding: 1.2rem 1.25rem;
+  backdrop-filter: blur(10px);
+  transition:
+    transform 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease,
+    background 260ms ease;
+}
+
+/* 카드 좌상단 은은한 광원 레이어를 올려 유리 느낌을 강화합니다. */
+.css-topic-card::before {
+  content: '';
+  position: absolute;
+  top: -42px;
+  left: -26px;
+  width: 150px;
+  height: 150px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(235, 105, 0, 0.24), transparent 70%);
+  pointer-events: none;
+}
+
+/* hover/focus 시 카드 패널을 살짝 띄우고 경계 대비를 높입니다. */
+.css-topic-card:is(:hover, :focus-visible) {
+  transform: translateY(-4px);
+  border-color: rgba(235, 105, 0, 0.72);
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.34),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
+    rgba(18, 18, 18, 0.7);
+  outline: none;
+}
+
+/* 카드 설명 텍스트는 초보자에게 직관적인 안내 문구만 제공합니다. */
+.css-topic-desc {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}

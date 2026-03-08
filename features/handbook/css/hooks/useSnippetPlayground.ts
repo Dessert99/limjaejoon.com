@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import type { HandbookSnippet } from '@/features/handbook/types';
+import type { HandbookSnippet } from '@/features/handbook/css/types';
 
 // 스니펫 상호작용(속성 선택) 상태를 관리하는 custom hook입니다.
 export function useSnippetPlayground(snippet: HandbookSnippet) {
