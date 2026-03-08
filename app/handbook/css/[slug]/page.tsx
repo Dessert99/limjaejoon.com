@@ -6,19 +6,21 @@ import { notFound } from 'next/navigation';
 import { SnippetSection } from '@/features/handbook/components/SnippetSection';
 import { categorySlugs, handbookCategories } from '@/features/handbook/categoryRepository';
 
-interface HandbookCategoryPageProps {
+interface HandbookCssCategoryPageProps {
   // App Router에서 전달하는 동적 라우트 파라미터 Promise 입니다.
   params: Promise<{ slug: string }>;
 }
 
-// handbook 상세 페이지를 SSG로 미리 생성하기 위한 slug 목록을 반환합니다.
+// handbook CSS 상세 페이지를 SSG로 미리 생성하기 위한 slug 목록을 반환합니다.
 export function generateStaticParams() {
   // 카테고리 slug 배열을 `[{ slug }]` 형태로 변환해 반환합니다.
   return categorySlugs.map((slug) => ({ slug }));
 }
 
-// handbook 카테고리 상세 페이지: 선택한 카테고리의 스니펫 목록을 렌더합니다.
-export default async function HandbookCategoryPage({ params }: HandbookCategoryPageProps) {
+// handbook CSS 상세 페이지: 선택한 주제의 스니펫 목록을 렌더합니다.
+export default async function HandbookCssCategoryPage({
+  params,
+}: HandbookCssCategoryPageProps) {
   // params Promise를 해제해 현재 경로의 slug 값을 얻습니다.
   const { slug } = await params;
   // 현재 slug에 대응하는 카테고리를 데이터 저장소에서 조회합니다.
@@ -30,7 +32,7 @@ export default async function HandbookCategoryPage({ params }: HandbookCategoryP
   }
 
   return (
-    <main className='mx-auto min-h-screen w-full max-w-7xl px-4 py-10 md:px-6'>
+    <main className='mx-auto min-h-screen w-full max-w-6xl px-4 py-10 md:px-6'>
       <div className='mb-4 flex flex-wrap items-center gap-4'>
         <Link
           href='/'
@@ -38,15 +40,15 @@ export default async function HandbookCategoryPage({ params }: HandbookCategoryP
           ← 홈으로
         </Link>
         <Link
-          href='/handbook'
+          href='/handbook/css'
           className='text-sm font-medium text-text-muted transition-colors hover:text-accent-strong'>
-          핸드북 목록
+          CSS 목록
         </Link>
       </div>
 
       <header className='surface-card mb-8 p-6 md:p-8'>
         <p className='text-xs font-semibold uppercase tracking-widest text-accent-strong'>
-          Category
+          CSS Topic
         </p>
         <h1 className='mt-3 text-3xl font-semibold text-text-primary md:text-4xl'>
           {category.title}
