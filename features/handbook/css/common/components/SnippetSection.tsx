@@ -56,10 +56,9 @@ export function SnippetSection({
         </div>
 
         <div className='space-y-4'>
-          {/* 6) 미리보기 패널에는 계산된 스타일과 현재 선택 상태를 전달합니다. */}
+          {/* 6) 미리보기 패널에는 계산된 스타일을 전달합니다. */}
           <PreviewPanel
             snippet={snippet}
-            selectedTokens={selectedTokens}
             previewStyles={previewStyles}
           />
           {/* 7) 컨트롤 패널은 선택 상태와 상태 변경 함수를 받아 입력 UI를 렌더합니다. */}
