@@ -6,13 +6,20 @@ import type {
 import { alignItemsPropertyModule } from '@/features/handbook/css/properties/align-items/module';
 import { backgroundPropertyModule } from '@/features/handbook/css/properties/background/module';
 import { borderPropertyModule } from '@/features/handbook/css/properties/border/module';
+import { displayPropertyModule } from '@/features/handbook/css/properties/display/module';
 import { flexPropertyModule } from '@/features/handbook/css/properties/flex/module';
 import { heightPropertyModule } from '@/features/handbook/css/properties/height/module';
 import { justifyContentPropertyModule } from '@/features/handbook/css/properties/justify-content/module';
 import { marginPropertyModule } from '@/features/handbook/css/properties/margin/module';
+import { opacityPropertyModule } from '@/features/handbook/css/properties/opacity/module';
+import { overflowPropertyModule } from '@/features/handbook/css/properties/overflow/module';
 import { paddingPropertyModule } from '@/features/handbook/css/properties/padding/module';
+import { positionPropertyModule } from '@/features/handbook/css/properties/position/module';
 import { textPropertyModule } from '@/features/handbook/css/properties/text/module';
+import { transformPropertyModule } from '@/features/handbook/css/properties/transform/module';
+import { transitionPropertyModule } from '@/features/handbook/css/properties/transition/module';
 import { widthPropertyModule } from '@/features/handbook/css/properties/width/module';
+import { zIndexPropertyModule } from '@/features/handbook/css/properties/z-index/module';
 import { cssGroups } from '@/features/handbook/css/catalog/groupMeta';
 
 // CSS 속성 핸드북에서 노출할 전체 모듈 목록입니다.
@@ -20,12 +27,19 @@ export const cssPropertyModules: CssPropertyModule[] = [
   flexPropertyModule,
   justifyContentPropertyModule,
   alignItemsPropertyModule,
+  displayPropertyModule,
+  positionPropertyModule,
+  overflowPropertyModule,
+  zIndexPropertyModule,
   widthPropertyModule,
   heightPropertyModule,
   marginPropertyModule,
   paddingPropertyModule,
   backgroundPropertyModule,
   borderPropertyModule,
+  opacityPropertyModule,
+  transformPropertyModule,
+  transitionPropertyModule,
   textPropertyModule,
 ];
 
