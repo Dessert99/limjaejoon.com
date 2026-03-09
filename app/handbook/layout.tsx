@@ -1,7 +1,7 @@
 // 핸드북 라우트 하위 전역 스타일을 로드합니다.
-import '@/features/handbook/css/styles/handbook.css';
+import '@/features/handbook/css/common/styles/snippetPlayground.css';
 // CSS 카테고리 카드 전용 스타일을 로드합니다.
-import '@/features/handbook/css/styles/cssCard.css';
+import '@/features/handbook/css/catalog/styles/propertyCatalog.css';
 // 핸드북 플립 카드 전용 스타일을 로드합니다.
 import '@/features/handbook/shared/styles/flip.css';
 

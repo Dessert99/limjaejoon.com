@@ -1,32 +1,55 @@
-// CSS 주제 카드 클릭 이동 링크를 만들기 위해 사용합니다.
 import Link from 'next/link';
 
-// 기존 CSS 학습 카테고리 데이터를 재사용합니다.
-import { handbookCategories } from '@/features/handbook/css/categoryRepository';
+import { groupedCssPropertyCards } from '@/features/handbook/css/catalog/propertyCatalog';
 
-// CSS 핸드북 목록 페이지: 세부 slug 진입용 주제 카드를 제공합니다.
+// CSS 속성 목록 페이지: 대분류별로 속성 카드를 렌더합니다.
 export default function HandbookCssPage() {
-  // CSS 카테고리 목록 화면을 렌더합니다.
   return (
-    <main className='mx-auto min-h-screen w-full max-w-6xl px-4 pt-28 pb-14 md:px-6'>
-      {/* CSS 카드 전용 스타일 클래스(cssCard.css)를 적용한 카드 그리드입니다. */}
-      <section className='css-topic-grid mt-6'>
-        {/* 기존 CSS 주제 데이터 배열을 카드 목록으로 렌더합니다. */}
-        {handbookCategories.map((category) => (
-          <Link
-            key={category.slug}
-            href={`/handbook/css/${category.slug}`}
-            className='css-topic-card'>
-            <h2 className='text-2xl font-semibold text-text-primary'>
-              {category.title}
-              <span className='ml-2 text-base font-medium text-text-muted'>
-                ({category.intentHint})
-              </span>
-            </h2>
+    <main className='mx-auto min-h-screen w-full max-w-6xl pb-14 md:px-6'>
+      <header className='mb-8'>
+        <p className='text-xs font-semibold uppercase tracking-widest text-accent-strong'>
+          CSS Property Handbook
+        </p>
+        <h1 className='mt-2 text-3xl font-semibold text-text-primary md:text-4xl'>
+          CSS 속성 분류
+        </h1>
+      </header>
 
-            <p className='css-topic-desc'>{category.description}</p>
-          </Link>
-        ))}
+      <section className='space-y-10'>
+        {groupedCssPropertyCards.map(({ group, cards }) => {
+          if (!cards.length) {
+            return null;
+          }
+
+          return (
+            <article key={group.slug}>
+              <header className='mb-4'>
+                <h2 className='text-xl font-semibold text-text-primary'>
+                  {group.label}
+                </h2>
+                {group.description ? (
+                  <p className='mt-1 text-sm text-text-secondary'>
+                    {group.description}
+                  </p>
+                ) : null}
+              </header>
+
+              <div className='css-topic-grid'>
+                {cards.map((card) => (
+                  <Link
+                    key={card.slug}
+                    href={`/handbook/css/${card.slug}`}
+                    className='css-topic-card'>
+                    <h3 className='text-2xl font-semibold text-text-primary'>
+                      {card.title}
+                    </h3>
+                    <p className='css-topic-desc'>{card.intent}</p>
+                  </Link>
+                ))}
+              </div>
+            </article>
+          );
+        })}
       </section>
     </main>
   );

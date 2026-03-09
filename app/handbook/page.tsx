@@ -1,7 +1,7 @@
-import { CssCard } from '@/features/handbook/css/components/CssCard';
-import { HtmlCard } from '@/features/handbook/html/components/HtmlCard';
-import { JsCard } from '@/features/handbook/js/components/JsCard';
-import { TsCard } from '@/features/handbook/ts/components/TsCard';
+import { CssCard } from '@/features/handbook/shared/components/cards/CssCard';
+import { HtmlCard } from '@/features/handbook/shared/components/cards/HtmlCard';
+import { JsCard } from '@/features/handbook/shared/components/cards/JsCard';
+import { TsCard } from '@/features/handbook/shared/components/cards/TsCard';
 
 export default function HandbookPage() {
   return (
