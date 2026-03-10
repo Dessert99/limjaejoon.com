@@ -23,6 +23,19 @@ const replaceCssDeclaration = (
   return cssCode.replace(pattern, `$1${value}$3`);
 };
 
+const replaceCssDeclarationInSelector = (
+  cssCode: string,
+  selector: string,
+  property: string,
+  value: string
+): string => {
+  const pattern = new RegExp(
+    `(${escapeRegExp(selector)}\\s*\\{[^}]*?)(${escapeRegExp(property)}\\s*:\\s*)([^;]+)(;)`
+  );
+
+  return cssCode.replace(pattern, `$1$2${value}$4`);
+};
+
 const getActiveToken = (
   controls: SnippetControl[],
   selectedTokens: Record<string, string>,
@@ -56,11 +69,17 @@ export const computeDisplayCssCode = (
     }
 
     for (const declaration of activeOption.cssDeclarations) {
-      nextCode = replaceCssDeclaration(
-        nextCode,
-        declaration.property,
-        declaration.value
-      );
+      if (declaration.selector) {
+        nextCode = replaceCssDeclarationInSelector(
+          nextCode,
+          declaration.selector,
+          declaration.property,
+          declaration.value
+        );
+        continue;
+      }
+
+      nextCode = replaceCssDeclaration(nextCode, declaration.property, declaration.value);
     }
   }
 

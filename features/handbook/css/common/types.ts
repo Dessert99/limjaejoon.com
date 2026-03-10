@@ -7,6 +7,7 @@ export type CssGroupSlug =
   | 'layout'
   | 'visual'
   | 'typography'
+  | 'units'
   | 'motion';
 
 // 목록 화면에서 대분류를 렌더할 때 사용하는 메타 구조입니다.
@@ -27,6 +28,7 @@ export interface SnippetControlOption {
   label: string;
   styleToken: string;
   cssDeclarations?: Array<{
+    selector?: string;
     property: string;
     value: string;
   }>;

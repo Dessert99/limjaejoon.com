@@ -23,6 +23,12 @@ import { positionPropertyModule } from '@/features/handbook/css/properties/posit
 import { textAlignPropertyModule } from '@/features/handbook/css/properties/text-align/module';
 import { transformPropertyModule } from '@/features/handbook/css/properties/transform/module';
 import { transitionPropertyModule } from '@/features/handbook/css/properties/transition/module';
+import { unitEmPropertyModule } from '@/features/handbook/css/properties/unit-em/module';
+import { unitPercentPropertyModule } from '@/features/handbook/css/properties/unit-percent/module';
+import { unitPxPropertyModule } from '@/features/handbook/css/properties/unit-px/module';
+import { unitRemPropertyModule } from '@/features/handbook/css/properties/unit-rem/module';
+import { unitVhPropertyModule } from '@/features/handbook/css/properties/unit-vh/module';
+import { unitVwPropertyModule } from '@/features/handbook/css/properties/unit-vw/module';
 import { widthPropertyModule } from '@/features/handbook/css/properties/width/module';
 import { zIndexPropertyModule } from '@/features/handbook/css/properties/z-index/module';
 import { cssGroups } from '@/features/handbook/css/catalog/groupMeta';
@@ -48,6 +54,12 @@ export const cssPropertyModules: CssPropertyModule[] = [
   fontPropertyModule,
   textAlignPropertyModule,
   lineHeightPropertyModule,
+  unitPxPropertyModule,
+  unitPercentPropertyModule,
+  unitEmPropertyModule,
+  unitRemPropertyModule,
+  unitVwPropertyModule,
+  unitVhPropertyModule,
   transformPropertyModule,
   transitionPropertyModule,
   animationPropertyModule,
