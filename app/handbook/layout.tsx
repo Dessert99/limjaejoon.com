@@ -2,6 +2,8 @@
 import '@/features/handbook/css/common/styles/snippetPlayground.css';
 // CSS 카테고리 카드 전용 스타일을 로드합니다.
 import '@/features/handbook/css/catalog/styles/propertyCatalog.css';
+// animation 핸드북 미리보기 keyframes 스타일을 로드합니다.
+import '@/features/handbook/css/properties/animation/styles/animationPreview.css';
 // 핸드북 플립 카드 전용 스타일을 로드합니다.
 import '@/features/handbook/shared/styles/flip.css';
 

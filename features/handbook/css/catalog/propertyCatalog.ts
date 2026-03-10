@@ -4,9 +4,13 @@ import type {
   CssPropertyModule,
 } from '@/features/handbook/css/common/types';
 import { alignItemsPropertyModule } from '@/features/handbook/css/properties/align-items/module';
+import { animationPropertyModule } from '@/features/handbook/css/properties/animation/module';
 import { backgroundPropertyModule } from '@/features/handbook/css/properties/background/module';
+import { backdropFilterPropertyModule } from '@/features/handbook/css/properties/backdrop-filter/module';
 import { borderPropertyModule } from '@/features/handbook/css/properties/border/module';
+import { clipPathPropertyModule } from '@/features/handbook/css/properties/clip-path/module';
 import { displayPropertyModule } from '@/features/handbook/css/properties/display/module';
+import { filterPropertyModule } from '@/features/handbook/css/properties/filter/module';
 import { flexPropertyModule } from '@/features/handbook/css/properties/flex/module';
 import { heightPropertyModule } from '@/features/handbook/css/properties/height/module';
 import { justifyContentPropertyModule } from '@/features/handbook/css/properties/justify-content/module';
@@ -38,8 +42,12 @@ export const cssPropertyModules: CssPropertyModule[] = [
   backgroundPropertyModule,
   borderPropertyModule,
   opacityPropertyModule,
+  filterPropertyModule,
+  backdropFilterPropertyModule,
+  clipPathPropertyModule,
   transformPropertyModule,
   transitionPropertyModule,
+  animationPropertyModule,
   textPropertyModule,
 ];
 
