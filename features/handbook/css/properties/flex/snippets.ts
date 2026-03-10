@@ -37,7 +37,7 @@ export const flexSnippets: HandbookSnippet[] = [
     htmlCode:
       '<div class="container">\n  <!-- 1. 첫 번째 박스 -->\n  <div class="item">A</div>\n  <!-- 2. 두 번째 박스 -->\n  <div class="item">B</div>\n  <!-- 3. 세 번째 박스 -->\n  <div class="item">C</div>\n</div>',
     cssCode:
-      '/* 1. 부모를 Flex 컨테이너로 지정 */\n.container {\n  display: flex;\n\n  /* 2. row(가로) 또는 column(세로) */\n  flex-direction: row;\n}',
+      '/* 1. 부모를 Flex 컨테이너로 지정 */\n.container {\n  display: flex;\n  background: rgba(251, 146, 60, 0.16);\n\n  /* 2. row(가로) 또는 column(세로) */\n  flex-direction: row;\n}',
     controls: [
       control('flex-direction', '배치 방향', 'container', 'flex-direction-row', [
         option('row', 'row (가로)', 'flex-direction-row', [
@@ -64,7 +64,7 @@ export const flexSnippets: HandbookSnippet[] = [
     htmlCode:
       '<div class="container">\n  <div class="item">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
     cssCode:
-      '/* 1. 주축(main axis) 정렬 */\n.container {\n  display: flex;\n  justify-content: flex-start;\n}',
+      '/* 1. 주축(main axis) 정렬 */\n.container {\n  display: flex;\n  background: rgba(251, 146, 60, 0.16);\n  justify-content: flex-start;\n}',
     controls: [
       control('justify-content', '가로축 정렬', 'container', 'justify-start', [
         option('start', 'flex-start', 'justify-start', [
@@ -94,9 +94,9 @@ export const flexSnippets: HandbookSnippet[] = [
     htmlCode:
       '<div class="container">\n  <div class="item">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
     cssCode:
-      '/* 1. 교차축(cross axis) 정렬 */\n.container {\n  display: flex;\n  align-items: center;\n}',
+      '/* 1. 교차축(cross axis) 정렬 */\n.container {\n  display: flex;\n  background: rgba(251, 146, 60, 0.16);\n  align-items: flex-start;\n}',
     controls: [
-      control('align-items', '세로축 정렬', 'container', 'align-center', [
+      control('align-items', '세로축 정렬', 'container', 'align-start', [
         option('start', 'flex-start', 'align-start', [
           { property: 'align-items', value: 'flex-start' },
         ]),
@@ -124,7 +124,7 @@ export const flexSnippets: HandbookSnippet[] = [
     htmlCode:
       '<div class="container">\n  <div class="item">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n  <div class="item">D</div>\n  <div class="item">E</div>\n  <div class="item">F</div>\n  <div class="item">G</div>\n  <div class="item">H</div>\n  <div class="item">I</div>\n</div>',
     cssCode:
-      '/* 1. 줄바꿈 허용 */\n.container {\n  display: flex;\n  flex-wrap: wrap;\n\n  /* 2. 아이템 간격 */\n  gap: 8px;\n\n  /* 3. 여러 줄 정렬 */\n  align-content: flex-start;\n}',
+      '/* 1. 줄바꿈 허용 */\n.container {\n  display: flex;\n  background: rgba(251, 146, 60, 0.16);\n  flex-wrap: wrap;\n\n  /* 2. 아이템 간격 */\n  gap: 8px;\n\n  /* 3. 여러 줄 정렬 */\n  align-content: flex-start;\n}',
     controls: [
       control('flex-wrap', '줄바꿈', 'container', 'flex-wrap', [
         option('nowrap', 'nowrap', 'flex-nowrap', [
@@ -171,102 +171,12 @@ export const flexSnippets: HandbookSnippet[] = [
     },
   },
   {
-    id: 'flex-grow',
-    title: '남는 공간 분배 (flex-grow)',
-    htmlCode:
-      '<div class="container">\n  <div class="item item-a">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
-    cssCode:
-      '/* 1. Flex 컨테이너 */\n.container {\n  display: flex;\n  gap: 10px;\n}\n\n/* 2. 공통 아이템 기본값 */\n.item {\n  flex: 0 1 90px;\n}\n\n/* 3. B는 grow 1 고정 */\n.item:nth-child(2) {\n  flex: 1 1 90px;\n}\n\n/* 4. item-a grow만 토글 */\n.item-a {\n  flex-grow: 1;\n}',
-    controls: [
-      control('flex-grow', 'item A grow', 'itemA', 'flex-grow-1', [
-        option('grow0', '0 (확장 안함)', 'flex-grow-0', [
-          { property: 'flex-grow', value: '0' },
-        ]),
-        option('grow1', '1 (B와 동일)', 'flex-grow-1', [
-          { property: 'flex-grow', value: '1' },
-        ]),
-        option('grow2', '2 (B의 2배)', 'flex-grow-2', [
-          { property: 'flex-grow', value: '2' },
-        ]),
-      ]),
-    ],
-    mdnLinks: [
-      {
-        label: 'flex-grow',
-        href: 'https://developer.mozilla.org/docs/Web/CSS/flex-grow',
-      },
-    ],
-    previewPreset: {
-      presetKey: 'flex-grow',
-    },
-  },
-  {
-    id: 'flex-shrink',
-    title: '공간이 부족할 때 축소 (flex-shrink)',
-    htmlCode:
-      '<div class="container">\n  <div class="item item-a">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
-    cssCode:
-      '/* 1. 좁은 폭 컨테이너 */\n.container {\n  display: flex;\n  width: 300px;\n  gap: 8px;\n}\n\n/* 2. 공통 기준 너비 (B/C) */\n.item {\n  flex: 0 1 120px;\n}\n\n/* 3. A는 더 큰 기준 너비 */\n.item-a {\n  flex-basis: 200px;\n\n  /* 4. shrink 값만 토글 */\n  flex-shrink: 1;\n}',
-    controls: [
-      control('flex-shrink', 'item A shrink', 'itemA', 'flex-shrink-1', [
-        option('shrink0', '0', 'flex-shrink-0', [
-          { property: 'flex-shrink', value: '0' },
-        ]),
-        option('shrink1', '1', 'flex-shrink-1', [
-          { property: 'flex-shrink', value: '1' },
-        ]),
-        option('shrink2', '2', 'flex-shrink-2', [
-          { property: 'flex-shrink', value: '2' },
-        ]),
-      ]),
-    ],
-    mdnLinks: [
-      {
-        label: 'flex-shrink',
-        href: 'https://developer.mozilla.org/docs/Web/CSS/flex-shrink',
-      },
-    ],
-    previewPreset: {
-      presetKey: 'flex-shrink',
-    },
-  },
-  {
-    id: 'flex-basis',
-    title: '기본 크기 기준 (flex-basis)',
-    htmlCode:
-      '<div class="container">\n  <div class="item item-a">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
-    cssCode:
-      '/* 1. Flex 컨테이너 */\n.container {\n  display: flex;\n  gap: 10px;\n}\n\n/* 2. 공통 아이템 기본값 */\n.item {\n  flex: 0 0 auto;\n  width: 100px;\n}\n\n/* 3. item-a 기준 크기만 토글 */\n.item-a {\n  flex-basis: 120px;\n}',
-    controls: [
-      control('flex-basis', 'item A basis', 'itemA', 'flex-basis-120', [
-        option('basis80', '80px', 'flex-basis-80', [
-          { property: 'flex-basis', value: '80px' },
-        ]),
-        option('basis120', '120px', 'flex-basis-120', [
-          { property: 'flex-basis', value: '120px' },
-        ]),
-        option('basis180', '180px', 'flex-basis-180', [
-          { property: 'flex-basis', value: '180px' },
-        ]),
-      ]),
-    ],
-    mdnLinks: [
-      {
-        label: 'flex-basis',
-        href: 'https://developer.mozilla.org/docs/Web/CSS/flex-basis',
-      },
-    ],
-    previewPreset: {
-      presetKey: 'flex-basis',
-    },
-  },
-  {
     id: 'flex-order-self',
     title: '순서 변경 + 개별 정렬',
     htmlCode:
       '<div class="container">\n  <div class="item item-a">A</div>\n  <div class="item">B</div>\n  <div class="item">C</div>\n</div>',
     cssCode:
-      '/* 1. 컨테이너 기본 정렬 */\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 220px;\n  gap: 10px;\n}\n\n/* 2. item-a 개별 제어 */\n.item-a {\n  order: 0;\n  align-self: flex-start;\n}',
+      '/* 1. 컨테이너 기본 정렬 */\n.container {\n  display: flex;\n  background: rgba(251, 146, 60, 0.16);\n  align-items: flex-start;\n  min-height: 220px;\n  gap: 10px;\n}\n\n/* 2. item-a 개별 제어 */\n.item-a {\n  order: 0;\n  align-self: flex-start;\n}',
     controls: [
       control('flex-order', 'item A order', 'itemA', 'flex-order-0', [
         option('orderMinus1', '-1', 'flex-order--1', [
