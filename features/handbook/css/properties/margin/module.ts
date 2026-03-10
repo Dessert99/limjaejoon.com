@@ -4,7 +4,7 @@ import { marginSnippets } from '@/features/handbook/css/properties/margin/snippe
 
 export const marginPropertyModule: CssPropertyModule = {
   slug: 'margin',
-  group: 'layout',
+  group: 'box-model',
   title: 'margin',
   intent: '요소 바깥 여백을 조절하고 싶을 때.',
   snippets: marginSnippets,

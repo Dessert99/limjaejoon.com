@@ -4,7 +4,7 @@ import { heightSnippets } from '@/features/handbook/css/properties/height/snippe
 
 export const heightPropertyModule: CssPropertyModule = {
   slug: 'height',
-  group: 'layout',
+  group: 'box-model',
   title: 'height',
   intent: '요소 세로 높이를 정하고 싶을 때.',
   snippets: heightSnippets,

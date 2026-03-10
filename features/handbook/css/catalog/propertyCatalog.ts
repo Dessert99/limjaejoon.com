@@ -3,23 +3,24 @@ import type {
   CssPropertyCard,
   CssPropertyModule,
 } from '@/features/handbook/css/common/types';
-import { alignItemsPropertyModule } from '@/features/handbook/css/properties/align-items/module';
 import { animationPropertyModule } from '@/features/handbook/css/properties/animation/module';
 import { backgroundPropertyModule } from '@/features/handbook/css/properties/background/module';
 import { backdropFilterPropertyModule } from '@/features/handbook/css/properties/backdrop-filter/module';
 import { borderPropertyModule } from '@/features/handbook/css/properties/border/module';
 import { clipPathPropertyModule } from '@/features/handbook/css/properties/clip-path/module';
+import { colorPropertyModule } from '@/features/handbook/css/properties/color/module';
 import { displayPropertyModule } from '@/features/handbook/css/properties/display/module';
 import { filterPropertyModule } from '@/features/handbook/css/properties/filter/module';
 import { flexPropertyModule } from '@/features/handbook/css/properties/flex/module';
+import { fontPropertyModule } from '@/features/handbook/css/properties/font/module';
 import { heightPropertyModule } from '@/features/handbook/css/properties/height/module';
-import { justifyContentPropertyModule } from '@/features/handbook/css/properties/justify-content/module';
+import { lineHeightPropertyModule } from '@/features/handbook/css/properties/line-height/module';
 import { marginPropertyModule } from '@/features/handbook/css/properties/margin/module';
 import { opacityPropertyModule } from '@/features/handbook/css/properties/opacity/module';
 import { overflowPropertyModule } from '@/features/handbook/css/properties/overflow/module';
 import { paddingPropertyModule } from '@/features/handbook/css/properties/padding/module';
 import { positionPropertyModule } from '@/features/handbook/css/properties/position/module';
-import { textPropertyModule } from '@/features/handbook/css/properties/text/module';
+import { textAlignPropertyModule } from '@/features/handbook/css/properties/text-align/module';
 import { transformPropertyModule } from '@/features/handbook/css/properties/transform/module';
 import { transitionPropertyModule } from '@/features/handbook/css/properties/transition/module';
 import { widthPropertyModule } from '@/features/handbook/css/properties/width/module';
@@ -28,27 +29,28 @@ import { cssGroups } from '@/features/handbook/css/catalog/groupMeta';
 
 // CSS 속성 핸드북에서 노출할 전체 모듈 목록입니다.
 export const cssPropertyModules: CssPropertyModule[] = [
-  flexPropertyModule,
-  justifyContentPropertyModule,
-  alignItemsPropertyModule,
-  displayPropertyModule,
-  positionPropertyModule,
-  overflowPropertyModule,
-  zIndexPropertyModule,
   widthPropertyModule,
   heightPropertyModule,
   marginPropertyModule,
   paddingPropertyModule,
+  displayPropertyModule,
+  flexPropertyModule,
+  positionPropertyModule,
+  overflowPropertyModule,
+  zIndexPropertyModule,
   backgroundPropertyModule,
   borderPropertyModule,
   opacityPropertyModule,
   filterPropertyModule,
   backdropFilterPropertyModule,
   clipPathPropertyModule,
+  colorPropertyModule,
+  fontPropertyModule,
+  textAlignPropertyModule,
+  lineHeightPropertyModule,
   transformPropertyModule,
   transitionPropertyModule,
   animationPropertyModule,
-  textPropertyModule,
 ];
 
 // 상세 라우트 생성에 사용하는 slug 목록입니다.

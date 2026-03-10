@@ -4,7 +4,7 @@ import { paddingSnippets } from '@/features/handbook/css/properties/padding/snip
 
 export const paddingPropertyModule: CssPropertyModule = {
   slug: 'padding',
-  group: 'layout',
+  group: 'box-model',
   title: 'padding',
   intent: '요소 안쪽 여백을 조절하고 싶을 때.',
   snippets: paddingSnippets,

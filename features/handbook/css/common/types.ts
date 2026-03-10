@@ -2,7 +2,12 @@
 import type { CSSProperties } from 'react';
 
 // CSS 속성 대분류 slug 입니다.
-export type CssGroupSlug = 'layout' | 'visual' | 'text';
+export type CssGroupSlug =
+  | 'box-model'
+  | 'layout'
+  | 'visual'
+  | 'typography'
+  | 'motion';
 
 // 목록 화면에서 대분류를 렌더할 때 사용하는 메타 구조입니다.
 export interface CssGroupMeta {

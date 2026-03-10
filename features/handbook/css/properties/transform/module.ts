@@ -4,7 +4,7 @@ import { transformSnippets } from '@/features/handbook/css/properties/transform/
 
 export const transformPropertyModule: CssPropertyModule = {
   slug: 'transform',
-  group: 'visual',
+  group: 'motion',
   title: 'transform',
   intent: '요소의 위치, 크기, 각도를 시각적으로 변형하고 싶을 때.',
   snippets: transformSnippets,
