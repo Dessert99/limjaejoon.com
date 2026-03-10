@@ -5,7 +5,6 @@ import type {
 } from '@/features/handbook/css/common/types';
 import { animationPropertyModule } from '@/features/handbook/css/properties/animation/module';
 import { backgroundPropertyModule } from '@/features/handbook/css/properties/background/module';
-import { backdropFilterPropertyModule } from '@/features/handbook/css/properties/backdrop-filter/module';
 import { borderPropertyModule } from '@/features/handbook/css/properties/border/module';
 import { clipPathPropertyModule } from '@/features/handbook/css/properties/clip-path/module';
 import { colorPropertyModule } from '@/features/handbook/css/properties/color/module';
@@ -46,7 +45,6 @@ export const cssPropertyModules: CssPropertyModule[] = [
   borderPropertyModule,
   opacityPropertyModule,
   filterPropertyModule,
-  backdropFilterPropertyModule,
   clipPathPropertyModule,
   colorPropertyModule,
   fontPropertyModule,
