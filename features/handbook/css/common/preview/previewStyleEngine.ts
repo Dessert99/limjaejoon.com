@@ -4,7 +4,7 @@ import { composeBoxShadow } from '@/features/handbook/css/properties/border/comp
 import type {
   CssPreviewConfig,
   HandbookSnippet,
-  PreviewTarget,
+  PreviewStylePatch,
   ResolvedPreviewStyles,
 } from '@/features/handbook/css/common/types';
 
@@ -40,16 +40,16 @@ const mergeStyle = (
 
 const applyPatch = (
   styles: ResolvedPreviewStyles,
-  patch?: Partial<Record<PreviewTarget, CSSProperties>>
+  patch?: PreviewStylePatch
 ) => {
   if (!patch) {
     return styles;
   }
 
   const container = mergeStyle(styles.container, patch.container);
-  const itemA = mergeStyle(styles.itemA, patch.itemA);
-  const itemB = mergeStyle(styles.itemB, patch.itemB);
-  const itemC = mergeStyle(styles.itemC, patch.itemC);
+  const itemA = mergeStyle(mergeStyle(styles.itemA, patch.allItems), patch.itemA);
+  const itemB = mergeStyle(mergeStyle(styles.itemB, patch.allItems), patch.itemB);
+  const itemC = mergeStyle(mergeStyle(styles.itemC, patch.allItems), patch.itemC);
 
   return {
     container,

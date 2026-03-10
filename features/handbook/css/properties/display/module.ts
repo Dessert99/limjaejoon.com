@@ -6,7 +6,7 @@ export const displayPropertyModule: CssPropertyModule = {
   slug: 'display',
   group: 'layout',
   title: 'display',
-  intent: '요소가 화면에 배치되는 방식을 바꾸고 싶을 때.',
+  intent: '태그의 속성을 바꾸고 싶을 때',
   snippets: displaySnippets,
   previewConfig: displayPreviewConfig,
 };

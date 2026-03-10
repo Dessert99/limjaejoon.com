@@ -60,7 +60,9 @@ export interface HandbookSnippet {
 }
 
 // 미리보기 스타일 조각 타입입니다.
-export type PreviewStylePatch = Partial<Record<PreviewTarget, CSSProperties>>;
+export type PreviewStylePatch = Partial<Record<PreviewTarget, CSSProperties>> & {
+  allItems?: CSSProperties;
+};
 
 // styleToken -> 스타일 조각 매핑입니다.
 export type PreviewStyleTokenMap = Record<string, PreviewStylePatch>;

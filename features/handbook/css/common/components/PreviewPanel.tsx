@@ -37,10 +37,12 @@ const targetOrder: Array<'itemA' | 'itemB' | 'itemC'> = [
  * - 상태 변화에 따라 UI를 즉시 재렌더해야 합니다.
  */
 export function PreviewPanel({ snippet, previewStyles }: PreviewPanelProps) {
-  // 1) preset에 값이 없으면 기본 3개 아이템을 렌더합니다.
-  const itemCount = snippet.previewPreset.itemCount ?? 3;
-  // 2) preset 라벨이 없으면 기본 라벨 배열을 사용합니다.
+  // 1) preset 라벨이 있으면 라벨 개수를 우선해 preview/코드 개수를 맞춥니다.
   const itemLabels = snippet.previewPreset.itemLabels ?? defaultLabels;
+  // 2) 라벨이 없을 때만 itemCount를 사용하고, 둘 다 없으면 기본 3개를 렌더합니다.
+  const itemCount = snippet.previewPreset.itemLabels?.length
+    ? snippet.previewPreset.itemLabels.length
+    : (snippet.previewPreset.itemCount ?? 3);
 
   return (
     <section className='surface-dark space-y-4 p-4'>
@@ -58,7 +60,7 @@ export function PreviewPanel({ snippet, previewStyles }: PreviewPanelProps) {
           return (
             <div
               // 4-2) snippet.id + 라벨 조합으로 key를 안정적으로 구성합니다.
-              key={`${snippet.id}-${itemLabels[index] ?? defaultLabels[index] ?? String(index + 1)}`}
+              key={`${snippet.id}-${index}-${itemLabels[index] ?? defaultLabels[index] ?? String(index + 1)}`}
               className='preview-item'
               // 4-3) target에 대응하는 최종 스타일 패치를 아이템에 적용합니다.
               style={previewStyles[target]}>
