@@ -13,6 +13,7 @@ const presetStyleMap: PreviewPresetStyleMap = {
       fontSize: '16px',
     },
     itemA: {
+      fontSize: '1em',
       width: '10em',
       height: '6em',
     },
@@ -41,6 +42,7 @@ const presetStyleMap: PreviewPresetStyleMap = {
       fontSize: '18px',
     },
     itemA: {
+      fontSize: '1em',
       width: '10em',
       minHeight: '80px',
     },

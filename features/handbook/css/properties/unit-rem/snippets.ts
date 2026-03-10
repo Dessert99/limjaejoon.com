@@ -35,14 +35,20 @@ export const unitRemSnippets: HandbookSnippet[] = [
     id: 'unit-rem-box-size',
     title: '박스 크기 비교 (rem)',
     htmlCode:
-      '<div class="parent">\n  <div class="child">8rem</div>\n</div>',
+      '<div class="parent">\n  <div class="child">child box</div>\n</div>',
     cssCode:
-      '/* rem은 루트(html) font-size 기준이라 문서 전반 스케일에 유리합니다. */\n.child {\n  width: 8rem;\n  height: 5rem;\n}',
+      '/* 기본 html font-size는 16px 입니다. */\n/* rem은 루트(html) font-size 기준이라 문서 전반 스케일에 유리합니다. */\n.child {\n  width: 8rem;\n  height: 5rem;\n}',
     controls: [
       control('rem-box-size', '박스 너비', 'itemA', 'rem-box-8', [
-        option('box6', '6rem', 'rem-box-6', [{ property: 'width', value: '6rem' }]),
-        option('box8', '8rem', 'rem-box-8', [{ property: 'width', value: '8rem' }]),
-        option('box11', '11rem', 'rem-box-11', [{ property: 'width', value: '11rem' }]),
+        option('box6', '6rem (96px)', 'rem-box-6', [
+          { selector: '.child', property: 'width', value: '6rem' },
+        ]),
+        option('box8', '8rem (128px)', 'rem-box-8', [
+          { selector: '.child', property: 'width', value: '8rem' },
+        ]),
+        option('box11', '11rem (176px)', 'rem-box-11', [
+          { selector: '.child', property: 'width', value: '11rem' },
+        ]),
       ]),
     ],
     mdnLinks: [
@@ -58,7 +64,7 @@ export const unitRemSnippets: HandbookSnippet[] = [
     previewPreset: {
       presetKey: 'unit-rem-box-size',
       itemCount: 1,
-      itemLabels: ['8rem'],
+      itemLabels: ['child box'],
     },
   },
   {
@@ -67,7 +73,7 @@ export const unitRemSnippets: HandbookSnippet[] = [
     htmlCode:
       '<div class="parent">\n  <p class="child">REM text scale</p>\n</div>',
     cssCode:
-      '/* rem 기반 font-size는 컴포넌트 중첩과 관계없이 루트 기준으로 계산됩니다. */\n.child {\n  font-size: 1rem;\n}',
+      '/* 기본 html font-size는 16px 입니다. */\n/* rem 기반 font-size는 컴포넌트 중첩과 관계없이 루트 기준으로 계산됩니다. */\n.child {\n  font-size: 1rem;\n}',
     controls: [
       control('rem-text-size', 'font-size', 'itemA', 'rem-text-1', [
         option('text0875', '0.875rem', 'rem-text-0875', [
@@ -99,21 +105,21 @@ export const unitRemSnippets: HandbookSnippet[] = [
   },
   {
     id: 'unit-rem-reference',
-    title: '기준 의존성 체감 (상위 font-size 변경)',
+    title: '기준 의존성 체감 (html font-size 변경)',
     htmlCode:
-      '<div class="parent">\n  <div class="child">child width: 8rem</div>\n</div>',
+      '<div class="parent">\n  <div class="child">child box</div>\n</div>',
     cssCode:
-      '/* 상위 요소 font-size를 바꿔도 rem은 루트 기준이라 child 변화가 제한적입니다. */\n.parent {\n  font-size: 18px;\n}\n\n.child {\n  width: 8rem;\n}',
+      '/* 기본 html font-size는 16px 입니다. */\n/* html font-size를 바꾸면 rem 너비와 텍스트 크기가 함께 변합니다. */\nhtml {\n  font-size: 16px;\n}\n\n.child {\n  width: 8rem;\n  font-size: 1rem;\n}',
     controls: [
-      control('rem-parent-font-size', '상위 font-size', 'container', 'rem-parent-font-18', [
-        option('parent14', '14px', 'rem-parent-font-14', [
-          { property: 'font-size', value: '14px' },
+      control('rem-root-font-size', 'html font-size', 'container', 'rem-root-font-16', [
+        option('root14', '14px', 'rem-root-font-14', [
+          { selector: 'html', property: 'font-size', value: '14px' },
         ]),
-        option('parent18', '18px', 'rem-parent-font-18', [
-          { property: 'font-size', value: '18px' },
+        option('root16', '16px', 'rem-root-font-16', [
+          { selector: 'html', property: 'font-size', value: '16px' },
         ]),
-        option('parent24', '24px', 'rem-parent-font-24', [
-          { property: 'font-size', value: '24px' },
+        option('root24', '24px', 'rem-root-font-24', [
+          { selector: 'html', property: 'font-size', value: '24px' },
         ]),
       ]),
     ],
@@ -130,7 +136,7 @@ export const unitRemSnippets: HandbookSnippet[] = [
     previewPreset: {
       presetKey: 'unit-rem-reference',
       itemCount: 1,
-      itemLabels: ['child width: 8rem'],
+      itemLabels: ['child box'],
     },
   },
 ];

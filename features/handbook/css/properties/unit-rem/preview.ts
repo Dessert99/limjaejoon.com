@@ -36,11 +36,11 @@ const presetStyleMap: PreviewPresetStyleMap = {
       alignItems: 'center',
       justifyContent: 'center',
       minHeight: '200px',
-      fontSize: '18px',
     },
     itemA: {
-      width: '8rem',
+      width: '128px',
       minHeight: '80px',
+      fontSize: '16px',
     },
   },
 };
@@ -52,9 +52,9 @@ const tokenStyleMap: PreviewStyleTokenMap = {
   'rem-text-0875': { itemA: { fontSize: '0.875rem' } },
   'rem-text-1': { itemA: { fontSize: '1rem' } },
   'rem-text-15': { itemA: { fontSize: '1.5rem' } },
-  'rem-parent-font-14': { container: { fontSize: '14px' } },
-  'rem-parent-font-18': { container: { fontSize: '18px' } },
-  'rem-parent-font-24': { container: { fontSize: '24px' } },
+  'rem-root-font-14': { itemA: { width: '112px', fontSize: '14px' } },
+  'rem-root-font-16': { itemA: { width: '128px', fontSize: '16px' } },
+  'rem-root-font-24': { itemA: { width: '192px', fontSize: '24px' } },
 };
 
 export const unitRemPreviewConfig: CssPreviewConfig = {

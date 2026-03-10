@@ -27,8 +27,6 @@ import { unitEmPropertyModule } from '@/features/handbook/css/properties/unit-em
 import { unitPercentPropertyModule } from '@/features/handbook/css/properties/unit-percent/module';
 import { unitPxPropertyModule } from '@/features/handbook/css/properties/unit-px/module';
 import { unitRemPropertyModule } from '@/features/handbook/css/properties/unit-rem/module';
-import { unitVhPropertyModule } from '@/features/handbook/css/properties/unit-vh/module';
-import { unitVwPropertyModule } from '@/features/handbook/css/properties/unit-vw/module';
 import { widthPropertyModule } from '@/features/handbook/css/properties/width/module';
 import { zIndexPropertyModule } from '@/features/handbook/css/properties/z-index/module';
 import { cssGroups } from '@/features/handbook/css/catalog/groupMeta';
@@ -58,8 +56,6 @@ export const cssPropertyModules: CssPropertyModule[] = [
   unitPercentPropertyModule,
   unitEmPropertyModule,
   unitRemPropertyModule,
-  unitVwPropertyModule,
-  unitVhPropertyModule,
   transformPropertyModule,
   transitionPropertyModule,
   animationPropertyModule,

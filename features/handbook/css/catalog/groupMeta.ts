@@ -5,7 +5,6 @@ export const cssGroups: CssGroupMeta[] = [
   {
     slug: 'units',
     label: '크기 단위',
-    description: '절대(px), 상대(rem/em/%), 뷰포트(vw/vh) 기준을 비교합니다.',
   },
   {
     slug: 'box-model',
