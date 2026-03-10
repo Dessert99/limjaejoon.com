@@ -52,6 +52,9 @@ const tokenStyleMap: PreviewStyleTokenMap = {
   'z-index-b-1': { itemB: { zIndex: 1 } },
   'z-index-b-2': { itemB: { zIndex: 2 } },
   'z-index-b-6': { itemB: { zIndex: 6 } },
+  'z-index-c-0': { itemC: { zIndex: 0 } },
+  'z-index-c-1': { itemC: { zIndex: 1 } },
+  'z-index-c-5': { itemC: { zIndex: 5 } },
 };
 
 export const zIndexPreviewConfig: CssPreviewConfig = {
