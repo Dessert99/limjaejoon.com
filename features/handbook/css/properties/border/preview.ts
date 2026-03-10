@@ -34,6 +34,24 @@ const presetStyleMap: PreviewPresetStyleMap = {
       borderRadius: '0px',
     },
   },
+  'box-radius-corners': {
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    itemA: {
+      width: '220px',
+      minHeight: '110px',
+      borderWidth: '2px',
+      borderColor: '#6b7280',
+      borderStyle: 'solid',
+      borderTopLeftRadius: '8px',
+      borderTopRightRadius: '8px',
+      borderBottomRightRadius: '8px',
+      borderBottomLeftRadius: '8px',
+    },
+  },
   'box-shadow': {
     container: {
       display: 'flex',
@@ -67,6 +85,18 @@ const tokenStyleMap: PreviewStyleTokenMap = {
   'radius-0': { itemA: { borderRadius: '0px' } },
   'radius-16': { itemA: { borderRadius: '16px' } },
   'radius-pill': { itemA: { borderRadius: '9999px' } },
+  'radius-tl-0': { itemA: { borderTopLeftRadius: '0px' } },
+  'radius-tl-8': { itemA: { borderTopLeftRadius: '8px' } },
+  'radius-tl-16': { itemA: { borderTopLeftRadius: '16px' } },
+  'radius-tr-0': { itemA: { borderTopRightRadius: '0px' } },
+  'radius-tr-8': { itemA: { borderTopRightRadius: '8px' } },
+  'radius-tr-16': { itemA: { borderTopRightRadius: '16px' } },
+  'radius-br-0': { itemA: { borderBottomRightRadius: '0px' } },
+  'radius-br-8': { itemA: { borderBottomRightRadius: '8px' } },
+  'radius-br-16': { itemA: { borderBottomRightRadius: '16px' } },
+  'radius-bl-0': { itemA: { borderBottomLeftRadius: '0px' } },
+  'radius-bl-8': { itemA: { borderBottomLeftRadius: '8px' } },
+  'radius-bl-16': { itemA: { borderBottomLeftRadius: '16px' } },
   'shadow-dir-none': { itemA: { boxShadow: 'none' } },
   'shadow-dir-top': {
     itemA: { boxShadow: '0 -8px 18px rgba(255, 255, 255, 0.28)' },

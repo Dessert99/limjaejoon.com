@@ -1,10 +1,21 @@
 // control 타입을 입력으로 받아 CSS 표시 문자열을 계산합니다.
 import type { SnippetControl } from '@/features/handbook/css/common/types';
-import { composeBoxShadow } from '@/features/handbook/css/properties/border/compose';
+import {
+  composeBorderRadius,
+  composeBoxShadow,
+} from '@/features/handbook/css/properties/border/compose';
 
 const SHADOW_DIRECTION_CONTROL_ID = 'shadow-direction';
 const SHADOW_BLUR_CONTROL_ID = 'shadow-blur';
 const SHADOW_COLOR_CONTROL_ID = 'shadow-color';
+const BORDER_RADIUS_SHORTHAND_TOP_LEFT_CONTROL_ID =
+  'border-radius-shorthand-top-left';
+const BORDER_RADIUS_SHORTHAND_TOP_RIGHT_CONTROL_ID =
+  'border-radius-shorthand-top-right';
+const BORDER_RADIUS_SHORTHAND_BOTTOM_RIGHT_CONTROL_ID =
+  'border-radius-shorthand-bottom-right';
+const BORDER_RADIUS_SHORTHAND_BOTTOM_LEFT_CONTROL_ID =
+  'border-radius-shorthand-bottom-left';
 
 const escapeRegExp = (value: string): string => {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -104,6 +115,45 @@ export const computeDisplayCssCode = (
       nextCode,
       'box-shadow',
       composeBoxShadow(shadowDirectionToken, shadowBlurToken, shadowColorToken)
+    );
+  }
+
+  const borderRadiusTopLeftToken = getActiveToken(
+    controls,
+    selectedTokens,
+    BORDER_RADIUS_SHORTHAND_TOP_LEFT_CONTROL_ID
+  );
+  const borderRadiusTopRightToken = getActiveToken(
+    controls,
+    selectedTokens,
+    BORDER_RADIUS_SHORTHAND_TOP_RIGHT_CONTROL_ID
+  );
+  const borderRadiusBottomRightToken = getActiveToken(
+    controls,
+    selectedTokens,
+    BORDER_RADIUS_SHORTHAND_BOTTOM_RIGHT_CONTROL_ID
+  );
+  const borderRadiusBottomLeftToken = getActiveToken(
+    controls,
+    selectedTokens,
+    BORDER_RADIUS_SHORTHAND_BOTTOM_LEFT_CONTROL_ID
+  );
+
+  if (
+    borderRadiusTopLeftToken &&
+    borderRadiusTopRightToken &&
+    borderRadiusBottomRightToken &&
+    borderRadiusBottomLeftToken
+  ) {
+    nextCode = replaceCssDeclaration(
+      nextCode,
+      'border-radius',
+      composeBorderRadius(
+        borderRadiusTopLeftToken,
+        borderRadiusTopRightToken,
+        borderRadiusBottomRightToken,
+        borderRadiusBottomLeftToken
+      )
     );
   }
 

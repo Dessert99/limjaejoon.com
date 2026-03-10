@@ -71,7 +71,7 @@ export const opacitySnippets: HandbookSnippet[] = [
     htmlCode:
       '<div class="layer front">Front Layer</div>\n<div class="layer back">Back Layer</div>',
     cssCode:
-      '/* 앞 레이어 투명도에 따라 뒤 레이어가 얼마나 보이는지 확인합니다. */\n.front {\n  opacity: 0.75;\n}',
+      '/* 앞 레이어 투명도와 색상을 함께 바꿔 뒤 레이어 가시성을 비교합니다. */\n.front {\n  opacity: 0.75;\n  background: blue;\n}',
     controls: [
       control('front-opacity', 'front opacity', 'itemA', 'front-opacity-75', [
         option('front100', '1.0', 'front-opacity-100', [
@@ -89,13 +89,13 @@ export const opacitySnippets: HandbookSnippet[] = [
       ]),
       control('front-color', 'front color', 'itemA', 'front-color-blue', [
         option('frontBlue', 'blue', 'front-color-blue', [
-          { property: 'background', value: 'blue' },
+          { selector: '.front', property: 'background', value: 'blue' },
         ]),
         option('frontRed', 'red', 'front-color-red', [
-          { property: 'background', value: 'red' },
+          { selector: '.front', property: 'background', value: 'red' },
         ]),
         option('frontBlack', 'black', 'front-color-black', [
-          { property: 'background', value: 'black' },
+          { selector: '.front', property: 'background', value: 'black' },
         ]),
       ]),
     ],

@@ -40,3 +40,33 @@ export const composeBoxShadow = (
   const offset = offsetMap[directionToken] ?? offsetMap['shadow-dir-bottom'];
   return `${offset.x} ${offset.y} ${blur} ${color}`;
 };
+
+const radiusTokenValueMap: Record<string, string> = {
+  'radius-tl-0': '0px',
+  'radius-tl-8': '8px',
+  'radius-tl-16': '16px',
+  'radius-tr-0': '0px',
+  'radius-tr-8': '8px',
+  'radius-tr-16': '16px',
+  'radius-br-0': '0px',
+  'radius-br-8': '8px',
+  'radius-br-16': '16px',
+  'radius-bl-0': '0px',
+  'radius-bl-8': '8px',
+  'radius-bl-16': '16px',
+};
+
+// 코너별 토큰을 border-radius 단축 속성 문자열로 조합합니다.
+export const composeBorderRadius = (
+  topLeftToken: string,
+  topRightToken: string,
+  bottomRightToken: string,
+  bottomLeftToken: string
+): string => {
+  const topLeft = radiusTokenValueMap[topLeftToken] ?? '8px';
+  const topRight = radiusTokenValueMap[topRightToken] ?? '8px';
+  const bottomRight = radiusTokenValueMap[bottomRightToken] ?? '8px';
+  const bottomLeft = radiusTokenValueMap[bottomLeftToken] ?? '8px';
+
+  return `${topLeft} ${topRight} ${bottomRight} ${bottomLeft}`;
+};
