@@ -1,6 +1,14 @@
 import type { CSSProperties } from 'react';
 
 import { composeBoxShadow } from '@/features/handbook/css/properties/border/compose';
+import {
+  composeClipPathCircle,
+  composeClipPathEllipse,
+  composeClipPathPath,
+  composeClipPathPolygon,
+  composeClipPathRect,
+  composeClipPathXywh,
+} from '@/features/handbook/css/properties/clip-path/compose';
 import type {
   CssPreviewConfig,
   HandbookSnippet,
@@ -11,6 +19,37 @@ import type {
 const SHADOW_DIRECTION_CONTROL_ID = 'shadow-direction';
 const SHADOW_BLUR_CONTROL_ID = 'shadow-blur';
 const SHADOW_COLOR_CONTROL_ID = 'shadow-color';
+const CLIP_CIRCLE_RADIUS_CONTROL_ID = 'clip-circle-radius';
+const CLIP_CIRCLE_CENTER_X_CONTROL_ID = 'clip-circle-center-x';
+const CLIP_CIRCLE_CENTER_Y_CONTROL_ID = 'clip-circle-center-y';
+const CLIP_ELLIPSE_RADIUS_X_CONTROL_ID = 'clip-ellipse-radius-x';
+const CLIP_ELLIPSE_RADIUS_Y_CONTROL_ID = 'clip-ellipse-radius-y';
+const CLIP_ELLIPSE_CENTER_X_CONTROL_ID = 'clip-ellipse-center-x';
+const CLIP_ELLIPSE_CENTER_Y_CONTROL_ID = 'clip-ellipse-center-y';
+const CLIP_POLYGON_P1_X_CONTROL_ID = 'clip-polygon-p1-x';
+const CLIP_POLYGON_P1_Y_CONTROL_ID = 'clip-polygon-p1-y';
+const CLIP_POLYGON_P2_X_CONTROL_ID = 'clip-polygon-p2-x';
+const CLIP_POLYGON_P2_Y_CONTROL_ID = 'clip-polygon-p2-y';
+const CLIP_POLYGON_P3_X_CONTROL_ID = 'clip-polygon-p3-x';
+const CLIP_POLYGON_P3_Y_CONTROL_ID = 'clip-polygon-p3-y';
+const CLIP_POLYGON_P4_X_CONTROL_ID = 'clip-polygon-p4-x';
+const CLIP_POLYGON_P4_Y_CONTROL_ID = 'clip-polygon-p4-y';
+const CLIP_PATH_M_X_CONTROL_ID = 'clip-path-m-x';
+const CLIP_PATH_M_Y_CONTROL_ID = 'clip-path-m-y';
+const CLIP_PATH_L2_X_CONTROL_ID = 'clip-path-l2-x';
+const CLIP_PATH_L2_Y_CONTROL_ID = 'clip-path-l2-y';
+const CLIP_PATH_L3_X_CONTROL_ID = 'clip-path-l3-x';
+const CLIP_PATH_L3_Y_CONTROL_ID = 'clip-path-l3-y';
+const CLIP_PATH_L4_X_CONTROL_ID = 'clip-path-l4-x';
+const CLIP_PATH_L4_Y_CONTROL_ID = 'clip-path-l4-y';
+const CLIP_RECT_TOP_CONTROL_ID = 'clip-rect-top';
+const CLIP_RECT_RIGHT_CONTROL_ID = 'clip-rect-right';
+const CLIP_RECT_BOTTOM_CONTROL_ID = 'clip-rect-bottom';
+const CLIP_RECT_LEFT_CONTROL_ID = 'clip-rect-left';
+const CLIP_XYWH_X_CONTROL_ID = 'clip-xywh-x';
+const CLIP_XYWH_Y_CONTROL_ID = 'clip-xywh-y';
+const CLIP_XYWH_WIDTH_CONTROL_ID = 'clip-xywh-width';
+const CLIP_XYWH_HEIGHT_CONTROL_ID = 'clip-xywh-height';
 
 const emptyStyles = (): ResolvedPreviewStyles => {
   const container: CSSProperties = {};
@@ -100,6 +139,173 @@ export const computePreviewStyles = (
           shadowDirectionToken,
           shadowBlurToken,
           shadowColorToken
+        ),
+      },
+    };
+  }
+
+  const clipCircleRadiusToken = activeTokens[CLIP_CIRCLE_RADIUS_CONTROL_ID];
+  const clipCircleCenterXToken = activeTokens[CLIP_CIRCLE_CENTER_X_CONTROL_ID];
+  const clipCircleCenterYToken = activeTokens[CLIP_CIRCLE_CENTER_Y_CONTROL_ID];
+
+  if (clipCircleRadiusToken && clipCircleCenterXToken && clipCircleCenterYToken) {
+    styles = {
+      ...styles,
+      itemA: {
+        ...styles.itemA,
+        clipPath: composeClipPathCircle(
+          clipCircleRadiusToken,
+          clipCircleCenterXToken,
+          clipCircleCenterYToken
+        ),
+      },
+    };
+  }
+
+  const clipEllipseRadiusXToken = activeTokens[CLIP_ELLIPSE_RADIUS_X_CONTROL_ID];
+  const clipEllipseRadiusYToken = activeTokens[CLIP_ELLIPSE_RADIUS_Y_CONTROL_ID];
+  const clipEllipseCenterXToken = activeTokens[CLIP_ELLIPSE_CENTER_X_CONTROL_ID];
+  const clipEllipseCenterYToken = activeTokens[CLIP_ELLIPSE_CENTER_Y_CONTROL_ID];
+
+  if (
+    clipEllipseRadiusXToken &&
+    clipEllipseRadiusYToken &&
+    clipEllipseCenterXToken &&
+    clipEllipseCenterYToken
+  ) {
+    styles = {
+      ...styles,
+      itemA: {
+        ...styles.itemA,
+        clipPath: composeClipPathEllipse(
+          clipEllipseRadiusXToken,
+          clipEllipseRadiusYToken,
+          clipEllipseCenterXToken,
+          clipEllipseCenterYToken
+        ),
+      },
+    };
+  }
+
+  const clipPolygonP1XToken = activeTokens[CLIP_POLYGON_P1_X_CONTROL_ID];
+  const clipPolygonP1YToken = activeTokens[CLIP_POLYGON_P1_Y_CONTROL_ID];
+  const clipPolygonP2XToken = activeTokens[CLIP_POLYGON_P2_X_CONTROL_ID];
+  const clipPolygonP2YToken = activeTokens[CLIP_POLYGON_P2_Y_CONTROL_ID];
+  const clipPolygonP3XToken = activeTokens[CLIP_POLYGON_P3_X_CONTROL_ID];
+  const clipPolygonP3YToken = activeTokens[CLIP_POLYGON_P3_Y_CONTROL_ID];
+  const clipPolygonP4XToken = activeTokens[CLIP_POLYGON_P4_X_CONTROL_ID];
+  const clipPolygonP4YToken = activeTokens[CLIP_POLYGON_P4_Y_CONTROL_ID];
+
+  if (
+    clipPolygonP1XToken &&
+    clipPolygonP1YToken &&
+    clipPolygonP2XToken &&
+    clipPolygonP2YToken &&
+    clipPolygonP3XToken &&
+    clipPolygonP3YToken &&
+    clipPolygonP4XToken &&
+    clipPolygonP4YToken
+  ) {
+    styles = {
+      ...styles,
+      itemA: {
+        ...styles.itemA,
+        clipPath: composeClipPathPolygon(
+          clipPolygonP1XToken,
+          clipPolygonP1YToken,
+          clipPolygonP2XToken,
+          clipPolygonP2YToken,
+          clipPolygonP3XToken,
+          clipPolygonP3YToken,
+          clipPolygonP4XToken,
+          clipPolygonP4YToken
+        ),
+      },
+    };
+  }
+
+  const clipPathMXToken = activeTokens[CLIP_PATH_M_X_CONTROL_ID];
+  const clipPathMYToken = activeTokens[CLIP_PATH_M_Y_CONTROL_ID];
+  const clipPathL2XToken = activeTokens[CLIP_PATH_L2_X_CONTROL_ID];
+  const clipPathL2YToken = activeTokens[CLIP_PATH_L2_Y_CONTROL_ID];
+  const clipPathL3XToken = activeTokens[CLIP_PATH_L3_X_CONTROL_ID];
+  const clipPathL3YToken = activeTokens[CLIP_PATH_L3_Y_CONTROL_ID];
+  const clipPathL4XToken = activeTokens[CLIP_PATH_L4_X_CONTROL_ID];
+  const clipPathL4YToken = activeTokens[CLIP_PATH_L4_Y_CONTROL_ID];
+
+  if (
+    clipPathMXToken &&
+    clipPathMYToken &&
+    clipPathL2XToken &&
+    clipPathL2YToken &&
+    clipPathL3XToken &&
+    clipPathL3YToken &&
+    clipPathL4XToken &&
+    clipPathL4YToken
+  ) {
+    styles = {
+      ...styles,
+      itemA: {
+        ...styles.itemA,
+        clipPath: composeClipPathPath(
+          clipPathMXToken,
+          clipPathMYToken,
+          clipPathL2XToken,
+          clipPathL2YToken,
+          clipPathL3XToken,
+          clipPathL3YToken,
+          clipPathL4XToken,
+          clipPathL4YToken
+        ),
+      },
+    };
+  }
+
+  const clipRectTopToken = activeTokens[CLIP_RECT_TOP_CONTROL_ID];
+  const clipRectRightToken = activeTokens[CLIP_RECT_RIGHT_CONTROL_ID];
+  const clipRectBottomToken = activeTokens[CLIP_RECT_BOTTOM_CONTROL_ID];
+  const clipRectLeftToken = activeTokens[CLIP_RECT_LEFT_CONTROL_ID];
+
+  if (
+    clipRectTopToken &&
+    clipRectRightToken &&
+    clipRectBottomToken &&
+    clipRectLeftToken
+  ) {
+    styles = {
+      ...styles,
+      itemA: {
+        ...styles.itemA,
+        clipPath: composeClipPathRect(
+          clipRectTopToken,
+          clipRectRightToken,
+          clipRectBottomToken,
+          clipRectLeftToken
+        ),
+      },
+    };
+  }
+
+  const clipXywhXToken = activeTokens[CLIP_XYWH_X_CONTROL_ID];
+  const clipXywhYToken = activeTokens[CLIP_XYWH_Y_CONTROL_ID];
+  const clipXywhWidthToken = activeTokens[CLIP_XYWH_WIDTH_CONTROL_ID];
+  const clipXywhHeightToken = activeTokens[CLIP_XYWH_HEIGHT_CONTROL_ID];
+
+  if (
+    clipXywhXToken &&
+    clipXywhYToken &&
+    clipXywhWidthToken &&
+    clipXywhHeightToken
+  ) {
+    styles = {
+      ...styles,
+      itemA: {
+        ...styles.itemA,
+        clipPath: composeClipPathXywh(
+          clipXywhXToken,
+          clipXywhYToken,
+          clipXywhWidthToken,
+          clipXywhHeightToken
         ),
       },
     };
