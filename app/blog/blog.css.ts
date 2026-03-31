@@ -1,88 +1,55 @@
-import { style } from '@vanilla-extract/css';
-import { vars } from '@/styles/theme.css';
-import { surfaceCard } from '@/styles/utils.css';
 import { bp } from '@/styles/breakpoints';
+import { vars } from '@/styles/theme.css';
+import { style } from '@vanilla-extract/css';
 
 export const main = style({
   margin: '0 auto',
   minHeight: '100vh',
   width: '100%',
-  maxWidth: '80rem',
-  paddingLeft: '1rem',
-  paddingRight: '1rem',
-  paddingTop: '7rem',
-  paddingBottom: '2.5rem',
+  maxWidth: '72rem',
+  paddingLeft: vars.spacing.pagePadMobile,
+  paddingRight: vars.spacing.pagePadMobile,
+  paddingBottom: '4rem',
   '@media': {
     [bp.md]: {
-      paddingLeft: '1.5rem',
-      paddingRight: '1.5rem',
+      paddingLeft: vars.spacing.pagePad,
+      paddingRight: vars.spacing.pagePad,
     },
   },
 });
 
-export const header = style([
-  surfaceCard,
-  {
-    padding: '1.5rem',
-    '@media': {
-      [bp.md]: {
-        padding: '2.5rem',
-      },
-    },
-  },
-]);
-
-export const label = style({
-  fontSize: '0.75rem',
-  fontWeight: 600,
-  textTransform: 'uppercase',
-  letterSpacing: '0.1em',
-  color: vars.color.accentStrong,
+export const header = style({
+  marginBottom: '2rem',
+  paddingBottom: '1.5rem',
+  borderBottom: `1px solid ${vars.color.lineSoft}`,
 });
 
 export const heading = style({
-  marginTop: '0.75rem',
-  fontSize: '1.875rem',
-  fontWeight: 600,
-  letterSpacing: '-0.025em',
+  fontSize: vars.fontSize['3xl'],
+  fontWeight: 700,
   color: vars.color.textPrimary,
+  letterSpacing: '-0.02em',
   '@media': {
     [bp.md]: {
-      fontSize: '3rem',
+      fontSize: vars.fontSize['4xl'],
     },
   },
 });
 
 export const description = style({
-  marginTop: '1rem',
-  maxWidth: '48rem',
-  fontSize: '0.875rem',
-  lineHeight: '1.75rem',
-  color: vars.color.textSecondary,
-  '@media': {
-    [bp.md]: {
-      fontSize: '1rem',
-    },
-  },
-});
-
-export const grid = style({
-  marginTop: '2rem',
-  display: 'grid',
-  gap: '1rem',
-  '@media': {
-    [bp.md]: {
-      gridTemplateColumns: 'repeat(2, 1fr)',
-    },
-    [bp.xl]: {
-      gridTemplateColumns: 'repeat(3, 1fr)',
-    },
-  },
-});
-
-export const emptyText = style({
-  marginTop: '3rem',
-  textAlign: 'center',
-  fontSize: '0.875rem',
+  marginTop: '0.5rem',
+  fontSize: vars.fontSize.sm,
   color: vars.color.textMuted,
+  lineHeight: '1.6',
+});
+
+export const layout = style({
+  display: 'grid',
+  gap: '1.5rem',
+  '@media': {
+    [bp.md]: {
+      gridTemplateColumns: '11rem 1fr',
+      alignItems: 'start',
+    },
+  },
 });
