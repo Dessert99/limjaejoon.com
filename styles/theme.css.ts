@@ -26,19 +26,19 @@ export const [darkTheme, vars] = createTheme({
     full: '9999px',
   },
   fontSize: {
-    xs:   '0.75rem',   // label, caption
-    sm:   '0.875rem',  // small body
-    base: '1rem',      // body
-    lg:   '1.125rem',  // slightly large
-    xl:   '1.25rem',   // subtitle
-    '2xl': '1.5rem',   // section title
+    xs: '0.75rem', // label, caption
+    sm: '0.875rem', // small body
+    base: '1rem', // body
+    lg: '1.125rem', // slightly large
+    xl: '1.25rem', // subtitle
+    '2xl': '1.5rem', // section title
     '3xl': '1.875rem', // page heading (mobile)
-    '4xl': '2.25rem',  // page heading (desktop)
-    '5xl': '3rem',     // hero heading
+    '4xl': '2.25rem', // page heading (desktop)
+    '5xl': '3rem', // hero heading
   },
   spacing: {
-    pagePadMobile: '1rem',  // page horizontal padding (mobile)
-    pagePad: '1.5rem',      // page horizontal padding (≥md)
+    pagePadMobile: '1rem', // page horizontal padding (mobile)
+    pagePad: '6rem', // page horizontal padding (≥md)
   },
 });
 
@@ -68,11 +68,11 @@ export const lightTheme = createTheme(vars, {
     full: '9999px',
   },
   fontSize: {
-    xs:   '0.75rem',
-    sm:   '0.875rem',
+    xs: '0.75rem',
+    sm: '0.875rem',
     base: '1rem',
-    lg:   '1.125rem',
-    xl:   '1.25rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
     '2xl': '1.5rem',
     '3xl': '1.875rem',
     '4xl': '2.25rem',
