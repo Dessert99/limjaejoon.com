@@ -1,6 +1,6 @@
-import { style } from '@vanilla-extract/css';
-import { vars } from '@/styles/theme.css';
 import { bp } from '@/styles/breakpoints';
+import { vars } from '@/styles/theme.css';
+import { style } from '@vanilla-extract/css';
 
 export const header = style({
   position: 'fixed',
@@ -9,7 +9,8 @@ export const header = style({
   right: 0,
   zIndex: 50,
   borderBottom: `1px solid ${vars.color.lineSoft}`,
-  backgroundColor: vars.color.bgPage,
+  backgroundColor: 'rgba(18, 18, 18, 0.8)',
+  backdropFilter: 'blur(8px)',
 });
 
 export const inner = style({
@@ -19,6 +20,8 @@ export const inner = style({
   maxWidth: '80rem',
   alignItems: 'center',
   justifyContent: 'space-between',
+  paddingTop: '0.875rem',
+  paddingBottom: '0.875rem',
   paddingLeft: vars.spacing.pagePadMobile,
   paddingRight: vars.spacing.pagePadMobile,
   '@media': {
@@ -70,9 +73,18 @@ export const navLink = style({
   fontSize: vars.fontSize.sm,
   fontWeight: 600,
   color: vars.color.textSecondary,
-  transition: 'color 150ms ease',
+  textDecoration: 'none',
+  transition:
+    'color 150ms ease, border-color 150ms ease, background-color 150ms ease',
   ':hover': {
-    color: vars.color.textPrimary,
+    color: vars.color.accentStrong,
+  },
+  selectors: {
+    '&[data-active="true"]': {
+      color: vars.color.accentStrong,
+      borderColor: vars.color.accentStrong,
+      backgroundColor: vars.color.accentSoft,
+    },
   },
   '@media': {
     [bp.md]: {

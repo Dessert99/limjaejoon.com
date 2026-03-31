@@ -1,10 +1,13 @@
 'use client';
+import { usePathname } from 'next/navigation';
 import { navItems } from '@/features/navigation/config/navItems';
 import * as s from './SiteHeader.css';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export function SiteHeader() {
+  const pathname = usePathname();
+
   return (
     <header className={s.header}>
       <div className={s.inner}>
@@ -22,7 +25,11 @@ export function SiteHeader() {
           <ul className={s.navList}>
             {navItems.map((item) => (
               <li key={item.href}>
-                <Link className={s.navLink} href={item.href}>
+                <Link
+                  className={s.navLink}
+                  href={item.href}
+                  data-active={pathname === item.href || pathname.startsWith(item.href + '/')}
+                >
                   {item.label}
                 </Link>
               </li>

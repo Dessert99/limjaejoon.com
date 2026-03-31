@@ -1,5 +1,5 @@
-import { style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+import { style } from '@vanilla-extract/css';
 
 export const card = style({
   display: 'flex',
@@ -16,7 +16,7 @@ export const card = style({
 });
 
 export const cardBody = style({
-  padding: '1.25rem',
+  padding: '2rem',
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
@@ -25,10 +25,10 @@ export const cardBody = style({
 });
 
 export const title = style({
-  fontSize: vars.fontSize.lg,
+  fontSize: vars.fontSize['2xl'],
   fontWeight: 700,
   color: vars.color.textPrimary,
-  lineHeight: '1.4',
+  lineHeight: '2',
   selectors: {
     [`${card}:hover &`]: {
       color: vars.color.accentStrong,
@@ -40,7 +40,7 @@ export const description = style({
   fontSize: vars.fontSize.sm,
   color: vars.color.textMuted,
   lineHeight: '1.6',
-  overflow: 'hidden',
+  overflow: 'hidden', // 3줄 넘어가면 가려지기
   maxHeight: '4.8rem', // ~3줄
 });
 
