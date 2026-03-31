@@ -11,8 +11,8 @@ export const [darkTheme, vars] = createTheme({
     textMuted: '#a1a1aa',
     lineSoft: '#303030',
     lineStrong: '#4a4a4a',
-    accentStrong: '#eb6900',
-    accentSoft: 'rgba(235, 105, 0, 0.2)',
+    accentStrong: '#12b886',
+    accentSoft: 'rgba(18, 184, 134, 0.15)',
   },
   shadow: {
     cardSm: '0 1px 3px rgba(0, 0, 0, 0.24)',
@@ -35,6 +35,10 @@ export const [darkTheme, vars] = createTheme({
     '3xl': '1.875rem', // page heading (mobile)
     '4xl': '2.25rem',  // page heading (desktop)
     '5xl': '3rem',     // hero heading
+  },
+  spacing: {
+    pagePadMobile: '1rem',  // page horizontal padding (mobile)
+    pagePad: '1.5rem',      // page horizontal padding (≥md)
   },
 });
 
@@ -73,5 +77,9 @@ export const lightTheme = createTheme(vars, {
     '3xl': '1.875rem',
     '4xl': '2.25rem',
     '5xl': '3rem',
+  },
+  spacing: {
+    pagePadMobile: '1rem',
+    pagePad: '1.5rem',
   },
 });
