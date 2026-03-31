@@ -11,12 +11,12 @@ export const main = style({
   maxWidth: '80rem',
   alignItems: 'center',
   justifyContent: 'center',
-  paddingLeft: '1rem',
-  paddingRight: '1rem',
+  paddingLeft: vars.spacing.pagePadMobile,
+  paddingRight: vars.spacing.pagePadMobile,
   '@media': {
     [bp.md]: {
-      paddingLeft: '1.5rem',
-      paddingRight: '1.5rem',
+      paddingLeft: vars.spacing.pagePad,
+      paddingRight: vars.spacing.pagePad,
     },
   },
 });
@@ -32,7 +32,7 @@ export const card = style([
 ]);
 
 export const label = style({
-  fontSize: '0.75rem',
+  fontSize: vars.fontSize.xs,
   fontWeight: 600,
   textTransform: 'uppercase',
   letterSpacing: '0.1em',
@@ -41,14 +41,14 @@ export const label = style({
 
 export const heading = style({
   marginTop: '0.75rem',
-  fontSize: '1.875rem',
+  fontSize: vars.fontSize['3xl'],
   fontWeight: 600,
   color: vars.color.textPrimary,
 });
 
 export const body = style({
   marginTop: '0.75rem',
-  fontSize: '0.875rem',
+  fontSize: vars.fontSize.sm,
   color: vars.color.textSecondary,
 });
 
@@ -62,7 +62,7 @@ export const homeLink = style({
   paddingRight: '1rem',
   paddingTop: '0.5rem',
   paddingBottom: '0.5rem',
-  fontSize: '0.875rem',
+  fontSize: vars.fontSize.sm,
   fontWeight: 600,
   color: vars.color.accentStrong,
   transition: 'background-color 150ms ease',

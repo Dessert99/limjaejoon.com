@@ -8,26 +8,25 @@ export const main = style({
   minHeight: '100vh',
   width: '100%',
   maxWidth: '80rem',
-  paddingLeft: '1rem',
-  paddingRight: '1rem',
-  paddingTop: '2.5rem',
+  paddingLeft: vars.spacing.pagePadMobile,
+  paddingRight: vars.spacing.pagePadMobile,
   paddingBottom: '2.5rem',
   '@media': {
     [bp.md]: {
-      paddingLeft: '1.5rem',
-      paddingRight: '1.5rem',
+      paddingLeft: vars.spacing.pagePad,
+      paddingRight: vars.spacing.pagePad,
     },
   },
 });
 
 export const pageTitle = style({
-  fontSize: '1.875rem',
+  fontSize: vars.fontSize['3xl'],
   fontWeight: 600,
   letterSpacing: '-0.025em',
   color: vars.color.textPrimary,
   '@media': {
     [bp.md]: {
-      fontSize: '2.25rem',
+      fontSize: vars.fontSize['4xl'],
     },
   },
 });
@@ -84,7 +83,7 @@ export const profileInfo = style({
 });
 
 export const profileLabel = style({
-  fontSize: '0.75rem',
+  fontSize: vars.fontSize.xs,
   fontWeight: 600,
   textTransform: 'uppercase',
   letterSpacing: '0.1em',
@@ -93,12 +92,12 @@ export const profileLabel = style({
 
 export const profileName = style({
   marginTop: '0.75rem',
-  fontSize: '1.5rem',
+  fontSize: vars.fontSize['2xl'],
   fontWeight: 600,
   color: vars.color.textPrimary,
   '@media': {
     [bp.md]: {
-      fontSize: '1.875rem',
+      fontSize: vars.fontSize['3xl'],
     },
   },
 });
@@ -122,7 +121,7 @@ export const sectionCard = style([
 ]);
 
 export const sectionTitle = style({
-  fontSize: '1.25rem',
+  fontSize: vars.fontSize.xl,
   fontWeight: 600,
   color: vars.color.textPrimary,
 });
@@ -155,17 +154,17 @@ export const iconWrapper = style({
   borderRadius: vars.radius.lg,
   border: `1px solid ${vars.color.lineSoft}`,
   backgroundColor: vars.color.bgElevated,
-  fontSize: '1.5rem',
+  fontSize: vars.fontSize['2xl'],
 });
 
 export const stackName = style({
   display: 'block',
-  fontSize: '0.875rem',
+  fontSize: vars.fontSize.sm,
   fontWeight: 600,
   color: vars.color.textPrimary,
   '@media': {
     [bp.md]: {
-      fontSize: '1rem',
+      fontSize: vars.fontSize.base,
     },
   },
 });
@@ -185,7 +184,7 @@ export const activityGroup = style([
 ]);
 
 export const orgLabel = style({
-  fontSize: '0.875rem',
+  fontSize: vars.fontSize.sm,
   fontWeight: 600,
   textTransform: 'uppercase',
   letterSpacing: '0.1em',
@@ -201,11 +200,11 @@ export const roleList = style({
 });
 
 export const roleItem = style({
-  fontSize: '0.875rem',
+  fontSize: vars.fontSize.sm,
   color: vars.color.textSecondary,
   '@media': {
     [bp.md]: {
-      fontSize: '1rem',
+      fontSize: vars.fontSize.base,
     },
   },
 });

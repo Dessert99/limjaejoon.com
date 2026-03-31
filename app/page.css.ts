@@ -1,17 +1,16 @@
-import { style } from '@vanilla-extract/css';
 import { bp } from '@/styles/breakpoints';
+import { vars } from '@/styles/theme.css';
+import { style } from '@vanilla-extract/css';
 
 export const main = style({
   minHeight: '100vh',
   width: '100%',
-  paddingLeft: '1rem',
-  paddingRight: '1rem',
-  paddingTop: '7rem',
-  paddingBottom: '6rem',
+  paddingLeft: vars.spacing.pagePadMobile,
+  paddingRight: vars.spacing.pagePadMobile,
   '@media': {
     [bp.md]: {
-      paddingLeft: '2rem',
-      paddingRight: '2rem',
+      paddingLeft: vars.spacing.pagePad,
+      paddingRight: vars.spacing.pagePad,
     },
   },
 });

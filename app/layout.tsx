@@ -11,7 +11,7 @@ export default function RootLayout({
   return (
     <html
       lang='ko'
-      className={darkTheme} // 다크 테마 적용
+      className={darkTheme}
     >
       <body>
         <SiteHeader />

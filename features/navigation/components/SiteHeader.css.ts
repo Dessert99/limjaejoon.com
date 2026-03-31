@@ -19,12 +19,12 @@ export const inner = style({
   maxWidth: '80rem',
   alignItems: 'center',
   justifyContent: 'space-between',
-  paddingLeft: '1rem',
-  paddingRight: '1rem',
+  paddingLeft: vars.spacing.pagePadMobile,
+  paddingRight: vars.spacing.pagePadMobile,
   '@media': {
     [bp.md]: {
-      paddingLeft: '1.5rem',
-      paddingRight: '1.5rem',
+      paddingLeft: vars.spacing.pagePad,
+      paddingRight: vars.spacing.pagePad,
     },
   },
 });
@@ -67,7 +67,7 @@ export const navLink = style({
   paddingRight: '0.625rem',
   paddingTop: '0.25rem',
   paddingBottom: '0.25rem',
-  fontSize: '0.875rem',
+  fontSize: vars.fontSize.sm,
   fontWeight: 600,
   color: vars.color.textSecondary,
   transition: 'color 150ms ease',
@@ -76,7 +76,7 @@ export const navLink = style({
   },
   '@media': {
     [bp.md]: {
-      fontSize: '1rem',
+      fontSize: vars.fontSize.base,
     },
   },
 });
