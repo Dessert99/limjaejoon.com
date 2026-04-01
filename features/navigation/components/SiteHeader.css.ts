@@ -9,7 +9,7 @@ export const header = style({
   right: 0,
   zIndex: 50,
   borderBottom: `1px solid ${vars.color.lineSoft}`,
-  backgroundColor: 'rgba(18, 18, 18, 0.8)',
+  backgroundColor: vars.color.bgPageTranslucent,
   backdropFilter: 'blur(8px)',
 });
 
@@ -58,6 +58,27 @@ export const navList = style({
     [bp.md]: {
       gap: '1.5rem',
     },
+  },
+});
+
+export const themeToggle = style({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '2rem',
+  height: '2rem',
+  borderRadius: vars.radius.xl,
+  border: '1px solid transparent',
+  backgroundColor: 'transparent',
+  color: vars.color.textSecondary,
+  fontSize: vars.fontSize.xl,
+  cursor: 'pointer',
+  transition:
+    'color 150ms ease, border-color 150ms ease, background-color 150ms ease',
+  ':hover': {
+    color: vars.color.accentStrong,
+    backgroundColor: vars.color.accentSoft,
+    borderColor: vars.color.accentStrong,
   },
 });
 

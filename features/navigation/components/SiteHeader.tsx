@@ -1,12 +1,15 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import { navItems } from '@/features/navigation/config/navItems';
+import { useTheme } from '@/features/navigation/hooks/useTheme';
+import { HiOutlineSun, HiOutlineMoon } from 'react-icons/hi2';
 import * as s from './SiteHeader.css';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className={s.header}>
@@ -34,6 +37,15 @@ export function SiteHeader() {
                 </Link>
               </li>
             ))}
+            <li>
+              <button
+                className={s.themeToggle}
+                onClick={toggleTheme}
+                aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+              >
+                {theme === 'dark' ? <HiOutlineSun /> : <HiOutlineMoon />}
+              </button>
+            </li>
           </ul>
         </nav>
       </div>
