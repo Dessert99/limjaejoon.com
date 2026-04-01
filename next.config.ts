@@ -7,6 +7,8 @@ const withVanillaExtract = createVanillaExtractPlugin({
   },
 });
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  reactCompiler: true,
+};
 
 export default withVanillaExtract(nextConfig);
