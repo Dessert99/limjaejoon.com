@@ -75,7 +75,7 @@ export const tag = style({
 export const prose = style({
   color: vars.color.textSecondary,
   lineHeight: '1.8',
-  fontSize: vars.fontSize.base,
+  fontSize: vars.fontSize.lg,
 });
 
 globalStyle(`${prose} h1`, {
