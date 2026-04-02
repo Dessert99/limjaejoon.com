@@ -1,3 +1,5 @@
+import { Mention } from '@/features/blog/components/Mention';
+import { Tooltip } from '@/features/blog/components/Tooltip';
 import { getStoryBySlug, getStoryList } from '@/features/blog/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { notFound } from 'next/navigation';
@@ -39,7 +41,10 @@ export default async function StoryPage({ params }: Props) {
       </header>
 
       <article className={s.prose}>
-        <MDXRemote source={story.content} />
+        <MDXRemote
+          source={story.content}
+          components={{ Tooltip, Mention }}
+        />
       </article>
     </main>
   );

@@ -1,7 +1,11 @@
+import { Mention } from '@/features/blog/components/Mention';
+import { Tooltip } from '@/features/blog/components/Tooltip';
 import { getPostBySlug, getPostList } from '@/features/blog/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { notFound } from 'next/navigation';
 import * as s from './page.css';
+
+const mdxComponents = { Tooltip, Mention };
 
 // 빌드 시 모든 포스트 slug를 정적 경로로 생성
 export function generateStaticParams() {
@@ -40,7 +44,10 @@ export default async function BlogPostPage({ params }: Props) {
       </header>
 
       <article className={s.prose}>
-        <MDXRemote source={post.content} />
+        <MDXRemote
+          source={post.content}
+          components={mdxComponents}
+        />
       </article>
     </main>
   );
