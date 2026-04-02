@@ -1,5 +1,7 @@
 import { Mention } from '@/features/blog/components/Mention';
+import { TableOfContents } from '@/features/blog/components/TableOfContents';
 import { Tooltip } from '@/features/blog/components/Tooltip';
+import { extractHeadings } from '@/features/blog/lib/extract-headings';
 import { mdxOptions } from '@/features/blog/lib/mdx-options';
 import { getPostBySlug, getPostList } from '@/features/blog/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
@@ -25,6 +27,8 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  const headings = extractHeadings(post.content);
+
   return (
     <main className={s.main}>
       <header className={s.header}>
@@ -44,13 +48,21 @@ export default async function BlogPostPage({ params }: Props) {
         )}
       </header>
 
-      <article className={s.prose}>
-        <MDXRemote
-          source={post.content}
-          options={mdxOptions}
-          components={mdxComponents}
-        />
-      </article>
+      <div className={s.contentLayout}>
+        <article className={s.prose}>
+          <MDXRemote
+            source={post.content}
+            options={mdxOptions}
+            components={mdxComponents}
+          />
+        </article>
+
+        {headings.length > 0 && (
+          <aside className={s.tocAside}>
+            <TableOfContents headings={headings} />
+          </aside>
+        )}
+      </div>
     </main>
   );
 }

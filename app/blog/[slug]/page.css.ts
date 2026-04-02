@@ -1,12 +1,19 @@
 import { bp } from '@/styles/breakpoints';
 import { vars } from '@/styles/theme.css';
+import {
+  applyHeadingAnchorStyles,
+  contentLayout,
+  tocAside,
+} from '@/styles/utils.css';
 import { globalStyle, style } from '@vanilla-extract/css';
+
+export { contentLayout, tocAside };
 
 export const main = style({
   margin: '0 auto',
   minHeight: '100vh',
   width: '100%',
-  maxWidth: '75rem',
+  maxWidth: '85rem',
   paddingLeft: vars.spacing.pagePadMobile,
   paddingRight: vars.spacing.pagePadMobile,
   paddingBottom: '4rem',
@@ -135,3 +142,5 @@ globalStyle(`${prose} pre code`, {
   padding: '0',
   color: vars.color.textPrimary,
 });
+
+applyHeadingAnchorStyles(prose);

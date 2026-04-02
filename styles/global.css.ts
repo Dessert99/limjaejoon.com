@@ -3,6 +3,12 @@ import { darkTheme, lightTheme, vars } from '@/styles/theme.css';
 
 globalStyle('html', {
   transition: 'background-color 200ms ease, color 200ms ease',
+  scrollBehavior: 'smooth',
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      scrollBehavior: 'auto',
+    },
+  },
 });
 
 globalStyle('html[data-loading]', {
