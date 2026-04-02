@@ -49,7 +49,11 @@ export function SiteHeader() {
                 aria-label={
                   theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'
                 }>
-                {theme === 'dark' ? <HiOutlineSun /> : <HiOutlineMoon />}
+                {theme === 'dark' ? (
+                  <HiOutlineSun aria-hidden='true' />
+                ) : (
+                  <HiOutlineMoon aria-hidden='true' />
+                )}
               </button>
             </li>
           </ul>

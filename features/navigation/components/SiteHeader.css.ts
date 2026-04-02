@@ -80,6 +80,16 @@ export const themeToggle = style({
     backgroundColor: vars.color.accentSoft,
     borderColor: vars.color.accentStrong,
   },
+  ':focus-visible': {
+    color: vars.color.accentStrong,
+    backgroundColor: vars.color.accentSoft,
+    borderColor: vars.color.accentStrong,
+  },
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      transition: 'none',
+    },
+  },
 });
 
 export const navLink = style({
