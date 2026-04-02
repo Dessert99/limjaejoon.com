@@ -28,7 +28,9 @@ export default async function StoryPage({ params }: Props) {
         {story.tags.length > 0 && (
           <ul className={s.tags}>
             {story.tags.map((tag) => (
-              <li key={tag} className={s.tag}>
+              <li
+                key={tag}
+                className={s.tag}>
                 {tag}
               </li>
             ))}

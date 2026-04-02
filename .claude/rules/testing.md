@@ -7,8 +7,9 @@ paths:
 
 작업이 끝나면 반드시 아래 순서로 검증한다.
 
-### 1. lint 검사 (항상 실행)
+### 1. lint & format 검사 (항상 실행)
 - `npm run lint` 실행하여 에러 없는지 확인
+- `npm run format:check` 실행하여 포맷 위반 없는지 확인 (위반 시 `npm run format`으로 자동 수정)
 
 ### 2. build 검사 (변경 범위에 따라 실행)
 - 다음 중 하나라도 해당하면 `npm run build` 실행:

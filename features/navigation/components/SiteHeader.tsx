@@ -14,7 +14,10 @@ export function SiteHeader() {
   return (
     <header className={s.header}>
       <div className={s.inner}>
-        <Link href='/' aria-label='홈으로 이동' className={s.logoLink}>
+        <Link
+          href='/'
+          aria-label='홈으로 이동'
+          className={s.logoLink}>
           <Image
             src='/images/logo.png'
             alt='프로필 로고'
@@ -31,8 +34,10 @@ export function SiteHeader() {
                 <Link
                   className={s.navLink}
                   href={item.href}
-                  data-active={pathname === item.href || pathname.startsWith(item.href + '/')}
-                >
+                  data-active={
+                    pathname === item.href ||
+                    pathname.startsWith(item.href + '/')
+                  }>
                   {item.label}
                 </Link>
               </li>
@@ -41,8 +46,9 @@ export function SiteHeader() {
               <button
                 className={s.themeToggle}
                 onClick={toggleTheme}
-                aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
-              >
+                aria-label={
+                  theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'
+                }>
                 {theme === 'dark' ? <HiOutlineSun /> : <HiOutlineMoon />}
               </button>
             </li>

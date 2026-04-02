@@ -76,14 +76,60 @@ export const prose = style({
   fontSize: vars.fontSize.base,
 });
 
-globalStyle(`${prose} h1`, { fontSize: vars.fontSize['3xl'], fontWeight: 700, color: vars.color.textPrimary, marginTop: '2rem', marginBottom: '0.75rem', letterSpacing: '-0.02em' });
-globalStyle(`${prose} h2`, { fontSize: vars.fontSize['2xl'], fontWeight: 600, color: vars.color.textPrimary, marginTop: '2rem', marginBottom: '0.75rem' });
-globalStyle(`${prose} h3`, { fontSize: vars.fontSize.xl, fontWeight: 600, color: vars.color.textPrimary, marginTop: '1.5rem', marginBottom: '0.5rem' });
+globalStyle(`${prose} h1`, {
+  fontSize: vars.fontSize['3xl'],
+  fontWeight: 700,
+  color: vars.color.textPrimary,
+  marginTop: '2rem',
+  marginBottom: '0.75rem',
+  letterSpacing: '-0.02em',
+});
+globalStyle(`${prose} h2`, {
+  fontSize: vars.fontSize['2xl'],
+  fontWeight: 600,
+  color: vars.color.textPrimary,
+  marginTop: '2rem',
+  marginBottom: '0.75rem',
+});
+globalStyle(`${prose} h3`, {
+  fontSize: vars.fontSize.xl,
+  fontWeight: 600,
+  color: vars.color.textPrimary,
+  marginTop: '1.5rem',
+  marginBottom: '0.5rem',
+});
 globalStyle(`${prose} p`, { marginBottom: '1.25rem' });
-globalStyle(`${prose} ul, ${prose} ol`, { paddingLeft: '1.5rem', marginBottom: '1.25rem' });
+globalStyle(`${prose} ul, ${prose} ol`, {
+  paddingLeft: '1.5rem',
+  marginBottom: '1.25rem',
+});
 globalStyle(`${prose} li`, { marginBottom: '0.25rem' });
-globalStyle(`${prose} strong`, { color: vars.color.textPrimary, fontWeight: 600 });
-globalStyle(`${prose} a`, { color: vars.color.accentStrong, textDecoration: 'underline' });
-globalStyle(`${prose} code`, { fontSize: vars.fontSize.sm, backgroundColor: vars.color.bgSoft, color: vars.color.accentStrong, borderRadius: vars.radius.md, paddingInline: '0.375rem', paddingBlock: '0.1rem' });
-globalStyle(`${prose} pre`, { backgroundColor: vars.color.bgElevated, border: `1px solid ${vars.color.lineSoft}`, borderRadius: vars.radius.lg, padding: '1rem', overflowX: 'auto', marginBottom: '1.25rem' });
-globalStyle(`${prose} pre code`, { backgroundColor: 'transparent', padding: '0', color: vars.color.textPrimary });
+globalStyle(`${prose} strong`, {
+  color: vars.color.textPrimary,
+  fontWeight: 600,
+});
+globalStyle(`${prose} a`, {
+  color: vars.color.accentStrong,
+  textDecoration: 'underline',
+});
+globalStyle(`${prose} code`, {
+  fontSize: vars.fontSize.sm,
+  backgroundColor: vars.color.bgSoft,
+  color: vars.color.accentStrong,
+  borderRadius: vars.radius.md,
+  paddingInline: '0.375rem',
+  paddingBlock: '0.1rem',
+});
+globalStyle(`${prose} pre`, {
+  backgroundColor: vars.color.bgElevated,
+  border: `1px solid ${vars.color.lineSoft}`,
+  borderRadius: vars.radius.lg,
+  padding: '1rem',
+  overflowX: 'auto',
+  marginBottom: '1.25rem',
+});
+globalStyle(`${prose} pre code`, {
+  backgroundColor: 'transparent',
+  padding: '0',
+  color: vars.color.textPrimary,
+});

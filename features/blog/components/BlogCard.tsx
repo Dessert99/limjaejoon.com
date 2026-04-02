@@ -8,13 +8,17 @@ interface BlogCardProps {
 
 export function BlogCard({ post }: BlogCardProps) {
   return (
-    <Link href={`/blog/${post.slug}`} className={s.card}>
+    <Link
+      href={`/blog/${post.slug}`}
+      className={s.card}>
       <span className={s.title}>{post.title}</span>
       <div className={s.meta}>
         {post.tags.length > 0 && (
           <ul className={s.tags}>
             {post.tags.map((tag) => (
-              <li key={tag} className={s.tag}>
+              <li
+                key={tag}
+                className={s.tag}>
                 {tag}
               </li>
             ))}

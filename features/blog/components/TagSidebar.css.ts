@@ -55,7 +55,8 @@ export const tagButton = style({
   paddingInline: '0.75rem',
   paddingBlock: '0.3rem',
   cursor: 'pointer',
-  transition: 'color 150ms ease, border-color 150ms ease, background-color 150ms ease',
+  transition:
+    'color 150ms ease, border-color 150ms ease, background-color 150ms ease',
   whiteSpace: 'nowrap',
   textAlign: 'left',
   ':hover': {

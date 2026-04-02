@@ -14,7 +14,10 @@ export default function Home() {
         <p className={s.heroDesc}>성장을 코드로 기록합니다.</p>
       </section>
 
-      <StoriesSection stories={stories} tags={storyTags} />
+      <StoriesSection
+        stories={stories}
+        tags={storyTags}
+      />
     </main>
   );
 }

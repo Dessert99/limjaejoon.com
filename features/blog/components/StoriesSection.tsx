@@ -35,20 +35,26 @@ export function StoriesSection({ stories, tags }: StoriesSectionProps) {
       <div className={s.header}>
         <h2 className={s.title}>나의 이야기</h2>
         <p className={s.description}>
-          개발하며 겪은 경험과 성장의 기록입니다. 관심 있는 주제를 선택해 보세요.
+          개발하며 겪은 경험과 성장의 기록입니다. 관심 있는 주제를 선택해
+          보세요.
         </p>
       </div>
 
-      <TagGrid tags={tags} activeTag={activeTag} onTagSelect={handleTag} />
+      <TagGrid
+        tags={tags}
+        activeTag={activeTag}
+        onTagSelect={handleTag}
+      />
 
       {filtered.length > 0 && (
-        <div ref={cardsRef} className={s.cards}>
+        <div
+          ref={cardsRef}
+          className={s.cards}>
           {filtered.map((story) => (
             <Link
               key={story.slug}
               href={`/stories/${story.slug}`}
-              className={s.storyCard}
-            >
+              className={s.storyCard}>
               <span className={s.storyTitle}>{story.title}</span>
               <span className={s.storyDate}>{story.date}</span>
             </Link>

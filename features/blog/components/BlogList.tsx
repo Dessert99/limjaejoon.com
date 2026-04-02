@@ -24,7 +24,10 @@ export function BlogList({ posts }: BlogListProps) {
   return (
     <section className={s.grid}>
       {filtered.map((post) => (
-        <BlogCard key={post.slug} post={post} />
+        <BlogCard
+          key={post.slug}
+          post={post}
+        />
       ))}
     </section>
   );

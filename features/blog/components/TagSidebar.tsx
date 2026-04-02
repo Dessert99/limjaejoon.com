@@ -31,8 +31,7 @@ export function TagSidebar({ tags }: TagSidebarProps) {
           <button
             className={s.tagButton}
             data-active={!activeTag}
-            onClick={() => router.push('/blog')}
-          >
+            onClick={() => router.push('/blog')}>
             전체
           </button>
         </li>
@@ -41,8 +40,7 @@ export function TagSidebar({ tags }: TagSidebarProps) {
             <button
               className={s.tagButton}
               data-active={activeTag === tag}
-              onClick={() => handleTag(tag)}
-            >
+              onClick={() => handleTag(tag)}>
               {tag}
             </button>
           </li>

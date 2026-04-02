@@ -14,8 +14,7 @@ export function TagGrid({ tags, activeTag, onTagSelect }: TagGridProps) {
           <button
             className={s.card}
             data-active={activeTag === tag}
-            onClick={() => onTagSelect(tag)}
-          >
+            onClick={() => onTagSelect(tag)}>
             {tag}
           </button>
         </li>

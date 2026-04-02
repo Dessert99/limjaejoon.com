@@ -18,7 +18,12 @@ interface ActivityGroup {
 
 const techStackItems: TechStackItem[] = [
   { id: 'react', name: 'React', icon: SiReact, iconColor: '#38bdf8' },
-  { id: 'react-native', name: 'React Native', icon: SiReact, iconColor: '#7dd3fc' },
+  {
+    id: 'react-native',
+    name: 'React Native',
+    icon: SiReact,
+    iconColor: '#7dd3fc',
+  },
   { id: 'expo', name: 'Expo', icon: SiExpo, iconColor: '#ffffff' },
 ];
 
@@ -66,9 +71,14 @@ export default function PortfolioPage() {
             {techStackItems.map((stack) => {
               const StackIcon = stack.icon;
               return (
-                <li key={stack.id} className={s.stackItem}>
+                <li
+                  key={stack.id}
+                  className={s.stackItem}>
                   <span className={s.iconWrapper}>
-                    <StackIcon aria-hidden='true' style={{ color: stack.iconColor }} />
+                    <StackIcon
+                      aria-hidden='true'
+                      style={{ color: stack.iconColor }}
+                    />
                   </span>
                   <strong className={s.stackName}>{stack.name}</strong>
                 </li>
@@ -81,11 +91,15 @@ export default function PortfolioPage() {
           <h2 className={s.sectionTitle}>활동</h2>
           <div className={s.activityList}>
             {activityGroups.map((group) => (
-              <section key={group.id} className={s.activityGroup}>
+              <section
+                key={group.id}
+                className={s.activityGroup}>
                 <h3 className={s.orgLabel}>{group.organization}</h3>
                 <ul className={s.roleList}>
                   {group.roles.map((role) => (
-                    <li key={role} className={s.roleItem}>
+                    <li
+                      key={role}
+                      className={s.roleItem}>
                       {role}
                     </li>
                   ))}
