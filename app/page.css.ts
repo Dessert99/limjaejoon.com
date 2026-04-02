@@ -41,6 +41,10 @@ export const heroName = style({
     [bp.md]: {
       fontSize: vars.fontSize['4xl'],
     },
+    '(prefers-reduced-motion: reduce)': {
+      opacity: 1,
+      animation: 'none',
+    },
   },
 });
 
@@ -52,6 +56,12 @@ export const heroRole = style({
   opacity: 0,
   animation: `${fadeUp} 0.6s ease forwards`,
   animationDelay: '0.3s',
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      opacity: 1,
+      animation: 'none',
+    },
+  },
 });
 
 export const heroDesc = style({
@@ -62,6 +72,12 @@ export const heroDesc = style({
   opacity: 0,
   animation: `${fadeUp} 0.6s ease forwards`,
   animationDelay: '0.5s',
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      opacity: 1,
+      animation: 'none',
+    },
+  },
 });
 
 export const section = style({

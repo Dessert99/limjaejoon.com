@@ -13,6 +13,11 @@ export const card = style({
     boxShadow: vars.shadow.cardMd,
     transform: 'translateY(-2px)',
   },
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      transition: 'none',
+    },
+  },
 });
 
 export const cardBody = style({
