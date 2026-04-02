@@ -1,5 +1,5 @@
 import { globalStyle } from '@vanilla-extract/css';
-import { vars } from '@/styles/theme.css';
+import { darkTheme, lightTheme, vars } from '@/styles/theme.css';
 
 globalStyle('html', {
   transition: 'background-color 200ms ease, color 200ms ease',
@@ -24,4 +24,12 @@ globalStyle('body', {
 globalStyle(':focus-visible', {
   outline: `2px solid ${vars.color.accentStrong}`,
   outlineOffset: '2px',
+});
+
+// rehype-pretty-code 다크/라이트 테마 브릿지
+globalStyle(`.${darkTheme} [data-rehype-pretty-code-figure] span`, {
+  color: 'var(--shiki-dark)',
+});
+globalStyle(`.${lightTheme} [data-rehype-pretty-code-figure] span`, {
+  color: 'var(--shiki-light)',
 });

@@ -1,5 +1,6 @@
 import { Mention } from '@/features/blog/components/Mention';
 import { Tooltip } from '@/features/blog/components/Tooltip';
+import { mdxOptions } from '@/features/blog/lib/mdx-options';
 import { getPostBySlug, getPostList } from '@/features/blog/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { notFound } from 'next/navigation';
@@ -46,6 +47,7 @@ export default async function BlogPostPage({ params }: Props) {
       <article className={s.prose}>
         <MDXRemote
           source={post.content}
+          options={mdxOptions}
           components={mdxComponents}
         />
       </article>
