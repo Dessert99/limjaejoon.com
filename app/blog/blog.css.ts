@@ -12,8 +12,8 @@ export const main = style({
   paddingBottom: '4rem',
   '@media': {
     [bp.md]: {
-      paddingLeft: vars.spacing.pagePad,
-      paddingRight: vars.spacing.pagePad,
+      paddingLeft: '3rem',
+      paddingRight: '3rem',
     },
   },
 });
@@ -48,7 +48,7 @@ export const layout = style({
   gap: '1.5rem',
   '@media': {
     [bp.md]: {
-      gridTemplateColumns: '11rem 1fr',
+      gridTemplateColumns: '9rem 1fr',
       alignItems: 'start',
     },
   },

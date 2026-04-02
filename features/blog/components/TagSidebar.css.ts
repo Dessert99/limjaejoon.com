@@ -13,6 +13,8 @@ export const sidebar = style({
       flexDirection: 'column',
       alignItems: 'flex-start',
       gap: '0.25rem',
+      position: 'sticky',
+      top: '5rem',
     },
   },
 });

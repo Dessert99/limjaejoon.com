@@ -1,10 +1,10 @@
-import Link from 'next/link';
-import { BlogCard } from '@/features/blog/components/BlogCard';
-import { getPostList } from '@/features/blog/lib/posts';
+import { StoriesSection } from '@/features/blog/components/StoriesSection';
+import { getStoryList, getStoryTagList } from '@/features/blog/lib/posts';
 import * as s from './page.css';
 
 export default function Home() {
-  const recentPosts = getPostList().slice(0, 3);
+  const stories = getStoryList();
+  const storyTags = getStoryTagList();
 
   return (
     <main className={s.main}>
@@ -14,19 +14,7 @@ export default function Home() {
         <p className={s.heroDesc}>성장을 코드로 기록합니다.</p>
       </section>
 
-      <section className={s.section}>
-        <div className={s.sectionHeader}>
-          <h2 className={s.sectionHeading}>최근 글</h2>
-          <Link href="/blog" className={s.sectionLink}>
-            모든 글 →
-          </Link>
-        </div>
-        <div className={s.postGrid}>
-          {recentPosts.map((post) => (
-            <BlogCard key={post.slug} post={post} />
-          ))}
-        </div>
-      </section>
+      <StoriesSection stories={stories} tags={storyTags} />
     </main>
   );
 }
