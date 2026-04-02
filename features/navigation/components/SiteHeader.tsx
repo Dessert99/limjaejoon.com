@@ -2,7 +2,11 @@
 import { usePathname } from 'next/navigation';
 import { navItems } from '@/features/navigation/config/navItems';
 import { useTheme } from '@/features/navigation/hooks/useTheme';
-import { HiOutlineSun, HiOutlineMoon } from 'react-icons/hi2';
+import {
+  HiOutlineSun,
+  HiOutlineMoon,
+  HiOutlineMagnifyingGlass,
+} from 'react-icons/hi2';
 import * as s from './SiteHeader.css';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -42,6 +46,14 @@ export function SiteHeader() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link
+                href='/search'
+                className={s.themeToggle}
+                aria-label='검색 페이지로 이동'>
+                <HiOutlineMagnifyingGlass aria-hidden='true' />
+              </Link>
+            </li>
             <li>
               <button
                 className={s.themeToggle}

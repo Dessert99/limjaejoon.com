@@ -1,4 +1,4 @@
-import type { Post, PostMeta } from '@/features/blog/types';
+import type { Post, PostMeta, SearchablePost } from '@/features/blog/types';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
@@ -78,4 +78,17 @@ export function getStoryTagList(): string[] {
 
 export function getStoryBySlug(slug: string): Post | null {
   return getPostBySlugFrom(STORIES_DIR, slug);
+}
+
+// 검색용: 블로그 + 스토리 전체 포스트를 href 포함하여 반환
+export function getAllPostsForSearch(): SearchablePost[] {
+  const blogs = getPostListFrom(BLOG_DIR).map((p) => ({
+    ...p,
+    href: `/blog/${p.slug}`,
+  }));
+  const stories = getPostListFrom(STORIES_DIR).map((p) => ({
+    ...p,
+    href: `/stories/${p.slug}`,
+  }));
+  return [...blogs, ...stories].sort((a, b) => (a.date < b.date ? 1 : -1));
 }

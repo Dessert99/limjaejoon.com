@@ -9,3 +9,7 @@ export interface PostMeta {
 export interface Post extends PostMeta {
   content: string;
 }
+
+export interface SearchablePost extends PostMeta {
+  href: string;
+}

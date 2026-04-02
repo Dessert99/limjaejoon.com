@@ -4,12 +4,13 @@ import * as s from './BlogCard.css';
 
 interface BlogCardProps {
   post: PostMeta;
+  href?: string;
 }
 
-export function BlogCard({ post }: BlogCardProps) {
+export function BlogCard({ post, href }: BlogCardProps) {
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={href ?? `/blog/${post.slug}`}
       className={s.card}>
       <span className={s.title}>{post.title}</span>
       <div className={s.meta}>
