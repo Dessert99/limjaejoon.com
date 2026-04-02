@@ -1,12 +1,12 @@
-import { globalStyle, style } from '@vanilla-extract/css';
-import { vars } from '@/styles/theme.css';
 import { bp } from '@/styles/breakpoints';
+import { vars } from '@/styles/theme.css';
+import { globalStyle, style } from '@vanilla-extract/css';
 
 export const main = style({
   margin: '0 auto',
   minHeight: '100vh',
   width: '100%',
-  maxWidth: '52rem',
+  maxWidth: '75rem',
   paddingLeft: vars.spacing.pagePadMobile,
   paddingRight: vars.spacing.pagePadMobile,
   paddingBottom: '4rem',
