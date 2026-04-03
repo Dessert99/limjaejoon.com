@@ -1,6 +1,6 @@
-import { style } from '@vanilla-extract/css';
-import { vars } from '@/styles/theme.css';
 import { bp } from '@/styles/breakpoints';
+import { vars } from '@/styles/theme.css';
+import { style } from '@vanilla-extract/css';
 
 export const sidebar = style({
   display: 'flex',
@@ -35,6 +35,9 @@ export const label = style({
 });
 
 export const list = style({
+  listStyle: 'none',
+  padding: 0,
+  margin: 0,
   display: 'contents', // 모바일: 버튼들을 sidebar flex에 직접 흘려보냄
   '@media': {
     [bp.md]: {
