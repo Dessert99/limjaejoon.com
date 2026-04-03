@@ -10,6 +10,8 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { notFound } from 'next/navigation';
 import * as s from './page.css';
 
+const mdxComponents = { Tooltip, Mention };
+
 export function generateStaticParams() {
   return getStoryList().map((story) => ({ slug: story.slug }));
 }
@@ -72,7 +74,7 @@ export default async function StoryPage({ params }: Props) {
   return (
     <main className={s.main}>
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <header className={s.header}>
@@ -97,7 +99,7 @@ export default async function StoryPage({ params }: Props) {
           <MDXRemote
             source={story.content}
             options={mdxOptions}
-            components={{ Tooltip, Mention }}
+            components={mdxComponents}
           />
         </article>
 

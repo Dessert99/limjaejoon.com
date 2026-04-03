@@ -1,6 +1,6 @@
 import { BlogList } from '@/features/blog/components/BlogList';
 import { TagSidebar } from '@/features/blog/components/TagSidebar';
-import { getPostList, getTagList } from '@/features/blog/lib/posts';
+import { getPostList } from '@/features/blog/lib/posts';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import * as s from './blog.css';
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const posts = getPostList();
-  const tags = getTagList();
+  const tags = [...new Set(posts.flatMap((p) => p.tags))].sort();
 
   return (
     <main className={s.main}>

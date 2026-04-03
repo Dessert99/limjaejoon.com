@@ -75,7 +75,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <main className={s.main}>
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <header className={s.header}>

@@ -58,8 +58,7 @@ globalStyle(`${popover}::before`, {
   width: '150%',
   aspectRatio: '1',
   borderRadius: '50%',
-  background:
-    'conic-gradient(#12b886, #845ef7, #339af0, #f06595, #12b886)',
+  background: 'conic-gradient(#12b886, #845ef7, #339af0, #f06595, #12b886)',
   transform: 'translate(-50%, -50%)',
   animation: `${rotate} 3s linear infinite`,
   zIndex: -2,

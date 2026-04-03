@@ -1,10 +1,10 @@
 import { StoriesSection } from '@/features/blog/components/StoriesSection';
-import { getStoryList, getStoryTagList } from '@/features/blog/lib/posts';
+import { getStoryList } from '@/features/blog/lib/posts';
 import * as s from './page.css';
 
 export default function Home() {
   const stories = getStoryList();
-  const storyTags = getStoryTagList();
+  const storyTags = [...new Set(stories.flatMap((s) => s.tags))].sort();
 
   return (
     <main className={s.main}>
