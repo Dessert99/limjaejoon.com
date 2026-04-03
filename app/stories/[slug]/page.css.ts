@@ -105,9 +105,9 @@ globalStyle(`${prose} h3`, {
   marginTop: '1.5rem',
   marginBottom: '0.5rem',
 });
-globalStyle(`${prose} p`, { marginBottom: '1.25rem' });
+globalStyle(`${prose} p`, { marginBottom: '1.25rem', paddingLeft: '1rem' });
 globalStyle(`${prose} ul, ${prose} ol`, {
-  paddingLeft: '1.5rem',
+  paddingLeft: '2.5rem',
   marginBottom: '1.25rem',
 });
 globalStyle(`${prose} li`, { marginBottom: '0.25rem' });
@@ -134,6 +134,7 @@ globalStyle(`${prose} pre`, {
   padding: '1rem',
   overflowX: 'auto',
   marginBottom: '1.25rem',
+  marginLeft: '1rem',
 });
 globalStyle(`${prose} pre code`, {
   backgroundColor: 'transparent',
