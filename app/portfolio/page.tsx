@@ -1,7 +1,17 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import type { IconType } from 'react-icons';
 import { SiExpo, SiReact } from 'react-icons/si';
 import * as s from './portfolio.css';
+
+export const metadata: Metadata = {
+  title: '포트폴리오',
+  description: '프론트엔드 개발자 임재준의 기술 스택과 활동 이력입니다.',
+  openGraph: {
+    title: '포트폴리오',
+    description: '프론트엔드 개발자 임재준의 기술 스택과 활동 이력입니다.',
+  },
+};
 
 interface TechStackItem {
   id: string;
