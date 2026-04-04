@@ -1,0 +1,84 @@
+---
+name: content-frontmatter
+description: content/blog 또는 content/stories의 MDX 파일에 frontmatter 메타데이터를 자동 생성한다. 사용자가 본문을 작성한 뒤 호출하면, 파일 내용을 분석하고 기존 태그를 확인하여 title, date, description, tags를 작성한다.
+---
+
+# Content Frontmatter 생성
+
+MDX 콘텐츠 파일의 frontmatter를 자동 생성하는 스킬.
+
+## 트리거 조건
+
+- 사용자가 content/blog/ 또는 content/stories/에 MDX 파일을 만들고 frontmatter 생성을 요청할 때
+- 사용자가 기존 MDX 파일의 frontmatter를 갱신하고 싶을 때
+
+## 절차
+
+### Step 1: 대상 파일 확인
+
+1. 사용자가 지정한 파일 또는 IDE에서 열린 파일을 확인한다.
+2. `content/blog/` 또는 `content/stories/` 중 어디에 있는지 판별한다.
+3. 파일의 전체 내용을 읽는다.
+
+### Step 2: 기존 태그 수집
+
+`content/blog/` 디렉토리의 모든 `.mdx` 파일에서 frontmatter의 `tags` 필드를 읽어 기존 태그 목록을 수집한다. 중복을 제거하고 정확한 문자열 목록을 만든다.
+
+### Step 3: 각 필드 생성
+
+#### title
+- 핵심 개념만 담아 간결하게 작성한다.
+- 예시: `'NAS (Network Attached Storage)'`, `'Route Handler'`
+
+#### date
+- 파일명에 날짜가 있는 경우 (예: `2026-04-02-NAS.mdx`): `YYYY-MM-DD` 부분을 추출한다.
+- 파일명에 날짜가 없는 경우: 오늘 날짜를 사용하고, 사용자에게 "파일명에 날짜가 없어 오늘 날짜를 사용합니다"라고 안내한다.
+
+#### description
+- 본문 전체를 읽고 1~2문장으로 핵심 내용을 요약한다.
+- 검색 기능에 사용되므로 본문의 중요 키워드가 자연스럽게 포함되도록 작성한다.
+- "~에 대해서 알아보자" 같은 단순 소개 문구는 지양한다.
+
+#### tags
+1. Step 2에서 수집한 기존 태그 목록과 대조한다.
+2. 본문에서 관련 키워드를 식별한다.
+3. 기존 태그 중 일치하는 것이 있으면 **정확히 그 문자열**을 사용한다 (대소문자 포함).
+   - 예: 기존에 `Next.js`가 있으면 `next.js`나 `NextJS`가 아닌 `Next.js`를 사용
+4. 기존 태그에 없는 개념이 필요하면 새 태그를 생성한다.
+5. 3~6개 정도가 적당하다.
+
+### Step 4: frontmatter 작성
+
+파일 최상단에 아래 형식으로 작성한다:
+
+```yaml
+---
+title: '제목'
+date: 'YYYY-MM-DD'
+description: '설명'
+tags: ['태그1', '태그2', '태그3']
+---
+```
+
+- 값은 모두 작은따옴표(`'`)로 감싼다.
+- 필드 순서: title → date → description → tags
+- 기존 frontmatter가 있으면 덮어쓴다.
+- 본문 내용은 절대 수정하지 않는다.
+
+### Step 5: 결과 보고
+
+생성한 frontmatter를 보여주고 간단히 설명한다:
+- title: 왜 이 제목을 선택했는지
+- date: 어디서 추출했는지
+- description: 어떤 키워드를 포함했는지
+- tags: 기존 태그에서 가져온 것과 새로 만든 것을 구분 표시
+
+## stories 파일
+
+stories도 동일한 frontmatter 형식을 사용한다. 다만 구현 내용 중심으로 description을 작성한다.
+
+## 주의사항
+
+- 본문(frontmatter 아래 마크다운)은 절대 수정하지 않는다.
+- 태그 비교는 case-sensitive로 수행한다.
+- 작은따옴표 안의 특수문자(특히 `'`) 주의: YAML에서 `''`로 이스케이프한다.
