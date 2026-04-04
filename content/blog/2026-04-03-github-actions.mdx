@@ -1,0 +1,157 @@
+---
+title: 'GitHub Actions'
+date: '2026-04-03'
+description: 'GitHub Actions의 핵심 구성 요소(Workflow, Event, Job, Step, Action, Runner)와 실행 원리, Job 의존 관계, 시크릿 관리, 캐시 최적화까지 CI/CD 자동화의 기본 구조를 정리한다.'
+tags: [ 'CI/CD', 'DevOps', 'Git']
+---
+
+## <Tooltip text="깃허브 액션은 YAML로 정의한 Workflow가 이벤트에 반응해 Runner 위에서 자동 실행되는 구조로, CI/CD 전체를 코드로 관리할 수 있게 해준다.">무엇인가?</Tooltip>
+1. 소프트웨어 개발에서는 코드를 작성한 뒤 테스트, 빌드, 배포까지 반복적으로 수행해야 하는 작업들이 있다.
+2. 이 과정을 매번 수동으로 처리하면 실수가 생기고 시간도 많이 걸린다.
+3. 이런 반복 작업을 자동화하는 개념을 CI/CD라고 한다.
+4. 깃허브 액션은 깃허브가 자체적으로 제공하는 CI/CD 자동화 도구이다.
+5. 코드가 push되거나 PR이 열리는 등 특정 이벤트가 발생했을 때, 미리 정의해둔 작업을 자동으로 실행한다.
+
+## 핵심 구성 요소
+
+```yaml
+# ↓ 이 파일 전체가 하나의 Workflow
+name: CI Pipeline
+# .github/workflows/ci.yml 로 저장됨
+
+# ↓ Event: 어떤 상황에 이 Workflow를 실행할지
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# ↓ Job 목록 (test와 build는 기본적으로 병렬 실행됨)
+jobs:
+
+  # ↓ Job 이름: test
+  test:
+    runs-on: ubuntu-latest  # ← Runner: 이 Job이 실행될 서버 환경
+
+    steps:
+      # ↓ Step 1: Action을 가져다 씀 (마켓플레이스의 공식 액션)
+      - uses: actions/checkout@v3
+
+      # ↓ Step 2: Action을 가져다 씀
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # ↓ Step 3: 직접 셸 명령 실행
+      - name: Install dependencies
+        run: npm install
+
+      # ↓ Step 4: 직접 셸 명령 실행
+      - name: Run tests
+        run: npm test
+
+  # ↓ Job 이름: build (test와 병렬 실행됨)
+  build:
+    runs-on: ubuntu-latest  # ← Runner: test Job과 별개의 서버에서 실행됨
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: npm run build
+```
+
+1. Workflow는 자동화의 전체 단위이며, `.github/workflows/` 폴더 안에 YAML 파일로 정의한다.
+2. Event는 Workflow를 실행시키는 트리거로, push, pull_request, schedule 등이 있다.
+3. Job은 Workflow 안에서 실행되는 작업 단위이며, 기본적으로 여러 Job은 병렬로 실행된다.
+4. Step은 Job 안에서 순서대로 실행되는 개별 명령 단위이다.
+5. Action은 Step에서 재사용 가능한 동작 묶음으로, 깃허브 마켓플레이스에서 가져다 쓸 수 있다.
+6. Runner는 Job이 실제로 실행되는 서버 환경으로, 깃허브가 제공하는 ubuntu, windows, macos 중 선택할 수 있다.
+
+## 기본 구조
+
+1. Workflow 파일은 아래와 같은 구조로 작성한다.
+    
+    ```yaml
+    name: CI
+    
+    on:
+      push:
+        branches: [main]
+    
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+    
+        steps:
+          - uses: actions/checkout@v3
+          - name: Install dependencies
+            run: npm install
+          - name: Run tests
+            run: npm test
+    ```
+    
+    - `on` 키는 어떤 이벤트에 반응할지를 정의한다.
+    - `jobs` 아래에 원하는 이름으로 Job을 정의하고, 그 안에 `steps`를 나열한다.
+    - `uses`는 미리 만들어진 Action을 가져다 쓰는 키워드이다.
+    - `actions/checkout@v3`는 현재 레포지토리의 코드를 Runner에 내려받는 공식 액션이다.
+    - `run`은 직접 셸 명령을 실행하는 키워드이다.
+    
+
+## 실행 원리
+
+1. 사용자가 코드를 push하면 깃허브 서버가 이벤트를 감지한다.
+2. 해당 이벤트와 매칭되는 Workflow 파일을 찾아 실행 대상으로 등록한다.
+3. 깃허브는 지정된 Runner 환경의 가상 머신을 새로 생성한다.
+4. 그 위에서 Job 안의 Step들을 위에서 아래로 순서대로 실행한다.
+5. 모든 Step이 완료되면 실행 결과(성공/실패/로그)를 깃허브 Actions 탭에 기록한다.
+6. Runner 환경은 Job이 끝나면 삭제되므로, 매 실행마다 깨끗한 환경에서 시작한다.
+
+## Job 간 의존 관계 설정: needs
+
+1. 기본적으로 여러 Job은 동시에 실행되지만, 순서를 정해야 할 때도 있다.
+2. 예를 들어 테스트가 통과해야만 배포를 실행하고 싶을 때는 `needs` 키를 사용한다.
+    
+    ```yaml
+    jobs:
+      test:
+        runs-on: ubuntu-latest
+        steps:
+          - run: npm test
+    
+      deploy:
+        runs-on: ubuntu-latest
+        needs: test  # test Job이 성공해야 실행됨
+        steps:
+          - run: ./deploy.sh
+    ```
+    
+3. `needs`에 명시된 Job이 실패하면 이후 Job은 실행되지 않는다.
+
+## 환경 변수와 시크릿
+
+1. API 키나 비밀번호처럼 코드에 직접 쓰면 안 되는 값은 시크릿으로 관리한다.
+2. 깃허브 레포지토리의 Settings → Secrets and variables에서 등록할 수 있다.
+3. Workflow에서는 `${{ secrets.변수명 }}` 형태로 불러온다.
+    
+    ```yaml
+    - name: Deploy
+      run: ./deploy.sh
+      env:
+        API_KEY: ${{ secrets.MY_API_KEY }}
+    ```
+    
+4. 시크릿 값은 로그에 출력되지 않도록 깃허브가 자동으로 마스킹 처리한다.
+
+## 캐시로 속도 최적화
+
+1. Runner는 매 실행마다 새로 생성되므로, `npm install` 같은 작업도 매번 처음부터 수행한다.
+2. 이 과정이 느릴 때는 `actions/cache`를 사용해 의존성을 캐시해 둘 수 있다.
+    
+    ```yaml
+    - uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+    ```
+    
+3. `key`가 이전 실행과 동일하면 캐시를 복원하고, 다르면 새로 저장한다.
+4. `package-lock.json`의 해시를 키로 쓰면 의존성이 바뀔 때만 캐시를 갱신할 수 있다..
