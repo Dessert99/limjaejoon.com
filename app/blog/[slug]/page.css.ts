@@ -80,6 +80,7 @@ export const tag = style({
 // MDX 본문 prose 스타일
 // globalStyle을 쓰는 이유: MDXRemote가 렌더링한 임의의 HTML 자식 요소를 스타일링해야 하기 때문
 export const prose = style({
+  minWidth: 0, // grid 아이템이 1fr을 무시하고 콘텐츠 크기로 늘어나는 것을 방지
   color: vars.color.textSecondary,
   lineHeight: '1.8',
   fontSize: vars.fontSize.lg,
