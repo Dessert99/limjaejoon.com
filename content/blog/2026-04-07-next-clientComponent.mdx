@@ -1,0 +1,222 @@
+---
+title: 'Client Component'
+date: '2026-04-07'
+description: "'use client' 선언이 서버-클라이언트 모듈 경계를 형성하는 원리와, 클라이언트 번들 크기를 최소화하는 컴포넌트 구조를 정리한다."
+tags: ['Next.js', 'RSC', 'hydration', 'Server Action']
+---
+
+## 배경
+
+1. Next.js App Router는 기본적으로 모든 컴포넌트를 서버 컴포넌트로 동작시킨다.
+2. 그러나 상태 관리, 이벤트 처리, 브라우저 API 접근 등 클라이언트 환경이 꼭 필요한 경우가 존재한다.
+3. 이런 상황을 위해 명시적으로 클라이언트에서 실행되도록 지정하는 클라이언트 컴포넌트 개념이 도입되었다.
+
+## 정의
+
+> Client Component는 `'use client'`로 경계를 선언해 브라우저 인터랙션이 필요한 부분만 클라이언트에서 실행되도록 하고, 나머지는 서버에 두어 성능과 기능을 균형 있게 확보하는 개념이다.
+> 
+1. 클라이언트 컴포넌트는 서버에서 미리 렌더링된 후, 브라우저에서 JavaScript로 실행되는 인터랙티브 UI 컴포넌트이다.
+2. 파일 최상단에 `'use client'`를 선언하면 해당 파일은 클라이언트 번들로 분류된다.
+3. 이 선언은 Server와 Client 모듈 간의 경계(boundary)를 명시하는 역할을 한다.
+4. 한 번 경계가 선언되면 해당 파일에서 `import`된 모든 모듈과 자식 컴포넌트도 자동으로 클라이언트 번들에 포함된다.
+
+## 클라이언트 컴포넌트도 서버에서 렌더링된다.(최초 페이지 로드)
+
+1. 사용자가 처음 페이지에 접근하면 Next.js는 서버에서 HTML을 먼저 생성한다.
+2. Next.js는 서버에서 서버 컴포넌트를 RSC Payload라는 데이터 형식으로 먼저 변환한다.
+3. RSC Payload에는 클라이언트 컴포넌트의 위치 정보(참조)가 포함된다.
+4. Next.js는 RSC Payload와 클라이언트 컴포넌트의 JavaScript 지침을 조합해 완성된 HTML을 만든다.
+5. 브라우저는 이 HTML을 받아 즉시 화면에 표시하므로, JavaScript 로딩 전에도 콘텐츠가 보인다.
+6. 하지만 이 시점의 화면은 아직 상호작용이 불가능한 정적인 상태이다.
+7. 이후 RSC Payload로 컴포넌트 트리를 정리하고, JavaScript로 하이드레이션(hydration)을 수행한다.
+8. 하이드레이션이란 정적인 HTML에 이벤트 리스너를 연결해 인터랙티브하게 만드는 과정이다.
+9. 이 과정은 React의 `hydrateRoot` API를 통해 백그라운드에서 실행된다.
+
+## 렌더링 방식: 이후 페이지 이동
+
+1. 이미 앱이 로드된 상태에서 페이지를 이동할 때는 동작 방식이 달라진다.
+2. 이 경우 클라이언트 컴포넌트는 서버를 거치지 않고 (서버 HTML없이) 브라우저에서만 렌더링된다.
+3. 브라우저가 JavaScript 번들을 다운로드하고 파싱한 뒤, RSC Payload로 트리를 조정하여 DOM을 업데이트한다.
+4. 정리하면, 서버 렌더링은 첫 로드 시 성능을 위한 사전 작업이고, 이후는 클라이언트가 전담한다.
+
+## 그렇다면 'use client'는 무슨 의미인가
+
+1. `'use client'`는 해당 컴포넌트를 서버에서 완전히 제외한다는 의미가 아니다.
+2. 이 지시어는 서버 모듈 그래프와 클라이언트 모듈 그래프 사이의 경계를 선언하는 것이다.
+3. <Tooltip text='이것 때문에 클라이언트 컴포넌트에서 “서버 컴포넌트”를 import하면 안된다'>경계 안쪽의 컴포넌트들은 클라이언트 번들에 포함되어 브라우저로 JS가 전송된다.</Tooltip>
+4. 브라우저는 전송받은 JS로 이벤트 핸들러를 DOM에 연결하는 과정을 거친다.
+5. 이 과정을 hydration(하이드레이션)이라고 하며, 이때 비로소 상호작용이 가능해진다.
+
+## 클라이언트 컴포넌트에서 서버 컴포넌트를 부르면 안되는 이유
+
+1. 클라이언트 컴포넌트는 서버에서 완전히 제외되지 않는다.
+2. `'use client'` 경계가 선언되면, 그 파일에서 import된 모든 모듈은 클라이언트 번들에 포함된다.
+3. 서버 컴포넌트가 클라이언트 번들에 포함되면, 서버 전용 로직이 브라우저에 노출될 수 있다.
+
+## 클라이언트 컴포넌트 - 서버 컴포넌트 다양한 케이스
+
+1. 서버 컴포넌트가 클라이언트 컴포넌트를 `import`하는 것은 된다.
+    
+    ```tsx
+    // ✅ 서버가 클라이언트를 import
+    import Button from './button' // 'use client'
+    
+    export default function Page() {
+      return <Button />
+    }
+    ```
+    
+2. 서버 컴포넌트가 클라이언트 컴포넌트에 `children`을 넘기는 것도 된다.
+    
+    ```tsx
+    // ✅ 서버가 조합 책임을 가짐
+    import Modal from './modal'   // 'use client'
+    import Cart from './cart'     // 서버 컴포넌트
+    
+    export default function Page() {
+      return <Modal><Cart /></Modal>
+    }
+    ```
+    
+3. 클라이언트 컴포넌트가 서버 컴포넌트를 직접 `import`하는 것은 안 된다.
+    
+    ```tsx
+    // ❌ 클라이언트가 서버를 import → 서버 로직이 번들에 포함됨
+    'use client'
+    import ServerComp from './server-comp'
+    
+    export default function Client() {
+      return <ServerComp />
+    }
+    ```
+    
+4. 부모가 클라이언트일 때, 서버 컴포넌트를 직접 `import`한다면  `children`으로 넘겨도 안 된다.
+    
+    ```tsx
+    // ❌ import 자체가 클라이언트에서 일어남
+    'use client'
+    import ServerComp from './server-comp'
+    
+    export default function Client() {
+      return <Wrapper><ServerComp /></Wrapper>
+    }
+    ```
+    
+5. ⭐️ 서버 → 클라이언트 → 서버 구조는 가능하다!
+    
+    ```tsx
+    // ✅ 조합은 서버인 Page가 담당
+    import Modal from './modal'     // 'use client'
+    import DeepServer from './deep' // 서버 컴포넌트
+    
+    export default function Page() {
+      return <Modal><DeepServer /></Modal> // Page(서버)가 import
+    }
+    ```
+    
+    대신, 
+    
+    ```tsx
+    // modal.tsx
+    'use client'
+    
+    export default function Modal({ children }: { children: React.ReactNode }) {
+      const [isOpen, setIsOpen] = useState(false)
+    
+      return (
+        <div>
+          <button onClick={() => setIsOpen(!isOpen)}>toggle</button>
+          {isOpen && <div>{children}</div>}
+        </div>
+      )
+    }
+    ```
+    
+    - 클라이언트 컴포넌트에서 서버 컴포넌트를 직접적으로 `import` 하면 안되고, `children`으로 넘겨줘야 한다.
+
+## 권장하는 클라이언트 컴포넌트 구조
+
+1. 인터랙티브 로직은 별도의 클라이언트 컴포넌트로 분리하고, 나머지 레이아웃은 서버 컴포넌트로 유지하는 것이 권장된다.
+2. 예를 들어 검색창(`SearchBar`)만 클라이언트 컴포넌트로 만들고, 전체 헤더 레이아웃은 서버 컴포넌트로 두는 식이다.
+3. 이렇게 하면 클라이언트 번들에 포함되는 JavaScript 양을 최소화할 수 있다.
+4. 클라이언트 컴포넌트는 트리의 말단에 두고, 서버 부모로부터 데이터를 `props`로 전달받는 구조를 유지하는 것이 핵심 원칙이다.
+5. 다음은 잘못된 구조이다.
+    
+    ```tsx
+    // ❌ Header.tsx
+    'use client'
+    
+    export default function Header() {
+      const [query, setQuery] = useState('')
+    
+      return (
+        <header>
+          <Logo />       {/* 인터랙션 없음 → 불필요하게 클라이언트 번들 포함 */}
+          <NavLinks />   {/* 인터랙션 없음 → 불필요하게 클라이언트 번들 포함 */}
+          <input value={query} onChange={e => setQuery(e.target.value)} />
+        </header>
+      )
+    }
+    ```
+    
+6. 이렇게 하면 `Logo`, `NavLinks`처럼 상호작용이 전혀 없는 컴포넌트까지 클라이언트 번들에 포함된다.
+7. 다음은 올바른 구조이다.
+    
+    ```tsx
+    // ✅ SearchBar.tsx → Client Component (말단)
+    'use client'
+    
+    export default function SearchBar() {
+      const [query, setQuery] = useState('')
+      return <input value={query} onChange={e => setQuery(e.target.value)} />
+    }
+    ```
+    
+    ```tsx
+    // ✅ Header.tsx → Server Component (레이아웃 유지)
+    import SearchBar from './SearchBar'
+    import Logo from './Logo'
+    import NavLinks from './NavLinks'
+    
+    export default function Header() {
+      return (
+        <header>
+          <Logo />      {/* 서버에서 렌더링 */}
+          <NavLinks />  {/* 서버에서 렌더링 */}
+          <SearchBar /> {/* 이 부분만 클라이언트 번들에 포함 */}
+        </header>
+      )
+    }
+    ```
+    
+8. `useState`가 필요한 검색창만 별도 클라이언트 컴포넌트로 추출한다.
+9. 클라이언트 번들에는 `SearchBar`의 JavaScript만 포함되고, `Logo`와 `NavLinks`는 포함되지 않는다.
+
+## 클라이언트 컴포넌트에서 서버의 함수를 직접 호출해야 할 때
+
+1. 서버 액션을 사용한다.
+2. 서버 액션은 파일 상단 또는 함수 내부에 `'use server'`를 선언해 정의한다.
+3. 클라이언트에서 호출하지만 실행은 서버에서 이루어지므로 DB 접근, 민감한 로직 처리가 가능하다.
+    
+    ```tsx
+    // actions.ts (Server Action 정의)
+    'use server'
+    export async function saveData(formData: FormData) {
+      await db.save(formData.get('email'))
+    }
+    ```
+    
+    ```tsx
+    // SettingsForm.tsx (Client Component에서 호출)
+    'use client'
+    import { saveData } from './actions'
+    
+    export function SettingsForm() {
+      return (
+        <form action={saveData}>
+          <input name="email" />
+          <button type="submit">저장</button>
+        </form>
+      )
+    }
+    ```
