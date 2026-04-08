@@ -1,13 +1,21 @@
 import { expect, test } from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
+
+const blogDir = path.join(process.cwd(), 'content/blog');
+const slugs = fs
+  .readdirSync(blogDir)
+  .filter((f) => f.endsWith('.mdx'))
+  .map((f) => f.replace(/\.mdx$/, ''));
 
 test.describe('블로그 상세 페이지', () => {
-  test('포스트 렌더링', async ({ page }) => {
-    await page.goto('/blog/route-handler');
-
-    await expect(
-      page.getByRole('heading', { name: 'Route Handler' })
-    ).toBeVisible();
-  });
+  for (const slug of slugs) {
+    test(`포스트 렌더링: ${slug}`, async ({ page }) => {
+      const response = await page.goto(`/blog/${slug}`);
+      expect(response?.status()).toBe(200);
+      await expect(page.getByRole('heading').first()).toBeVisible();
+    });
+  }
 
   test('존재하지 않는 slug 접근 시 404 페이지', async ({ page }) => {
     const response = await page.goto('/blog/this-post-does-not-exist');
