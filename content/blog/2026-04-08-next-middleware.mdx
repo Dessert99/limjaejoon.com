@@ -1,0 +1,391 @@
+---
+title: 'Next.js Middleware'
+date: '2026-04-08'
+description: 'Next.js 미들웨어가 요청과 응답 사이에서 실행되는 방식과, Matcher 설정, NextResponse API를 통한 redirect/rewrite/next 제어, 그리고 axios interceptor와의 역할 차이를 정리한다.'
+tags: ['Next.js', 'middleware']
+---
+
+## 무엇인가?
+
+1. 웹 애플리케이션에서 클라이언트가 요청을 보내면, 서버는 그 요청을 처리해 응답을 돌려준다.
+
+2. 미들웨어는 이 흐름 사이에 끼어들어, 응답이 완성되기 전에 먼저 실행되는 코드다.
+
+3. 여기서 말하는 서버는 별도의 백엔드 서버가 아니라, Next.js 애플리케이션 자체가 돌아가는 서버를 의미한다.
+
+4. 즉, 미들웨어는 라우트나 페이지가 처리되기 전 단계에서 요청을 가로채 원하는 로직을 실행할 수 있는 진입점이다.
+
+## 언제 쓸까?
+
+1. 가장 대표적인 용도는 인증과 권한 확인으로, 로그인 여부나 세션 쿠키를 페이지 접근 전에 검사할 수 있다.
+
+2. 권한이 없는 사용자를 서버 측에서 직접 리디렉션하는 것도 미들웨어가 잘하는 일이다.
+
+3. 경로 재작성(rewrite)은 URL은 그대로 유지하면서 실제로는 다른 페이지를 보여주는 기능으로, A/B 테스트나 레거시 경로 지원에 유용하다.
+
+4. 그 밖에도 봇 감지, 요청 로깅, 기능 플래깅 같은 가벼운 전처리 작업에 적합하다.
+
+## middleware에서 하면 안되는 작업
+
+1. 미들웨어는 모든 요청마다 실행되기 때문에, 무거운 작업이 들어오면 전체 페이지 응답 속도가 느려진다.
+
+2. 따라서 복잡한 데이터 조회나 조작은 Route Handler 또는 서버 측 유틸리티에서 처리해야 한다.
+
+3. 계산 비용이 큰 작업도 마찬가지로 전용 Route Handler에 위임하는 것이 맞다.
+
+4. 세션 관리 전체를 미들웨어에 맡기거나, 데이터베이스에 직접 접근하는 것도 권장되지 않는다.
+
+5. 한 줄로 요약하면, 미들웨어는 "요청을 어디로 보낼지 판단"하는 역할에 집중하고, 실제 처리는 다른 곳에 맡겨야 한다.
+
+## 실행 순서
+
+1. 미들웨어는 캐시된 콘텐츠와 라우트가 매칭되기 전에 실행된다는 점이 중요하다.
+2. Next.js 전체 요청 처리 순서는 다음과 같다
+    
+    ```
+    next.config.js의 headers 
+    	→ redirects
+    		→ 미들웨어
+    			→ beforeFiles rewrites 
+    				→ 파일 시스템 라우트
+    					→ afterFiles rewrites
+    						→ 동적 라우트 
+    							→ fallback rewrites.
+    ```
+    
+3. 즉, 미들웨어는 실제 파일 시스템 라우트보다 먼저 실행되므로, 페이지가 렌더링되기 전에 요청을 완전히 제어할 수 있다.
+
+## 파일 설정 규칙
+
+1. 미들웨어는 프로젝트 루트에 `middleware.ts` 파일 하나를 만드는 것으로 시작한다.
+2. `pages/`나 `app/`과 같은 레벨, 또는 `src/` 안에 위치시키면 된다.
+3. Next.js는 프로젝트당 하나의 미들웨어 파일만 허용하지만, 로직은 별도 파일로 분리해서 `import`하는 방식으로 모듈화할 수 있다.
+4. 기본 구조는 아래와 같다.
+    
+    ```tsx
+    import { NextResponse } from 'next/server'
+    import type { NextRequest } from 'next/server'
+    
+    export function middleware(request: NextRequest) {
+      return NextResponse.redirect(new URL('/home', request.url))
+    }
+    
+    export const config = {
+      matcher: '/about/:path*',
+    }
+    ```
+    
+5. `middleware` 함수가 실제 로직이고, `config.matcher`는 이 미들웨어가 적용될 경로를 지정한다.
+
+## Matcher로 경로 지정하기
+
+1. 미들웨어는 기본적으로 모든 라우트에 대해 실행되므로, 필요한 경로에만 적용되도록 `matcher`를 설정하는 것이 중요하다.
+2. 단일 경로는 문자열로, 여러 경로는 배열로 지정할 수 있다.
+    
+    ```tsx
+    export const config = {
+      matcher: ['/about/:path*', '/dashboard/:path*'],
+    }
+    ```
+    
+3. `:path*`에서 `*`은 0개 이상, `?`는 0개 또는 1개, `+`는 1개 이상의 세그먼트를 의미한다.
+4. 정규식도 사용할 수 있어서, 특정 경로를 제외한 모든 경로에 적용하는 부정형 매칭도 가능하다.
+    
+    ```tsx
+    export const config = {
+      matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+    }
+    ```
+    
+5. 위 예시는 API 라우트, 정적 파일, 이미지 최적화 경로, 파비콘을 제외한 모든 경로에 미들웨어를 적용한다.
+6. `matcher` 값은 빌드 타임에 정적으로 분석되므로, 변수 같은 동적 값은 사용할 수 없다.
+
+## 조건문으로 경로 분기하기
+
+1. matcher 대신 함수 내부에서 조건문으로 경로를 분기하는 방법도 있다.
+2. `request.nextUrl.pathname`을 통해 현재 경로를 확인하고, 경로별로 다른 동작을 수행할 수 있다.
+    
+    ```tsx
+    export function middleware(request: NextRequest) {
+      if (request.nextUrl.pathname.startsWith('/about')) {
+        return NextResponse.rewrite(new URL('/about-2', request.url))
+      }
+      if (request.nextUrl.pathname.startsWith('/dashboard')) {
+        return NextResponse.rewrite(new URL('/dashboard/user', request.url))
+      }
+    }
+    ```
+    
+3. `matcher`는 적용 대상 경로 자체를 제한할 때, 조건문은 경로별로 다른 로직을 실행할 때 사용한다.
+
+## 응답을 제어하기: NextResponse API
+
+1. 미들웨어 안에서 응답을 제어하는 핵심 도구는 `NextResponse`다.
+2. 1️⃣ `NextResponse.redirect()`는 사용자를 다른 URL로 완전히 이동시키고, 브라우저 주소창의 URL도 바뀐다.
+3. 서버가 301/307 같은 리다이렉트 응답을 내려보내고, 브라우저가 새 URL로 다시 요청을 보내는 방식으로 동작한다.
+4. 가장 대표적인 사용 사례는 로그인하지 않은 사용자를 로그인 페이지로 보내는 인증 처리다.
+    
+    ```tsx
+    import { NextResponse } from 'next/server'
+    import type { NextRequest } from 'next/server'
+    
+    export function middleware(request: NextRequest) {
+      const token = request.cookies.get('auth-token')
+    
+      // 토큰이 없으면 /login으로 완전히 이동시킨다
+      // 브라우저 주소창도 /login으로 바뀐다
+      if (!token) {
+        return NextResponse.redirect(new URL('/login', request.url))
+      }
+    }
+    
+    export const config = {
+      matcher: ['/dashboard/:path*', '/mypage/:path*'],
+    }
+    ```
+    
+5. `new URL('/login', request.url)`에서 두 번째 인자 `request.url`은 현재 요청의 도메인을 기준으로 상대경로를 절대경로로 만들어주는 역할을 한다.
+6. 즉 개발 환경에서는 `http://localhost:3000/login`, 프로덕션에서는 `https://myapp.com/login`이 된다.
+7. 2️⃣ `NextResponse.rewrite()`는 URL은 그대로 유지하면서 내부적으로 다른 페이지를 렌더링한다.
+8. 사용자 눈에는 `/about`에 있는 것처럼 보이지만, 서버는 내부적으로 `/about-v2`를 렌더링하는 식이다.
+9. 대표적인 사용 사례는 A/B 테스트로, 사용자를 두 버전의 페이지로 나눠 보내면서도 URL은 동일하게 유지할 수 있다.
+    
+    ```tsx
+    import { NextResponse } from 'next/server'
+    import type { NextRequest } from 'next/server'
+    
+    export function middleware(request: NextRequest) {
+      const bucket = request.cookies.get('ab-bucket')?.value
+    
+      if (request.nextUrl.pathname === '/landing') {
+        // 쿠키 값에 따라 다른 페이지를 렌더링하지만
+        // 주소창은 계속 /landing으로 보인다
+        if (bucket === 'B') {
+          return NextResponse.rewrite(new URL('/landing-v2', request.url))
+        }
+      }
+    }
+    ```
+    
+10. 레거시 경로 지원에도 유용한데, `/old-page`로 들어온 요청을 `/new-page`로 rewrite하면 외부 링크가 깨지지 않는다.
+11. 3️⃣ `NextResponse.next()`는 요청을 그대로 다음 단계로 넘기며, 아무것도 막거나 바꾸지 않는다.
+12. 대신 이 과정에서 헤더나 쿠키를 추가하거나 수정할 수 있다.
+13. 가장 흔한 패턴은 요청 헤더에 사용자 정보를 심어서 이후 페이지나 API가 읽을 수 있게 하는 것이다.
+    
+    ```tsx
+    import { NextResponse } from 'next/server'
+    import type { NextRequest } from 'next/server'
+    
+    export function middleware(request: NextRequest) {
+      const userId = request.cookies.get('user-id')?.value
+    
+      // 요청 헤더를 복제하고 사용자 ID를 추가한다
+      const requestHeaders = new Headers(request.headers)
+      requestHeaders.set('x-user-id', userId ?? 'guest')
+    
+      // 요청을 막지 않고 그대로 통과시키되, 헤더를 추가해서 넘긴다
+      return NextResponse.next({
+        request: { headers: requestHeaders },
+      })
+    }
+    ```
+    
+14. 이렇게 심어둔 헤더는 이후 Server Component나 Route Handler에서 `headers()` 함수로 꺼내 쓸 수 있다.
+15. 인증 실패 같은 경우에는 아래처럼 미들웨어에서 직접 JSON 응답을 반환할 수도 있다.
+    
+    ```tsx
+    if (!isAuthenticated(request)) {
+      return Response.json(
+        { success: false, message: 'authentication failed' },
+        { status: 401 }
+      )
+    }
+    ```
+    
+
+## 런타임 환경
+
+1. Next.js 미들웨어는 현재 Edge Runtime에서만 실행된다.
+
+2. Edge Runtime은 Node.js 전체 런타임이 아니기 때문에, Node.js 전용 API나 라이브러리는 사용할 수 없다.
+
+3. 이것이 미들웨어에서 DB 접근이나 무거운 작업을 피해야 하는 또 다른 이유이기도 하다.
+
+## Next.js 16 에서는 middleware.ts → proxy.ts로 변경되었다.
+
+1. Next.js 16에서 `middleware.ts`는 `proxy.ts`로 이름이 바뀌었고, 내보내는 함수명도 `middleware`에서 `proxy`로 변경됐다.
+2. 이름을 바꾼 이유는 "미들웨어"라는 단어가 Express.js 미들웨어와 혼동을 일으켜 잘못된 사용을 유도하기 때문이다.
+3. "proxy"라는 이름은 앱 앞단에 네트워크 경계가 있다는 것을 명확히 하고, 무거운 로직보다는 라우팅과 프록시 역할에 집중해야 한다는 의도를 담고 있다.
+4. 코드 로직 자체는 동일하고, 마이그레이션은 파일명과 함수명만 바꾸면 된다.
+    
+    ```tsx
+    // Next.js 14 — middleware.ts
+    export function middleware(request: NextRequest) { ... }
+    
+    // Next.js 16 — proxy.ts (로직은 동일)
+    export function proxy(request: NextRequest) { ... }
+    ```
+    
+5. `next.config.ts`의 관련 옵션명도 바뀌어서, 예를 들어 `skipMiddlewareUrlNormalize`는 `skipProxyUrlNormalize`로 변경됐다.
+
+## 사용 사례 1) 인증과 권한 확인
+
+1. 미들웨어에서 인증을 처리하는 핵심 아이디어는, 페이지가 렌더링되기 전에 쿠키나 토큰을 먼저 확인하는 것이다.
+2. 토큰이 없으면 `redirect()`로 로그인 페이지로 보내고, 있으면 `next()`로 통과시킨다.
+    
+    ```tsx
+    import { NextResponse } from 'next/server'
+    import type { NextRequest } from 'next/server'
+    
+    export function middleware(request: NextRequest) {
+      const token = request.cookies.get('auth-token')?.value
+    
+      if (!token) {
+        // 로그인 후 원래 가려던 페이지로 돌아오기 위해
+        // 현재 경로를 쿼리로 넘긴다
+        const loginUrl = new URL('/login', request.url)
+        <ToolTip text='로그인 완료 후 원래 가려던 페이지로 다시 보내주기 위한 처리다.'>loginUrl.searchParams.set('redirect', request.nextUrl.pathname)</Tooltip>
+        return NextResponse.redirect(loginUrl)
+      }
+    
+      return NextResponse.next()
+    }
+    
+    export const config = {
+      matcher: ['/dashboard/:path*', '/admin/:path*'],
+    }
+    ```
+    
+3. 단, 미들웨어에서는 JWT 서명 검증 같은 무거운 인증 로직은 하지 않는 것이 원칙이고, 쿠키 존재 여부나 간단한 형식 확인 정도만 수행하는 것이 맞다.
+
+## 사용 사례 2) **권한에 따른 서버 측 리디렉션**
+
+1. 로그인 여부뿐 아니라 사용자 역할(role)에 따라 다른 페이지로 보내야 하는 경우도 있다.
+2. 예를 들어 일반 사용자가 `/admin`에 접근하면 `/403` 페이지로, 비로그인 사용자면 `/login`으로 보내는 식이다.
+    
+    ```tsx
+    import { NextResponse } from 'next/server'
+    import type { NextRequest } from 'next/server'
+    
+    export function middleware(request: NextRequest) {
+      const token = request.cookies.get('auth-token')?.value
+      const role = request.cookies.get('user-role')?.value
+    
+      // 비로그인 사용자는 로그인 페이지로
+      if (!token) {
+        return NextResponse.redirect(new URL('/login', request.url))
+      }
+    
+      // 로그인은 했지만 admin 권한이 없으면 403으로
+      if (request.nextUrl.pathname.startsWith('/admin') && role !== 'admin') {
+        return NextResponse.redirect(new URL('/403', request.url))
+      }
+    
+      return NextResponse.next()
+    }
+    
+    export const config = {
+      matcher: ['/admin/:path*', '/dashboard/:path*'],
+    }
+    ```
+    
+3. 이 처리가 서버 측에서 이루어지기 때문에, 클라이언트에서 조건 분기를 하는 것보다 보안적으로 훨씬 안전하다.
+
+## 사용 사례 3)  경로 재작성
+
+1. rewrite는 URL은 그대로 두면서 실제 렌더링은 다른 페이지로 넘기는 기능이다.
+2. 사용자 로케일(언어)에 따라 다른 페이지를 보여주는 국제화 처리에도 자주 쓰인다.
+    
+    ```tsx
+    import { NextResponse } from 'next/server'
+    import type { NextRequest } from 'next/server'
+    
+    export function middleware(request: NextRequest) {
+      const locale = request.cookies.get('locale')?.value ?? 'ko'
+      const pathname = request.nextUrl.pathname
+    
+      // /about으로 들어온 요청을 언어별 페이지로 재작성한다
+      // 브라우저 주소창은 계속 /about으로 보인다
+      if (pathname === '/about') {
+        return NextResponse.rewrite(new URL(`/about-${locale}`, request.url))
+      }
+    }
+    ```
+    
+3. 또 다른 활용 사례는 유지보수 중인 페이지를 교체할 때로, 기존 URL을 유지하면서 새 페이지를 내보낼 수 있어 SEO에도 유리하다.
+
+## 사용 사례 4)  봇 감지와 로깅
+
+1. 미들웨어는 모든 요청을 가로채기 때문에, 요청 데이터를 분석 플랫폼에 전송하기에 적합한 위치다.
+2. 단, 로깅 요청이 미들웨어의 응답을 지연시켜선 안 되므로, `waitUntil()`을 사용해 백그라운드에서 처리한다.
+    
+    ```tsx
+    import { NextResponse } from 'next/server'
+    import type { NextFetchEvent, NextRequest } from 'next/server'
+    
+    const BOT_USER_AGENTS = /bot|crawl|spider|slurp|teoma/i
+    
+    export function middleware(req: NextRequest, event: NextFetchEvent) {
+      const userAgent = req.headers.get('user-agent') ?? ''
+    
+      // 봇으로 판단되면 403 반환
+      if (BOT_USER_AGENTS.test(userAgent)) {
+        return new Response('Forbidden', { status: 403 })
+      }
+    
+      // 일반 사용자는 통과시키되, 분석 데이터를 백그라운드에서 전송한다
+      // waitUntil은 응답을 기다리지 않고 백그라운드에서 실행된다
+      event.waitUntil(
+        fetch('https://my-analytics.com/log', {
+          method: 'POST',
+          body: JSON.stringify({ path: req.nextUrl.pathname, ua: userAgent }),
+        })
+      )
+    
+      return NextResponse.next()
+    }
+    ```
+    
+3. `waitUntil()`이 없으면 `fetch`가 끝날 때까지 미들웨어가 기다려야 하므로, 반드시 사용해 응답 속도를 보장해야 한다.
+
+## axios interceptor 와 next middleware.ts
+
+1. 미들웨어의 본질은 "요청과 응답 사이에서 가로채 무언가를 처리하는 것"이다.
+2. axios interceptor는 HTTP 요청이 서버로 나가기 전, 또는 응답이 클라이언트 코드에 도달하기 전에 가로채 로직을 실행한다.
+3. 이 구조는 미들웨어의 개념과 정확히 일치하므로, axios interceptor는 클라이언트 측 미들웨어라고 볼 수 있다.
+4. 다만 Next.js의 `middleware.ts`는 서버(Edge Runtime)에서 실행되고, axios interceptor는 브라우저(클라이언트)에서 실행된다는 점에서 실행 환경이 근본적으로 다르다.
+5. Next.js 미들웨어는 브라우저가 Next.js 서버에 보내는 요청을 가로챈다.
+6. 즉, 사용자가 페이지를 요청할 때 그 요청을 서버 단에서 처리하는 것이다.
+7. axios interceptor는 클라이언트 코드가 외부 API 서버로 보내는 요청을 가로챈다.
+8. 예를 들어 React 컴포넌트 안에서 `axios.get('https://api.example.com/data')`를 호출할 때 작동하는 것이다.
+9. 따라서 둘은 가로채는 요청의 출발지와 목적지가 완전히 다르다.
+10. 그렇다면 Next.js에서 axios interceptor가 필요 없을까?
+11. 필요 없는 것이 아니라, 역할이 달라서 함께 사용하는 것이 일반적이다.
+12. Next.js 미들웨어로 할 수 없는 일이 있는데, 대표적으로 외부 API 요청에 토큰을 자동으로 붙이는 작업이다.
+13. 예를 들어 `Authorization: Bearer <token>` 헤더를 모든 API 요청에 자동으로 추가하려면 axios interceptor가 필요하다.
+    
+    ```tsx
+    axios.interceptors.request.use((config) => {
+      config.headers.Authorization = `Bearer ${getToken()}`
+      return config
+    })
+    ```
+    
+14. Next.js 미들웨어로 할 수 없는 것이 또 있는데, 401 응답이 왔을 때 토큰을 재발급받고 요청을 자동으로 재시도하는 것이다.
+    
+    ```tsx
+    axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (error.response?.status === 401) {
+          const newToken = await refreshToken()
+          error.config.headers.Authorization = `Bearer ${newToken}`
+          return axios(error.config) // 요청 재시도
+        }
+        return Promise.reject(error)
+      }
+    )
+    ```
+    
+15. 이런 작업은 클라이언트에서 외부 서버와 통신하는 흐름이기 때문에, Next.js 미들웨어가 개입할 수 없는 영역이다.
+16. 실제 프로젝트에서는 페이지 접근 제어는 Next.js 미들웨어가, API 통신 전처리는 axios interceptor가 각각 담당하는 구조로 함께 쓰인다.

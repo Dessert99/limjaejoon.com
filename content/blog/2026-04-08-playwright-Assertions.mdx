@@ -1,0 +1,231 @@
+---
+title: 'Playwright Assertions'
+date: '2026-04-08'
+description: ‘Playwright의 expect() 기반 Assertion 종류와 사용법을 정리한다. Auto-retrying, Soft Assertions, expect.poll, toPass, 커스텀 매처까지 비동기 환경에서 안정적인 테스트를 작성하는 패턴을 다룬다.’
+tags: [‘Playwright’, ‘testing’, ‘E2E’, ‘assertion’]
+---
+
+## <Tooltip text="Playwright의 Assertion은 자동 재시도 여부를 중심으로 설계되어 있으며, soft assertion, poll, toPass, 커스텀 매처까지 조합하면 비동기 웹 환경에서도 안정적이고 유연한 테스트를 작성할 수 있다.">무엇인가?</Tooltip>
+
+1. 테스트에서 "이 값이 이래야 한다"는 기대를 코드로 표현하는 것을 Assertion이라고 한다.
+
+2. Playwright는 이를 위해 `expect()` 함수를 제공한다.
+
+3. `expect(값).toEqual()`, `toBeTruthy()` 같은 일반 매처로 어떤 조건이든 검증할 수 있다.
+
+4. 그런데 웹 페이지는 데이터를 비동기로 보여주는 경우가 많아, 단순한 즉시 검사만으로는 타이밍 문제가 생길 수 있다.
+
+5. 이 문제를 해결하기 위해 Playwright는 조건이 충족될 때까지 자동으로 재시도하는 비동기 매처를 별도로 제공한다.
+
+## 자동 재시도로 테스트하고 싶을 때: Auto-retrying Assertions
+
+1. 자동 재시도 Assertion은 조건이 통과되거나 타임아웃에 도달할 때까지 요소를 반복적으로 다시 가져와 검사한다.
+2. 비동기로 동작하므로 반드시 `await`를 붙여야 한다.
+3. 기본 타임아웃은 5초이며, 설정 파일의 `testConfig.expect`로 전역 변경할 수 있다.
+4. 대표적인 예시는 아래와 같다.
+    
+    ```tsx
+    await expect(page.getByTestId('status')).toHaveText('Submitted');
+    ```
+    
+5. 위 코드는 `status` 요소의 텍스트가 `"Submitted"`가 될 때까지 계속 재시도한다.
+6. 자주 쓰이는 매처로는 `toBeVisible()`, `toHaveText()`, `toBeEnabled()`, `toHaveURL()` 등이 있다.
+7. `toBeVisible()`은 요소가 화면에 보이는지 확인한다.
+    
+    ```tsx
+    await expect(page.getByText('로그인 성공')).toBeVisible();
+    // ✅ '로그인 성공' 텍스트가 DOM에 존재하고 화면에 보임
+    // ❌ 요소가 없거나 display:none 상태면 실패
+    ```
+    
+8. `toHaveText()`는 요소의 텍스트 내용이 기대값과 일치하는지 확인한다.
+    
+    ```tsx
+    await expect(page.getByTestId('status')).toHaveText('Submitted');
+    // ✅ status 요소의 텍스트가 정확히 'Submitted'임
+    // ❌ 'submitted' (소문자) 또는 'Submitted!' 이면 실패
+    ```
+    
+9. `toBeEnabled()`는 버튼이나 입력창 같은 요소가 비활성화되지 않았는지 확인한다.
+    
+    ```tsx
+    await expect(page.getByRole('button', { name: '제출' })).toBeEnabled();
+    // ✅ 버튼에 disabled 속성이 없음
+    // ❌ <button disabled> 상태면 실패
+    ```
+    
+10. `toHaveURL()`은 현재 페이지의 URL이 기대값과 일치하는지 확인한다.
+    
+    ```tsx
+    await expect(page).toHaveURL('https://example.com/dashboard');
+    // ✅ 현재 URL이 정확히 해당 주소임
+    // ❌ 리다이렉트가 아직 안 됐거나 URL이 다르면 실패
+    ```
+    
+
+## 호출 즉시 검사할 때: Non-retrying Assertions
+
+1. 재시도 없이 호출 시점의 값을 즉시 검사하는 매처들도 존재한다.
+2. 웹 페이지의 비동기 특성 때문에, 이 방식은 타이밍에 따라 테스트가 불안정하게 실패하는 flaky test를 유발할 수 있다.
+3. 따라서 가능하면 자동 재시도 Assertion을 우선 사용하는 것이 권장된다.
+4. 대표적인 매처로는 `toBe()`, `toEqual()`, `toContain()`, `toBeNull()`, `toThrow()` 등이 있다.
+5. `toBe()`는 값이 완전히 동일한지 확인한다 (참조까지 같은 엄격한 비교).
+    
+    ```tsx
+    expect(1 + 1).toBe(2);
+    // ✅ 2 === 2
+    // ❌ expect({a:1}).toBe({a:1}) 은 참조가 다르므로 실패
+    ```
+    
+6. `toEqual()`은 참조가 달라도 내용이 같으면 통과하는 깊은 비교를 수행한다.
+    
+    ```tsx
+    expect({ a: 1 }).toEqual({ a: 1 });
+    // ✅ 내용이 같으므로 통과
+    // ❌ expect({ a: 1 }).toEqual({ a: 2 }) 은 실패
+    ```
+    
+7. `toContain()`은 문자열 안에 부분 문자열이 있는지, 또는 배열 안에 특정 요소가 있는지 확인한다.
+    
+    ```tsx
+    expect('hello world').toContain('world');
+    // ✅ 'world'가 포함되어 있음
+    
+    expect([1, 2, 3]).toContain(2);
+    // ✅ 배열에 2가 존재함
+    // ❌ expect([1, 2, 3]).toContain(5) 는 실패
+    ```
+    
+8. `toBeNull()`은 값이 정확히 `null`인지 확인한다.
+    
+    ```tsx
+    expect(null).toBeNull();
+    // ✅ null임
+    // ❌ undefined, 0, '' 등은 실패
+    ```
+    
+9. `toThrow()`는 함수를 실행했을 때 에러가 던져지는지 확인한다.
+    
+    ```tsx
+    expect(() => JSON.parse('invalid')).toThrow();
+    // ✅ 파싱 실패로 에러가 발생함
+    // ❌ 에러 없이 정상 실행되면 실패
+    ```
+    
+
+## 반대 검증하고 싶을 때: Negating
+
+1. 어떤 매처든 앞에 `.not`을 붙이면 조건의 반대를 검증할 수 있다.
+    
+    ```tsx
+    expect(value).not.toEqual(0);
+    await expect(locator).not.toContainText('some text');
+    ```
+    
+
+## 유연한 조건 검사하고 싶을 때: Asymmetric Matchers
+
+1. Asymmetric Matchers는 일부 조건만 만족해도 통과시키고 싶을 때 다른 매처 안에 중첩해서 사용한다.
+2. 이는 정확한 일치가 아닌 "~를 포함하는", "~의 인스턴스인" 같은 유연한 조건 검사에 유용하다.
+3. `expect.arrayContaining()`, `expect.objectContaining()`, `expect.stringMatching()` 등이 대표적이다.
+4. `expect.arrayContaining()`은 배열이 특정 요소들을 포함하기만 하면 통과시킨다.
+    
+    ```tsx
+    expect([1, 2, 3, 4]).toEqual(expect.arrayContaining([2, 4]));
+    // ✅ [2, 4]가 배열 안에 모두 포함되어 있음
+    // ❌ expect.arrayContaining([5]) 는 5가 없으므로 실패
+    
+    expect([1, 2, 3, 4]).toEqual(expect.arrayContaining([2]));
+    // ✅ [2]의 요소인 2가 대상 배열에 존재하므로 통과
+    ```
+    
+5. `expect.objectContaining()`은 객체가 특정 프로퍼티를 포함하기만 하면 통과시킨다.
+    
+    ```tsx
+    expect({ name: 'Alice', age: 30, role: 'admin' }).toEqual(
+      expect.objectContaining({ name: 'Alice', role: 'admin' })
+    );
+    // ✅ name과 role이 모두 존재하고 값도 일치함
+    // ❌ age가 다르더라도, 검사 대상이 아니므로 무시됨
+    ```
+    
+6. `expect.stringMatching()`은 문자열이 정규식 또는 부분 문자열 패턴과 일치하는지 확인한다
+    
+    ```tsx
+    expect('hello world').toEqual(expect.stringMatching(/^hello/));
+    // ✅ 'hello'로 시작하므로 통과
+    // ❌ 'world hello' 는 ^hello 패턴에 맞지 않아 실패
+    ```
+    
+
+## Soft Assertions
+
+1. 기본적으로 Assertion이 실패하면 테스트 실행이 즉시 중단된다.
+2. 그런데 여러 항목을 한꺼번에 점검하고 싶을 때는, 하나가 실패해도 나머지 검사를 계속 진행하고 싶을 수 있다.
+3. 이럴 때 `expect.soft()`를 사용하면 실패해도 테스트가 중단되지 않고 계속 진행되며, 최종적으로 테스트를 실패로 표시한다.
+    
+    ```tsx
+    await expect.soft(page.getByTestId('status')).toHaveText('Success');
+    await expect.soft(page.getByTestId('eta')).toHaveText('1 day');
+    ```
+    
+4. 중간에 soft assertion 실패 여부를 확인하고 싶다면 아래처럼 쓸 수 있다.
+    
+    ```tsx
+    expect(test.info().errors).toHaveLength(0);
+    ```
+    
+
+## Custom Message
+
+1. Assertion에 두 번째 인자로 문자열을 전달하면 실패 시 리포터에 더 명확한 설명이 출력된다.
+    
+    ```tsx
+    await expect(page.getByText('Name'), 'should be logged in').toBeVisible();
+    ```
+    
+
+## expect.configure
+
+1. 매번 옵션을 반복하지 않으려면 `expect.configure()`로 타임아웃이나 soft 여부를 미리 설정한 인스턴스를 만들 수 있다.
+    
+    ```tsx
+    const slowExpect = expect.configure({ timeout: 10000 });
+    const softExpect = expect.configure({ soft: true });
+    ```
+    
+
+## expect.poll
+
+1. 동기 함수의 결과값을 반복 검사하고 싶을 때는 `expect.poll()`을 사용한다.
+2. 내부에서 비동기 함수를 실행하고 그 반환값이 조건을 만족할 때까지 재시도한다.
+    
+    ```tsx
+    await expect.poll(async () => {
+      const response = await page.request.get('https://api.example.com');
+      return response.status();
+    }, { timeout: 10000 }).toBe(200);
+    ```
+    
+
+## expect.toPass
+
+1. 코드 블록 전체를 통과할 때까지 재시도하고 싶을 때는 `expect.toPass()`를 사용한다.
+    
+    ```tsx
+    await expect(async () => {
+      const response = await page.request.get('https://api.example.com');
+      expect(response.status()).toBe(200);
+    }).toPass();
+    ```
+    
+2. `poll`은 반환값을 매처로 검사하고, `toPass`는 블록 안에서 예외 없이 통과하는지를 검사한다는 점에서 차이가 있다.
+3. `toPass`는 기본 타임아웃이 0으로 설정되어 있어, 별도로 지정하지 않으면 무한 재시도에 가깝게 동작하니 주의가 필요하다.
+
+## Custom Matchers
+
+1. 프로젝트 특성에 맞는 검증 로직을 `expect.extend()`로 직접 만들어 등록할 수 있다.
+
+2. 커스텀 매처는 `pass` 여부와 실패 시 출력할 `message` 함수를 반환해야 한다.
+
+3. 여러 모듈에서 각자 정의한 커스텀 매처를 하나로 합칠 때는 `mergeExpects()`를 사용한다.
