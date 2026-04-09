@@ -1,6 +1,6 @@
 ---
 paths:
-    - "content/blog/**"
+    - "frontend/content/blog/**"
 ---
 
 # 학습 정리 블로그 포스트 형식

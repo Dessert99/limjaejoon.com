@@ -1,6 +1,6 @@
 ---
 paths:
-    - "features/**/components/**"
+    - "frontend/features/**/components/**"
 ---
 
 # 컴포넌트 작성 규칙

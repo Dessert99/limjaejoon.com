@@ -1,7 +1,7 @@
 ---
 paths:
-    - "**/*.css.ts"
-    - "styles/**"
+    - "frontend/**/*.css.ts"
+    - "frontend/styles/**"
 ---
 
 # Vanilla Extract 규칙

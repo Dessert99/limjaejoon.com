@@ -1,6 +1,6 @@
 # limjaejoon.com
 
-개인 포트폴리오 & 기술 블로그 사이트. Next.js App Router + Vanilla Extract 기반, MDX 블로그 지원.
+개인 포트폴리오 & 기술 블로그 + API 서버. npm workspaces 모노레포.
 
 
 ## 개발 철학
@@ -13,29 +13,34 @@
 
 ## 기술 스택
 
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript 5 (strict mode)
-- **Styling**: Vanilla Extract CSS (타입 안전 CSS-in-JS)
-- **Blog**: MDX (next-mdx-remote/rsc, gray-matter)
+- **Frontend**: Next.js 16 (App Router), React 19, Vanilla Extract CSS, MDX
+- **Backend**: NestJS 11, TypeScript 5
+- **공통**: TypeScript 5 (strict mode), npm workspaces
 
 
 ## 디렉토리 구조
-app/           # Next.js 라우트 페이지
-features/      # 기능별 컴포넌트 (blog, navigation 등)
-content/blog/  # MDX 블로그 포스트
-styles/        # 디자인 토큰, 글로벌 스타일 (Vanilla Extract)
-public/        # 정적 에셋
+frontend/          # Next.js 프론트엔드
+  app/             # 라우트 페이지
+  features/        # 기능별 컴포넌트
+  content/blog/    # MDX 블로그 포스트
+  styles/          # 디자인 토큰, 글로벌 스타일
+  public/          # 정적 에셋
+backend/           # NestJS API 서버
+  src/             # 소스 코드
 
 
 ## 개발 명령어
-npm run dev    # 개발 서버 (Turbopack)
-npm run build  # 프로덕션 빌드
-npm run lint   # ESLint 검사
+npm run dev:fe     # 프론트엔드 개발 서버
+npm run dev:be     # 백엔드 개발 서버
+npm run build:fe   # 프론트엔드 빌드
+npm run build:be   # 백엔드 빌드
+npm run lint       # 전체 린트
+npm run format     # 전체 포맷
 
 
 ## 코드 컨벤션
-- 스타일은 반드시 Vanilla Extract (`*.css.ts`)로 작성, 인라인 스타일 지양
-- 경로 alias: `@/*` (루트 기준)
-- features/ 아래에 기능별로 컴포넌트 분리
+- 프론트엔드 스타일은 반드시 Vanilla Extract (`*.css.ts`)로 작성, 인라인 스타일 지양
+- 프론트엔드 경로 alias: `@/*` (`frontend/` 기준)
+- `frontend/features/` 아래에 기능별로 컴포넌트 분리
 
 
