@@ -6,18 +6,26 @@ test.describe('블로그 목록 페이지', () => {
 
     const sidebar = page.getByRole('complementary');
     // "전체" 다음 첫 번째 태그 버튼 클릭
-    const firstTag = sidebar.getByRole('button').filter({ hasNotText: '전체' }).first();
+    const firstTag = sidebar
+      .getByRole('button')
+      .filter({ hasNotText: '전체' })
+      .first();
     const tagName = await firstTag.textContent();
     await firstTag.click();
 
-    await expect(page).toHaveURL(`/blog?tag=${encodeURIComponent(tagName!.trim())}`);
+    await expect(page).toHaveURL(
+      `/blog?tag=${encodeURIComponent(tagName!.trim())}`
+    );
   });
 
   test('활성 태그 재클릭 시 필터 해제', async ({ page }) => {
     await page.goto('/blog');
 
     const sidebar = page.getByRole('complementary');
-    const firstTag = sidebar.getByRole('button').filter({ hasNotText: '전체' }).first();
+    const firstTag = sidebar
+      .getByRole('button')
+      .filter({ hasNotText: '전체' })
+      .first();
     await firstTag.click();
     await firstTag.click(); // 재클릭
 
@@ -27,7 +35,10 @@ test.describe('블로그 목록 페이지', () => {
   test('"전체" 버튼 클릭 시 태그 필터 해제', async ({ page }) => {
     await page.goto('/blog?tag=Next.js');
 
-    await page.getByRole('complementary').getByRole('button', { name: '전체' }).click();
+    await page
+      .getByRole('complementary')
+      .getByRole('button', { name: '전체' })
+      .click();
 
     await expect(page).toHaveURL('/blog');
   });
