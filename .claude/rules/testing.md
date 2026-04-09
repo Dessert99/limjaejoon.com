@@ -7,17 +7,9 @@ paths:
 
 작업이 끝나면 반드시 아래 순서로 검증한다.
 
-### 1. lint & format 검사 (항상 실행)
-- `npm run lint` 실행하여 에러 없는지 확인
+### 1. CI 검사 (항상 실행)
+- 프론트엔드: `npm run ci -w frontend` 실행 (lint → type-check → build 순차 실행)
 - `npm run format:check` 실행하여 포맷 위반 없는지 확인 (위반 시 `npm run format`으로 자동 수정)
 
-### 2. build 검사 (변경 범위에 따라 실행)
-- 다음 중 하나라도 해당하면 `npm run build` 실행:
-  - `.css.ts` 파일 수정 (스타일 변경)
-  - 컴포넌트/페이지 파일 추가·삭제
-  - import 경로 변경
-  - TypeScript 타입 수정
-- 단순 텍스트 수정(MDX 본문 등)은 lint만으로 충분
-
-### 3. 영향 범위 확인
+### 2. 영향 범위 확인
 - 수정한 컴포넌트를 사용하는 페이지가 정상 렌더링되는지 확인
