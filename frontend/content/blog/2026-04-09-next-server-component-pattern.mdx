@@ -1,0 +1,175 @@
+---
+title: 'Next.js 서버 컴포넌트 패턴'
+date: '2026-04-09'
+description: '서버 컴포넌트에서 fetch 메모이제이션과 cache()를 활용한 데이터 공유, server-only 패키지로 서버 전용 코드 보호, Provider 패턴으로 클라이언트 Context를 분리하는 방법을 정리한다.'
+tags: ['Next.js', 'RSC']
+---
+
+## 서버 컴포넌트
+
+1. 서버 컴포넌트는 서버 환경에서 실행되는 리액트 컴포넌트이다.
+
+2. 서버에서 실행되기 때문에 데이터베이스나 백엔드 서비스에 직접 접근할 수 있다.
+
+3. 덕분에 다양한 형태로 컴포넌트를 구현할 수 있다.
+
+## 1️⃣ 컴포넌트 간 데이터 공유
+
+1. 컴포넌트 간 데이터를 공유해야 할 경우가 많다.
+2. 일반적으로 클라이언트 컴포넌트에서는 데이터를 공유하기 위해 리액트 컨텍스트를 사용하거나 `props`로 하위 컴포넌트에 데이터를 전달한다.
+3. 하지만 서버 컴포넌트에서는 컨텍스트를 사용할 수 없기 때문에 다른 방식이 필요하다.
+4. 그래서 각 컴포넌트에서 `fetch()`나 리액트의 `cache()`함수를 사용해서 직접 데이터를 가져오는 형태로 구현하게 된다.
+5. 여기서 `fetch` 의 경우 동일한 데이터에 대한 페칭이 불필요하게 여러 번 발생한다고 생각할 수 있다.
+6. 하지만 여러 컴포넌트가 같은 URL로 `fetch()`를 호출하더라도, Next.js는 자동으로 결과를 메모이제이션한다.
+7. 이것을 리퀘스트 메모이제이션이라고 하며, 실제 네트워크 요청은 한 번만 발생한다.
+8. 덕분에 서버 컴포넌트에서는 `props` 를 통해 전달할 필요 없이 각 컴포넌트에서 곧바로 가져다가 사용하면 된다.
+    
+    ```tsx
+    // UserCard.tsx
+    async function UserCard() {
+      const user = await fetch('/api/user').then(r => r.json()); // 메모이제이션됨
+      return <p>{user.name}</p>;
+    }
+    
+    // UserBadge.tsx
+    async function UserBadge() {
+      const user = await fetch('/api/user').then(r => r.json()); // 같은 요청 → 캐시 반환
+      return <span>{user.role}</span>;
+    }
+    ```
+    
+9. `fetch`가 아닌 일반 함수의 결과를 컴포넌트 간에 공유해야 할 때는 리액트의 `cache()`를 사용한다.
+10. `cache()`로 감싼 함수는 동일한 인자로 호출될 때 이전 결과를 그대로 반환한다.
+    
+    ```tsx
+    import { cache } from 'react';
+    
+    const getCachedTotal = cache((numbers: number[]) => {
+      return numbers.reduce((a, b) => a + b, 0); // 무거운 계산이라고 가정
+    });
+    
+    // ComponentA.tsx
+    function ComponentA({ numbers }: { numbers: number[] }) {
+      const total = getCachedTotal(numbers); // 계산 실행 후 캐싱
+      return <p>합계: {total}</p>;
+    }
+    
+    // ComponentB.tsx
+    function ComponentB({ numbers }: { numbers: number[] }) {
+      const total = getCachedTotal(numbers); // 동일 인자 → 캐시된 값 반환
+      return <small>총합: {total}</small>;
+    }
+    ```
+    
+11. 통계를 내거나 계산을 하는 등 무거운 함수는 동일한 입력값에 대한 계산 결과를 저장해놓고 다른 컴포넌트에서 재사용해야 할 경우 사용한다.
+12. 정리하면, 서버 컴포넌트에서는 `fetch`의 메모이제이션과 `cache()`를 활용해 데이터를 효율적으로 공유한다.
+
+## 2️⃣ 클라이언트 환경에서 서버 전용 코드 차단
+
+1. 서버 컴포넌트와 클라이언트 컴포넌트를 함께 사용하다 보면 하나의 자바스크립트 모듈을 두 곳에서 동시에 사용하는 경우가 발생한다.
+2. 일반적인 함수의 경우 상관없지만, 서버에서만 써야 하는 함수가 실수로 클라이언트 컴포넌트에서 `import`될 수 있다.
+3. 대표적인 예가 서버 전용 환경 변수를 사용하는 함수이다.
+    
+    ```tsx
+    // lib/api.ts
+    export async function getData() {
+      const res = await fetch('https://api.example.com/data', {
+        headers: { authorization: process.env.API_KEY }, // 서버에서만 존재
+      });
+      return res.json();
+    }
+    ```
+    
+4. 이 함수는 서버 환경에서만 정상적으로 작동한다.
+5. 왜냐하면 Next.js에서 클라이언트가 접근 가능한 환경 변수는 `NEXT_PUBLIC_` 접두사가 필요하다.
+6. 그렇지 않은 변수는 클라이언트 환경에서 `undefined`가 되어 함수가 올바르게 작동하지 않는다.
+7. 그래서 `getData()` 함수는 클라이언트 환경에서는 작동하지 않기 떄문에 서버 컴포넌트에서만 가져다 사용해야 한다.
+8. 이러한 제약 조건을 강제로 설정할 수 있게 해주는 것이 바로 server-only 패키지이다.
+9. 이 패키지를 사용하면 서버 환경에서만 작동하는 모듈을 클라이언트 컴포넌트에서 사용하려고 할 때 빌드 타임 오류를 발생시킴으로써 에러를 사전에 방지할 수 있다.
+10. 사용 방법은 다음과 같다.
+    
+    ```bash
+    npm install server-only
+    ```
+    
+    ```bash
+    import 'server-only';
+    
+    export async function getDate() {
+    		const res = await fetch('https://api.example.com/data', {
+    				headers: {
+    						authorization: process.env.API_KEY,
+    				},
+    		});
+    
+    		return res.json();
+    }
+    ```
+    
+
+## 3️⃣ 프로바이더 사용하기
+
+1. Context API는 내부적으로 `useState`와 훅을 사용하므로 반드시 클라이언트 컴포넌트여야 한다.
+2. Next.js App Router의 루트 레이아웃(`layout.tsx`)은 기본적으로 서버 컴포넌트이다.
+3. 따라서 서버 컴포넌트인 `layout.tsx` 안에 Context Provider를 직접 쓸 수 없다.
+4. 해결책은 Provider를 별도의 클라이언트 컴포넌트로 분리하는 것이다.
+    
+    ```tsx
+    // providers/ThemeProvider.tsx
+    'use client'; // 클라이언트 컴포넌트로 선언
+    
+    import { createContext, useContext, useState } from 'react';
+    
+    const ThemeContext = createContext<{ theme: string } | null>(null);
+    
+    export function ThemeProvider({ children }: { children: React.ReactNode }) {
+      const [theme, setTheme] = useState('light');
+      return (
+        <ThemeContext.Provider value={{ theme }}>
+          {children}
+        </ThemeContext.Provider>
+      );
+    }
+    ```
+    
+    ```tsx
+    // app/layout.tsx (서버 컴포넌트)
+    import { ThemeProvider } from '@/providers/ThemeProvider';
+    
+    export default function RootLayout({ children }: { children: React.ReactNode }) {
+      return (
+        <html>
+          <body>
+            <ThemeProvider> {/* 클라이언트 컴포넌트를 서버 컴포넌트 안에서 사용 */}
+              {children}
+            </ThemeProvider>
+          </body>
+        </html>
+      );
+    }
+    ```
+    
+5. 이렇게 하면 `layout.tsx`는 서버 컴포넌트로 유지되면서 클라이언트 Context를 제공할 수 있다.
+6. 여기서 주의할 점이 있는데, Provider를 가능한 한 컴포넌트 트리의 하위에 두는 것이 좋다.
+7. 그 이유는 Provider 하위의 모든 컴포넌트가 클라이언트 컴포넌트로 처리될 가능성이 높아지기 때문이다.
+8. 예를 들어, 테마 기능이 특정 섹션에서만 필요하다면 루트가 아닌 그 섹션의 상위에만 Provider를 두면 된다.
+    
+    ```tsx
+    // 불필요하게 루트에 배치한 경우 → 전체 트리가 클라이언트 영향을 받음
+    <RootLayout>
+      <ThemeProvider> {/* 루트에서 전체 래핑 */}
+        <ServerOnlyPage />   {/* 이 컴포넌트도 클라이언트 경계 안으로 들어옴 */}
+        <ThemePage />
+      </ThemeProvider>
+    </RootLayout>
+    
+    // 필요한 위치에만 배치한 경우 → 서버 컴포넌트 범위를 최대한 보존
+    <RootLayout>
+      <ServerOnlyPage />   {/* 서버 컴포넌트로 유지됨 */}
+      <ThemeProvider>      {/* 필요한 범위만 래핑 */}
+        <ThemePage />
+      </ThemeProvider>
+    </RootLayout>
+    ```
+    
+9. 서버 컴포넌트는 클라이언트보다 성능상 이점이 있으므로, 클라이언트 경계는 최소화하는 것이 원칙이다.
