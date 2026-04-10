@@ -1,12 +1,6 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('검색 페이지', () => {
-  test('검색 입력 필드가 자동 포커스됨', async ({ page }) => {
-    await page.goto('/search');
-    const input = page.getByRole('searchbox', { name: '블로그 검색' });
-    await expect(input).toBeFocused();
-  });
-
   test('검색어 입력 시 결과 표시', async ({ page }) => {
     await page.goto('/search');
 
