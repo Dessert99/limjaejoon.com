@@ -11,11 +11,12 @@ interface BlogListProps {
 
 export function BlogList({ posts }: BlogListProps) {
   const searchParams = useSearchParams();
-  const activeTag = searchParams.get('tag') ?? undefined;
+  const activeTags = searchParams.get('tags')?.split(',') ?? [];
 
-  const filtered = activeTag
-    ? posts.filter((p) => p.tags.includes(activeTag))
-    : posts;
+  const filtered =
+    activeTags.length > 0
+      ? posts.filter((p) => activeTags.every((tag) => p.tags.includes(tag)))
+      : posts;
 
   if (filtered.length === 0) {
     return <p className={s.emptyText}>해당 태그의 포스트가 없습니다.</p>;
