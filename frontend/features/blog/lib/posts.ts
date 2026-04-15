@@ -5,7 +5,6 @@ import path from 'path';
 import { cache } from 'react';
 
 const BLOG_DIR = path.join(process.cwd(), 'content/blog');
-const STORIES_DIR = path.join(process.cwd(), 'content/stories');
 
 // 지정 디렉토리의 모든 MDX 파일을 읽어 날짜 내림차순으로 정렬된 목록 반환
 function getPostListFrom(dir: string): PostMeta[] {
@@ -61,24 +60,10 @@ export function getPostBySlug(slug: string): Post | null {
   return getCachedPostBySlug(BLOG_DIR, slug);
 }
 
-// 스토리 (나의 개발 이야기)
-export function getStoryList(): PostMeta[] {
-  return getPostListFrom(STORIES_DIR);
-}
-
-export function getStoryBySlug(slug: string): Post | null {
-  return getCachedPostBySlug(STORIES_DIR, slug);
-}
-
-// 검색용: 블로그 + 스토리 전체 포스트를 href 포함하여 반환
+// 검색용: 블로그 포스트를 href 포함하여 반환
 export function getAllPostsForSearch(): SearchablePost[] {
-  const blogs = getPostListFrom(BLOG_DIR).map((p) => ({
+  return getPostListFrom(BLOG_DIR).map((p) => ({
     ...p,
     href: `/blog/${p.slug}`,
   }));
-  const stories = getPostListFrom(STORIES_DIR).map((p) => ({
-    ...p,
-    href: `/stories/${p.slug}`,
-  }));
-  return [...blogs, ...stories].sort((a, b) => (a.date < b.date ? 1 : -1));
 }

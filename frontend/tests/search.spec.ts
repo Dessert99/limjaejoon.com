@@ -31,6 +31,6 @@ test.describe('검색 페이지', () => {
     const firstResult = page.getByRole('main').getByRole('link').first();
     await firstResult.click();
 
-    await expect(page).toHaveURL(/\/(blog|stories)\/.+/);
+    await expect(page).toHaveURL(/\/blog\/.+/);
   });
 });

@@ -1,4 +1,4 @@
-import { getPostList, getStoryList } from '@/features/blog/lib/posts';
+import { getPostList } from '@/features/blog/lib/posts';
 import { SITE_URL } from '@/features/shared/constants';
 import type { MetadataRoute } from 'next';
 
@@ -8,13 +8,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: post.date,
     changeFrequency: 'monthly' as const,
     priority: 0.7,
-  }));
-
-  const stories = getStoryList().map((story) => ({
-    url: `${SITE_URL}/stories/${story.slug}`,
-    lastModified: story.date,
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
   }));
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -30,13 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
-    {
-      url: `${SITE_URL}/portfolio`,
-      lastModified: new Date().toISOString().split('T')[0],
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
   ];
 
-  return [...staticPages, ...blogs, ...stories];
+  return [...staticPages, ...blogs];
 }
