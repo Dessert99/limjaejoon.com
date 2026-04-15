@@ -1,13 +1,30 @@
+import { HeroSection } from '@/features/about/components/HeroSection';
+import { ProjectsSection } from '@/features/about/components/ProjectsSection';
+import { SkillsSection } from '@/features/about/components/SkillsSection';
+import { Timeline } from '@/features/about/components/Timeline';
+import { activities } from '@/features/about/data/activities';
+import { education } from '@/features/about/data/education';
+import { experience } from '@/features/about/data/experience';
 import * as s from './page.css';
 
 export default function Home() {
   return (
     <main className={s.main}>
-      <section className={s.hero}>
-        <h1 className={s.heroName}>안녕하세요, 임재준입니다.</h1>
-        <p className={s.heroRole}>프론트엔드 개발자</p>
-        <p className={s.heroDesc}>성장을 코드로 기록합니다.</p>
-      </section>
+      <HeroSection />
+      <Timeline
+        title='경력'
+        items={experience}
+      />
+      <Timeline
+        title='활동'
+        items={activities}
+      />
+      <ProjectsSection />
+      <SkillsSection />
+      <Timeline
+        title='학력'
+        items={education}
+      />
     </main>
   );
 }

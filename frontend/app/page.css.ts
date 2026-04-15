@@ -1,81 +1,19 @@
 import { bp } from '@/styles/breakpoints';
 import { vars } from '@/styles/theme.css';
-import { keyframes, style } from '@vanilla-extract/css';
-
-const fadeUp = keyframes({
-  from: { opacity: 0, transform: 'translateY(16px)' },
-  to: { opacity: 1, transform: 'translateY(0)' },
-});
+import { style } from '@vanilla-extract/css';
 
 export const main = style({
   minHeight: '100vh',
   width: '100%',
+  maxWidth: '60rem',
+  marginInline: 'auto',
   paddingLeft: vars.spacing.pagePadMobile,
   paddingRight: vars.spacing.pagePadMobile,
+  paddingBottom: '4rem',
   '@media': {
     [bp.md]: {
       paddingLeft: vars.spacing.pagePad,
       paddingRight: vars.spacing.pagePad,
-    },
-  },
-});
-
-export const hero = style({
-  '@media': {
-    [bp.md]: {
-      paddingTop: '6rem',
-      paddingBottom: '6rem',
-    },
-  },
-});
-
-export const heroName = style({
-  fontSize: vars.fontSize['3xl'],
-  fontWeight: 700,
-  color: vars.color.textPrimary,
-  margin: 0,
-  opacity: 0,
-  animation: `${fadeUp} 0.8s ease forwards`,
-  animationDelay: '0.1s',
-  '@media': {
-    [bp.md]: {
-      fontSize: vars.fontSize['4xl'],
-    },
-    '(prefers-reduced-motion: reduce)': {
-      opacity: 1,
-      animation: 'none',
-    },
-  },
-});
-
-export const heroRole = style({
-  fontSize: vars.fontSize.xl,
-  color: vars.color.accentStrong,
-  marginTop: '0.5rem',
-  marginBottom: 0,
-  opacity: 0,
-  animation: `${fadeUp} 0.6s ease forwards`,
-  animationDelay: '0.3s',
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      opacity: 1,
-      animation: 'none',
-    },
-  },
-});
-
-export const heroDesc = style({
-  fontSize: vars.fontSize.base,
-  color: vars.color.textMuted,
-  marginTop: '0.75rem',
-  marginBottom: 0,
-  opacity: 0,
-  animation: `${fadeUp} 0.6s ease forwards`,
-  animationDelay: '0.5s',
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      opacity: 1,
-      animation: 'none',
     },
   },
 });
