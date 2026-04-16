@@ -1,0 +1,41 @@
+{
+  "plan": "plan_tdd",
+  "tasks": [
+    { "name": "frontend에 Vitest + React 관련 devDep 설치", "passes": false },
+    {
+      "name": "frontend/vitest.config.ts + vitest.setup.ts 생성",
+      "passes": false
+    },
+    {
+      "name": "frontend/package.json 스크립트 교체 (test→vitest, test:e2e→playwright)",
+      "passes": false
+    },
+    {
+      "name": "Playwright 파일 frontend/tests/ → frontend/e2e/ 이관 (git mv)",
+      "passes": false
+    },
+    {
+      "name": "frontend/playwright.config.ts testDir: './e2e' 수정",
+      "passes": false
+    },
+    {
+      "name": "샘플 테스트 frontend/tests/features/blog/lib/posts.test.ts 작성 + npm run test -w frontend 통과",
+      "passes": false
+    },
+    {
+      "name": "backend/jest.config.js 생성 + backend/package.json 스크립트 수정",
+      "passes": false
+    },
+    {
+      "name": ".claude/hooks/enforce-tdd.sh 작성 (+x, 미러 경로 로직)",
+      "passes": false
+    },
+    { "name": ".claude/settings.json PreToolUse 배선 추가", "passes": false },
+    { "name": "TDD 훅 차단/통과 수동 검증", "passes": false },
+    { "name": "CLAUDE.md TDD 훅 안내 한 줄 추가", "passes": false },
+    {
+      "name": ".github/workflows/playwright.yml test:fe → test:e2e 수정",
+      "passes": false
+    }
+  ]
+}
