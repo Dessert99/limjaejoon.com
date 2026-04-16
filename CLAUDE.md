@@ -43,6 +43,7 @@ npm run format     # 전체 포맷
 ## 개발 프로세스
 - 커밋 메시지: conventional commits (feat: , fix: )
 - CRITICAL: 새 기능은 테스트를 먼저 작성 (TDD)
+- 기능 단위 작업은 `/harness`로 설계하고 `npm run harness <plan-dir>`로 실행한다.
 
 ## 절대 하지 말아야 할 것들
 - 애매한 부분이 생기면 추측하지 말고 무조건 물어봐라.

@@ -1,0 +1,6 @@
+{
+  "plans": [
+    { "dir": "plan_tdd", "status": "completed" },
+    { "dir": "plan_harness", "status": "pending" }
+  ]
+}
