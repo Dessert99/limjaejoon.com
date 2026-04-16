@@ -11,7 +11,7 @@
 5. 기존 Playwright 파일을 `frontend/e2e/`로 이관, 유닛은 `frontend/tests/` 미러 구조
 6. CLAUDE.md에 훅 한 줄 안내
 
-## MVP 제외 사항
+## 범위 외 (Out of Scope)
 - `@vanilla-extract/vite-plugin` (VE 스타일 import하는 컴포넌트 테스트 할 때 추가)
 - `vite-tsconfig-paths` (`@/` alias 필요해질 때 추가)
 - `@testing-library/user-event` (인터랙션 테스트 생길 때)
