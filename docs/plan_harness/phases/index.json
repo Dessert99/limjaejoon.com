@@ -1,0 +1,87 @@
+{
+  "project": "limjaejoon.com",
+  "phase": "plan_harness",
+  "steps": [
+    {
+      "step": 0,
+      "name": "workspace-setup",
+      "status": "completed",
+      "summary": "tools/harness workspace 부트스트랩, tsx/vitest/eslint devDep 설치, 빈 execute.ts 스텁",
+      "started_at": "2026-04-16T23:30:00+0900",
+      "completed_at": "2026-04-16T23:35:00+0900"
+    },
+    {
+      "step": 1,
+      "name": "state-schema",
+      "status": "completed",
+      "summary": "state/schema.ts(StepStatus/StepEntry/PhaseIndex/PlanEntry/PlansIndex) + state/io.ts(readJson/writeJson/readPhaseIndex/writePhaseIndex/readPlansIndex/writePlansIndex/updateStep/upsertPlanStatus) + vitest.config.ts + typescript-eslint 추가",
+      "started_at": "2026-04-16T23:35:00+0900",
+      "completed_at": "2026-04-16T23:40:00+0900"
+    },
+    {
+      "step": 2,
+      "name": "git-helper",
+      "status": "completed",
+      "summary": "git/commands.ts: runGit/checkoutBranch/commitStaged/twoStageCommit + tmpdir 기반 실물 git 테스트 7종",
+      "started_at": "2026-04-16T23:40:00+0900",
+      "completed_at": "2026-04-16T23:45:00+0900"
+    },
+    {
+      "step": 3,
+      "name": "preamble-builder",
+      "status": "completed",
+      "summary": "claude/preamble.ts: loadGuardrails/buildStepContext/buildPreamble + 6개 작업 규칙 + 8 테스트",
+      "started_at": "2026-04-16T23:45:00+0900",
+      "completed_at": "2026-04-16T23:50:00+0900"
+    },
+    {
+      "step": 4,
+      "name": "claude-invoker",
+      "status": "completed",
+      "summary": "claude/invoker.ts: spawnSync 기반 invokeClaude + 결과 writeJson 저장 + mock bash로 3케이스 테스트",
+      "started_at": "2026-04-16T23:50:00+0900",
+      "completed_at": "2026-04-16T23:55:00+0900"
+    },
+    {
+      "step": 5,
+      "name": "ac-verifier",
+      "status": "completed",
+      "summary": "verify/ac.ts: parseACFromStep (## Acceptance Criteria 첫 bash 펜스) + runACCommands (bash -lc, 5분 타임아웃) + 8 테스트",
+      "started_at": "2026-04-16T23:55:00+0900",
+      "completed_at": "2026-04-17T00:00:00+0900"
+    },
+    {
+      "step": 6,
+      "name": "orchestrator",
+      "status": "completed",
+      "summary": "orchestrator/blocker.ts(checkBlockers) + loop.ts(executeAllSteps/executeSingleStep, 3회 재시도, Trust-but-Verify, 주입형 DI) + execute.ts runHarness 조립 + 10 테스트 (46 total)",
+      "started_at": "2026-04-17T00:00:00+0900",
+      "completed_at": "2026-04-17T00:15:00+0900"
+    },
+    {
+      "step": 7,
+      "name": "cli-root-integration",
+      "status": "completed",
+      "summary": "execute.ts에 parseArgv/runHarness(options+deps)/CLI entry guard + 루트 package.json harness 스크립트 + tsx devDep + 10 테스트 (56 total)",
+      "started_at": "2026-04-17T00:15:00+0900",
+      "completed_at": "2026-04-17T00:25:00+0900"
+    },
+    {
+      "step": 8,
+      "name": "slash-command-and-docs",
+      "status": "completed",
+      "summary": ".claude/commands/harness.md 신규 + docs/_template phases 스켈레톤 추가 + progress.txt/feature_list.json 레거시 제거 + docs/plans-index.json 시드 + CLAUDE.md 1줄 안내",
+      "started_at": "2026-04-17T00:25:00+0900",
+      "completed_at": "2026-04-17T00:35:00+0900"
+    },
+    {
+      "step": 9,
+      "name": "smoke-test",
+      "status": "completed",
+      "summary": "throwaway 플랜으로 하네스 end-to-end 실행 검증 (브랜치 생성·2단계 커밋·AC 재실행 정상). 검증 완료 후 smoke 산출물은 제거.",
+      "started_at": "2026-04-17T00:35:00+0900",
+      "completed_at": "2026-04-17T00:50:00+0900"
+    }
+  ],
+  "completed_at": "2026-04-17T00:50:00+0900"
+}

@@ -9,7 +9,7 @@ description: 현재 대화에서 작업한 내용을 학습 정리 문서로 생
 
 - **대상 독자**: 작성자 본인 (미래의 나)
 - **템플릿**: 이 스킬 폴더의 `guideline.md` (반드시 읽어서 형식 규칙을 따른다)
-- **출력 위치**: `docs/reports/YYYY-MM-DD-{주제 영문 kebab-case}.md`
+- **출력 위치**: `reports/YYYY-MM-DD-{주제 영문 kebab-case}.md`
 - **컨텍스트**: 현재 대화에서 수행한 작업 내용 전체
 
 ## 실행 흐름
@@ -55,7 +55,7 @@ guideline.md 형식 규칙에 따라 섹션별로 작성한다:
 
 ### 6. 파일 저장
 
-`docs/reports/YYYY-MM-DD-{주제}.md`로 저장한다.
+`reports/YYYY-MM-DD-{주제}.md`로 저장한다.
 같은 날짜에 같은 주제가 있으면 접미사를 붙인다.
 
 ## 주의사항

@@ -1,0 +1,10 @@
+{
+  "plans": [
+    { "dir": "plan_tdd", "status": "completed" },
+    {
+      "dir": "plan_harness",
+      "status": "completed",
+      "completed_at": "2026-04-17T00:50:00+0900"
+    }
+  ]
+}

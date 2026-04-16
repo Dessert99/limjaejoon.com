@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "frontend",
-    "backend"
+    "backend",
+    "tools/harness"
   ],
   "scripts": {
     "dev:fe": "npm run dev -w frontend",
@@ -15,9 +16,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:fe": "npm run test -w frontend",
-    "test:be": "npm run test -w backend"
+    "test:be": "npm run test -w backend",
+    "harness": "tsx tools/harness/src/execute.ts"
   },
   "devDependencies": {
-    "prettier": "^3.8.1"
+    "prettier": "^3.8.1",
+    "tsx": "^4.19.2"
   }
 }

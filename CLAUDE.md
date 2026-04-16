@@ -36,13 +36,10 @@ npm run format     # 전체 포맷
 - `frontend/features/` 아래에 기능별로 컴포넌트 분리
 
 
-## 활성 플랜
-- 현재 진행 중: `docs/plan_tdd/` — 세션 시작 시 `PRD.md`와 `progress.txt`를 먼저 읽고 범위 확인
-- 완료되면 이 섹션 제거
-
 ## 개발 프로세스
 - 커밋 메시지: conventional commits (feat: , fix: )
 - CRITICAL: 새 기능은 테스트를 먼저 작성 (TDD)
+- 기능 단위 작업은 `/harness`로 설계하고 `npm run harness <plan-dir>`로 실행한다.
 
 ## 절대 하지 말아야 할 것들
 - 애매한 부분이 생기면 추측하지 말고 무조건 물어봐라.
