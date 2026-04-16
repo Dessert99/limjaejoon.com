@@ -74,6 +74,14 @@
       "started_at": "2026-04-17T00:25:00+0900",
       "completed_at": "2026-04-17T00:35:00+0900"
     },
-    { "step": 9, "name": "smoke-test", "status": "pending" }
-  ]
+    {
+      "step": 9,
+      "name": "smoke-test",
+      "status": "completed",
+      "summary": "throwaway 플랜으로 하네스 end-to-end 실행 검증 (브랜치 생성·2단계 커밋·AC 재실행 정상). 검증 완료 후 smoke 산출물은 제거.",
+      "started_at": "2026-04-17T00:35:00+0900",
+      "completed_at": "2026-04-17T00:50:00+0900"
+    }
+  ],
+  "completed_at": "2026-04-17T00:50:00+0900"
 }
