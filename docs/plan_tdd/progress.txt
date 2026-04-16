@@ -1,0 +1,31 @@
+# Progress: plan_tdd
+
+## 현재 Phase
+Phase 0 — 플랜 승인 완료, 구현 착수 직전
+
+## 직전 세션에서 완료
+- 플랜 확정 (`~/.claude/plans/polymorphic-dreaming-quail.md`)
+- docs/_template/ 5종 스켈레톤 생성
+- docs/plan_tdd/ 5종 문서화
+
+## 다음 세션이 이어갈 것
+1. frontend에 Vitest + React 관련 devDep 설치
+2. frontend/vitest.config.ts + vitest.setup.ts 생성
+3. frontend/package.json 스크립트 교체 (test→vitest)
+4. Playwright 파일 frontend/tests/ → frontend/e2e/ 이관 (git mv)
+5. frontend/playwright.config.ts testDir 수정
+6. 샘플 테스트 frontend/tests/features/blog/lib/posts.test.ts 작성
+7. npm run test -w frontend 통과 확인
+8. backend/jest.config.js + backend/package.json 스크립트 수정
+9. .claude/hooks/enforce-tdd.sh 작성 (+x)
+10. .claude/settings.json 훅 배선
+11. TDD 훅 차단/통과 수동 검증
+12. CLAUDE.md 1줄 추가
+13. .github/workflows/playwright.yml 수정
+
+## 주의/블로커
+- Vitest + Next.js 16 + React 19 peer dep 충돌 가능 → 발생 시 --legacy-peer-deps 회피 말고 버전 조정
+- playwright.yml의 test:fe 참조 변경 필수 (안 하면 CI 깨짐)
+
+## 컨텍스트 사용률
+12%
