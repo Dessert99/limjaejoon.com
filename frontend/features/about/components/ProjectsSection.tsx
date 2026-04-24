@@ -1,6 +1,17 @@
+'use client';
+
+import type { MouseEvent } from 'react';
 import { SectionReveal } from '@/features/about/components/SectionReveal';
 import { projects } from '@/features/about/data/projects';
 import * as s from './ProjectsSection.css';
+
+function handleMouseMove(event: MouseEvent<HTMLElement>) {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const mx = ((event.clientX - rect.left) / rect.width) * 100;
+  const my = ((event.clientY - rect.top) / rect.height) * 100;
+  event.currentTarget.style.setProperty('--mx', `${mx}%`);
+  event.currentTarget.style.setProperty('--my', `${my}%`);
+}
 
 export function ProjectsSection() {
   return (
@@ -10,7 +21,13 @@ export function ProjectsSection() {
         {projects.map((project, index) => (
           <li key={project.name}>
             <SectionReveal delayMs={index * 80}>
-              <article className={s.card}>
+              <article
+                className={s.card}
+                onMouseMove={handleMouseMove}>
+                <span
+                  className={s.corner}
+                  aria-hidden='true'
+                />
                 <header className={s.cardHeader}>
                   <h3 className={s.name}>{project.name}</h3>
                   <span className={s.period}>{project.period}</span>
@@ -35,6 +52,11 @@ export function ProjectsSection() {
                           target='_blank'
                           rel='noopener noreferrer'>
                           {link.label}
+                          <span
+                            className={s.linkArrow}
+                            aria-hidden='true'>
+                            →
+                          </span>
                         </a>
                       </li>
                     ))}
