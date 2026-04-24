@@ -149,9 +149,6 @@ export const card = style({
     '&:hover::after': {
       opacity: 1,
     },
-    [`${item}:first-child &::before`]: {
-      transform: 'scaleY(1)',
-    },
   },
 
   '@media': {
