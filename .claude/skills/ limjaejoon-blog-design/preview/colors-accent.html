@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Colors — Primary</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:20px;background:var(--bg-page);}
+  .wrap{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .swatch{border:1px solid var(--line-soft);border-radius:var(--r-lg);overflow:hidden;background:var(--bg-surface);}
+  .chip{height:70px;display:flex;align-items:flex-end;padding:10px;}
+  .meta{padding:8px 10px;display:flex;justify-content:space-between;align-items:baseline;}
+  .name{font-size:var(--fs-sm);font-weight:var(--fw-semibold);color:var(--fg-primary);}
+  .hex{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--fg-muted);}
+  .tag{display:inline-block;padding:2px 8px;border-radius:var(--r-full);background:var(--accent-soft);color:var(--accent-strong);font-size:var(--fs-xs);font-weight:var(--fw-semibold);}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="swatch"><div class="chip" style="background:#12b886"><span class="tag" style="background:rgba(255,255,255,.2);color:#fff">ACCENT</span></div>
+    <div class="meta"><span class="name">accent-strong (dark)</span><span class="hex">#12B886</span></div></div>
+  <div class="swatch"><div class="chip" style="background:#0ca678"><span class="tag" style="background:rgba(255,255,255,.2);color:#fff">ACCENT</span></div>
+    <div class="meta"><span class="name">accent-strong (light)</span><span class="hex">#0CA678</span></div></div>
+  <div class="swatch"><div class="chip" style="background:rgba(18,184,134,.15);backdrop-filter:blur(2px)"></div>
+    <div class="meta"><span class="name">accent-soft (dark)</span><span class="hex">rgba(18,184,134,.15)</span></div></div>
+  <div class="swatch"><div class="chip" style="background:rgba(12,166,120,.1)"></div>
+    <div class="meta"><span class="name">accent-soft (light)</span><span class="hex">rgba(12,166,120,.10)</span></div></div>
+</div>
+</body></html>

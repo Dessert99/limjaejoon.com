@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Type scale</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:20px;background:var(--bg-page);}
+  .row{display:grid;grid-template-columns:80px 1fr 80px;align-items:baseline;gap:12px;padding:6px 0;border-bottom:1px solid var(--line-soft);}
+  .row:last-child{border-bottom:none;}
+  .tok{font-family:var(--font-mono);font-size:10px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:var(--ls-cap);}
+  .sample{color:var(--fg-primary);font-weight:var(--fw-medium);line-height:1;}
+  .px{font-family:var(--font-mono);font-size:10px;color:var(--fg-muted);text-align:right;}
+</style></head>
+<body>
+<div class="row"><span class="tok">5xl</span><span class="sample" style="font-size:var(--fs-5xl);font-weight:700">Aa 가</span><span class="px">48 / 700</span></div>
+<div class="row"><span class="tok">4xl</span><span class="sample" style="font-size:var(--fs-4xl);font-weight:700;letter-spacing:var(--ls-tight)">Aa 가</span><span class="px">36 / 700</span></div>
+<div class="row"><span class="tok">3xl</span><span class="sample" style="font-size:var(--fs-3xl);font-weight:700">Aa 가</span><span class="px">30 / 700</span></div>
+<div class="row"><span class="tok">2xl</span><span class="sample" style="font-size:var(--fs-2xl);font-weight:600">Aa 가</span><span class="px">24 / 600</span></div>
+<div class="row"><span class="tok">xl</span><span class="sample" style="font-size:var(--fs-xl);font-weight:600">Aa 가</span><span class="px">20 / 600</span></div>
+<div class="row"><span class="tok">lg</span><span class="sample" style="font-size:var(--fs-lg)">Aa 가나다</span><span class="px">18 / 400</span></div>
+<div class="row"><span class="tok">base</span><span class="sample" style="font-size:var(--fs-base)">Aa 가나다</span><span class="px">16 / 400</span></div>
+<div class="row"><span class="tok">sm</span><span class="sample" style="font-size:var(--fs-sm)">Aa 가나다</span><span class="px">14 / 400</span></div>
+<div class="row"><span class="tok">xs</span><span class="sample" style="font-size:var(--fs-xs)">Aa 가나다</span><span class="px">12 / 400</span></div>
+</body></html>

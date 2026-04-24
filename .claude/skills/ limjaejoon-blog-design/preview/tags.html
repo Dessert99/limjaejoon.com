@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Tag chips</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:18px;background:var(--bg-page);}
+  h3{font-size:var(--fs-xs);margin:0 0 10px;text-transform:uppercase;letter-spacing:var(--ls-cap);color:var(--fg-muted);font-weight:600;}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .post-tag{font-size:var(--fs-xs);color:var(--accent-strong);background:var(--accent-soft);border-radius:var(--r-full);padding:2px 10px;}
+  .stack{font-size:var(--fs-xs);color:var(--fg-secondary);border:1px solid var(--line-soft);border-radius:var(--r-full);padding:2px 8px;background:var(--bg-soft);}
+  .tagbtn{font-size:var(--fs-sm);color:var(--fg-muted);background:transparent;border:1px solid var(--line-soft);border-radius:var(--r-full);padding:4px 12px;cursor:pointer;}
+  .tagbtn.active{color:var(--accent-strong);border-color:var(--accent-strong);background:var(--accent-soft);}
+</style></head>
+<body>
+  <h3>post tag — accent-soft pill</h3>
+  <div class="row"><span class="post-tag">Git</span><span class="post-tag">Next.js</span><span class="post-tag">zshrc</span><span class="post-tag">환경 변수</span></div>
+  <h3>stack chip — outlined</h3>
+  <div class="row"><span class="stack">React Native</span><span class="stack">Expo</span><span class="stack">TypeScript</span></div>
+  <h3>filter button (idle / active)</h3>
+  <div class="row"><button class="tagbtn">전체</button><button class="tagbtn active">Git</button><button class="tagbtn">Next.js</button><button class="tagbtn">Playwright</button></div>
+</body></html>

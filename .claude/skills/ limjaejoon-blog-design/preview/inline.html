@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Inline — mention &amp; tooltip</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:20px 22px;background:var(--bg-page);color:var(--fg-secondary);font-family:var(--font-sans);font-size:var(--fs-base);line-height:1.75;}
+  .stack{display:flex;flex-direction:column;gap:22px;}
+  .item{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:center;}
+  .lbl{
+    font-size:10px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:var(--ls-cap);
+    font-weight:600;font-family:var(--font-mono);
+  }
+  p{margin:0;}
+
+  /* --- Mention — reads as a compact "doc chip" with icon + title + arrow --- */
+  .mention{
+    position:relative;isolation:isolate;
+    display:inline-flex;align-items:center;gap:.4rem;
+    color:var(--accent-strong);background:var(--bg-soft);
+    border:1px solid color-mix(in oklab,var(--accent-strong) 22%,var(--line-soft));
+    border-left:2px solid var(--accent-strong);
+    border-radius:var(--r-md);
+    padding:.1rem .55rem .1rem .5rem;
+    text-decoration:none;font-weight:500;line-height:1.45;
+    vertical-align:baseline;
+    transition:background-color .2s ease,border-color .2s ease,color .2s ease,padding .25s ease;
+  }
+  .mention .m-ico{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:.95em;height:.95em;flex-shrink:0;opacity:.85;
+  }
+  .mention .m-ico svg{width:100%;height:100%;}
+  .mention .m-arrow{
+    display:inline-block;width:0;opacity:0;overflow:hidden;flex-shrink:0;
+    font-family:var(--font-mono);
+    transition:width .22s ease,opacity .22s ease,margin-left .22s ease;
+  }
+  .mention:hover{
+    background:var(--accent-soft);
+    border-color:var(--accent-strong);
+    padding-right:.75rem;
+  }
+  .mention:hover .m-arrow{width:.85em;opacity:1;margin-left:.1rem;}
+
+  /* --- Tooltip — viewport-safe auto placement --- */
+  .tt-wrap{position:relative;display:inline-block;}
+  .trigger{
+    text-decoration:underline;text-decoration-style:dotted;
+    text-decoration-color:var(--fg-muted);text-underline-offset:3px;
+    cursor:help;color:var(--fg-primary);font-weight:500;
+  }
+  .popover{
+    position:absolute;z-index:5;
+    /* top/left are set by JS; fall back to below-left if JS is off */
+    top:calc(100% + 10px);left:0;
+    width:min(22rem,calc(100vw - 24px));
+    font-size:var(--fs-sm);line-height:1.55;color:var(--fg-primary);
+    background:var(--bg-elevated);border:1px solid var(--accent-strong);
+    border-radius:var(--r-md);padding:.7rem .9rem;
+    box-shadow:0 0 0 4px color-mix(in oklab,var(--accent-strong) 10%,transparent),var(--shadow-card-md);
+  }
+  .popover .arrow{
+    position:absolute;width:10px;height:10px;background:var(--bg-elevated);
+    border:1px solid var(--accent-strong);
+  }
+  /* arrow orientation per placement */
+  .popover[data-placement="bottom"] .arrow{top:-6px;border-right:none;border-bottom:none;transform:rotate(45deg);}
+  .popover[data-placement="top"]    .arrow{bottom:-6px;border-left:none;border-top:none;transform:rotate(45deg);}
+  .popover[data-placement="right"]  .arrow{left:-6px;border-right:none;border-top:none;transform:rotate(-45deg);}
+  .popover[data-placement="left"]   .arrow{right:-6px;border-left:none;border-bottom:none;transform:rotate(-45deg);}
+
+  /* --- Inline code --- */
+  code{
+    background:var(--bg-soft);color:var(--accent-strong);border-radius:var(--r-md);
+    padding:.12rem .45rem;font-family:var(--font-mono);font-size:.9em;
+    border:1px solid color-mix(in oklab,var(--accent-strong) 12%,transparent);
+  }
+</style></head>
+<body>
+  <div class="stack">
+    <div class="item">
+      <span class="lbl">mention</span>
+      <p>참고 문서: <a class="mention" href="#"><span class="m-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6M9 2l4 4M9 2v4h4M5.5 9h5M5.5 11.5h3"/></svg></span>Git HEAD 개요<span class="m-arrow">→</span></a> 를 함께 확인하세요.</p>
+    </div>
+
+    <div class="item">
+      <span class="lbl">tooltip</span>
+      <p>
+        <span class="tt-wrap">
+          <span class="trigger" data-tooltip>개요</span>
+          <span class="popover" data-placement="bottom" role="tooltip">
+            <span class="arrow" aria-hidden="true"></span>
+            HEAD는 내가 지금 서 있는 위치를 가리키는 포인터로, 모든 Git 작업의 기준점이 된다.
+          </span>
+        </span>
+        를 먼저 읽어 보세요.
+      </p>
+    </div>
+
+    <div class="item">
+      <span class="lbl">code</span>
+      <p>터미널을 열면 <code>~/.zshrc</code> 가 실행되고 <code>PATH</code> 환경변수가 설정된다.</p>
+    </div>
+  </div>
+
+<script>
+  // Viewport-safe tooltip placement.
+  // Chooses bottom → top → right → left, whichever fits. Clamps horizontally
+  // and repositions the arrow so it always points at the trigger center.
+  const PAD = 8;      // gap between trigger and popover
+  const EDGE = 8;     // min distance from viewport edge
+
+  function place(wrap){
+    const pop = wrap.querySelector('.popover');
+    const trig = wrap.querySelector('.trigger');
+    const arrow = pop.querySelector('.arrow');
+    if (!pop || !trig) return;
+
+    // Reset so measurements are clean
+    pop.style.top = '';
+    pop.style.left = '';
+    pop.style.right = '';
+    pop.style.bottom = '';
+
+    const tr = trig.getBoundingClientRect();
+    const pw = pop.offsetWidth;
+    const ph = pop.offsetHeight;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Try placements in order
+    const candidates = [
+      { name: 'bottom', fits: vh - tr.bottom >= ph + PAD + EDGE },
+      { name: 'top',    fits: tr.top >= ph + PAD + EDGE },
+      { name: 'right',  fits: vw - tr.right >= pw + PAD + EDGE },
+      { name: 'left',   fits: tr.left >= pw + PAD + EDGE },
+    ];
+    const pick = candidates.find(c => c.fits) || candidates[0];
+    pop.setAttribute('data-placement', pick.name);
+
+    // Compute coords in viewport space, then convert to offsets from wrap
+    const wr = wrap.getBoundingClientRect();
+    let vx, vy;
+    if (pick.name === 'bottom'){
+      vy = tr.bottom + PAD;
+      vx = tr.left + tr.width/2 - pw/2;
+    } else if (pick.name === 'top'){
+      vy = tr.top - PAD - ph;
+      vx = tr.left + tr.width/2 - pw/2;
+    } else if (pick.name === 'right'){
+      vx = tr.right + PAD;
+      vy = tr.top + tr.height/2 - ph/2;
+    } else {
+      vx = tr.left - PAD - pw;
+      vy = tr.top + tr.height/2 - ph/2;
+    }
+
+    // Clamp against viewport
+    vx = Math.max(EDGE, Math.min(vx, vw - pw - EDGE));
+    vy = Math.max(EDGE, Math.min(vy, vh - ph - EDGE));
+
+    pop.style.left = (vx - wr.left) + 'px';
+    pop.style.top  = (vy - wr.top)  + 'px';
+
+    // Arrow: point at trigger center along the axis shared with placement
+    if (pick.name === 'bottom' || pick.name === 'top'){
+      const center = tr.left + tr.width/2;
+      let ax = center - vx - 5;  // 5 = half of arrow width
+      ax = Math.max(10, Math.min(ax, pw - 20));
+      arrow.style.left = ax + 'px';
+      arrow.style.top = '';
+      arrow.style.right = '';
+      arrow.style.bottom = '';
+    } else {
+      const center = tr.top + tr.height/2;
+      let ay = center - vy - 5;
+      ay = Math.max(10, Math.min(ay, ph - 20));
+      arrow.style.top = ay + 'px';
+      arrow.style.left = '';
+      arrow.style.right = '';
+      arrow.style.bottom = '';
+    }
+  }
+
+  const wraps = document.querySelectorAll('.tt-wrap');
+  const rerun = () => wraps.forEach(place);
+  // Initial + on every layout-affecting event
+  requestAnimationFrame(rerun);
+  window.addEventListener('resize', rerun);
+  window.addEventListener('scroll', rerun, {passive:true, capture:true});
+</script>
+</body></html>

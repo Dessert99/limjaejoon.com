@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Typography — Families</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:var(--bg-page);}
+  .block{padding:14px 16px;border:1px solid var(--line-soft);border-radius:var(--r-lg);margin-bottom:12px;background:var(--bg-surface);}
+  .label{font-size:10px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:var(--ls-cap);font-weight:600;display:block;margin-bottom:6px;}
+  .kr{font-family:var(--font-sans);font-size:22px;color:var(--fg-primary);font-weight:500;}
+  .en{font-family:var(--font-sans);font-size:18px;color:var(--fg-secondary);margin-top:4px;}
+  .mono{font-family:var(--font-mono);font-size:16px;color:var(--accent-strong);background:var(--bg-soft);padding:10px 12px;border-radius:var(--r-md);display:block;}
+  .meta{font-family:var(--font-mono);font-size:10px;color:var(--fg-muted);margin-top:6px;}
+</style></head>
+<body>
+  <div class="block">
+    <span class="label">Sans · Pretendard Variable</span>
+    <div class="kr">나무가 아닌 숲을 보는 개발자</div>
+    <div class="en">Frontend engineer focused on readability.</div>
+    <div class="meta">weights 400 · 500 · 600 · 700</div>
+  </div>
+  <div class="block">
+    <span class="label">Mono · JetBrains Mono</span>
+    <code class="mono">const head = 'refs/heads/main';</code>
+    <div class="meta">코드, 파일명, kbd</div>
+  </div>
+</body></html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Logo</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:20px;background:var(--bg-page);display:flex;gap:24px;align-items:center;}
+  .item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .ring{border-radius:9999px;border:1px solid var(--line-soft);background:var(--bg-soft);overflow:hidden;}
+  .ring img{display:block;object-fit:cover;}
+  .tag{font-family:var(--font-mono);font-size:10px;color:var(--fg-muted);}
+  .name{font-size:var(--fs-sm);color:var(--fg-primary);font-weight:600;}
+  .site-title{font-size:var(--fs-lg);color:var(--fg-primary);font-weight:700;}
+  .site-sub{font-size:var(--fs-sm);color:var(--fg-muted);}
+  .site{display:flex;align-items:center;gap:12px;border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:10px 14px;background:var(--bg-surface);}
+</style></head>
+<body>
+  <div class="item"><div class="ring" style="width:48px;height:48px"><img src="../assets/logo.png" width="48" height="48"/></div><span class="tag">48 · header</span></div>
+  <div class="item"><div class="ring" style="width:72px;height:72px"><img src="../assets/logo.png" width="72" height="72"/></div><span class="tag">72</span></div>
+  <div class="item"><div class="ring" style="width:96px;height:96px"><img src="../assets/logo.png" width="96" height="96"/></div><span class="tag">96</span></div>
+  <div class="site"><div class="ring" style="width:44px;height:44px"><img src="../assets/logo.png" width="44" height="44"/></div>
+    <div><div class="site-title">임재준</div><div class="site-sub">프론트엔드 개발자</div></div></div>
+</body></html>

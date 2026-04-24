@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Buttons &amp; links</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:20px;background:var(--bg-page);display:flex;flex-direction:column;gap:16px;font-family:var(--font-sans);}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .lbl{font-size:10px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:var(--ls-cap);font-weight:600;min-width:110px;}
+
+  /* ---- project link (pill with icon slide-in + accent ring) ---- */
+  .pill-link{
+    position:relative;display:inline-flex;align-items:center;gap:6px;
+    font-size:var(--fs-sm);font-weight:500;color:var(--accent-strong);text-decoration:none;
+    padding:5px 13px;border:1px solid var(--accent-strong);border-radius:var(--r-full);
+    background:transparent;overflow:hidden;isolation:isolate;
+    transition:color .2s ease,padding .2s ease,box-shadow .2s ease,background-color .2s ease;
+  }
+  .pill-link::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;
+    background:linear-gradient(135deg,var(--accent-soft),transparent 60%);
+    opacity:0;transition:opacity .2s ease;z-index:-1;
+  }
+  .pill-link .arrow{
+    display:inline-block;width:0;opacity:0;overflow:hidden;
+    transition:width .22s ease,opacity .22s ease,margin-left .22s ease;
+    font-family:var(--font-mono);
+  }
+  .pill-link:hover,.pill-link.hover{
+    background:var(--accent-soft);
+    box-shadow:0 0 0 3px color-mix(in oklab,var(--accent-strong) 18%,transparent);
+    padding-right:16px;
+  }
+  .pill-link:hover::before,.pill-link.hover::before{opacity:1;}
+  .pill-link:hover .arrow,.pill-link.hover .arrow{width:10px;opacity:1;margin-left:2px;}
+
+  /* ---- nav link (underline reveal + active dot) ---- */
+  .navlink{
+    position:relative;display:inline-flex;align-items:center;gap:6px;
+    font-size:var(--fs-sm);font-weight:600;color:var(--fg-secondary);text-decoration:none;
+    padding:6px 2px;background:transparent;border:none;
+    transition:color .18s ease;
+  }
+  .navlink::after{
+    content:"";position:absolute;left:2px;right:2px;bottom:2px;height:2px;
+    background:var(--accent-strong);border-radius:2px;
+    transform-origin:left center;transform:scaleX(0);
+    transition:transform .24s cubic-bezier(.2,.8,.2,1);
+  }
+  .navlink:hover{color:var(--fg-primary);}
+  .navlink:hover::after{transform:scaleX(1);}
+  .navlink.active{color:var(--fg-primary);}
+  .navlink.active::after{transform:scaleX(1);background:var(--accent-strong);}
+  .navlink .dot{
+    width:5px;height:5px;border-radius:50%;background:var(--accent-strong);
+    opacity:0;transform:translateX(-4px);
+    transition:opacity .2s ease,transform .2s ease;
+  }
+  .navlink.active .dot{opacity:1;transform:translateX(0);}
+
+  /* ---- icon button (unchanged, just refined) ---- */
+  .icon-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:2rem;height:2rem;border-radius:var(--r-xl);
+    border:1px solid transparent;background:transparent;color:var(--fg-secondary);cursor:pointer;
+    transition:color .15s ease,background-color .15s ease,border-color .15s ease,transform .15s ease;
+  }
+  .icon-btn:hover,.icon-btn.active{color:var(--accent-strong);background:var(--accent-soft);border-color:var(--accent-strong);}
+  .icon-btn:hover{transform:translateY(-1px);}
+  svg{width:16px;height:16px;}
+</style></head>
+<body>
+  <div class="row"><span class="lbl">project link</span>
+    <a class="pill-link" href="#">Google Play<span class="arrow">→</span></a>
+    <a class="pill-link hover" href="#">App Store<span class="arrow">→</span></a></div>
+
+  <div class="row"><span class="lbl">nav link</span>
+    <a class="navlink"><span class="dot"></span>지식 모음</a>
+    <a class="navlink active"><span class="dot"></span>지식 모음</a></div>
+
+  <div class="row"><span class="lbl">icon button</span>
+    <button class="icon-btn" aria-label="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+    <button class="icon-btn active" aria-label="theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></button>
+    <button class="icon-btn" aria-label="moon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5Z"/></svg></button></div>
+</body></html>

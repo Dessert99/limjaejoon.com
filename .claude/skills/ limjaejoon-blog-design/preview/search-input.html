@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Search input</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:var(--bg-page);display:flex;flex-direction:column;gap:14px;}
+  .input{width:100%;padding:.875rem 1.25rem;font-size:var(--fs-lg);color:var(--fg-primary);background:var(--bg-soft);border:1px solid var(--line-soft);border-radius:var(--r-xl);outline:none;font-family:var(--font-sans);}
+  .input.focus{border-color:var(--accent-strong);}
+  .input::placeholder{color:var(--fg-muted);}
+  .lbl{font-size:10px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:var(--ls-cap);font-weight:600;}
+</style></head>
+<body>
+  <span class="lbl">idle</span>
+  <input class="input" placeholder="제목, 설명, 태그로 검색..." />
+  <span class="lbl">focused</span>
+  <input class="input focus" value="zshrc" />
+</body></html>
