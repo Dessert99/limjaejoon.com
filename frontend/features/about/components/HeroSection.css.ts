@@ -37,22 +37,6 @@ export const name = style({
   },
 });
 
-export const role = style({
-  fontSize: vars.fontSize.xl,
-  color: vars.color.accentStrong,
-  marginTop: '0.5rem',
-  marginBottom: 0,
-  opacity: 0,
-  animation: `${fadeUp} 0.6s ease forwards`,
-  animationDelay: '0.3s',
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      opacity: 1,
-      animation: 'none',
-    },
-  },
-});
-
 export const taglineList = style({
   listStyle: 'none',
   padding: 0,
