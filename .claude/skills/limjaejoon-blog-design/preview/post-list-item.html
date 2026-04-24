@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Post list item</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:18px 26px;background:var(--bg-page);font-family:var(--font-sans);}
+  ol{list-style:none;margin:0;padding:0;counter-reset:post;}
+  ol li{counter-increment:post;}
+
+  a.row{
+    position:relative;isolation:isolate;
+    display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;
+    text-decoration:none;padding:14px 14px 14px 18px;
+    border-bottom:1px solid var(--line-soft);
+    transition:background-color .2s ease,padding .25s ease,border-color .2s ease;
+  }
+
+  /* left accent gauge (hidden until hover) */
+  a.row::before{
+    content:"";position:absolute;left:0;top:10px;bottom:10px;width:2px;
+    background:var(--accent-strong);border-radius:2px;
+    transform:scaleY(0);transform-origin:center;
+    transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  }
+  /* soft tint panel on hover, contained to the row */
+  a.row::after{
+    content:"";position:absolute;inset:0;z-index:-1;border-radius:var(--r-md);
+    background:linear-gradient(90deg,var(--bg-soft),transparent 70%);
+    opacity:0;transition:opacity .25s ease;
+  }
+
+  a.row:hover,a.row.hover{padding-left:22px;}
+  a.row:hover::before,a.row.hover::before{transform:scaleY(1);}
+  a.row:hover::after,a.row.hover::after{opacity:1;}
+
+  /* numeric index — monospace, muted, reveals on hover */
+  .idx{
+    font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--fg-muted);
+    font-feature-settings:"tnum";min-width:26px;
+    opacity:.55;transition:color .2s ease,opacity .2s ease;
+  }
+  .idx::before{content:counter(post,decimal-leading-zero);}
+  a.row:hover .idx,a.row.hover .idx{color:var(--accent-strong);opacity:1;}
+
+  .title-wrap{display:flex;align-items:center;gap:8px;min-width:0;}
+  .title{
+    font-size:var(--fs-base);font-weight:600;color:var(--fg-primary);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;
+    transition:color .2s ease;
+  }
+  a.row:hover .title,a.row.hover .title{color:var(--accent-strong);}
+
+  /* arrow — hidden, slides in from the left of the title on hover */
+  .arrow{
+    display:inline-block;font-family:var(--font-mono);color:var(--accent-strong);
+    width:0;opacity:0;overflow:hidden;flex-shrink:0;
+    transition:width .22s ease,opacity .22s ease,transform .22s ease;
+    transform:translateX(-4px);
+  }
+  a.row:hover .arrow,a.row.hover .arrow{width:14px;opacity:1;transform:translateX(0);}
+
+  .meta{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+  .tag{
+    font-size:var(--fs-xs);color:var(--accent-strong);background:var(--accent-soft);
+    border-radius:var(--r-full);padding:2px 10px;
+    border:1px solid transparent;transition:border-color .2s ease,background-color .2s ease;
+  }
+  a.row:hover .tag,a.row.hover .tag{border-color:color-mix(in oklab,var(--accent-strong) 30%,transparent);}
+  .date{
+    font-size:var(--fs-xs);color:var(--fg-muted);
+    font-family:var(--font-mono);font-feature-settings:"tnum";white-space:nowrap;
+  }
+</style></head>
+<body>
+<ol>
+  <li><a class="row" href="#">
+    <span class="idx"></span>
+    <span class="title-wrap"><span class="arrow">→</span><span class="title">zshrc 는 무엇인가?</span></span>
+    <span class="meta"><span class="tag">zshrc</span><span class="tag">환경 변수</span><span class="date">2026-04-02</span></span>
+  </a></li>
+  <li><a class="row hover" href="#">
+    <span class="idx"></span>
+    <span class="title-wrap"><span class="arrow">→</span><span class="title">Git HEAD</span></span>
+    <span class="meta"><span class="tag">Git</span><span class="date">2026-04-04</span></span>
+  </a></li>
+  <li><a class="row" href="#">
+    <span class="idx"></span>
+    <span class="title-wrap"><span class="arrow">→</span><span class="title">Next.js App Router에서의 서버 컴포넌트 렌더링 모델과 캐싱 전략 정리</span></span>
+    <span class="meta"><span class="tag">Next.js</span><span class="tag">SSR</span><span class="date">2026-04-09</span></span>
+  </a></li>
+</ol>
+</body></html>

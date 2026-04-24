@@ -42,6 +42,10 @@ export function SiteHeader() {
                     pathname === item.href ||
                     pathname.startsWith(item.href + '/')
                   }>
+                  <span
+                    className={s.navDot}
+                    aria-hidden='true'
+                  />
                   {item.label}
                 </Link>
               </li>
@@ -49,14 +53,17 @@ export function SiteHeader() {
             <li>
               <Link
                 href='/search'
-                className={s.themeToggle}
+                className={s.iconBtn}
+                data-active={
+                  pathname === '/search' || pathname.startsWith('/search/')
+                }
                 aria-label='검색 페이지로 이동'>
                 <HiOutlineMagnifyingGlass aria-hidden='true' />
               </Link>
             </li>
             <li>
               <button
-                className={s.themeToggle}
+                className={s.iconBtn}
                 onClick={toggleTheme}
                 aria-label={
                   theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'

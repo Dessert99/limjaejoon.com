@@ -12,7 +12,18 @@ export function BlogCard({ post, href }: BlogCardProps) {
     <Link
       href={href ?? `/blog/${post.slug}`}
       className={s.card}>
-      <span className={s.title}>{post.title}</span>
+      <span
+        className={s.idx}
+        aria-hidden='true'
+      />
+      <span className={s.titleWrap}>
+        <span
+          className={s.arrow}
+          aria-hidden='true'>
+          →
+        </span>
+        <span className={s.title}>{post.title}</span>
+      </span>
       <div className={s.meta}>
         {post.tags.length > 0 && (
           <ul className={s.tags}>

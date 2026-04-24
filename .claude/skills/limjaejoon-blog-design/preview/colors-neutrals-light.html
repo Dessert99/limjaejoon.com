@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Neutrals — Light</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  :root{color-scheme:light;}
+  body{margin:0;padding:20px;background:#ffffff;color:#1a1a1a;font-family:var(--font-sans);}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .cell{border:1px solid #e9ecef;border-radius:var(--r-md);padding:10px 12px;background:#fff;}
+  .swatch{height:48px;border-radius:var(--r-md);margin-bottom:8px;border:1px solid #e9ecef;}
+  .name{font-size:var(--fs-xs);font-weight:600;color:#1a1a1a;display:block;}
+  .hex{font-family:var(--font-mono);font-size:10px;color:#868e96;}
+  h3{font-size:var(--fs-xs);margin:0 0 10px;text-transform:uppercase;letter-spacing:var(--ls-cap);color:#868e96;font-weight:600;}
+</style></head>
+<body>
+<h3>Light · backgrounds</h3>
+<div class="grid" style="margin-bottom:16px">
+  <div class="cell"><div class="swatch" style="background:#ffffff"></div><span class="name">bg-page</span><span class="hex">#FFFFFF</span></div>
+  <div class="cell"><div class="swatch" style="background:#f8f9fa"></div><span class="name">bg-elevated</span><span class="hex">#F8F9FA</span></div>
+  <div class="cell"><div class="swatch" style="background:#f1f3f5"></div><span class="name">bg-soft</span><span class="hex">#F1F3F5</span></div>
+</div>
+<h3>Light · text &amp; line</h3>
+<div class="grid">
+  <div class="cell"><div class="swatch" style="background:#1a1a1a"></div><span class="name">fg-primary</span><span class="hex">#1A1A1A</span></div>
+  <div class="cell"><div class="swatch" style="background:#495057"></div><span class="name">fg-secondary</span><span class="hex">#495057</span></div>
+  <div class="cell"><div class="swatch" style="background:#868e96"></div><span class="name">fg-muted</span><span class="hex">#868E96</span></div>
+  <div class="cell"><div class="swatch" style="background:#e9ecef"></div><span class="name">line-soft</span><span class="hex">#E9ECEF</span></div>
+  <div class="cell"><div class="swatch" style="background:#ced4da"></div><span class="name">line-strong</span><span class="hex">#CED4DA</span></div>
+  <div class="cell" style="display:flex;align-items:center;justify-content:center;color:#868e96;font-size:var(--fs-xs)">5 steps</div>
+</div>
+</body></html>

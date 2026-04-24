@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Timeline</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:22px 26px;background:var(--bg-page);font-family:var(--font-sans);}
+
+  ol{list-style:none;padding:0 0 0 1.75rem;margin:0;position:relative;}
+
+  /* the rail: soft base line + accent fill that stops at the last active marker */
+  ol::before{
+    content:"";position:absolute;top:.6rem;bottom:.6rem;left:.375rem;width:2px;
+    background:var(--line-soft);border-radius:9999px;
+  }
+  ol::after{
+    content:"";position:absolute;top:.6rem;left:.375rem;width:2px;height:calc(100% - 1.8rem);
+    background:linear-gradient(180deg,var(--accent-strong),color-mix(in oklab,var(--accent-strong) 30%,transparent));
+    border-radius:9999px;
+    -webkit-mask:linear-gradient(180deg,#000 0 60%,transparent 100%);
+            mask:linear-gradient(180deg,#000 0 60%,transparent 100%);
+  }
+
+  li{position:relative;padding-bottom:18px;}
+  li:last-child{padding-bottom:0;}
+
+  /* pulsing marker */
+  @keyframes tl-pulse{
+    0%{box-shadow:0 0 0 0 color-mix(in oklab,var(--accent-strong) 50%,transparent),0 0 0 3px var(--bg-page);}
+    70%{box-shadow:0 0 0 8px color-mix(in oklab,var(--accent-strong) 0%,transparent),0 0 0 3px var(--bg-page);}
+    100%{box-shadow:0 0 0 0 color-mix(in oklab,var(--accent-strong) 0%,transparent),0 0 0 3px var(--bg-page);}
+  }
+  .marker{
+    position:absolute;left:-1.55rem;top:.5rem;width:.7rem;height:.7rem;border-radius:9999px;
+    background:var(--accent-strong);box-shadow:0 0 0 3px var(--bg-page);
+  }
+  li:first-child .marker{animation:tl-pulse 2.2s ease-out infinite;}
+
+  /* card with accent gutter, subtle gradient sheen, hover reveal */
+  .card{
+    position:relative;isolation:isolate;overflow:hidden;
+    border:1px solid var(--line-soft);border-radius:var(--r-lg);
+    background:var(--bg-surface);box-shadow:var(--shadow-card-sm);
+    padding:11px 15px 11px 18px;
+    transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+  }
+  .card::before{
+    content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;
+    background:var(--accent-strong);border-radius:2px;
+    transform:scaleY(.35);transform-origin:top;transition:transform .3s ease;
+  }
+  .card::after{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(120% 60% at 100% 0%,color-mix(in oklab,var(--accent-strong) 7%,transparent),transparent 55%);
+    opacity:0;transition:opacity .3s ease;
+  }
+  .card > *{position:relative;z-index:1;}
+  .card:hover{border-color:color-mix(in oklab,var(--accent-strong) 40%,var(--line-soft));box-shadow:var(--shadow-card-md);}
+  .card:hover::before{transform:scaleY(1);}
+  .card:hover::after{opacity:1;}
+  li:first-child .card::before{transform:scaleY(1);}
+
+  .head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+  .t{font-size:var(--fs-base);font-weight:600;color:var(--fg-primary);margin:0;letter-spacing:-0.01em;}
+  .p{font-size:var(--fs-xs);color:var(--fg-muted);font-family:var(--font-mono);font-feature-settings:"tnum";white-space:nowrap;}
+  .s{font-size:var(--fs-xs);color:var(--fg-secondary);margin-top:3px;}
+
+  .now-tag{
+    display:inline-flex;align-items:center;gap:4px;font-size:9px;letter-spacing:var(--ls-cap);
+    text-transform:uppercase;font-weight:600;color:var(--accent-strong);
+    background:var(--accent-soft);border-radius:var(--r-full);padding:1px 7px;
+    margin-left:6px;vertical-align:1px;
+  }
+  .now-tag::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent-strong);animation:tl-pulse 2.2s ease-out infinite;}
+</style></head>
+<body>
+<ol>
+  <li><span class="marker"></span>
+    <div class="card">
+      <div class="head"><h3 class="t">PageLabs <span class="now-tag">NOW</span></h3><span class="p">2025.04 — 현재</span></div>
+      <div class="s">프리랜서 · 프론트엔드 개발자</div>
+    </div></li>
+  <li><span class="marker"></span>
+    <div class="card">
+      <div class="head"><h3 class="t">멋쟁이사자처럼 대학 14기</h3><span class="p">2026.01 — 2026.12</span></div>
+      <div class="s">운영진 · 프론트엔드 팀장</div>
+    </div></li>
+</ol>
+</body></html>

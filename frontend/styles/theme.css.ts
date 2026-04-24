@@ -41,6 +41,9 @@ export const [darkTheme, vars] = createTheme({
     pagePadMobile: '1rem', // page horizontal padding (mobile)
     pagePad: '6rem', // page horizontal padding (≥md)
   },
+  font: {
+    mono: 'var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, Consolas, "D2Coding", monospace',
+  },
 });
 
 export const lightTheme = createTheme(vars, {
@@ -83,5 +86,8 @@ export const lightTheme = createTheme(vars, {
   spacing: {
     pagePadMobile: '1rem',
     pagePad: '6rem',
+  },
+  font: {
+    mono: 'var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, Consolas, "D2Coding", monospace',
   },
 });

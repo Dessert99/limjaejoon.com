@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Spacing</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:20px;background:var(--bg-page);}
+  .row{display:flex;align-items:center;gap:12px;padding:4px 0;}
+  .bar{height:14px;background:var(--accent-strong);border-radius:2px;}
+  .lbl{font-family:var(--font-mono);font-size:11px;color:var(--fg-muted);width:60px;}
+  .val{font-family:var(--font-mono);font-size:11px;color:var(--fg-primary);}
+  h3{font-size:var(--fs-xs);margin:0 0 8px;text-transform:uppercase;letter-spacing:var(--ls-cap);color:var(--fg-muted);font-weight:600;}
+  .note{font-size:var(--fs-xs);color:var(--fg-muted);margin-top:8px;}
+</style></head>
+<body>
+<h3>page padding</h3>
+<div class="row"><span class="lbl">mobile</span><span class="bar" style="width:16px"></span><span class="val">1rem · 16px</span></div>
+<div class="row"><span class="lbl">≥ md</span><span class="bar" style="width:96px"></span><span class="val">6rem · 96px</span></div>
+<h3 style="margin-top:14px">section vertical rhythm</h3>
+<div class="row"><span class="lbl">mobile</span><span class="bar" style="width:40px"></span><span class="val">2.5rem · 40px</span></div>
+<div class="row"><span class="lbl">≥ md</span><span class="bar" style="width:56px"></span><span class="val">3.5rem · 56px</span></div>
+<p class="note">max-width: home 60rem · blog 72rem · post 85rem</p>
+</body></html>

@@ -4,7 +4,8 @@ import { vars } from '@/styles/theme.css';
 export const grid = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: '0.75rem',
+  gap: 0,
+  counterReset: 'post',
 });
 
 export const emptyText = style({
