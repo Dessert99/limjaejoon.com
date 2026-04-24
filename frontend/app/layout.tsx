@@ -4,6 +4,13 @@ import '@/styles/global.css';
 import { darkTheme, lightTheme } from '@/styles/theme.css';
 import { contentWrapper } from './layout.css';
 import type { Metadata } from 'next';
+import { JetBrains_Mono } from 'next/font/google';
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -46,7 +53,7 @@ export default function RootLayout({
   return (
     <html
       lang='ko'
-      className={darkTheme}
+      className={`${darkTheme} ${jetbrainsMono.variable}`}
       suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
