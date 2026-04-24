@@ -1,5 +1,5 @@
 import { HiOutlineEnvelope, HiOutlinePhone } from 'react-icons/hi2';
-import { SiGithub, SiLinkedin } from 'react-icons/si';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import type { ContactKind, ContactLink } from '@/features/about/types';
 import * as s from './ContactLinks.css';
 
@@ -8,8 +8,8 @@ interface ContactLinksProps {
 }
 
 const iconByKind: Record<ContactKind, React.ComponentType> = {
-  github: SiGithub,
-  linkedin: SiLinkedin,
+  github: FaGithub,
+  linkedin: FaLinkedin,
   email: HiOutlineEnvelope,
   phone: HiOutlinePhone,
 };
