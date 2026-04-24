@@ -38,7 +38,9 @@ npm run format     # 전체 포맷
 
 ## 개발 프로세스
 - 커밋 메시지: conventional commits (feat: , fix: )
-- CRITICAL: 새 기능은 테스트를 먼저 작성 (TDD)
+- CRITICAL: 모든 로직과 데이터 흐름에 독자가 이해하기 쉽게 한 줄 이내로 주석을 추가한다.
+
+
 
 ## 절대 하지 말아야 할 것들
 - 애매한 부분이 생기면 추측하지 말고 무조건 물어봐라.
