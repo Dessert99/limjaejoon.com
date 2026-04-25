@@ -1,0 +1,22 @@
+# Node 22 LTS + alpine (경량, 로컬 개발에 충분)
+FROM node:22-alpine
+
+# 컨테이너 작업 루트. 호스트 레포 루트와 대응되도록 /workspace로 명명.
+WORKDIR /workspace
+
+# ───── [1단] 의존성 메타데이터만 먼저 복사 (레이어 캐시) ─────
+COPY package.json package-lock.json ./
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
+# ↑ frontend/package.json도 필수: npm workspaces는 선언된 워크스페이스 폴더가
+#   하나라도 없으면 "No workspaces found" 에러.
+
+# ───── [2단] backend 워크스페이스만 설치 ─────
+RUN npm ci -w backend
+
+# ───── [3단] 소스 복사 (변경 잦음 → 뒤에) ─────
+COPY tsconfig.base.json ./
+COPY backend ./backend
+
+EXPOSE 4000
+CMD ["npm", "run", "dev:be"]

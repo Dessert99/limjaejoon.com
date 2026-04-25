@@ -1,0 +1,56 @@
+services:
+  # ─────────────── Backend (NestJS) ───────────────
+  backend:
+    build:
+      # 빌드 컨텍스트는 루트 (모노레포 package-lock.json, 각 workspace package.json 접근 필요).
+      context: .
+      # Dockerfile은 backend/ 안의 dev용 파일 사용.
+      dockerfile: backend/Dockerfile.dev
+    ports:
+      # "호스트:컨테이너". 좌측만 바꿔도 됨 (예: "14000:4000").
+      - "4000:4000"
+    volumes:
+      # bind mount: 호스트 ↔ 컨테이너 실시간 동기화 (핫 리로드)
+      - ./backend:/workspace/backend
+      - ./package.json:/workspace/package.json
+      - ./package-lock.json:/workspace/package-lock.json
+      - ./tsconfig.base.json:/workspace/tsconfig.base.json
+      # 익명 볼륨: bind mount가 컨테이너 내부 node_modules를
+      # 호스트 경로로 덮어쓰지 않게 보호.
+      # - 루트 node_modules: npm workspaces가 여기에 hoist하기 때문.
+      # - backend/node_modules: backend-로컬 의존성이 있을 경우.
+      # (backend/dist는 일부러 격리하지 않음: nest-cli.json의 deleteOutDir:true가
+      #  dist를 rmdir하려 하는데 마운트 포인트는 삭제가 불가능해 watch가 죽음.
+      #  .gitignore/.dockerignore에 dist/가 이미 포함돼 호스트로 새도 무해.)
+      - /workspace/node_modules
+      - /workspace/backend/node_modules
+    depends_on:
+      postgres:
+        # postgres가 "접속 준비 완료(healthy)"된 후 backend 시작.
+        # 단순 depends_on: [postgres]는 프로세스 기동만 보장하고, DB가 accept 준비 전에
+        # backend가 먼저 떠서 연결 거부를 겪는 경주 조건을 못 막음.
+        condition: service_healthy
+
+  # ─────────────── PostgreSQL ───────────────
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      # compose 파일 옆 .env에서 자동 로드.
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      # named volume: Docker가 관리하는 저장 공간. 컨테이너 지워도 데이터 유지.
+      - postgres_data:/var/lib/postgresql/data # postgres_data 라는 이름의 볼륨을 컨테이너 안 /var/lib/postgresql/data 경로에 마운트해라.
+    healthcheck:
+      # pg_isready: postgres가 접속 수락 가능한 상태인지 초경량 체크.
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+# 위에서 쓴 named volume의 "선언"부. 이 블록이 있어야 Docker가 생성.
+volumes:
+  postgres_data: # postgres_data 라는 이름의 named volume을 Docker가 관리하도록 등록해라

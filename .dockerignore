@@ -1,0 +1,15 @@
+# 보안: 비밀 파일과 git 이력은 이미지에 안 들어가게
+.git
+.env
+.env.*
+
+# 용량/호환성: 호스트 node_modules 등 수천 파일 제외
+**/node_modules
+**/dist
+**/.next
+**/out
+**/coverage
+
+# 잡음
+.DS_Store
+*.log
