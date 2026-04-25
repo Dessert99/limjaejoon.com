@@ -1,6 +1,6 @@
 ---
 name: study-note
-description: 현재 대화에서 작업한 내용을 학습 정리 문서로 생성한다. guideline.md 지침에 따라 docs/reports/에 날짜-주제.md 파일을 만든다.
+description: 현재 대화에서 작업한 내용을 학습 정리 문서로 생성한다. guideline.md 지침에 따라 reports/에 날짜-주제.md 파일을 만든다.
 ---
 
 # 학습 정리 노트 생성
