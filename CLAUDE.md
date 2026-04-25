@@ -31,7 +31,6 @@ npm run format     # 전체 포맷
 
 
 ## 코드 컨벤션
-- 프론트엔드 스타일은 반드시 Vanilla Extract (`*.css.ts`)로 작성, 인라인 스타일 지양
 - 프론트엔드 경로 alias: `@/*` (`frontend/` 기준)
 - `frontend/features/` 아래에 기능별로 컴포넌트 분리
 
@@ -49,3 +48,5 @@ npm run format     # 전체 포맷
 
 ## 디자인
 - UI/컴포넌트/페이지/에셋 등 디자인 관련 작업은 항상 `limjaejoon-blog-design` 스킬을 사용한다 (디자인 토큰, UI 키트, 톤·아이콘·레이아웃 가이드라인이 포함됨)
+- CSS컨벤션은 @docs/conventions/vanilla-extract-conventions.md 참조.
+
