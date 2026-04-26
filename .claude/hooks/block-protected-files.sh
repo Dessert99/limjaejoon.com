@@ -14,12 +14,6 @@ fi
 
 BASENAME=$(basename "$FILE_PATH")
 
-# .env, .env.* 차단
-if [[ "$BASENAME" == ".env" || "$BASENAME" == .env.* ]]; then
-  echo "BLOCKED: env 파일($FILE_PATH)은 직접 수정해야 합니다." >&2
-  exit 2
-fi
-
 # package-lock.json 차단
 if [[ "$BASENAME" == "package-lock.json" ]]; then
   echo "BLOCKED: package-lock.json은 npm install로만 변경해야 합니다." >&2
