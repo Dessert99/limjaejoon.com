@@ -1,7 +1,6 @@
 // LoginForm 컴포넌트 테스트 — RHF 검증 + a11y(aria-invalid·role=alert) + 401 에러 매핑
 // React Testing Library: 사용자 관점에서 DOM을 쿼리·조작 (구현 디테일 X, 동작 검증 O)
 import type { ReactNode } from 'react';
-import type { Mock } from 'vitest';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
@@ -51,7 +50,7 @@ describe('LoginForm', () => {
       renderForm();
 
       // getByLabelText — label 텍스트로 input을 찾을 수 있다는 것 자체가 연결 검증
-      const emailInput = screen.getByLabelText('이메일');
+      const emailInput = screen.getByLabelText(/이메일/);
       expect(emailInput).toBeInTheDocument();
       expect(emailInput.tagName).toBe('INPUT');
     });
@@ -59,7 +58,7 @@ describe('LoginForm', () => {
     it('비밀번호 input과 label도 연결되어 있다', () => {
       renderForm();
 
-      const passwordInput = screen.getByLabelText('비밀번호');
+      const passwordInput = screen.getByLabelText(/비밀번호/);
       expect(passwordInput).toBeInTheDocument();
       expect((passwordInput as HTMLInputElement).type).toBe('password');
     });
@@ -67,7 +66,7 @@ describe('LoginForm', () => {
     it('초기 상태에는 aria-invalid가 false다', () => {
       renderForm();
 
-      const emailInput = screen.getByLabelText('이메일');
+      const emailInput = screen.getByLabelText(/이메일/);
       // boolean attribute — aria-invalid="false" 또는 미지정 (Boolean(undefined)=false)
       expect(emailInput.getAttribute('aria-invalid')).toBe('false');
     });
@@ -78,11 +77,11 @@ describe('LoginForm', () => {
       renderForm();
 
       // Arrange — 이메일 잘못 입력
-      const emailInput = screen.getByLabelText('이메일');
+      const emailInput = screen.getByLabelText(/이메일/);
       fireEvent.change(emailInput, { target: { value: 'not-an-email' } });
 
       // 비밀번호는 정상 입력 (다른 검증 충돌 방지)
-      const passwordInput = screen.getByLabelText('비밀번호');
+      const passwordInput = screen.getByLabelText(/비밀번호/);
       fireEvent.change(passwordInput, { target: { value: 'pw12345678' } });
 
       // Act — submit
@@ -107,10 +106,10 @@ describe('LoginForm', () => {
     it('짧은 비밀번호 → 비밀번호 필드에 에러 표시', async () => {
       renderForm();
 
-      fireEvent.change(screen.getByLabelText('이메일'), {
+      fireEvent.change(screen.getByLabelText(/이메일/), {
         target: { value: 'a@b.c' },
       });
-      const passwordInput = screen.getByLabelText('비밀번호');
+      const passwordInput = screen.getByLabelText(/비밀번호/);
       fireEvent.change(passwordInput, { target: { value: 'short' } });
 
       fireEvent.submit(passwordInput.closest('form')!);
@@ -127,10 +126,10 @@ describe('LoginForm', () => {
     it('정상 입력 후 submit → useLogin().mutate가 email/password로 호출된다', async () => {
       renderForm();
 
-      fireEvent.change(screen.getByLabelText('이메일'), {
+      fireEvent.change(screen.getByLabelText(/이메일/), {
         target: { value: 'a@b.c' },
       });
-      fireEvent.change(screen.getByLabelText('비밀번호'), {
+      fireEvent.change(screen.getByLabelText(/비밀번호/), {
         target: { value: 'pw12345678' },
       });
       fireEvent.click(screen.getByRole('button', { name: /로그인/ }));
@@ -164,10 +163,10 @@ describe('LoginForm', () => {
 
       renderForm();
 
-      fireEvent.change(screen.getByLabelText('이메일'), {
+      fireEvent.change(screen.getByLabelText(/이메일/), {
         target: { value: 'a@b.c' },
       });
-      fireEvent.change(screen.getByLabelText('비밀번호'), {
+      fireEvent.change(screen.getByLabelText(/비밀번호/), {
         target: { value: 'pw12345678' },
       });
       fireEvent.click(screen.getByRole('button', { name: /로그인/ }));

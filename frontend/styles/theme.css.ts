@@ -63,9 +63,9 @@ export const lightTheme = createTheme(vars, {
     accentStrong: '#0ca678',
     accentSoft: 'rgba(12, 166, 120, 0.1)',
     bgPageTranslucent: 'rgba(255, 255, 255, 0.8)',
-    // 라이트 모드: 더 진한 레드 계열로 가독성 확보
-    colorDanger: '#e03131',
-    colorDangerSubtle: 'rgba(224, 49, 49, 0.08)',
+    // 라이트 모드: WCAG AA 4.5:1 대비 만족하도록 진한 레드 (textPrimary·bgElevated 위 가독성 확보)
+    colorDanger: '#c4202a',
+    colorDangerSubtle: 'rgba(196, 32, 42, 0.08)',
   },
   shadow: {
     cardSm: '0 1px 3px rgba(0, 0, 0, 0.08)',

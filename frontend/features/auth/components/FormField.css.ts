@@ -15,6 +15,12 @@ export const label = style({
   fontWeight: 500,
 });
 
+// 필수 입력 표시 마크 — 시각 단서만 제공 (스크린리더는 aria-required로 인지)
+export const requiredMark = style({
+  color: vars.color.colorDanger,
+  fontWeight: 600,
+});
+
 // 텍스트 입력 — 다크/라이트 양쪽에서 bgPage 기반, 포커스 시 accent 보더
 export const input = style({
   width: '100%',

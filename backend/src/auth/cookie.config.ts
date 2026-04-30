@@ -14,7 +14,7 @@ function baseOptions(cs: ConfigService): CookieOptions {
     httpOnly: true, // JS에서 쿠키 접근 차단 — XSS 방어
     sameSite: 'lax', // CSRF 기본 방어 (크로스-사이트 GET은 허용, POST는 same-site only)
     path: '/',
-    secure: cs.get<string>('COOKIE_SECURE') === 'true', // prod에서는 HTTPS 전용
+    secure: cs.get<boolean>('COOKIE_SECURE') === true, // prod에서는 HTTPS 전용 — Joi가 boolean으로 변환했음에 주의
     // COOKIE_DOMAIN 이 비어 있으면 Host-only 쿠키 — 서브도메인 누설 방지
     ...(domain ? { domain } : {}),
   };

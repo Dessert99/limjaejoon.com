@@ -29,11 +29,12 @@ export function proxy(request: NextRequest): NextResponse {
     return NextResponse.redirect(homeUrl);
   }
 
-  // 보호 페이지 + 토큰 0개 → /login으로 redirect (returnTo에 현재 경로 보존)
+  // 보호 페이지 + 토큰 0개 → /login으로 redirect (returnTo에 pathname + search 모두 보존)
   if (!isAuthRoute && !hasToken) {
     const loginUrl = request.nextUrl.clone();
+    const fullPath = pathname + request.nextUrl.search;
     loginUrl.pathname = '/login';
-    loginUrl.search = `returnTo=${encodeURIComponent(pathname)}`;
+    loginUrl.search = `returnTo=${encodeURIComponent(fullPath)}`;
     return NextResponse.redirect(loginUrl);
   }
 

@@ -112,16 +112,21 @@ export class RefreshTokenService {
   }
 }
 
-// "15m", "7d" 형식의 TTL 문자열을 현재 시각 기준 Date로 변환
+// "15m", "7d" 형식의 TTL 문자열을 현재 시각 기준 Date로 변환 — 환경 변수는 Joi 패턴 검증으로 보장됨
+const TTL_RE = /^(\d+)([smhd])$/;
+const TTL_UNIT_MS: Record<string, number> = {
+  s: 1000,
+  m: 60 * 1000,
+  h: 60 * 60 * 1000,
+  d: 24 * 60 * 60 * 1000,
+};
+
 function parseTtlToDate(ttl: string): Date {
-  const unit = ttl.slice(-1); // 마지막 문자가 단위
-  const value = parseInt(ttl.slice(0, -1), 10);
-  const msMap: Record<string, number> = {
-    s: 1000,
-    m: 60 * 1000,
-    h: 60 * 60 * 1000,
-    d: 24 * 60 * 60 * 1000,
-  };
-  const ms = (msMap[unit] ?? 1000) * value;
+  const match = TTL_RE.exec(ttl);
+  // Joi가 검증했지만 방어적으로 한 번 더 — 형식 어긋나면 silent failure 대신 즉시 throw
+  if (!match) {
+    throw new Error(`Invalid TTL format: "${ttl}". Expected <number><s|m|h|d>`);
+  }
+  const ms = TTL_UNIT_MS[match[2]] * parseInt(match[1], 10);
   return new Date(Date.now() + ms);
 }

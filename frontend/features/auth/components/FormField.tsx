@@ -1,5 +1,5 @@
 'use client';
-// 폼 한 항목(label + input + error)을 묶는 재사용 가능한 원자 컴포넌트
+// 폼 한 항목(label + input + error/helper)을 묶는 재사용 가능한 원자 컴포넌트
 // react-hook-form `register()` 결과를 그대로 spread할 수 있도록 input 표준 props를 통과시킨다
 import { type InputHTMLAttributes, type Ref } from 'react';
 
@@ -25,19 +25,30 @@ export function FormField({
   error,
   helper,
   type = 'text',
+  required,
   ref,
   ...inputAttrs
 }: FormFieldProps) {
-  // 에러가 있을 때만 aria-describedby로 에러 p를 연결한다
+  // aria-describedby에 연결할 id들 — 에러 우선, 없으면 helper
   const errorId = error ? `${id}-error` : undefined;
+  const helperId = !error && helper ? `${id}-helper` : undefined;
+  const describedBy = errorId ?? helperId;
 
   return (
     <div className={s.fieldWrapper}>
-      {/* label — htmlFor로 input과 연결 */}
+      {/* label — htmlFor로 input과 연결, required 시각 표시(*)는 aria-hidden로 중복 announce 방지 */}
       <label
         htmlFor={id}
         className={s.label}>
         {label}
+        {required && (
+          <span
+            className={s.requiredMark}
+            aria-hidden='true'>
+            {' '}
+            *
+          </span>
+        )}
       </label>
 
       {/* input — register()가 spread한 name/onChange/onBlur 등이 inputAttrs로 들어온다 */}
@@ -45,14 +56,22 @@ export function FormField({
         id={id}
         type={type}
         ref={ref}
+        required={required}
+        aria-required={required ? true : undefined}
         aria-invalid={Boolean(error)}
-        aria-describedby={errorId}
+        aria-describedby={describedBy}
         className={s.input}
         {...inputAttrs}
       />
 
       {/* 헬퍼 텍스트 — 에러가 없을 때만 표시 (에러가 우선) */}
-      {!error && helper && <p className={s.helperMessage}>{helper}</p>}
+      {!error && helper && (
+        <p
+          id={helperId}
+          className={s.helperMessage}>
+          {helper}
+        </p>
+      )}
 
       {/* 에러 메시지 — role="alert"로 스크린리더가 즉시 읽는다 */}
       {error && (

@@ -18,9 +18,13 @@ export const envValidationSchema = Joi.object({
   JWT_ACCESS_SECRET: Joi.string().min(32).required(),
   JWT_REFRESH_SECRET: Joi.string().min(32).required(),
 
-  // JWT 만료 duration 문자열 (예: 15m, 7d)
-  JWT_ACCESS_TTL: Joi.string().default('15m'),
-  JWT_REFRESH_TTL: Joi.string().default('7d'),
+  // JWT 만료 duration 문자열 — `숫자+단위(s|m|h|d)` 형식 강제 (예: 15m, 7d). 잘못된 단위 시 silent failure 방지
+  JWT_ACCESS_TTL: Joi.string()
+    .pattern(/^\d+[smhd]$/)
+    .default('15m'),
+  JWT_REFRESH_TTL: Joi.string()
+    .pattern(/^\d+[smhd]$/)
+    .default('7d'),
 
   // bcrypt 라운드 — 너무 낮으면 보안 취약, 너무 높으면 성능 저하
   BCRYPT_ROUNDS: Joi.number().integer().min(10).max(14).default(12),

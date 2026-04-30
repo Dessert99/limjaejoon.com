@@ -81,6 +81,7 @@ export function LoginForm() {
             label='이메일'
             type='email'
             autoComplete='email'
+            required
             disabled={loginMutation.isPending}
             error={errors.email?.message}
             {...register('email', {
@@ -96,6 +97,7 @@ export function LoginForm() {
             label='비밀번호'
             type='password'
             autoComplete='current-password'
+            required
             disabled={loginMutation.isPending}
             error={errors.password?.message}
             {...register('password', {
@@ -108,10 +110,11 @@ export function LoginForm() {
           />
         </div>
 
-        {/* 제출 버튼 — pending 중 비활성화 + 텍스트 변경 */}
+        {/* 제출 버튼 — pending 중 비활성화 + aria-busy로 스크린리더에 진행 상태 안내 */}
         <button
           type='submit'
           disabled={loginMutation.isPending}
+          aria-busy={loginMutation.isPending}
           className={s.submitButton}>
           {loginMutation.isPending ? '로그인 중...' : '로그인'}
         </button>

@@ -76,6 +76,7 @@ export function SignupForm() {
             label='이메일'
             type='email'
             autoComplete='email'
+            required
             disabled={signupMutation.isPending}
             error={errors.email?.message}
             {...register('email', {
@@ -91,6 +92,7 @@ export function SignupForm() {
             label='비밀번호'
             type='password'
             autoComplete='new-password'
+            required
             disabled={signupMutation.isPending}
             helper={`${PASSWORD_MIN_LENGTH}자 이상 입력해주세요.`}
             error={errors.password?.message}
@@ -104,9 +106,11 @@ export function SignupForm() {
           />
         </div>
 
+        {/* aria-busy로 스크린리더에 가입 진행 상태 announce */}
         <button
           type='submit'
           disabled={signupMutation.isPending}
+          aria-busy={signupMutation.isPending}
           className={s.submitButton}>
           {signupMutation.isPending ? '가입 중...' : '회원가입'}
         </button>

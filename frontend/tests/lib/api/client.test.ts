@@ -2,15 +2,7 @@
 // MSW로 백엔드 응답을 컨트롤하고, 실제 axios 인터셉터가 돌아가는지 검증
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-} from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { apiClient } from '@/lib/api/client';
 import { clearAuth, setAccessExpiresAt } from '@/lib/api/tokenStore';
