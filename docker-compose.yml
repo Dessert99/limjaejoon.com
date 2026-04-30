@@ -8,13 +8,15 @@ services:
       dockerfile: backend/Dockerfile.dev
     ports:
       # "호스트:컨테이너". 좌측만 바꿔도 됨 (예: "14000:4000").
-      - "4000:4000"
+      - '4000:4000'
     volumes:
       # bind mount: 호스트 ↔ 컨테이너 실시간 동기화 (핫 리로드)
       - ./backend:/workspace/backend
       - ./package.json:/workspace/package.json
       - ./package-lock.json:/workspace/package-lock.json
       - ./tsconfig.base.json:/workspace/tsconfig.base.json
+      # 루트 .env를 read-only로 노출 — NestJS ConfigModule(envFilePath ../../.env)이 컨테이너 안에서 읽는다
+      - ./.env:/workspace/.env:ro
       # 익명 볼륨: bind mount가 컨테이너 내부 node_modules를
       # 호스트 경로로 덮어쓰지 않게 보호.
       # - 루트 node_modules: npm workspaces가 여기에 hoist하기 때문.
@@ -35,7 +37,7 @@ services:
   postgres:
     image: postgres:16-alpine
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       # compose 파일 옆 .env에서 자동 로드.
       POSTGRES_USER: ${POSTGRES_USER}
@@ -46,7 +48,7 @@ services:
       - postgres_data:/var/lib/postgresql/data # postgres_data 라는 이름의 볼륨을 컨테이너 안 /var/lib/postgresql/data 경로에 마운트해라.
     healthcheck:
       # pg_isready: postgres가 접속 수락 가능한 상태인지 초경량 체크.
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
       interval: 5s
       timeout: 3s
       retries: 10

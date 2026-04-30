@@ -15,22 +15,37 @@ https://www.limjaejoon.com
 ```
 frontend/          # Next.js 프론트엔드
   app/             # 라우트 페이지
-  features/        # 기능별 컴포넌트
-  content/blog/    # MDX 블로그 포스트
+  features/        # 기능별 컴포넌트·훅·API·타입
+  lib/             # 도메인 비종속 인프라 (api client, auth helpers)
+  providers/       # 전역 Provider (QueryClient 등)
   styles/          # 디자인 토큰, 글로벌 스타일
+  content/blog/    # MDX 블로그 포스트
   public/          # 정적 에셋
+  proxy.ts         # Next.js 16 proxy
 backend/           # NestJS API 서버
-  src/             # 소스 코드
-docs/              # 프로젝트 문서
-  reports/         # 작업 기술서
+  src/
+    auth/          # 인증·세션
+    users/         # 사용자 도메인
+    config/        # env 검증
+    database/      # TypeORM DataSource
+    migrations/    # DB 스키마 변경 이력
+docs/
+  conventions/     # 코드/스타일 규칙 (CLAUDE.md에서 참조)
+  plans/           # 기능 단위 PRD/ADR/state
+reports/           # 작업 기술서·학습 정리
 ```
 
 ## 작업 기술서 (Reports)
 
-프로젝트 진행 과정에서 주요 작업을 기록한 기술서는 `docs/reports/`에 있다.
+프로젝트 진행 과정에서 주요 작업을 기록한 기술서는 `reports/`에 있다.
 
-- [SEO 최적화 구현 보고서](docs/reports/2026-04-03-seo-implementation.md)
-- [모노레포 마이그레이션](docs/reports/2026-04-09-monorepo-migration.md)
+- [SEO 최적화 구현 보고서](reports/2026-04-03-seo-implementation.md)
+- [모노레포 마이그레이션](reports/2026-04-09-monorepo-migration.md)
+- [Claude Code 훅 시스템](reports/2026-04-10-claude-code-hooks.md)
+- [하네스 엔지니어링](reports/2026-04-17-harness-engineering.md)
+- [Docker 로컬 셋업](reports/2026-04-26-docker-local-setup.md)
+- [NestJS 아키텍처](reports/2026-04-26-nestjs-architecture.md)
+- [auth-session 회고](reports/2026-04-30-auth-session.md)
 
 ## 개발 명령어
 

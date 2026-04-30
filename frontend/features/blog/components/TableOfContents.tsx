@@ -18,12 +18,16 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       .map((h) => document.getElementById(h.slug))
       .filter(Boolean) as HTMLElement[];
 
-    if (elements.length === 0) return;
+    if (elements.length === 0) {
+      return;
+    }
 
     // 목차가 스크롤되는 중요 로직
     const observer = new IntersectionObserver(
       (entries) => {
-        if (isClickScrolling.current) return;
+        if (isClickScrolling.current) {
+          return;
+        }
         for (const entry of entries) {
           if (entry.isIntersecting) {
             setActiveSlug(entry.target.id);
@@ -48,7 +52,9 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     }, 800);
   }
 
-  if (headings.length === 0) return null;
+  if (headings.length === 0) {
+    return null;
+  }
 
   return (
     <nav

@@ -11,6 +11,13 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   // TypeScript 관련 Next 권장 룰을 추가 적용합니다.
   ...nextTs,
+  // 프로젝트 공통 룰을 추가합니다.
+  {
+    rules: {
+      // 모든 제어문에 중괄호를 강제 — 단일 문에도 블록 사용으로 일관성·디버깅 편의 확보
+      curly: ['error', 'all'],
+    },
+  },
   // Next 기본 ignore에 프로젝트 성격에 맞는 경로를 명시합니다.
   globalIgnores([
     // 빌드 산출물(.next)은 검사 대상에서 제외합니다.
