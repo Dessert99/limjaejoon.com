@@ -4,7 +4,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { AuthModule } from './auth/auth.module';
 import { envValidationSchema } from './config/env.validation';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -29,14 +31,16 @@ import { envValidationSchema } from './config/env.validation';
         username: cs.get<string>('POSTGRES_USER'),
         password: cs.get<string>('POSTGRES_PASSWORD'),
         database: cs.get<string>('POSTGRES_DB'),
-        // Phase 2에서 각 모듈이 TypeOrmModule.forFeature()로 등록하면 자동 수집됨
+        // 각 모듈이 TypeOrmModule.forFeature()로 등록한 엔티티를 자동 수집
         autoLoadEntities: true,
         // 스키마 자동 동기화 금지 — 변경은 항상 마이그레이션으로
         synchronize: false,
       }),
     }),
+    // Phase 2 — 도메인 모듈 등록
+    UsersModule,
+    AuthModule,
   ],
-  // Phase 2에서 AuthModule, UsersModule이 추가됨
   controllers: [],
   providers: [],
 })
