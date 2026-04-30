@@ -37,6 +37,8 @@ export const getQueryClient = (): QueryClient => {
     return makeQueryClient();
   }
   // 브라우저: 한 번만 생성하고 재사용
-  if (!browserQueryClient) browserQueryClient = makeQueryClient();
+  if (!browserQueryClient) {
+    browserQueryClient = makeQueryClient();
+  }
   return browserQueryClient;
 };

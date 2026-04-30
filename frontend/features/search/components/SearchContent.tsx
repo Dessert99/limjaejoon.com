@@ -60,7 +60,9 @@ function filterAndSort(
       const descMatch = post.description.toLowerCase().includes(q);
       const tagMatch = post.tags.some((tag) => tag.toLowerCase().includes(q));
 
-      if (!titleMatch && !descMatch && !tagMatch) return [];
+      if (!titleMatch && !descMatch && !tagMatch) {
+        return [];
+      }
 
       const priority = titleMatch ? 1 : descMatch ? 2 : 3;
       return [{ post, priority }];

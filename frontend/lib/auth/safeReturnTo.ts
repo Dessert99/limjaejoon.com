@@ -15,13 +15,19 @@ const SAFE_PATH_RE = /^\/(?!\/)([\w\-./?=&%]*)$/;
  */
 export const safeReturnTo = (input: string | null | undefined): string => {
   // 입력이 없으면 홈으로
-  if (!input) return '/';
+  if (!input) {
+    return '/';
+  }
 
   // 백슬래시 포함 금지 — Windows 경로 트릭 방지 (ADR 0005 규칙 3)
-  if (input.includes('\\')) return '/';
+  if (input.includes('\\')) {
+    return '/';
+  }
 
   // 정규식으로 안전한 path-only 형식 검증
-  if (!SAFE_PATH_RE.test(input)) return '/';
+  if (!SAFE_PATH_RE.test(input)) {
+    return '/';
+  }
 
   // 루프 유발 prefix 차단
   for (const prefix of DISALLOWED_PREFIXES) {

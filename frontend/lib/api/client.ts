@@ -32,7 +32,9 @@ const PROACTIVE_REFRESH_THRESHOLD_MS = 60_000;
 // 요청 인터셉터 — access 만료 임박 시 refresh를 먼저 수행한다
 apiClient.interceptors.request.use(async (config) => {
   // refresh 엔드포인트 자체는 사전 분기에서 제외 — 무한 루프 방지
-  if (config.url === '/auth/refresh') return config;
+  if (config.url === '/auth/refresh') {
+    return config;
+  }
 
   const exp = getAccessExpiresAt();
   // accessExpiresAt이 설정되어 있고 만료까지 60초 이하면 사전 refresh
@@ -71,7 +73,9 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error: unknown) => {
     // axios 에러인지 확인
-    if (!axios.isAxiosError(error)) return Promise.reject(error);
+    if (!axios.isAxiosError(error)) {
+      return Promise.reject(error);
+    }
 
     const originalConfig = error.config as typeof error.config & {
       _retry?: boolean;
