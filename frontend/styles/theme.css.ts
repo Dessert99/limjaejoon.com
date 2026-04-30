@@ -14,6 +14,9 @@ export const [darkTheme, vars] = createTheme({
     accentStrong: '#12b886',
     accentSoft: 'rgba(18, 184, 134, 0.15)',
     bgPageTranslucent: 'rgba(18, 18, 18, 0.8)',
+    // 에러·위험 상태용 — 폼 검증 실패, 파괴적 액션 경고에 사용
+    colorDanger: '#ff6b6b',
+    colorDangerSubtle: 'rgba(255, 107, 107, 0.12)',
   },
   shadow: {
     cardSm: '0 1px 3px rgba(0, 0, 0, 0.24)',
@@ -60,6 +63,9 @@ export const lightTheme = createTheme(vars, {
     accentStrong: '#0ca678',
     accentSoft: 'rgba(12, 166, 120, 0.1)',
     bgPageTranslucent: 'rgba(255, 255, 255, 0.8)',
+    // 라이트 모드: 더 진한 레드 계열로 가독성 확보
+    colorDanger: '#e03131',
+    colorDangerSubtle: 'rgba(224, 49, 49, 0.08)',
   },
   shadow: {
     cardSm: '0 1px 3px rgba(0, 0, 0, 0.08)',
