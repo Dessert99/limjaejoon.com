@@ -7,23 +7,14 @@ interface BlogCardProps {
   href?: string;
 }
 
+// 카드 전체가 포스트 상세로 이동하는 링크. href override가 없으면 slug 기반 경로 사용
 export function BlogCard({ post, href }: BlogCardProps) {
   return (
     <Link
       href={href ?? `/blog/${post.slug}`}
       className={s.card}>
-      <span
-        className={s.idx}
-        aria-hidden='true'
-      />
-      <span className={s.titleWrap}>
-        <span
-          className={s.arrow}
-          aria-hidden='true'>
-          →
-        </span>
-        <span className={s.title}>{post.title}</span>
-      </span>
+      <h2 className={s.title}>{post.title}</h2>
+      <p className={s.description}>{post.description}</p>
       <div className={s.meta}>
         {post.tags.length > 0 && (
           <ul className={s.tags}>
@@ -36,7 +27,11 @@ export function BlogCard({ post, href }: BlogCardProps) {
             ))}
           </ul>
         )}
-        <span className={s.date}>{post.date}</span>
+        <time
+          className={s.date}
+          dateTime={post.date}>
+          {post.date}
+        </time>
       </div>
     </Link>
   );

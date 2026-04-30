@@ -1,70 +1,54 @@
 import { vars } from '@/styles/theme.css';
-import { bp } from '@/styles/breakpoints';
 import { style } from '@vanilla-extract/css';
 
+// 카드 그리드 셀: 세로 flex로 제목·설명·메타를 배치, 메타는 marginTop:auto로 바닥 고정
 export const card = style({
   position: 'relative',
-  isolation: 'isolate',
-  display: 'grid',
-  gridTemplateColumns: 'auto 1fr auto',
-  alignItems: 'center',
-  gap: '0.875rem',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.625rem',
   textDecoration: 'none',
-  paddingBlock: '0.875rem',
-  paddingLeft: '1.125rem',
-  paddingRight: '0.875rem',
-  borderBottom: `1px solid ${vars.color.lineSoft}`,
-  counterIncrement: 'post',
-  transition: 'background-color 200ms ease, padding 250ms ease',
+  padding: '1.125rem 1.25rem',
+  border: `1px solid ${vars.color.lineSoft}`,
+  borderRadius: vars.radius.lg,
+  backgroundColor: vars.color.bgSurface,
+  boxShadow: vars.shadow.cardSm,
+  // 짧은 콘텐츠 카드도 그리드 행에서 너무 작아지지 않도록 최소 높이 보장
+  minHeight: '12rem',
+  transition:
+    'transform 250ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 250ms ease, box-shadow 250ms ease',
 
+  // 좌측 액센트 바: 평소 숨김, hover 시 위→아래로 펼쳐짐
   '::before': {
     content: '""',
     position: 'absolute',
     left: 0,
-    top: '10px',
-    bottom: '10px',
+    top: '14px',
+    bottom: '14px',
     width: '2px',
     background: vars.color.accentStrong,
-    borderRadius: '2px',
     transform: 'scaleY(0)',
     transformOrigin: 'center',
     transition: 'transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1)',
   },
-  '::after': {
-    content: '""',
-    position: 'absolute',
-    inset: 0,
-    zIndex: -1,
-    borderRadius: vars.radius.md,
-    background: `linear-gradient(90deg, ${vars.color.bgSoft}, transparent 70%)`,
-    opacity: 0,
-    transition: 'opacity 250ms ease',
-  },
 
   ':hover': {
-    paddingLeft: '1.375rem',
+    transform: 'translateY(-2px)',
+    borderColor: vars.color.accentStrong,
+    boxShadow: vars.shadow.cardMd,
   },
 
   selectors: {
     '&:hover::before': {
       transform: 'scaleY(1)',
     },
-    '&:hover::after': {
-      opacity: 1,
-    },
   },
 
   '@media': {
-    [bp.md]: {
-      gap: '1rem',
-    },
     '(prefers-reduced-motion: reduce)': {
       transition: 'none',
       selectors: {
         '&::before': {
-          transition: 'none',
-        },
-        '&::after': {
           transition: 'none',
         },
       },
@@ -72,73 +56,17 @@ export const card = style({
   },
 });
 
-export const idx = style({
-  fontFamily: vars.font.mono,
-  fontSize: vars.fontSize.xs,
-  color: vars.color.textMuted,
-  fontFeatureSettings: '"tnum"',
-  minWidth: '1.625rem',
-  opacity: 0.55,
-  transition: 'color 200ms ease, opacity 200ms ease',
-
-  '::before': {
-    content: 'counter(post, decimal-leading-zero)',
-  },
-
-  selectors: {
-    [`${card}:hover &`]: {
-      color: vars.color.accentStrong,
-      opacity: 1,
-    },
-  },
-
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transition: 'none',
-    },
-  },
-});
-
-export const titleWrap = style({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.5rem',
-  minWidth: 0,
-});
-
-export const arrow = style({
-  display: 'inline-block',
-  color: vars.color.accentStrong,
-  width: 0,
-  opacity: 0,
-  overflow: 'hidden',
-  flexShrink: 0,
-  transform: 'translateX(-4px)',
-  transition: 'width 220ms ease, opacity 220ms ease, transform 220ms ease',
-
-  selectors: {
-    [`${card}:hover &`]: {
-      width: '0.875rem',
-      opacity: 1,
-      transform: 'translateX(0)',
-    },
-  },
-
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transition: 'none',
-    },
-  },
-});
-
+// 제목: 2줄 클램프, hover 시 액센트 색으로 전환
 export const title = style({
-  fontSize: vars.fontSize.base,
+  fontSize: vars.fontSize.lg,
   fontWeight: 600,
+  lineHeight: 1.35,
   color: vars.color.textPrimary,
+  margin: 0,
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
   overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  minWidth: 0,
   transition: 'color 200ms ease',
 
   selectors: {
@@ -154,11 +82,26 @@ export const title = style({
   },
 });
 
+// 설명: 3줄 클램프
+export const description = style({
+  fontSize: vars.fontSize.sm,
+  color: vars.color.textSecondary,
+  lineHeight: 1.6,
+  margin: 0,
+  display: '-webkit-box',
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+});
+
+// 메타 라인: marginTop:auto로 카드 바닥에 고정, 태그·날짜를 가로 배치
 export const meta = style({
+  marginTop: 'auto',
   display: 'flex',
   alignItems: 'center',
   gap: '0.5rem',
-  flexShrink: 0,
+  flexWrap: 'wrap',
+  rowGap: '0.5rem',
 });
 
 export const tags = style({
@@ -183,4 +126,5 @@ export const date = style({
   color: vars.color.textMuted,
   fontFeatureSettings: '"tnum"',
   flexShrink: 0,
+  marginLeft: 'auto',
 });
