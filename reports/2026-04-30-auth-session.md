@@ -6,185 +6,175 @@
 
 ## 데이터 흐름 시각화
 
-1. 인증 시스템은 여러 흐름이 얽혀 있어 텍스트 설명만으로는 잡기 어려우므로, 이번 플랜에서 구현한 7가지 핵심 흐름을 도식으로 정리한다.
+1. 인증 시스템은 여러 흐름이 얽혀 있어 텍스트 설명만으로는 잡기 어려우므로, 이번 플랜에서 구현한 7가지 핵심 흐름을 Mermaid 도식으로 정리한다.
 2. 첫 번째는 회원가입·로그인 흐름으로, 폼 제출이 mutation을 거쳐 백엔드 → DB → 응답을 받고 마지막으로 me 캐시를 채우는 한 사이클이다.
 
-```text
-[Form submit (RHF handleSubmit)]
-   ↓
-[useLogin/useSignup → mutate(data)]
-   ↓
-[login()/signup() API → apiClient.post(path, data)]
-   ↓ (request interceptor: 사전 refresh 분기 — 첫 요청은 SKIP)
-   ↓
-[Backend AuthController → AuthService]
-   ├─ findByEmail
-   ├─ bcrypt.compare or DUMMY_HASH (timing 균등)
-   ├─ JWT.sign(access)
-   └─ RefreshTokenService.issue (new family_id)
-   ↓
-[Response: 200 + Set-Cookie(access, refresh) + body{user, accessExpiresAt}]
-   ↓
-[setAccessExpiresAt(accessExpiresAt)]    ← tokenStore 갱신
-   ↓
-[hook onSuccess: setQueryData(authKeys.me(), user)]   ← 추가 GET 절약
-   ↓
-[caller onSuccess: router.push(safeReturnTo(...))]
+```mermaid
+sequenceDiagram
+  actor User as 사용자
+  participant Form as LoginForm/SignupForm
+  participant Hook as useLogin/useSignup
+  participant API as login()/signup()
+  participant Client as apiClient (axios)
+  participant Backend
+  participant Store as tokenStore
+  participant Cache as QueryClient
+
+  User->>Form: submit (RHF handleSubmit)
+  Form->>Hook: mutate(data)
+  Hook->>API: login(data)
+  API->>Client: post(path, data)
+  Note over Client: 사전 refresh 분기 (첫 요청은 SKIP)
+  Client->>Backend: POST /auth/login
+  Note over Backend: bcrypt.compare or DUMMY_HASH<br/>JWT.sign(access)<br/>RefreshToken.issue (new family_id)
+  Backend-->>Client: 200 + Set-Cookie + body{user, accessExpiresAt}
+  Client-->>API: response
+  API->>Store: setAccessExpiresAt(accessExpiresAt)
+  API-->>Hook: data
+  Hook->>Cache: setQueryData(authKeys.me(), user)
+  Hook-->>Form: onSuccess
+  Form->>Form: router.push(safeReturnTo(...))
 ```
 
 3. 두 번째는 사전 refresh 흐름으로, 만료 임박 시 동시에 들어온 여러 요청이 단 한 번의 refresh를 공유하는 뮤텍스 패턴이다.
 
-```text
-[apiClient.get('/auth/me') × 3회 동시]
-   ↓
-[Request interceptor]
-   exp = getAccessExpiresAt()
-   if (Date.now() + 60s >= exp):
-     ┌─── 1st 요청 ────┐  ┌─ 2nd ─┐  ┌─ 3rd ─┐
-     refreshPromise === null     != null     != null
-     ↓ (새 Promise 시작)         (skip)      (skip)
-     setRefreshPromise(P)
-     await P                    await P     await P
-              └────────┬─────────┴───────────┘
-                       ↓ (refresh 1회만 호출)
-                  /auth/refresh
-                       ↓
-              setAccessExpiresAt(new)
-              setRefreshPromise(null)   ← finally 해제 필수
-   ↓
-[모든 원 요청 진행 with new cookies]
+```mermaid
+sequenceDiagram
+  participant R1 as 요청 1
+  participant R2 as 요청 2
+  participant R3 as 요청 3
+  participant Store as tokenStore
+  participant Backend
+
+  R1->>Store: getRefreshPromise()
+  Store-->>R1: null
+  R1->>Backend: POST /auth/refresh
+  R1->>Store: setRefreshPromise(P)
+  par 동시 요청들이 같은 P를 공유
+    R2->>Store: getRefreshPromise()
+    Store-->>R2: P (await)
+  and
+    R3->>Store: getRefreshPromise()
+    Store-->>R3: P (await)
+  end
+  Backend-->>R1: 200 (refresh 단 1회만 호출)
+  R1->>Store: setAccessExpiresAt(new)
+  R1->>Store: setRefreshPromise(null)
+  Note over R1,R3: 모두 await P 해제 → 원 요청 진행
 ```
 
 4. 세 번째는 refresh 토큰 회전과 재사용 감지로, atomic UPDATE+RETURNING이 race-safe 핵심이다.
 
-```text
-[POST /auth/refresh, Cookie: refresh_token=raw]
-   ↓
-[RefreshTokenService.rotate]
-   tokenHash = sha256(raw)
-   ↓
-[atomic UPDATE refresh_tokens
-   SET revokedAt=now()
-   WHERE tokenHash=$1 AND revokedAt IS NULL
-   RETURNING *]
-   ↓
-   ┌── 1행 반환 ──┐         ┌── 0행 반환 ──┐
-   ↓ 정상 회전              ↓ 충돌 또는 재사용
-   새 token 생성            기존 행 SELECT
-   INSERT (같은 family_id)  ┌── 행 없음 ──┐ ┌── 행 있음 + revokedAt 있음 ──┐
-   Set-Cookie 새 access·   401 (위조)     family 일괄 폐기 (재사용 감지)
-   refresh + body 반환                    → 정상 사용자도 강제 로그아웃
-                                          → 공격자 추가 시도 차단
+```mermaid
+flowchart TD
+  Start([POST /auth/refresh<br/>Cookie: refresh_token=raw])
+  Start --> Hash[sha256 해시 → tokenHash]
+  Hash --> Update["atomic UPDATE refresh_tokens<br/>SET revokedAt = now<br/>WHERE tokenHash = $1 AND revokedAt IS NULL<br/>RETURNING *"]
+  Update --> Affected{영향 받은<br/>행 수?}
+  Affected -- 1행 --> Issue[새 토큰 INSERT<br/>같은 family_id 상속]
+  Issue --> RespOK([Set-Cookie 새 access·refresh<br/>200 + body])
+  Affected -- 0행 --> Lookup{기존 행 SELECT}
+  Lookup -- 행 없음 --> Forge([401 — 위조 토큰])
+  Lookup -- "revokedAt 있음<br/>(이미 폐기)" --> Reuse[재사용 감지]
+  Reuse --> Family[같은 family_id 모든 토큰<br/>일괄 폐기]
+  Family --> Force([401 — 정상 사용자도 강제 로그아웃<br/>공격자 추가 시도 차단])
 ```
 
 5. 네 번째는 401 reactive fallback 흐름으로, 사전 refresh가 놓친 케이스를 응답 인터셉터가 한 번 더 만회한다.
 
-```text
-[apiClient.get('/auth/me')]
-   ↓ (사전 refresh 분기 SKIP — exp 멀거나 null)
-   ↓
-[Backend 401] (clock skew·만료 직후 등)
-   ↓
-[Response interceptor]
-   if (status === 401 && !_retry && url !== '/auth/refresh'):
-     originalConfig._retry = true   ← 무한 루프 방지 표식
-     ┌── refresh 성공 ──┐         ┌── refresh 실패 ──┐
-     setAccessExpiresAt(new)      clearAuth()
-     return apiClient(originalConfig)  ← 원 요청 재시도
-                                       onAuthFailure?.()  ← /login 이동
-     ↓                                  reject
-     [200 OK]
+```mermaid
+flowchart TD
+  Req([apiClient.get '/auth/me'])
+  Req --> Send[Backend 호출]
+  Send --> Resp{응답}
+  Resp -- 200 --> OK([정상 반환])
+  Resp -- 401 --> Cond{!_retry &&<br/>url !== /auth/refresh?}
+  Cond -- No --> Reject([그대로 reject])
+  Cond -- Yes --> Mark[_retry = true<br/>무한 루프 방지 표식]
+  Mark --> Refresh[apiClient.post /auth/refresh]
+  Refresh -- 성공 --> Save[setAccessExpiresAt new]
+  Save --> Retry[apiClient originalConfig<br/>원 요청 재시도]
+  Retry --> OK
+  Refresh -- 실패 --> Cleanup[clearAuth + onAuthFailure]
+  Cleanup --> Logout([로그인 페이지 이동])
 ```
 
 6. 다섯 번째는 보호 라우트 2층 게이트로, proxy.ts(빠른 1차)와 SC verifySession(정밀 2차)이 짝을 이룬다.
 
-```text
-[GET /me]
-   ↓
-[proxy.ts (Node runtime, 매 요청 전)]
-   has(access_token) || has(refresh_token)?
-   ─ 0개 ──→ redirect /login?returnTo=/me + search
-   ─ 1개+ ─┐ (통과 — 쿠키 존재만 검사, 검증은 SC가)
-           ↓
-[(protected)/layout.tsx (Server Component)]
-   await verifySession('/me')
-     ┌─ cookies().get('access_token')
-     │  ─ 없음 ──→ redirect /login
-     │  ─ 있음 ─┐
-     │          ↓
-     └─ fetch /auth/me {Cookie: access_token=..., cache: 'no-store'}
-        ─ 401/5xx ──→ redirect /login
-        ─ 200 ──→ return user (React.cache 메모이즈)
-   ↓
-[me/page.tsx (Server Component)]
-   await verifySession('/me')   ← 같은 요청 — cache 히트, fetch 0회
-   user를 dl/dt/dd로 렌더
-   ↓
-[HTML stream → 브라우저]
+```mermaid
+flowchart TD
+  Req([GET /me])
+  Req --> Proxy{proxy.ts<br/>access_token OR refresh_token<br/>쿠키 존재?}
+  Proxy -- 0개 --> R1([redirect /login?returnTo=...])
+  Proxy -- 1개 이상 --> Layout["app/(protected)/layout.tsx"]
+  Layout --> VS[verifySession '/me' 호출]
+  VS --> Cookie{access_token<br/>쿠키 값 있나?}
+  Cookie -- 없음 --> R2([redirect /login])
+  Cookie -- 있음 --> Fetch["fetch /auth/me<br/>Cookie 헤더 전달<br/>cache: 'no-store'"]
+  Fetch --> Status{응답}
+  Status -- 401/5xx --> R3([redirect /login])
+  Status -- 200 --> Page["me/page.tsx 렌더<br/>verifySession 재호출도<br/>React.cache로 fetch 0회"]
+  Page --> Out([HTML stream → 브라우저])
 ```
 
 7. 여섯 번째는 에러 매핑 흐름으로, 백엔드가 던진 axios 에러를 react-hook-form의 errors 객체로 합류시키는 onError 브리지다.
 
-```text
-[apiClient → AxiosError throw (401/409/...)]
-   ↓
-[useMutation이 자동 capture → onError 콜백 발화]
-   ↓
-[mutate 호출의 onError (LoginForm/SignupForm)]
-   if (axios.isAxiosError(error)):
-     ┌── status === 401 (login) ──┐  ┌── status === 409 (signup) ──┐
-     setError('root', '이메일·비번  setError('email', '이미 가입된
-              올바르지 않습니다')           이메일입니다')
-   else:
-     setError('root', '잠시 후 다시 시도')
-   ↓
-[RHF formState.errors 갱신]
-   ↓
-[리렌더]
-   errors.root → <div role='alert' 폼 상단>
-   errors.email → FormField → <p role='alert' 인풋 아래> + aria-invalid=true
+```mermaid
+flowchart TD
+  Throw([apiClient → AxiosError throw])
+  Throw --> Capture[useMutation onError 자동 발화]
+  Capture --> Bridge[mutate 호출의 onError 콜백]
+  Bridge --> Guard{axios.isAxiosError?}
+  Guard -- No --> Generic["setError 'root'<br/>'잠시 후 다시 시도'"]
+  Guard -- Yes --> Status{response.status?}
+  Status -- 401 login --> Root["setError 'root'<br/>'이메일 또는 비밀번호 틀림'"]
+  Status -- 409 signup --> Field["setError 'email'<br/>'이미 가입된 이메일'"]
+  Status -- "기타 4xx/5xx" --> Misc["setError 'root'<br/>일반 메시지"]
+  Generic --> Update[RHF formState.errors 갱신]
+  Root --> Update
+  Field --> Update
+  Misc --> Update
+  Update --> Render["리렌더<br/>errors.root → 폼 상단 div role='alert'<br/>errors.email → FormField p role='alert' + aria-invalid=true"]
 ```
 
 8. 일곱 번째는 책임 레이어 전체 그림으로, 한 호출에 lib·providers·features·app·backend가 어떻게 협력하는지 보여준다.
 
-```text
-┌─ app/(protected)/me/page.tsx ─────────────┐  Server Component
-│  await verifySession('/me')               │
-└──────────────┬────────────────────────────┘
-               │ (서버 fetch)
-               ↓
-┌─ backend AuthController.me ───────────────┐  NestJS
-│  JwtAuthGuard → AuthService.me            │
-│  → DB SELECT users                        │
-└────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+  subgraph App ["app 레이어 (라우트)"]
+    Page["app/(protected)/me/page.tsx<br/>Server Component"]
+    Form["features/auth/components/LoginForm.tsx<br/>'use client' + RHF"]
+  end
 
-브라우저 Client Component 영역 (예: 다른 페이지):
-┌─ features/auth/components/LoginForm.tsx ──┐  RHF + 'use client'
-│  useForm<LoginRequest>                    │
-│  useLogin() → loginMutation.mutate(...)   │
-└──────────┬─────────────────────────────────┘
-           ↓ (hook 호출)
-┌─ features/auth/hooks/useLogin.ts ─────────┐  TanStack
-│  useMutation({ mutationFn: login,         │
-│    onSuccess: setQueryData(authKeys.me()) │
-│  })                                        │
-└──────────┬─────────────────────────────────┘
-           ↓ (api 함수)
-┌─ features/auth/api/login.ts ──────────────┐
-│  apiClient.post('/auth/login', body)      │
-│  setAccessExpiresAt(...)                  │
-└──────────┬─────────────────────────────────┘
-           ↓ (axios 인터셉터)
-┌─ lib/api/client.ts ───────────────────────┐
-│  request: 사전 refresh 분기 + mutex       │
-│  response: 401 fallback + _retry          │
-│  registerAuthFailureHandler ← QueryProvider│
-└──────────┬─────────────────────────────────┘
-           ↓ (네트워크)
-┌─ Backend ─────────────────────────────────┐
-│  AuthController → AuthService → DB        │
-│  Set-Cookie(access, refresh) + body       │
-└────────────────────────────────────────────┘
+  subgraph Hooks ["hook 레이어 (TanStack)"]
+    UL["useLogin / useSignup / useMe / useLogout"]
+  end
+
+  subgraph APIfn ["api 함수 (thin axios wrapper)"]
+    LoginAPI["login() / signup() / logout() / getMe()"]
+  end
+
+  subgraph Lib ["lib 레이어 (인프라)"]
+    Client["lib/api/client.ts<br/>인터셉터 + tokenStore"]
+    VS["lib/auth/verifySession.ts<br/>SC 전용"]
+    Safe["lib/auth/safeReturnTo.ts<br/>open redirect 방어"]
+  end
+
+  subgraph BE ["Backend (NestJS)"]
+    Ctrl["AuthController"]
+    Svc["AuthService + RefreshTokenService"]
+    DB[(PostgreSQL)]
+  end
+
+  Page -- "await" --> VS
+  VS -- "fetch" --> Ctrl
+  Form -- "useLogin" --> UL
+  Form -- "safeReturnTo(returnTo)" --> Safe
+  UL -- "mutationFn" --> LoginAPI
+  LoginAPI -- "post()" --> Client
+  Client -- "axios" --> Ctrl
+  Ctrl --> Svc
+  Svc --> DB
 ```
 
 9. 이 7개 흐름을 머릿속에 그려두면 이후 코드를 읽거나 디버깅할 때 어디를 봐야 하는지 빠르게 잡힌다.
