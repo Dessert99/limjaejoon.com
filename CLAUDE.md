@@ -49,6 +49,7 @@ npm run format     # 전체 포맷
 - `frontend/features/` 아래에 기능별로 컴포넌트 분리
 - TanStack Query 컨벤션은 @docs/conventions/tanstack-query-conventions.md 참조.
 - React Hook Form 컨벤션은 @docs/conventions/react-hook-form-conventions.md 참조.
+- TDD 컨벤션은 @docs/conventions/tdd-conventions.md 참조.
 
 ## 개발 프로세스
 
