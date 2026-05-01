@@ -46,6 +46,7 @@ reports/           # 작업 기술서·학습 정리
 - [Docker 로컬 셋업](reports/2026-04-26-docker-local-setup.md)
 - [NestJS 아키텍처](reports/2026-04-26-nestjs-architecture.md)
 - [auth-session 회고](reports/2026-04-30-auth-session.md)
+- [IconTile 글라스모피즘 카드 — vanilla-extract 단일 클래스 규칙과 selectors 패턴](reports/2026-05-01-icon-tile-glass-card.md)
 
 ## 개발 명령어
 
