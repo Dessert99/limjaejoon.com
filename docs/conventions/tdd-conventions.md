@@ -41,6 +41,6 @@
 
 ### 7. 워크플로우
 
-- 사용자: 별도 터미널에 `npm run test:watch -w frontend`(또는 `cd frontend && npm run test:watch`) 켜둠
+- 사용자: 별도 터미널에 `npm run test:fe:watch` 켜둠
 - 에이전트: 매 라운드에서 `npm run test:fe`(단일 실행)으로 결과 확인
 - watch는 사용자 화면 신호 역할 — 에이전트는 watch를 띄우지 않음
