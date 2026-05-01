@@ -6,7 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthModule } from './auth/auth.module';
 import { envValidationSchema } from './config/env.validation';
+import { TourModule } from './tour/tour.module';
 import { UsersModule } from './users/users.module';
+import { WishlistModule } from './wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -40,6 +42,10 @@ import { UsersModule } from './users/users.module';
     // Phase 2 — 도메인 모듈 등록
     UsersModule,
     AuthModule,
+    // tour wishlist 플랜 — 외부 API 프록시
+    TourModule,
+    // tour wishlist 플랜 — 본인 위시리스트 CRUD
+    WishlistModule,
   ],
   controllers: [],
   providers: [],

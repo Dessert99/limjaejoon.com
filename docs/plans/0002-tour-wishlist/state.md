@@ -21,6 +21,8 @@
 - [x] ADR 초안 (6개)
 - [x] ADR 검토 (architect-reviewer + security-auditor) — 피드백 반영 완료
 - [ ] 구현
+  - [x] 백엔드 라운드 1: 선결 + tour 모듈 + wishlist 모듈 (TDD, 테스트 35/35 통과)
+  - [ ] 프론트 라운드: features/tour 스캐폴딩 + 페이지 3종 + nav/middleware
 - [ ] 코드 검토 (code-reviewer + security-auditor + accessibility-tester)
 - [ ] 회고 (study-note)
 
@@ -32,28 +34,12 @@
 
 ## 마지막 작업 요약
 
-ADR 6개 작성·검토 완료. 검토 피드백(타입 동기화, IDOR 차단, 캐시 누설, 에러 누설, debounce 등) 반영 완료. 구현 대기.
+**백엔드 라운드 1 완료** (2026-05-01). 선결(env+ValidationPipe 회귀 검증) → tour 모듈(HttpModule+ACL+컨트롤러+에러 마스킹) → wishlist 모듈(엔티티+migration+IDOR 차단 service+컨트롤러+CurrentUser 데코레이터) 모두 TDD로 작성. 기존 19개 + 새 16개 = **테스트 35/35 통과**, 빌드 통과. node-specialist 위임 → 누락분(wishlist 빌더/컨트롤러/모듈, 데코레이터, migration)은 main에서 보강. rxjs 중복 설치로 발생한 `Observable` 타입 충돌은 `npm dedupe`로 해소.
 
 ## 다음 액션
 
-`/execute 0002-tour-wishlist`로 새 세션에서 시작. execute 첫 라운드 작업 단위:
+프론트 라운드 진입. `/execute` 재진입 시 아래 4번부터:
 
-1. **백엔드 선결**:
-   - `env.validation.ts`에 `TOUR_API_KEY: Joi.string().required()` 추가
-   - `main.ts`의 `ValidationPipe` 전역 등록 상태 검증 (없으면 추가, ADR 0006)
-   - **회귀 검증**: `forbidNonWhitelisted: true` 옵션이 추가되면 기존 `auth/users` 요청 페이로드 중 DTO에 정의되지 않은 필드는 모두 400으로 거부됨. 기존 `LoginDto`/`SignupDto`/`RefreshDto` 필드와 클라이언트(`useLogin`/`useSignup`) 페이로드 일치 확인 + 기존 `auth.service.spec.ts` 통과 확인 (ADR 0006)
-2. **백엔드 tour 모듈 생성** (TDD):
-   - `HttpModule.registerAsync` 등록 + `serviceKey` 인터셉터 (ADR 0002)
-   - `TourService.searchByKeyword(keyword, page)` 반환 envelope `{ items, page, hasMore }` (ADR 0006)
-   - `fetchCommon(contentId)`, `fetchIntro(contentId)` + ACL mapper
-   - `TourController` GET `/api/tour/search`, GET `/api/tour/:contentId/common`, GET `/api/tour/:contentId/intro`
-   - 503 변환 시 에러 누설 방지 검증 (ADR 0002)
-   - **logger 시리얼라이저 단위 테스트 1개**: 외부 API 에러를 logger에 흘렸을 때 출력 문자열에 `serviceKey`/`config.url`이 포함되지 않는지 검증 (ADR 0002의 마스킹이 코드로 강제됨을 회귀 방지)
-3. **백엔드 wishlist 모듈 생성** (TDD):
-   - `Wishlist` 엔티티 + migration (ADR 0003)
-   - `WishlistService` (`userId` 필수 인자, `repo.delete({ id, user_id })` IDOR 차단)
-   - `WishlistController` GET/POST/DELETE `/api/wishlist` + `JwtAuthGuard` + `@CurrentUser()`
-   - `CreateWishlistDto` (`contentId` 정규식, `title` 길이 제한)
 4. **프론트 `features/tour/` 단일 도메인 스캐폴딩** (ADR 0001):
    - `features/tour/types.ts` (백엔드 DTO 수동 미러링: `TourItem`, `TourDetail`, `WishlistItem`)
    - `features/tour/constants/keys.ts` (`tourKeys` + `wishlistKeys` 두 팩토리 공존)
@@ -77,9 +63,26 @@ ADR 6개 작성·검토 완료. 검토 피드백(타입 동기화, IDOR 차단, 
 
 - `docs/plans/0002-tour-wishlist/PRD.md` — 기능 요구사항 + 보안 민감도 + 완료 기준
 - `docs/plans/0002-tour-wishlist/adr/0001~0006-*.md` — 6개 결정 문서
+- `docs/plans/0002-tour-wishlist/questions.md` — 세션 중 사용자 개념 질문 누적 로그 (생성)
 - `.env`, `.env.example` — `TOUR_API_KEY` 환경변수 추가 (Decoding 키)
+- `backend/package.json` — `@nestjs/axios` ^4 + `axios` ^1 추가
+- `backend/src/config/env.validation.ts` — `TOUR_API_KEY: Joi.string().required()` 검증 추가
+- `backend/src/auth/decorators/current-user.decorator.ts` — `req.user.sub` 추출 파라미터 데코레이터 (IDOR 차단 핵심)
+- `backend/src/tour/tour.module.ts` — `HttpModule.registerAsync` + 공통 params(serviceKey/MobileOS/_type) 자동 주입, AuthModule import
+- `backend/src/tour/tour.service.ts` — searchByKeyword/fetchCommon/fetchIntro + ACL 매퍼 + serializeAxiosError(serviceKey 마스킹)
+- `backend/src/tour/tour.service.spec.ts` — ACL 매핑/hasMore 경계/null 정규화/503 변환/시리얼라이저 누설 7케이스
+- `backend/src/tour/tour.controller.ts` — `@UseGuards(JwtAuthGuard)` + 3개 GET 엔드포인트
+- `backend/src/tour/dto/{tour-item,tour-detail,tour-search-response,tour-search-query,tour-content-id-param}.dto.ts` — DTO + class-validator
+- `backend/src/wishlist/wishlist.module.ts` — `TypeOrmModule.forFeature([Wishlist])` + AuthModule import
+- `backend/src/wishlist/wishlist.service.ts` — `userId` 첫 인자 강제 + `repo.delete({id,userId})` IDOR 차단 + 23505 → 409
+- `backend/src/wishlist/wishlist.service.spec.ts` — list/add/remove + IDOR 회귀 6케이스
+- `backend/src/wishlist/wishlist.controller.ts` — `@CurrentUser()` + `ParseUUIDPipe` + 204 응답
+- `backend/src/wishlist/dto/{create-wishlist,wishlist-item}.dto.ts` — 입력/응답 DTO
+- `backend/src/wishlist/entities/wishlist.entity.ts` — 컬럼 평탄화 스냅샷 (snapshotTitle/FirstImage/Addr)
+- `backend/src/migrations/1714099300000-init-wishlist.ts` — wishlist 테이블 + (userId,contentId) UNIQUE + (userId,createdAt) 인덱스
+- `backend/src/app.module.ts` — TourModule + WishlistModule imports에 추가
 
 ## 미해결 결정 / 질문
 
-- 없음. 모든 결정 사용자 컨펌 완료 (Q1=A 슬롯 합성 / Q2=B throttler 비범위 / 메뉴 두 개 추가 / middleware 가드 / 상세 페이지 가드 포함 / detailCommon2 + detailIntro2).
-- execute 첫 작업으로 `ValidationPipe` 전역 등록 상태와 `cookie.config.ts`의 `Domain` 미설정 상태만 빠르게 검증 (둘 다 ADR에 명시).
+- 없음. 백엔드 라운드는 ADR 그대로 구현. 프론트 라운드 진입 시 BE↔FE envelope `{items,page,hasMore}` 정확 미러링이 핵심 회귀 지점.
+- migration은 아직 DB에 적용 안 함(`npm --workspace backend run migration:run`은 프론트 라운드 종료 후 통합 검증 시점에 실행).

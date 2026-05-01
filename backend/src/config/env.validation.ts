@@ -50,6 +50,9 @@ export const envValidationSchema = Joi.object({
       .uri({ scheme: ['http', 'https'] })
       .required(),
   }),
+
+  // 한국관광공사 KorService2 API Decoding 키 — TourModule HttpModule 인터셉터에서 serviceKey로 자동 주입 (ADR 0002)
+  TOUR_API_KEY: Joi.string().required(),
 })
   // 두 JWT 시크릿이 동일하면 refresh 토큰을 access 시크릿으로 검증 가능 → 보안 구멍
   .custom((value: Record<string, unknown>, helpers) => {
