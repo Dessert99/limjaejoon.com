@@ -11,6 +11,7 @@ export default function Home() {
   return (
     <main className={s.main}>
       <HeroSection />
+      <SkillsSection />
       <Timeline
         title='경력'
         items={experience}
@@ -20,7 +21,7 @@ export default function Home() {
         items={activities}
       />
       <ProjectsSection />
-      <SkillsSection />
+
       <Timeline
         title='학력'
         items={education}

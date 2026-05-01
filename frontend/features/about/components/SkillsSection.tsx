@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { IconType } from 'react-icons';
 import {
   SiExpo,
   SiJavascript,
@@ -9,9 +9,10 @@ import {
 } from 'react-icons/si';
 import { SectionReveal } from '@/features/about/components/SectionReveal';
 import { skills } from '@/features/about/data/skills';
+import { IconTile } from './IconTile';
 import * as s from './SkillsSection.css';
 
-const iconBySkill: Record<string, ComponentType> = {
+const iconBySkill: Record<string, IconType> = {
   'Next.js': SiNextdotjs,
   'React.js': SiReact,
   TypeScript: SiTypescript,
@@ -29,18 +30,15 @@ export function SkillsSection() {
         <ul className={s.list}>
           {skills.map((skill) => {
             const Icon = iconBySkill[skill];
+            if (!Icon) {
+              return null;
+            }
             return (
-              <li
-                key={skill}
-                className={s.chip}>
-                {Icon && (
-                  <span
-                    className={s.icon}
-                    aria-hidden='true'>
-                    <Icon />
-                  </span>
-                )}
-                {skill}
+              <li key={skill}>
+                <IconTile
+                  icon={Icon}
+                  label={skill}
+                />
               </li>
             );
           })}

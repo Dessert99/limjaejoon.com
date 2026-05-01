@@ -1,4 +1,4 @@
-export type ContactKind = 'github' | 'linkedin' | 'email' | 'phone';
+export type ContactKind = 'github' | 'linkedin';
 
 export interface ContactLink {
   kind: ContactKind;
