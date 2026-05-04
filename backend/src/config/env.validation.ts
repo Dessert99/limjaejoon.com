@@ -24,7 +24,7 @@ export const envValidationSchema = Joi.object({
     .default('15m'),
   JWT_REFRESH_TTL: Joi.string()
     .pattern(/^\d+[smhd]$/)
-    .default('7d'),
+    .default('1d'),
 
   // bcrypt 라운드 — 너무 낮으면 보안 취약, 너무 높으면 성능 저하
   BCRYPT_ROUNDS: Joi.number().integer().min(10).max(14).default(12),

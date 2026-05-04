@@ -23,6 +23,8 @@ interface RawSearchItem {
 // 외부 KorService2 detailCommon2 응답의 item 한 건
 interface RawCommonItem {
   contentid: string;
+  // contenttypeid: detailIntro2 호출 시 필수 파라미터 — common 응답에서 추출해 클라이언트에 노출
+  contenttypeid: string;
   title: string;
   overview: string;
   homepage: string;
@@ -130,6 +132,8 @@ export class TourService {
 
       return {
         contentId: raw.contentid,
+        // detailIntro2 후속 호출 + 클라이언트 분기에 사용 — 외부 응답 그대로 전달
+        contentTypeId: raw.contenttypeid,
         title: raw.title,
         // overview·homepage는 HTML 태그 포함 가능 — 그대로 전달, 빈값은 null 정규화
         overview: raw.overview || null,
@@ -146,13 +150,17 @@ export class TourService {
   }
 
   // 관광지 소개 정보 — contentTypeId마다 구조가 달라 raw 그대로 반환
-  async fetchIntro(contentId: string): Promise<TourIntroDto> {
+  // contentTypeId는 KorService2 detailIntro2의 필수 파라미터 — 누락 시 외부가 비정상 응답
+  async fetchIntro(
+    contentId: string,
+    contentTypeId: string
+  ): Promise<TourIntroDto> {
     try {
       const res = await firstValueFrom(
         this.http.get<KorServiceResponse<Record<string, unknown>>>(
           '/detailIntro2',
           {
-            params: { contentId },
+            params: { contentId, contentTypeId },
           }
         )
       );

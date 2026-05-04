@@ -101,17 +101,32 @@ export class AuthController {
   ): Promise<AuthResponseBody> {
     // refresh 쿠키는 body가 아닌 쿠키에서 읽는다 — body 노출 금지
     const rawRefresh: string | undefined = req.cookies?.['refresh_token'];
+    // 토큰 부재/검증 실패는 모두 "복구 불가능한 인증 실패"로 간주 → 양쪽 쿠키 만료 후 401
+    // 호출자(브라우저·verifySession)가 좀비 쿠키를 들고 무한 루프에 빠지지 않도록 백엔드가 lifecycle 청소를 강제 (ADR 0005 보강)
     if (!rawRefresh) {
+      res.cookie('access_token', '', COOKIE_OPTS_CLEAR(this.cs));
+      res.cookie('refresh_token', '', COOKIE_OPTS_CLEAR(this.cs));
       throw new UnauthorizedException('No refresh token');
     }
-    const result = await this.authService.refresh(rawRefresh);
-    res.cookie('access_token', result.accessToken, COOKIE_OPTS_ACCESS(this.cs));
-    res.cookie(
-      'refresh_token',
-      result.refreshToken,
-      COOKIE_OPTS_REFRESH(this.cs)
-    );
-    return { user: result.user, accessExpiresAt: result.accessExpiresAt };
+    try {
+      const result = await this.authService.refresh(rawRefresh);
+      res.cookie(
+        'access_token',
+        result.accessToken,
+        COOKIE_OPTS_ACCESS(this.cs)
+      );
+      res.cookie(
+        'refresh_token',
+        result.refreshToken,
+        COOKIE_OPTS_REFRESH(this.cs)
+      );
+      return { user: result.user, accessExpiresAt: result.accessExpiresAt };
+    } catch (err) {
+      // refresh 검증 실패(만료/회수/주인 부재) 모두 동일 처리 — 좀비 쿠키 청소 후 원본 예외 전파
+      res.cookie('access_token', '', COOKIE_OPTS_CLEAR(this.cs));
+      res.cookie('refresh_token', '', COOKIE_OPTS_CLEAR(this.cs));
+      throw err;
+    }
   }
 
   // 로그아웃 — refresh 폐기 + 양쪽 쿠키 삭제

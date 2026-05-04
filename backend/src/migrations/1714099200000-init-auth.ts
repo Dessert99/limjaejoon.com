@@ -26,7 +26,6 @@ export class InitAuth1714099200000 implements MigrationInterface {
       CREATE TABLE "refresh_tokens" (
         "id"          UUID NOT NULL DEFAULT gen_random_uuid(),
         "userId"      UUID NOT NULL,
-        "familyId"    UUID NOT NULL,
         "tokenHash"   CHAR(64) NOT NULL,
         "revokedAt"   TIMESTAMPTZ DEFAULT NULL,
         "expiresAt"   TIMESTAMPTZ NOT NULL,
@@ -37,19 +36,9 @@ export class InitAuth1714099200000 implements MigrationInterface {
       )
     `);
 
-    // tokenHash 유니크 인덱스 — atomic rotate WHERE tokenHash = $1 의 성능 보장
+    // tokenHash 유니크 인덱스 — refresh 회전 시 단일 행 조회용
     await queryRunner.query(`
       CREATE UNIQUE INDEX "IDX_rt_token_hash" ON "refresh_tokens" ("tokenHash")
-    `);
-
-    // familyId + revokedAt 복합 인덱스 — family 일괄 폐기 풀스캔 방지 (ADR 0001 필수)
-    await queryRunner.query(`
-      CREATE INDEX "IDX_rt_family_revoked" ON "refresh_tokens" ("familyId", "revokedAt")
-    `);
-
-    // userId + revokedAt 복합 인덱스 — 사용자별 활성 세션 조회 최적화
-    await queryRunner.query(`
-      CREATE INDEX "IDX_rt_user_revoked" ON "refresh_tokens" ("userId", "revokedAt")
     `);
   }
 

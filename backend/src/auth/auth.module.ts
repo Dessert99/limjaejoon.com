@@ -20,7 +20,7 @@ import { RefreshTokenService } from './refresh-token.service';
   ],
   controllers: [AuthController],
   providers: [AuthService, RefreshTokenService, JwtAuthGuard],
-  // JwtAuthGuard 를 다른 모듈(예: 미래 보호 라우트)에서 쓸 수 있도록 export
-  exports: [JwtAuthGuard, AuthService],
+  // JwtAuthGuard + JwtModule 둘 다 export — 가드가 다른 모듈(Tour/Wishlist)에서 사용될 때 그 모듈 스코프에서 JwtService를 해석할 수 있어야 함
+  exports: [JwtAuthGuard, AuthService, JwtModule],
 })
 export class AuthModule {}

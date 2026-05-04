@@ -32,17 +32,6 @@ export interface AuthResult {
 // bcrypt 라운드를 결정하는 환경 변수 — Joi 검증으로 10–14 보장
 const BCRYPT_ROUNDS_ENV = 'BCRYPT_ROUNDS';
 
-// timing-safe 로그인을 위한 모듈 싱글턴 더미 해시 Promise
-// 사용자 미존재 시에도 bcrypt.compare를 실제로 돌려 응답 시간 편차를 줄인다 (ADR 0002)
-// 모듈 임포트 시 1회만 생성 — 요청마다 재생성하면 timing이 깨진다
-let _dummyHashPromise: Promise<string> | null = null;
-function getDummyHashPromise(rounds: number): Promise<string> {
-  if (!_dummyHashPromise) {
-    _dummyHashPromise = bcrypt.hash('dummy-password-for-timing', rounds);
-  }
-  return _dummyHashPromise;
-}
-
 // raw User → 공개 가능한 형태로 변환 — passwordHash 를 응답에서 제거
 function toPublicUser(user: User): PublicUser {
   return { id: user.id, email: user.email, createdAt: user.createdAt };
@@ -80,18 +69,13 @@ export class AuthService {
     return this.buildAuthResult(user);
   }
 
-  // 로그인 — 사용자 미존재·비밀번호 불일치 모두 동일한 401 반환 (enum 방지)
+  // 로그인 — 사용자 미존재·비밀번호 불일치 모두 동일한 401 메시지로 enumeration 힌트 차단
   async login(email: string, password: string): Promise<AuthResult> {
-    const rounds = this.cs.get<number>(BCRYPT_ROUNDS_ENV) ?? 12;
     const user = await this.usersService.findByEmail(email);
-
     if (!user) {
-      // 사용자 없음: dummy hash 로 timing 일정화 — 응답 시간으로 존재 여부 추측 불가
-      await bcrypt.compare(password, await getDummyHashPromise(rounds));
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // 비밀번호 검증 — 실패해도 동일 메시지로 401
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');

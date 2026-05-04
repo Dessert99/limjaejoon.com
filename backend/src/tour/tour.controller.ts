@@ -8,6 +8,7 @@ import {
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TourContentIdParamDto } from './dto/tour-content-id-param.dto';
+import { TourIntroQueryDto } from './dto/tour-intro-query.dto';
 import { TourSearchQueryDto } from './dto/tour-search-query.dto';
 import { TourCommonDto, TourIntroDto } from './dto/tour-detail.dto';
 import { TourSearchResponseDto } from './dto/tour-search-response.dto';
@@ -51,16 +52,23 @@ export class TourController {
   }
 
   // 관광지 소개 정보 조회 — contentTypeId별 raw 반환
+  // contentTypeId는 detailCommon2 응답에서 얻어 클라이언트가 ?contentTypeId= 쿼리로 함께 전달
   @Get(':contentId/intro')
   @ApiOperation({
     summary:
       '관광지 소개 정보 (KorService2 detailIntro2, contentTypeId별 구조 상이)',
   })
   @ApiResponse({ status: 200, type: TourIntroDto })
-  @ApiResponse({ status: 400, description: '잘못된 contentId 형식' })
+  @ApiResponse({
+    status: 400,
+    description: '잘못된 contentId/contentTypeId 형식',
+  })
   @ApiResponse({ status: 401, description: '인증 필요' })
   @ApiResponse({ status: 503, description: '외부 관광 API 호출 실패' })
-  async getIntro(@Param() param: TourContentIdParamDto): Promise<TourIntroDto> {
-    return this.tourService.fetchIntro(param.contentId);
+  async getIntro(
+    @Param() param: TourContentIdParamDto,
+    @Query() query: TourIntroQueryDto
+  ): Promise<TourIntroDto> {
+    return this.tourService.fetchIntro(param.contentId, query.contentTypeId);
   }
 }

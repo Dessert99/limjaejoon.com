@@ -39,7 +39,7 @@ const makeSearchResponse = (
   },
 });
 
-// detailCommon2 정상 응답
+// detailCommon2 정상 응답 — contenttypeid가 detailIntro2 호출 시 필수 파라미터로 사용됨
 const makeCommonResponse = () => ({
   data: {
     response: {
@@ -49,6 +49,7 @@ const makeCommonResponse = () => ({
           item: [
             {
               contentid: '125508',
+              contenttypeid: '12',
               title: '경복궁',
               overview: '<p>조선 왕조의 법궁</p>',
               homepage: 'http://www.royalpalace.go.kr',
@@ -245,6 +246,8 @@ describe('TourService', () => {
       const result = await service.fetchCommon('125508');
 
       expect(result.contentId).toBe('125508');
+      // detailIntro2 호출에 필요한 contentTypeId가 응답에 포함되어야 함
+      expect(result.contentTypeId).toBe('12');
       expect(result.title).toBe('경복궁');
       expect(result.overview).toBe('<p>조선 왕조의 법궁</p>');
       expect(result.homepage).toBe('http://www.royalpalace.go.kr');
@@ -259,7 +262,7 @@ describe('TourService', () => {
     it('detailIntro2 응답의 item[0]을 raw 그대로 반환한다', async () => {
       mockHttp.get.mockReturnValue(of(makeIntroResponse()));
 
-      const result = await service.fetchIntro('125508');
+      const result = await service.fetchIntro('125508', '12');
 
       expect(result.contentId).toBe('125508');
       // 외부 필드가 그대로 raw에 들어 있어야 함
@@ -268,6 +271,23 @@ describe('TourService', () => {
         contenttypeid: '12',
         accomcount: '500',
       });
+    });
+
+    it('contentTypeId를 detailIntro2의 필수 query 파라미터로 전달한다', async () => {
+      // KorService2 detailIntro2는 contentTypeId가 필수 — 누락 시 외부 API가 비정상 응답
+      mockHttp.get.mockReturnValue(of(makeIntroResponse()));
+
+      await service.fetchIntro('125508', '12');
+
+      expect(mockHttp.get).toHaveBeenCalledWith(
+        '/detailIntro2',
+        expect.objectContaining({
+          params: expect.objectContaining({
+            contentId: '125508',
+            contentTypeId: '12',
+          }),
+        })
+      );
     });
   });
 });

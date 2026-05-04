@@ -5,6 +5,12 @@ export class TourCommonDto {
   @ApiProperty({ description: '관광지 고유 ID (외부 contentid)' })
   contentId!: string;
 
+  @ApiProperty({
+    description:
+      '관광지 타입 ID (외부 contenttypeid) — detailIntro2 후속 호출에 필요',
+  })
+  contentTypeId!: string;
+
   @ApiProperty({ description: '관광지명 (외부 title)' })
   title!: string;
 
