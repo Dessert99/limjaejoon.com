@@ -1,7 +1,6 @@
 // 초기 인증 스키마 — users + refresh_tokens 두 테이블을 한 번에 만든다. typeorm-ts-node-commonjs CLI가 schema 적용 시 이 파일을 실행
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-// MigrationInterface — TypeORM이 마이그레이션이라고 인식하기 위한 계약. up(적용) / down(롤백) 두 메서드 구현 강제
 export class InitAuth1714099200000 implements MigrationInterface {
   // up — migration:run 시 호출. FK가 users를 참조하므로 users 먼저, refresh_tokens 나중 순서가 중요
   async up(queryRunner: QueryRunner): Promise<void> {
@@ -22,12 +21,12 @@ export class InitAuth1714099200000 implements MigrationInterface {
       CREATE UNIQUE INDEX "IDX_users_email" ON "users" ("email")
     `);
 
-    // refresh_tokens 테이블 — userId FK + ON DELETE CASCADE로 사용자 삭제 시 토큰도 자동 정리
+    // refresh_tokens 테이블 — JWT의 jti 클레임을 행 식별자로. userId FK + ON DELETE CASCADE로 사용자 삭제 시 토큰도 자동 정리
     await queryRunner.query(`
       CREATE TABLE "refresh_tokens" (
         "id"          UUID NOT NULL DEFAULT gen_random_uuid(),
         "userId"      UUID NOT NULL,
-        "tokenHash"   CHAR(64) NOT NULL,
+        "jti"         UUID NOT NULL,
         "revokedAt"   TIMESTAMPTZ DEFAULT NULL,
         "expiresAt"   TIMESTAMPTZ NOT NULL,
         "createdAt"   TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -37,9 +36,9 @@ export class InitAuth1714099200000 implements MigrationInterface {
       )
     `);
 
-    // tokenHash 유니크 인덱스 — rotate/revoke가 hash로 단일 행을 조회하므로 풀스캔 방지 + 중복 hash 차단
+    // jti 유니크 인덱스 — RefreshTokenStrategy.validate가 jti로 단일 행 조회. 풀스캔 방지 + jti 중복 차단
     await queryRunner.query(`
-      CREATE UNIQUE INDEX "IDX_rt_token_hash" ON "refresh_tokens" ("tokenHash")
+      CREATE UNIQUE INDEX "IDX_rt_jti" ON "refresh_tokens" ("jti")
     `);
   }
 

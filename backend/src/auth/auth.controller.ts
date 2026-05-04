@@ -1,4 +1,4 @@
-// 인증 라우트 컨트롤러 — HTTP를 받아 AuthService에 위임. 라우트 5개(signup/login/refresh/logout/me) 모두 토큰을 응답 body에 노출하지 않고 httpOnly 쿠키로만 발급
+// 인증 라우트 컨트롤러 — HTTP를 받아 AuthService에 위임. /me는 AccessTokenGuard, /refresh는 RefreshTokenGuard로 보호. 토큰은 응답 body에 노출하지 않고 httpOnly 쿠키로만 발급
 import {
   Body,
   Controller,
@@ -6,7 +6,6 @@ import {
   Post,
   Req,
   Res,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -26,43 +25,43 @@ import {
 } from './cookie.config';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { AccessTokenGuard } from './guards/access-token.guard';
+import { RefreshTokenGuard } from './guards/refresh-token.guard';
 
-// JwtAuthGuard.canActivate가 검증 후 req.user에 부착하는 페이로드 — me에서 sub(=userId)만 사용
-interface JwtPayload {
+// Passport strategy의 validate 반환값이 req.user에 부착되는 형태 — access는 {sub}, refresh는 {sub, jti}
+interface AccessUser {
   sub: string;
 }
+interface RefreshUser {
+  sub: string;
+  jti: string;
+}
 
-// 응답 body 형태 — accessExpiresAt은 epoch ms, 프론트가 만료 임박 시점을 계산해 사전 refresh를 트리거하는 데 사용
+// 응답 body — accessExpiresAt은 epoch ms, 프론트가 만료 임박 시점 계산해 사전 refresh 트리거
 interface AuthResponseBody {
   user: PublicUser;
   accessExpiresAt: number;
 }
 
-// @ApiTags — Swagger UI 좌측 그룹 라벨. @Controller('auth') — 모든 라우트가 /auth 프리픽스
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  // DI — AuthService(비즈니스 로직)와 ConfigService(쿠키 옵션 헬퍼가 환경 변수 읽을 때 사용)
   constructor(
     private readonly authService: AuthService,
     private readonly cs: ConfigService
   ) {}
 
-  // signup(dto, res) — 가입 처리 → access·refresh 쿠키 굽기 → user+accessExpiresAt JSON 반환
+  // signup(dto, res) — 가입 처리 → access·refresh 쿠키 발급 → user+accessExpiresAt JSON
   @Post('signup')
   @ApiOperation({ summary: '이메일/비밀번호 회원가입' })
   @ApiResponse({ status: 201, description: '가입 성공 — 쿠키 발급됨' })
   @ApiResponse({ status: 400, description: '입력값 검증 실패' })
   @ApiResponse({ status: 409, description: '중복 이메일' })
   async signup(
-    // @Body() — req.body를 SignupDto 인스턴스로 변환 + 글로벌 ValidationPipe가 class-validator 규칙 검증
     @Body() dto: SignupDto,
-    // @Res({passthrough:true}) — 응답 객체에 손은 대지만(쿠키 set), JSON 직렬화·인터셉터는 Nest에 위임
     @Res({ passthrough: true }) res: Response
   ): Promise<AuthResponseBody> {
     const result = await this.authService.signup(dto.email, dto.password);
-    // 쿠키 옵션은 cookie.config 헬퍼에서만 가져온다 — 인라인 옵션을 쓰면 발급/삭제 시 옵션 불일치로 브라우저가 삭제 못 함
     res.cookie('access_token', result.accessToken, COOKIE_OPTS_ACCESS(this.cs));
     res.cookie(
       'refresh_token',
@@ -72,7 +71,7 @@ export class AuthController {
     return { user: result.user, accessExpiresAt: result.accessExpiresAt };
   }
 
-  // login(dto, res) — 자격 검증 → access·refresh 쿠키 발급 → user+accessExpiresAt JSON 반환
+  // login(dto, res) — 자격 검증 → access·refresh 쿠키 발급 → user+accessExpiresAt JSON
   @Post('login')
   @ApiOperation({ summary: '이메일/비밀번호 로그인' })
   @ApiResponse({ status: 200, description: '로그인 성공 — 쿠키 발급됨' })
@@ -92,8 +91,10 @@ export class AuthController {
     return { user: result.user, accessExpiresAt: result.accessExpiresAt };
   }
 
-  // refresh(req, res) — 쿠키의 refresh 토큰 → 회전(기존 폐기 + 새 발급) → 새 쌍 쿠키 굽기, 실패 시 양쪽 쿠키 만료해 좀비 상태 청소
+  // refresh(req, res) — RefreshTokenGuard가 쿠키→JWT→DB 활성 검증까지 처리 후 req.user={sub,jti}. 회전 실패는 가드 단계에서 401, 쿠키 청소는 가드가 못 하므로 catch에서
   @Post('refresh')
+  @UseGuards(RefreshTokenGuard)
+  @ApiCookieAuth('refresh_token')
   @ApiOperation({ summary: 'Access 토큰 재발급 (refresh 쿠키 사용)' })
   @ApiResponse({ status: 200, description: '재발급 성공' })
   @ApiResponse({
@@ -104,16 +105,10 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response
   ): Promise<AuthResponseBody> {
-    // refresh 토큰은 쿠키에서만 읽는다 — body로 받으면 XSS로 탈취·재전송 가능
-    const rawRefresh: string | undefined = req.cookies?.['refresh_token'];
-    // 쿠키가 없으면 복구 불가 — 양쪽 쿠키를 즉시 만료시켜 프론트 verifySession이 좀비 access만 들고 무한 refresh 시도 못 하게 막음
-    if (!rawRefresh) {
-      res.cookie('access_token', '', COOKIE_OPTS_CLEAR(this.cs));
-      res.cookie('refresh_token', '', COOKIE_OPTS_CLEAR(this.cs));
-      throw new UnauthorizedException('No refresh token');
-    }
+    // Passport strategy의 validate 반환값이 req.user에 부착됨
+    const { sub, jti } = (req as Request & { user: RefreshUser }).user;
     try {
-      const result = await this.authService.refresh(rawRefresh);
+      const result = await this.authService.refresh(sub, jti);
       res.cookie(
         'access_token',
         result.accessToken,
@@ -126,14 +121,14 @@ export class AuthController {
       );
       return { user: result.user, accessExpiresAt: result.accessExpiresAt };
     } catch (err) {
-      // 검증 실패(만료/이미 폐기/주인 부재) 모두 동일 청소 후 원본 예외 전파 — 클라가 어떤 실패 사유였는지 알 필요 없음
+      // rotate 중 race(이미 폐기) 등 — 좀비 쿠키 청소 후 원본 예외 전파
       res.cookie('access_token', '', COOKIE_OPTS_CLEAR(this.cs));
       res.cookie('refresh_token', '', COOKIE_OPTS_CLEAR(this.cs));
       throw err;
     }
   }
 
-  // logout(req, res) — 쿠키의 refresh 토큰을 DB에서 폐기(있을 때만) + 양쪽 쿠키 만료 → {ok:true} 반환
+  // logout(req, res) — refresh JWT를 직접 디코드해 jti 추출 후 폐기, 검증 실패해도 쿠키는 무조건 만료시킨다(멱등)
   @Post('logout')
   @ApiOperation({ summary: '로그아웃 — 쿠키 삭제 및 refresh 폐기' })
   @ApiResponse({ status: 200, description: '로그아웃 성공' })
@@ -142,28 +137,42 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response
   ): Promise<{ ok: boolean }> {
     const rawRefresh: string | undefined = req.cookies?.['refresh_token'];
-    // 쿠키가 있을 때만 DB revoke — 없어도 클라 입장에선 로그아웃 효과는 같으므로 throw 안 함(멱등)
+    // 쿠키가 있을 때만 JWT 디코드 시도 — 가드 없이 처리하는 이유는 만료/위조된 토큰이어도 로그아웃은 성공해야 하기 때문
     if (rawRefresh) {
-      await this.authService.logout(rawRefresh);
+      const jti = decodeJti(rawRefresh);
+      if (jti) {
+        await this.authService.logout(jti);
+      }
     }
-    // 옵션이 발급 시와 동일해야 브라우저가 같은 쿠키로 인식해 삭제 — COOKIE_OPTS_CLEAR가 같은 베이스 옵션을 사용하는 이유
+    // 쿠키 청소는 무조건 실행 — 옵션이 발급 시와 동일해야 브라우저가 같은 쿠키로 인식해 삭제
     res.cookie('access_token', '', COOKIE_OPTS_CLEAR(this.cs));
     res.cookie('refresh_token', '', COOKIE_OPTS_CLEAR(this.cs));
     return { ok: true };
   }
 
-  // me(req) — JwtAuthGuard 통과 후 req.user.sub로 DB 조회 → PublicUser 반환
+  // me(req) — AccessTokenGuard가 access JWT 검증 후 req.user.sub 부착, 그 userId로 DB 조회
   @Get('me')
-  // @UseGuards(JwtAuthGuard) — 핸들러 진입 전에 가드 실행, 미인증이면 핸들러 호출조차 안 됨
-  @UseGuards(JwtAuthGuard)
-  // @ApiCookieAuth — Swagger UI에 자물쇠 아이콘 표시 (실제 인증은 가드가 담당)
+  @UseGuards(AccessTokenGuard)
   @ApiCookieAuth('access_token')
   @ApiOperation({ summary: '현재 로그인 사용자 정보 조회' })
   @ApiResponse({ status: 200, description: '사용자 정보 반환' })
   @ApiResponse({ status: 401, description: '인증 필요' })
   async me(@Req() req: Request): Promise<PublicUser> {
-    // 가드가 부착해둔 payload를 타입 단언으로 꺼낸다 — Nest가 Request 타입을 자동 확장해주지 않음
-    const payload = (req as Request & { user: JwtPayload }).user;
-    return this.authService.me(payload.sub);
+    const { sub } = (req as Request & { user: AccessUser }).user;
+    return this.authService.me(sub);
+  }
+}
+
+// JWT 디코드 헬퍼 — 서명 검증 없이 payload만 꺼냄. 로그아웃은 위조된 토큰이어도 jti가 있으면 폐기 시도, 없으면 그냥 통과
+function decodeJti(token: string): string | null {
+  try {
+    const segments = token.split('.');
+    if (segments.length < 2) return null;
+    const payload = JSON.parse(
+      Buffer.from(segments[1], 'base64url').toString('utf8')
+    ) as { jti?: string };
+    return payload.jti ?? null;
+  } catch {
+    return null;
   }
 }

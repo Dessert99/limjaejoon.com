@@ -59,11 +59,12 @@ describe('AuthService', () => {
     ).toString('base64url');
     mockJwtService.sign.mockReturnValue(`header.${payload}.sig`);
 
-    // issue() 기본 반환값
+    // issue() 기본 반환값 — jti 포함 (RefreshTokenStrategy.validate에서 사용)
     mockRefreshTokenService.issue.mockResolvedValue({
       raw: 'raw-refresh-token',
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       userId: 'user-1',
+      jti: 'jti-1',
     });
 
     const module: TestingModule = await Test.createTestingModule({
@@ -178,11 +179,11 @@ describe('AuthService', () => {
   // ─── logout ──────────────────────────────────────────────────────────────
 
   describe('logout', () => {
-    it('revoke 를 호출하고 예외 없이 완료', async () => {
+    it('jti로 revoke 를 호출하고 예외 없이 완료', async () => {
       mockRefreshTokenService.revoke.mockResolvedValue(undefined);
 
-      await expect(service.logout('raw-token')).resolves.toBeUndefined();
-      expect(mockRefreshTokenService.revoke).toHaveBeenCalledWith('raw-token');
+      await expect(service.logout('jti-1')).resolves.toBeUndefined();
+      expect(mockRefreshTokenService.revoke).toHaveBeenCalledWith('jti-1');
     });
   });
 

@@ -1,17 +1,12 @@
-import * as crypto from 'crypto';
-
+// RefreshTokenService 스펙 — JWT 서명은 JwtService mock으로 대체, DB는 Repository mock으로 대체. assertActive/rotate/revoke 동작을 jti 기반으로 검증
 import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { RefreshToken } from './entities/refresh-token.entity';
 import { RefreshTokenService } from './refresh-token.service';
-
-// 실제 서비스와 동일한 sha-256 해시 — 테스트에서 토큰 hash 생성
-function hashToken(raw: string): string {
-  return crypto.createHash('sha256').update(raw).digest('hex');
-}
 
 function futureDate(daysFromNow = 1): Date {
   return new Date(Date.now() + daysFromNow * 24 * 60 * 60 * 1000);
@@ -24,13 +19,30 @@ function pastDate(): Date {
 describe('RefreshTokenService', () => {
   let service: RefreshTokenService;
 
+  // Repository mock — DB 호출 인메모리 대체
   const mockRtRepo = {
     create: jest.fn(),
     save: jest.fn(),
     findOne: jest.fn(),
   };
 
-  const mockCs = { get: jest.fn().mockReturnValue('1d') };
+  // ConfigService mock — TTL '1d' + 시크릿 더미값
+  const mockCs = {
+    get: jest.fn((key: string) => {
+      if (key === 'JWT_REFRESH_TTL') return '1d';
+      return undefined;
+    }),
+    getOrThrow: jest.fn((key: string) => {
+      if (key === 'JWT_REFRESH_SECRET')
+        return 'test-refresh-secret-32bytes!!!!';
+      throw new Error(`unexpected key ${key}`);
+    }),
+  };
+
+  // JwtService mock — sign 호출 시 가짜 JWT 문자열 반환, 실제 서명 검증은 strategy 테스트가 별도로 다룸
+  const mockJwt = {
+    sign: jest.fn().mockReturnValue('signed.jwt.string'),
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -40,6 +52,7 @@ describe('RefreshTokenService', () => {
         RefreshTokenService,
         { provide: getRepositoryToken(RefreshToken), useValue: mockRtRepo },
         { provide: ConfigService, useValue: mockCs },
+        { provide: JwtService, useValue: mockJwt },
       ],
     }).compile();
 
@@ -47,106 +60,131 @@ describe('RefreshTokenService', () => {
   });
 
   describe('issue', () => {
-    it('새 토큰을 생성하고 DB에 저장한다', async () => {
+    it('jti 생성 + DB 저장 + JWT 서명을 거쳐 raw·jti·expiresAt을 반환', async () => {
       mockRtRepo.create.mockReturnValue({});
       mockRtRepo.save.mockResolvedValue({});
 
       const result = await service.issue('user-1');
 
-      expect(result.raw).toBeTruthy();
+      expect(result.raw).toBe('signed.jwt.string');
       expect(result.userId).toBe('user-1');
+      expect(result.jti).toMatch(/^[0-9a-f-]{36}$/i); // UUID 형태
       expect(result.expiresAt).toBeInstanceOf(Date);
       expect(mockRtRepo.save).toHaveBeenCalledTimes(1);
+      // sign 인자에 sub와 jti가 모두 들어가야 함
+      expect(mockJwt.sign).toHaveBeenCalledWith(
+        expect.objectContaining({ sub: 'user-1', jti: result.jti }),
+        expect.objectContaining({
+          secret: 'test-refresh-secret-32bytes!!!!',
+        })
+      );
+    });
+  });
+
+  describe('assertActive', () => {
+    it('활성 jti — 통과', async () => {
+      mockRtRepo.findOne.mockResolvedValueOnce({
+        revokedAt: null,
+        expiresAt: futureDate(),
+      });
+
+      await expect(service.assertActive('jti-1')).resolves.toBeUndefined();
+    });
+
+    it('미존재 jti — 401', async () => {
+      mockRtRepo.findOne.mockResolvedValueOnce(null);
+
+      await expect(service.assertActive('jti-x')).rejects.toThrow(
+        UnauthorizedException
+      );
+    });
+
+    it('이미 폐기된 jti — 401', async () => {
+      mockRtRepo.findOne.mockResolvedValueOnce({
+        revokedAt: new Date(),
+        expiresAt: futureDate(),
+      });
+
+      await expect(service.assertActive('jti-revoked')).rejects.toThrow(
+        UnauthorizedException
+      );
+    });
+
+    it('만료된 jti — 401', async () => {
+      mockRtRepo.findOne.mockResolvedValueOnce({
+        revokedAt: null,
+        expiresAt: pastDate(),
+      });
+
+      await expect(service.assertActive('jti-expired')).rejects.toThrow(
+        UnauthorizedException
+      );
     });
   });
 
   describe('rotate', () => {
-    it('유효한 토큰 — 기존 행 폐기 후 새 토큰 발급', async () => {
-      const raw = crypto.randomBytes(32).toString('base64url');
+    it('유효한 jti — 기존 행 폐기 + 새 jti 발급', async () => {
       const row: Partial<RefreshToken> = {
         userId: 'user-1',
-        tokenHash: hashToken(raw),
+        jti: 'old-jti',
         expiresAt: futureDate(),
         revokedAt: null,
       };
 
       mockRtRepo.findOne.mockResolvedValueOnce(row);
-      mockRtRepo.save.mockResolvedValue({}); // 기존 행 revoke + 새 행 발급
+      mockRtRepo.save.mockResolvedValue({});
       mockRtRepo.create.mockReturnValue({});
 
-      const result = await service.rotate(raw);
+      const result = await service.rotate('old-jti', 'user-1');
 
-      expect(result.raw).not.toBe(raw);
+      expect(result.jti).not.toBe('old-jti');
       expect(result.userId).toBe('user-1');
-      // save 가 2번 호출 — 1번은 revoke, 1번은 새 토큰 발급
+      // save 2번 — 기존 revoke + 새 행 INSERT
       expect(mockRtRepo.save).toHaveBeenCalledTimes(2);
       expect(row.revokedAt).toBeInstanceOf(Date);
     });
 
-    it('이미 폐기된 토큰 — 401', async () => {
-      const raw = crypto.randomBytes(32).toString('base64url');
+    it('이미 폐기된 jti — 401(race 방어)', async () => {
       mockRtRepo.findOne.mockResolvedValueOnce({
-        tokenHash: hashToken(raw),
+        userId: 'user-1',
         revokedAt: new Date(),
-        expiresAt: futureDate(),
       });
 
-      await expect(service.rotate(raw)).rejects.toThrow(UnauthorizedException);
-    });
-
-    it('존재하지 않는 토큰 — 401', async () => {
-      mockRtRepo.findOne.mockResolvedValueOnce(null);
-
-      await expect(
-        service.rotate(crypto.randomBytes(32).toString('base64url'))
-      ).rejects.toThrow(UnauthorizedException);
-    });
-
-    it('만료된 토큰 — 401', async () => {
-      const raw = crypto.randomBytes(32).toString('base64url');
-      mockRtRepo.findOne.mockResolvedValueOnce({
-        tokenHash: hashToken(raw),
-        revokedAt: null,
-        expiresAt: pastDate(),
-      });
-
-      await expect(service.rotate(raw)).rejects.toThrow(UnauthorizedException);
+      await expect(service.rotate('jti-x', 'user-1')).rejects.toThrow(
+        UnauthorizedException
+      );
     });
   });
 
   describe('revoke', () => {
-    it('유효한 토큰 — revokedAt 세팅', async () => {
-      const raw = crypto.randomBytes(32).toString('base64url');
+    it('활성 jti — revokedAt 세팅', async () => {
       const row: Partial<RefreshToken> = {
-        tokenHash: hashToken(raw),
+        jti: 'jti-1',
         revokedAt: null,
       };
 
       mockRtRepo.findOne.mockResolvedValueOnce(row);
       mockRtRepo.save.mockResolvedValue({});
 
-      await service.revoke(raw);
+      await service.revoke('jti-1');
       expect(row.revokedAt).toBeInstanceOf(Date);
       expect(mockRtRepo.save).toHaveBeenCalledTimes(1);
     });
 
-    it('이미 폐기된 토큰 — save 호출 없음(멱등)', async () => {
-      const raw = crypto.randomBytes(32).toString('base64url');
+    it('이미 폐기된 jti — save 호출 없음', async () => {
       mockRtRepo.findOne.mockResolvedValueOnce({
-        tokenHash: hashToken(raw),
+        jti: 'jti-1',
         revokedAt: new Date(),
       });
 
-      await expect(service.revoke(raw)).resolves.toBeUndefined();
+      await expect(service.revoke('jti-1')).resolves.toBeUndefined();
       expect(mockRtRepo.save).not.toHaveBeenCalled();
     });
 
-    it('존재하지 않는 토큰 — 예외 없이 통과', async () => {
+    it('미존재 jti — 예외 없이 통과', async () => {
       mockRtRepo.findOne.mockResolvedValueOnce(null);
 
-      await expect(
-        service.revoke(crypto.randomBytes(32).toString('base64url'))
-      ).resolves.toBeUndefined();
+      await expect(service.revoke('jti-x')).resolves.toBeUndefined();
     });
   });
 });

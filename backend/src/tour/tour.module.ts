@@ -1,4 +1,4 @@
-// 관광지 모듈 — 외부 KorService2 API 프록시. AuthModule을 import해 JwtAuthGuard로 모든 라우트 보호, HttpModule을 비동기 등록해 baseURL+공통 params 자동 주입
+// 관광지 모듈 — 외부 KorService2 API 프록시. AuthModule을 import해 AccessTokenGuard로 모든 라우트 보호, HttpModule을 비동기 등록해 baseURL+공통 params 자동 주입
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -9,7 +9,7 @@ import { TourService } from './tour.service';
 
 @Module({
   imports: [
-    // AuthModule이 JwtAuthGuard + JwtModule을 export — 컨트롤러의 @UseGuards(JwtAuthGuard)가 여기서 가드 + JwtService를 해석
+    // AuthModule이 AccessTokenGuard + JwtModule + PassportModule을 export — 컨트롤러의 @UseGuards(AccessTokenGuard)가 여기서 가드와 그 의존(strategy)을 해석
     AuthModule,
 
     // HttpModule.registerAsync — ConfigService 주입을 기다려 axios 인스턴스 옵션을 비동기로 조립 (env 읽으려면 register는 동기라 부족)

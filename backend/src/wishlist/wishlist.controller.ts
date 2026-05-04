@@ -1,4 +1,4 @@
-// 위시리스트 라우트 컨트롤러 — 모든 라우트가 JwtAuthGuard로 보호 + @CurrentUser로만 userId 주입(IDOR 방어), DB 쓰기·검증 로직은 WishlistService에 위임
+// 위시리스트 라우트 컨트롤러 — 모든 라우트가 AccessTokenGuard로 보호 + @CurrentUser로만 userId 주입(IDOR 방어), DB 쓰기·검증 로직은 WishlistService에 위임
 import {
   Body,
   Controller,
@@ -18,15 +18,15 @@ import {
 } from '@nestjs/swagger';
 
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { WishlistItemDto } from './dto/wishlist-item.dto';
 import { WishlistService } from './wishlist.service';
 
-// 클래스 레벨 가드 — 본인 항목 CRUD라 모든 라우트가 인증 필수
+// 클래스 레벨 가드 — 본인 항목 CRUD라 모든 라우트가 인증 필수. AccessTokenGuard는 AuthGuard('jwt')로 access 전략을 트리거
 @ApiTags('wishlist')
 @ApiBearerAuth('access_token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AccessTokenGuard)
 @Controller('wishlist')
 export class WishlistController {
   constructor(private readonly service: WishlistService) {}

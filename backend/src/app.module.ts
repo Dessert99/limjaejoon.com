@@ -43,7 +43,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
         synchronize: false,
       }),
     }),
-    // 도메인 모듈 — Auth는 Users 의존, Wishlist는 Auth(JwtAuthGuard) 의존
+    // 도메인 모듈 — Auth는 Users 의존, Tour/Wishlist는 Auth(AccessTokenGuard) 의존
     UsersModule,
     AuthModule,
     TourModule,

@@ -24,7 +24,7 @@ export class UsersService {
     return this.userRepo.findOne({ where: { email } });
   }
 
-  // findById(id) — me·refresh가 사용. JwtAuthGuard 통과 후 sub 클레임으로 조회
+  // findById(id) — me·refresh가 사용. AccessTokenGuard/RefreshTokenGuard 통과 후 sub 클레임으로 조회
   async findById(id: string): Promise<User | null> {
     return this.userRepo.findOne({ where: { id } });
   }

@@ -1,4 +1,4 @@
-// 관광지 라우트 컨트롤러 — 모든 엔드포인트가 JwtAuthGuard로 보호되며, 외부 KorService2 호출은 TourService에 위임하고 여기선 HTTP/검증만 담당
+// 관광지 라우트 컨트롤러 — 모든 엔드포인트가 AccessTokenGuard로 보호되며, 외부 KorService2 호출은 TourService에 위임하고 여기선 HTTP/검증만 담당
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
 import { TourContentIdParamDto } from './dto/tour-content-id-param.dto';
 import { TourIntroQueryDto } from './dto/tour-intro-query.dto';
 import { TourSearchQueryDto } from './dto/tour-search-query.dto';
@@ -15,10 +15,10 @@ import { TourCommonDto, TourIntroDto } from './dto/tour-detail.dto';
 import { TourSearchResponseDto } from './dto/tour-search-response.dto';
 import { TourService } from './tour.service';
 
-// @UseGuards를 클래스 레벨에 — 메서드마다 붙이지 않아도 모든 라우트에 적용. 미인증 요청은 컨트롤러 진입 전 401
+// @UseGuards를 클래스 레벨에 — 메서드마다 붙이지 않아도 모든 라우트에 적용. AccessTokenGuard가 access JWT 검증 후 req.user 부착
 @ApiTags('tour')
 @ApiBearerAuth('access_token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AccessTokenGuard)
 @Controller('tour')
 export class TourController {
   constructor(private readonly tourService: TourService) {}

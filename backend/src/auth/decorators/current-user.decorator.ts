@@ -2,7 +2,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 
-// JwtAuthGuard가 verify 후 req.user에 부착하는 payload 형태 — sub 클레임 = userId
+// AccessTokenStrategy.validate가 반환해 req.user에 부착되는 형태 — sub 클레임 = userId
 interface JwtPayload {
   sub: string;
 }
@@ -15,9 +15,9 @@ export const CurrentUser = createParamDecorator(
     const req = ctx
       .switchToHttp()
       .getRequest<Request & { user?: JwtPayload }>();
-    // req.user가 비어 있으면 가드 누락 — 라우트에 @UseGuards(JwtAuthGuard) 빠뜨린 개발자 실수를 부팅 후 첫 요청에서 즉시 노출
+    // req.user가 비어 있으면 가드 누락 — 라우트에 @UseGuards(AccessTokenGuard) 빠뜨린 개발자 실수를 부팅 후 첫 요청에서 즉시 노출
     if (!req.user?.sub) {
-      throw new Error('CurrentUser used without JwtAuthGuard');
+      throw new Error('CurrentUser used without AccessTokenGuard');
     }
     return req.user.sub;
   }
