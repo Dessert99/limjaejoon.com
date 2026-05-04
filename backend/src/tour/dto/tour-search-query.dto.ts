@@ -1,3 +1,4 @@
+// /tour/search 쿼리 검증 — keyword 길이·page 범위를 컨트롤러 진입 전에 거른다. ValidationPipe(transform:true)가 query string을 number로 캐스팅
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
@@ -10,7 +11,6 @@ import {
   MinLength,
 } from 'class-validator';
 
-// GET /api/tour/search 쿼리 파라미터 — ValidationPipe(transform)가 타입 변환까지 처리
 export class TourSearchQueryDto {
   @ApiProperty({ description: '검색 키워드 (1~50자)', example: '경복궁' })
   @IsString()

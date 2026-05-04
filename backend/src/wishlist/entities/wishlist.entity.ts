@@ -1,3 +1,4 @@
+// wishlist 테이블 매핑 — 외부 관광 데이터를 "추가 시점 그대로" 평탄화해 저장(snapshot 컬럼). 외부 API 데이터가 변해도 사용자 화면이 흔들리지 않게 함
 import {
   Column,
   CreateDateColumn,
@@ -5,26 +6,25 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-// 위시리스트 엔티티 — 사용자가 즐겨찾기한 관광지 스냅샷을 평탄화 컬럼으로 저장 (ADR 0003)
 @Entity('wishlist')
 export class Wishlist {
-  // UUID PK — 순차 노출 방지
+  // uuid PK — 순차 정수 PK는 사용자 항목 수 추정 가능, 노출 회피
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  // 소유자 — FK는 migration에서 raw SQL로 정의, 엔티티는 컬럼 메타만 선언
+  // 소유자 FK — 외래키 제약은 migration에서 raw SQL로 정의(엔티티는 컬럼 메타만 선언)
   @Column({ type: 'uuid', name: 'userId' })
   userId!: string;
 
-  // 외부 KorService2 관광지 식별자 — 숫자 문자열, 최대 20자
+  // 외부 KorService2 contentId — 숫자 문자열, 길이 20자 여유. (userId, contentId) UNIQUE는 migration에서 정의
   @Column({ type: 'varchar', length: 20, name: 'contentId' })
   contentId!: string;
 
-  // 추가 시점의 관광지명 스냅샷 — 외부 데이터 변경에 무관하게 원본 유지
+  // 추가 시점의 관광지명 — 외부에서 이름이 바뀌어도 사용자 화면엔 추가 당시 이름이 유지됨
   @Column({ type: 'varchar', length: 200, name: 'snapshotTitle' })
   snapshotTitle!: string;
 
-  // 추가 시점의 대표 이미지 URL 스냅샷 — 없으면 null
+  // 추가 시점 대표 이미지 URL 스냅샷 — 외부 이미지 교체에 영향 안 받음
   @Column({
     type: 'varchar',
     length: 500,
@@ -33,7 +33,7 @@ export class Wishlist {
   })
   snapshotFirstImage!: string | null;
 
-  // 추가 시점의 주소 스냅샷 — 없으면 null
+  // 추가 시점 주소 스냅샷 — 외부 데이터 갱신과 분리
   @Column({
     type: 'varchar',
     length: 300,
@@ -42,7 +42,7 @@ export class Wishlist {
   })
   snapshotAddr!: string | null;
 
-  // 추가 시각 — DB default now(), DESC 정렬 기준
+  // INSERT 시 자동 채움 — list 메서드의 DESC 정렬 기준
   @CreateDateColumn({ type: 'timestamptz', name: 'createdAt' })
   createdAt!: Date;
 }

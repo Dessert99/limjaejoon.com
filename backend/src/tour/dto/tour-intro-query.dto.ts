@@ -1,8 +1,7 @@
+// /tour/:contentId/intro의 ?contentTypeId= 쿼리 검증 — detailIntro2가 contentTypeId 없으면 비정상 응답을 반환해 사전에 형식만 막아둔다
 import { ApiProperty } from '@nestjs/swagger';
 import { Matches } from 'class-validator';
 
-// /tour/:contentId/intro 의 ?contentTypeId= 쿼리 전용 DTO
-// KorService2 detailIntro2 호출 시 contentTypeId가 필수 — 누락 시 외부 API가 비정상 응답
 export class TourIntroQueryDto {
   @ApiProperty({
     description:

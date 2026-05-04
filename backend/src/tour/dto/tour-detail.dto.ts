@@ -1,6 +1,7 @@
+// /tour/:contentId/common, /intro 응답 형태 — 외부 KorService2의 한글 필드를 영문 camelCase로 ACL 변환한 결과
 import { ApiProperty } from '@nestjs/swagger';
 
-// detailCommon2 응답을 정규화한 DTO — HTML 태그 포함 필드(overview, homepage)는 그대로 전달
+// detailCommon2 응답 정규화 — HTML 태그 포함 필드(overview, homepage)는 그대로 전달, 빈 값은 null로 통일
 export class TourCommonDto {
   @ApiProperty({ description: '관광지 고유 ID (외부 contentid)' })
   contentId!: string;

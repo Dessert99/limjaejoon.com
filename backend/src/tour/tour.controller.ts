@@ -1,3 +1,4 @@
+// 관광지 라우트 컨트롤러 — 모든 엔드포인트가 JwtAuthGuard로 보호되며, 외부 KorService2 호출은 TourService에 위임하고 여기선 HTTP/검증만 담당
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -14,7 +15,7 @@ import { TourCommonDto, TourIntroDto } from './dto/tour-detail.dto';
 import { TourSearchResponseDto } from './dto/tour-search-response.dto';
 import { TourService } from './tour.service';
 
-// 컨트롤러 단위 JwtAuthGuard — 모든 tour 엔드포인트는 인증 필수 (ADR 0001)
+// @UseGuards를 클래스 레벨에 — 메서드마다 붙이지 않아도 모든 라우트에 적용. 미인증 요청은 컨트롤러 진입 전 401
 @ApiTags('tour')
 @ApiBearerAuth('access_token')
 @UseGuards(JwtAuthGuard)
@@ -22,7 +23,7 @@ import { TourService } from './tour.service';
 export class TourController {
   constructor(private readonly tourService: TourService) {}
 
-  // 키워드로 관광지 검색 — 페이지네이션 포함
+  // search(query) — keyword/page를 받아 외부 검색 후 페이지네이션 응답으로 반환
   @Get('search')
   @ApiOperation({ summary: '키워드 관광지 검색 (KorService2 searchKeyword2)' })
   @ApiResponse({ status: 200, type: TourSearchResponseDto })
@@ -30,13 +31,14 @@ export class TourController {
   @ApiResponse({ status: 401, description: '인증 필요' })
   @ApiResponse({ status: 503, description: '외부 관광 API 호출 실패' })
   async search(
+    // @Query() — req.query를 DTO로 변환·검증. ValidationPipe transform이 page를 string→number로 캐스팅
     @Query() query: TourSearchQueryDto
   ): Promise<TourSearchResponseDto> {
-    // page 기본값 1 — TourSearchQueryDto에서 선언, ValidationPipe transform이 적용
+    // page 누락 시 기본 1 — DTO에서 default 못 주는 경우 핸들러에서 보정 (Query string은 항상 string이라 transform 분기가 까다로움)
     return this.tourService.searchByKeyword(query.keyword, query.page ?? 1);
   }
 
-  // 관광지 공통 상세 정보 조회
+  // getCommon(param) — contentId로 공통 상세 조회. 응답에 contentTypeId가 포함돼 클라가 후속 intro 호출 가능
   @Get(':contentId/common')
   @ApiOperation({
     summary: '관광지 공통 상세 정보 (KorService2 detailCommon2)',
@@ -46,13 +48,13 @@ export class TourController {
   @ApiResponse({ status: 401, description: '인증 필요' })
   @ApiResponse({ status: 503, description: '외부 관광 API 호출 실패' })
   async getCommon(
+    // @Param() — URL path 변수를 DTO로 변환. contentId 형식 검증(숫자 1~10자리)이 여기서 일어남
     @Param() param: TourContentIdParamDto
   ): Promise<TourCommonDto> {
     return this.tourService.fetchCommon(param.contentId);
   }
 
-  // 관광지 소개 정보 조회 — contentTypeId별 raw 반환
-  // contentTypeId는 detailCommon2 응답에서 얻어 클라이언트가 ?contentTypeId= 쿼리로 함께 전달
+  // getIntro(param, query) — contentId + contentTypeId로 소개 정보 조회. detailIntro2가 두 값 모두 요구
   @Get(':contentId/intro')
   @ApiOperation({
     summary:

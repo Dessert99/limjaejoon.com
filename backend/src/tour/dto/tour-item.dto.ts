@@ -1,7 +1,6 @@
+// 검색 결과 한 건의 응답 형태 — 외부 한글 필드(contentid, firstimage 등)를 영문 camelCase로 ACL 변환한 결과, 좌표는 string→number로 정규화
 import { ApiProperty } from '@nestjs/swagger';
 
-// 외부 KorService2 searchKeyword2 응답 1건을 정규화한 DTO
-// 외부 한글 필드명 → 영문 camelCase로 ACL(Anti-Corruption Layer) 변환
 export class TourItemDto {
   @ApiProperty({ description: '관광지 고유 ID (외부 contentid)' })
   contentId!: string;
