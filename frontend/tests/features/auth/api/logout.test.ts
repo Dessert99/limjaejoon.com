@@ -2,13 +2,17 @@
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/lib/api/client', () => ({
-  apiClient: { post: vi.fn() },
-}));
+vi.mock('@/lib/api/client', () => {
+  return {
+    apiClient: { post: vi.fn() },
+  };
+});
 // logout은 setAccessExpiresAt이 아니라 clearAuth를 호출함
-vi.mock('@/lib/api/tokenStore', () => ({
-  clearAuth: vi.fn(),
-}));
+vi.mock('@/lib/api/tokenStore', () => {
+  return {
+    clearAuth: vi.fn(),
+  };
+});
 
 import { apiClient } from '@/lib/api/client';
 import { clearAuth } from '@/lib/api/tokenStore';

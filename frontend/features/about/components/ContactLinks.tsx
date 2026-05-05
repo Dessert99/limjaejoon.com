@@ -18,15 +18,17 @@ export function ContactLinks({ contacts }: ContactLinksProps) {
     <ul
       className={s.list}
       aria-label='연락처'>
-      {contacts.map((c) => (
-        <li key={c.kind}>
-          <IconTile
-            icon={iconByKind[c.kind]}
-            href={c.href}
-            ariaLabel={c.label}
-          />
-        </li>
-      ))}
+      {contacts.map((c) => {
+        return (
+          <li key={c.kind}>
+            <IconTile
+              icon={iconByKind[c.kind]}
+              href={c.href}
+              ariaLabel={c.label}
+            />
+          </li>
+        );
+      })}
     </ul>
   );
 }

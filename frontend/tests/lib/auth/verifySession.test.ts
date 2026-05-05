@@ -5,15 +5,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // vi.mock 호출은 vitest가 파일 최상단으로 자동 hoisting하므로 import보다 먼저 실행됨
 // next/headers, next/navigation은 Next 런타임 의존이라 테스트에선 가짜 모듈로 대체 필수
-vi.mock('next/headers', () => ({
-  cookies: vi.fn(),
-}));
-vi.mock('next/navigation', () => ({
-  // 실제 Next의 redirect는 호출 시 throw로 흐름을 끊는데, 테스트도 같은 동작을 흉내내야 한다
-  redirect: vi.fn((url: string) => {
-    throw new Error(`NEXT_REDIRECT:${url}`);
-  }),
-}));
+vi.mock('next/headers', () => {
+  return {
+    cookies: vi.fn(),
+  };
+});
+vi.mock('next/navigation', () => {
+  return {
+    // 실제 Next의 redirect는 호출 시 throw로 흐름을 끊는데, 테스트도 같은 동작을 흉내내야 한다
+    redirect: vi.fn((url: string) => {
+      throw new Error(`NEXT_REDIRECT:${url}`);
+    }),
+  };
+});
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';

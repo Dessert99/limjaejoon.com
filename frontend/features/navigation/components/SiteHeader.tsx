@@ -33,23 +33,25 @@ export function SiteHeader() {
 
         <nav aria-label='주요 메뉴'>
           <ul className={s.navList}>
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  className={s.navLink}
-                  href={item.href}
-                  data-active={
-                    pathname === item.href ||
-                    pathname.startsWith(item.href + '/')
-                  }>
-                  <span
-                    className={s.navDot}
-                    aria-hidden='true'
-                  />
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              return (
+                <li key={item.href}>
+                  <Link
+                    className={s.navLink}
+                    href={item.href}
+                    data-active={
+                      pathname === item.href ||
+                      pathname.startsWith(item.href + '/')
+                    }>
+                    <span
+                      className={s.navDot}
+                      aria-hidden='true'
+                    />
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
             <li>
               <Link
                 href='/search'

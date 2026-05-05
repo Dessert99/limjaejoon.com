@@ -24,7 +24,9 @@ export function SearchContent({ posts }: SearchContentProps) {
         type='search'
         placeholder='제목, 설명, 태그로 검색...'
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          return setQuery(e.target.value);
+        }}
         aria-label='블로그 검색'
         autoFocus
       />
@@ -35,13 +37,15 @@ export function SearchContent({ posts }: SearchContentProps) {
         <p className={s.emptyText}>검색 결과가 없습니다.</p>
       ) : (
         <section className={s.results}>
-          {results.map((post) => (
-            <BlogCard
-              key={post.href}
-              post={post}
-              href={post.href}
-            />
-          ))}
+          {results.map((post) => {
+            return (
+              <BlogCard
+                key={post.href}
+                post={post}
+                href={post.href}
+              />
+            );
+          })}
         </section>
       )}
     </div>
@@ -58,7 +62,9 @@ function filterAndSort(
     .flatMap((post) => {
       const titleMatch = post.title.toLowerCase().includes(q);
       const descMatch = post.description.toLowerCase().includes(q);
-      const tagMatch = post.tags.some((tag) => tag.toLowerCase().includes(q));
+      const tagMatch = post.tags.some((tag) => {
+        return tag.toLowerCase().includes(q);
+      });
 
       if (!titleMatch && !descMatch && !tagMatch) {
         return [];
@@ -67,6 +73,10 @@ function filterAndSort(
       const priority = titleMatch ? 1 : descMatch ? 2 : 3;
       return [{ post, priority }];
     })
-    .toSorted((a, b) => a.priority - b.priority)
-    .map((item) => item.post);
+    .toSorted((a, b) => {
+      return a.priority - b.priority;
+    })
+    .map((item) => {
+      return item.post;
+    });
 }

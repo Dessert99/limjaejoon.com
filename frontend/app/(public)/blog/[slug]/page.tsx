@@ -14,7 +14,9 @@ const mdxComponents = { Tooltip, Mention };
 
 // 빌드 시 모든 포스트 slug를 정적 경로로 생성
 export function generateStaticParams() {
-  return getPostList().map((post) => ({ slug: post.slug }));
+  return getPostList().map((post) => {
+    return { slug: post.slug };
+  });
 }
 
 interface Props {
@@ -86,13 +88,15 @@ export default async function BlogPostPage({ params }: Props) {
         <p className={s.description}>{post.description}</p>
         {post.tags.length > 0 && (
           <ul className={s.tags}>
-            {post.tags.map((tag) => (
-              <li
-                key={tag}
-                className={s.tag}>
-                {tag}
-              </li>
-            ))}
+            {post.tags.map((tag) => {
+              return (
+                <li
+                  key={tag}
+                  className={s.tag}>
+                  {tag}
+                </li>
+              );
+            })}
           </ul>
         )}
       </header>

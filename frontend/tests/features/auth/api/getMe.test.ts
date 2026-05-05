@@ -3,9 +3,11 @@ import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // tokenStore mock 필요 없음 — getMe는 부수효과 0
-vi.mock('@/lib/api/client', () => ({
-  apiClient: { get: vi.fn() },
-}));
+vi.mock('@/lib/api/client', () => {
+  return {
+    apiClient: { get: vi.fn() },
+  };
+});
 
 import { apiClient } from '@/lib/api/client';
 import { getMe } from '@/features/auth/api/getMe';

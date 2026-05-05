@@ -6,9 +6,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/features/auth/api/getMe', () => ({
-  getMe: vi.fn(),
-}));
+vi.mock('@/features/auth/api/getMe', () => {
+  return {
+    getMe: vi.fn(),
+  };
+});
 
 import { getMe } from '@/features/auth/api/getMe';
 import { useMe } from '@/features/auth/hooks/useMe';
@@ -17,9 +19,11 @@ function setup() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  const wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  const wrapper = ({ children }: { children: ReactNode }) => {
+    return (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+  };
   return { queryClient, wrapper };
 }
 
@@ -33,10 +37,17 @@ describe('useMe', () => {
     (getMe as Mock).mockResolvedValue(mockUser);
 
     const { wrapper } = setup();
-    renderHook(() => useMe(), { wrapper });
+    renderHook(
+      () => {
+        return useMe();
+      },
+      { wrapper }
+    );
 
     // useQuery는 마운트되자마자 queryFn을 호출 (mutation과 달리 manual trigger 불요)
-    await waitFor(() => expect(getMe).toHaveBeenCalled());
+    await waitFor(() => {
+      return expect(getMe).toHaveBeenCalled();
+    });
   });
 
   it('성공 시 result.current.data에 user를 담아 반환한다', async () => {
@@ -44,9 +55,16 @@ describe('useMe', () => {
     (getMe as Mock).mockResolvedValue(mockUser);
 
     const { wrapper } = setup();
-    const { result } = renderHook(() => useMe(), { wrapper });
+    const { result } = renderHook(
+      () => {
+        return useMe();
+      },
+      { wrapper }
+    );
 
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await waitFor(() => {
+      return expect(result.current.isSuccess).toBe(true);
+    });
 
     expect(result.current.data).toEqual(mockUser);
   });
@@ -55,9 +73,16 @@ describe('useMe', () => {
     (getMe as Mock).mockRejectedValue(new Error('401 Unauthorized'));
 
     const { wrapper } = setup();
-    const { result } = renderHook(() => useMe(), { wrapper });
+    const { result } = renderHook(
+      () => {
+        return useMe();
+      },
+      { wrapper }
+    );
 
-    await waitFor(() => expect(result.current.isError).toBe(true));
+    await waitFor(() => {
+      return expect(result.current.isError).toBe(true);
+    });
 
     expect(result.current.data).toBeUndefined();
   });

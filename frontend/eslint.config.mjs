@@ -16,6 +16,10 @@ const eslintConfig = defineConfig([
     rules: {
       // 모든 제어문에 중괄호를 강제 — 단일 문에도 블록 사용으로 일관성·디버깅 편의 확보
       curly: ['error', 'all'],
+      // 화살표 함수도 항상 블록 바디 사용 — concise body 금지, 디버깅·로그 삽입 용이
+      'arrow-body-style': ['error', 'always'],
+      // 한 줄 블록(`{ ... }`) 금지 — 여는·닫는 중괄호 사이 본문은 항상 줄바꿈
+      'brace-style': ['error', '1tbs', { allowSingleLine: false }],
     },
   },
   // Next 기본 ignore에 프로젝트 성격에 맞는 경로를 명시합니다.

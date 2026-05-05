@@ -5,5 +5,7 @@ export const authKeys = {
   // 도메인 루트 — 전체 invalidation 시 사용
   all: ['auth'] as const,
   // 현재 로그인 사용자 — useMe + login/signup 성공 시 setQueryData 대상
-  me: () => [...authKeys.all, 'me'] as const,
+  me: () => {
+    return [...authKeys.all, 'me'] as const;
+  },
 };

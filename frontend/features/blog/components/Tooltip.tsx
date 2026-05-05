@@ -14,10 +14,18 @@ export function Tooltip({ children, text }: TooltipProps) {
   return (
     <span
       className={s.wrapper}
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
-      onFocus={() => setVisible(true)}
-      onBlur={() => setVisible(false)}>
+      onMouseEnter={() => {
+        return setVisible(true);
+      }}
+      onMouseLeave={() => {
+        return setVisible(false);
+      }}
+      onFocus={() => {
+        return setVisible(true);
+      }}
+      onBlur={() => {
+        return setVisible(false);
+      }}>
       <span
         className={s.trigger}
         tabIndex={0}

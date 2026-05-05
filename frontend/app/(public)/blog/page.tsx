@@ -16,7 +16,13 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const posts = getPostList();
-  const tags = [...new Set(posts.flatMap((p) => p.tags))].sort();
+  const tags = [
+    ...new Set(
+      posts.flatMap((p) => {
+        return p.tags;
+      })
+    ),
+  ].sort();
 
   return (
     <main className={s.main}>

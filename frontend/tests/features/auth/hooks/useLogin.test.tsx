@@ -6,9 +6,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/features/auth/api/login', () => ({
-  login: vi.fn(),
-}));
+vi.mock('@/features/auth/api/login', () => {
+  return {
+    login: vi.fn(),
+  };
+});
 
 import { login } from '@/features/auth/api/login';
 import { authKeys } from '@/features/auth/constants/keys';
@@ -18,9 +20,11 @@ function setup() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
-  const wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  const wrapper = ({ children }: { children: ReactNode }) => {
+    return (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+  };
   return { queryClient, wrapper };
 }
 
@@ -36,10 +40,17 @@ describe('useLogin', () => {
     });
 
     const { wrapper } = setup();
-    const { result } = renderHook(() => useLogin(), { wrapper });
+    const { result } = renderHook(
+      () => {
+        return useLogin();
+      },
+      { wrapper }
+    );
 
     result.current.mutate({ email: 'a@b.c', password: 'pw12345678' });
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await waitFor(() => {
+      return expect(result.current.isSuccess).toBe(true);
+    });
 
     expect(login).toHaveBeenCalledWith(
       { email: 'a@b.c', password: 'pw12345678' },
@@ -52,10 +63,17 @@ describe('useLogin', () => {
     (login as Mock).mockResolvedValue({ user: mockUser, accessExpiresAt: 0 });
 
     const { queryClient, wrapper } = setup();
-    const { result } = renderHook(() => useLogin(), { wrapper });
+    const { result } = renderHook(
+      () => {
+        return useLogin();
+      },
+      { wrapper }
+    );
 
     result.current.mutate({ email: 'a@b.c', password: 'pw12345678' });
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await waitFor(() => {
+      return expect(result.current.isSuccess).toBe(true);
+    });
 
     expect(queryClient.getQueryData(authKeys.me())).toEqual(mockUser);
   });
@@ -64,10 +82,17 @@ describe('useLogin', () => {
     (login as Mock).mockRejectedValue(new Error('401 Unauthorized'));
 
     const { queryClient, wrapper } = setup();
-    const { result } = renderHook(() => useLogin(), { wrapper });
+    const { result } = renderHook(
+      () => {
+        return useLogin();
+      },
+      { wrapper }
+    );
 
     result.current.mutate({ email: 'a@b.c', password: 'wrong' });
-    await waitFor(() => expect(result.current.isError).toBe(true));
+    await waitFor(() => {
+      return expect(result.current.isError).toBe(true);
+    });
 
     expect(queryClient.getQueryData(authKeys.me())).toBeUndefined();
   });

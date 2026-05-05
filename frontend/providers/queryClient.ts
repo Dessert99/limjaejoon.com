@@ -9,8 +9,8 @@ import {
 
 // 새 QueryClient 인스턴스를 생성한다 — 호출부는 getQueryClient만 사용
 // 전역 기본값은 개별 query에서 오버라이드 가능
-const makeQueryClient = (): QueryClient =>
-  new QueryClient({
+const makeQueryClient = (): QueryClient => {
+  return new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: 5 * 60 * 1000, // 5분 — 페이지 이동 시 즉시 refetch 방지로 UX·서버 부하 균형
@@ -20,12 +20,16 @@ const makeQueryClient = (): QueryClient =>
       },
       // SSR prefetch가 pending 상태인 query까지 dehydrate되도록 허용 (공식 가이드)
       dehydrate: {
-        shouldDehydrateQuery: (query) =>
-          defaultShouldDehydrateQuery(query) ||
-          query.state.status === 'pending',
+        shouldDehydrateQuery: (query) => {
+          return (
+            defaultShouldDehydrateQuery(query) ||
+            query.state.status === 'pending'
+          );
+        },
       },
     },
   });
+};
 
 // 브라우저 한정 모듈 싱글턴 — 서버에서는 생성·재사용하지 않는다
 let browserQueryClient: QueryClient | undefined;
