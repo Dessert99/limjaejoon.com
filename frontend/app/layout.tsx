@@ -1,11 +1,9 @@
 import { SITE_URL } from '@/features/shared/constants';
-import { SiteHeader } from '@/features/navigation/components/SiteHeader';
 import '@/styles/global.css';
 import { darkTheme, lightTheme } from '@/styles/theme.css';
-import { contentWrapper } from './layout.css';
 import type { Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
-// QueryClient + 401 핸들러를 포함한 클라이언트 프로바이더 — SiteHeader가 useQuery를 쓸 수 있으므로 바깥에서 감쌈
+// QueryClient + 401 핸들러를 포함한 클라이언트 프로바이더 — 모든 route group이 TanStack Query 컨텍스트를 쓰므로 root에 유지
 import QueryProvider from '@/providers/QueryProvider';
 
 const jetbrainsMono = JetBrains_Mono({
@@ -61,11 +59,8 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
-        {/* QueryProvider가 SiteHeader를 포함해 전체 트리를 감쌈 — QueryClient 컨텍스트를 헤더에도 제공 */}
-        <QueryProvider>
-          <SiteHeader />
-          <div className={contentWrapper}>{children}</div>
-        </QueryProvider>
+        {/* QueryProvider가 전체 트리를 감쌈 — SiteHeader/contentWrapper는 각 route group layout에서 처리 */}
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );

@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  getAllPostsForSearch,
-  getPostList,
-} from '../../../../features/blog/lib/posts';
+import { getAllPostsForSearch, getPostList } from '@/features/blog/lib/posts';
 
 describe('getPostList', () => {
   it('포스트가 최신 날짜 순으로 정렬되어 반환된다', () => {

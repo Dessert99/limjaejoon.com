@@ -5,7 +5,7 @@ import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { API_BASE_URL } from '../base-url';
+import { API_BASE_URL } from '@/lib/base-url';
 
 // 백엔드 /auth/me 응답 형태 (백엔드 PublicUser 기준)
 export interface SessionUser {
@@ -26,13 +26,13 @@ export const verifySession = cache(
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('access_token');
 
-    // 쿠키가 없으면 즉시 redirect — 백엔드 호출 불필요
+    // 쿠키 부재 시 즉시 redirect — 백엔드 호출 불필요
     if (!accessToken?.value) {
       redirect(`/login?returnTo=${encodeURIComponent(currentPath)}`);
     }
 
     // access_token 쿠키를 Cookie 헤더로 전달해 백엔드 /auth/me 호출
-    // cache: 'no-store' 필수 — 캐시 시 다른 사용자에게 같은 결과 반환 위험 (ADR 0005 함정)
+    // cache: 'no-store' 필수 — 캐시 시 다른 사용자에게 같은 결과 반환 위험
     const response = await fetch(`${API_BASE_URL}/auth/me`, {
       headers: {
         // httpOnly 쿠키를 서버 측에서 수동 전달 — withCredentials는 브라우저 전용
@@ -41,7 +41,7 @@ export const verifySession = cache(
       cache: 'no-store',
     });
 
-    // 401 또는 기타 실패 시 login으로 redirect
+    // 401/기타 실패 시 /login으로 redirect — 클라이언트 측 apiClient 인터셉터가 후속 refresh 처리
     if (!response.ok) {
       redirect(`/login?returnTo=${encodeURIComponent(currentPath)}`);
     }

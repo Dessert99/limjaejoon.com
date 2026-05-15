@@ -3,8 +3,9 @@
 import { Suspense } from 'react';
 
 import { LoginForm } from '@/features/auth/components/LoginForm';
+import { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: '로그인',
   description: '이메일과 비밀번호로 로그인합니다.',
 };
