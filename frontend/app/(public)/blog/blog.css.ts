@@ -43,6 +43,11 @@ export const description = style({
   lineHeight: '1.6',
 });
 
+// 검색창 영역 — 헤더와 태그/리스트 그리드 사이 간격
+export const searchWrap = style({
+  marginBottom: '1.5rem',
+});
+
 export const layout = style({
   display: 'grid',
   gap: '1.5rem',

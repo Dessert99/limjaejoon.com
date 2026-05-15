@@ -4,11 +4,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  HiOutlineMagnifyingGlass,
-  HiOutlineMoon,
-  HiOutlineSun,
-} from 'react-icons/hi2';
+import { HiOutlineMoon, HiOutlineSun } from 'react-icons/hi2';
 
 import { navItems } from '@/features/navigation/config/navItems';
 import { useTheme } from '@/features/navigation/hooks/useTheme';
@@ -68,17 +64,6 @@ export function SiteHeader({ user }: SiteHeaderProps) {
                 </li>
               );
             })}
-            <li>
-              <Link
-                href='/search'
-                className={s.iconBtn}
-                data-active={
-                  pathname === '/search' || pathname.startsWith('/search/')
-                }
-                aria-label='검색 페이지로 이동'>
-                <HiOutlineMagnifyingGlass aria-hidden='true' />
-              </Link>
-            </li>
             <li>
               <button
                 className={s.iconBtn}

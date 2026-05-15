@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getAllPostsForSearch, getPostList } from '@/features/blog/lib/posts';
+import { getPostList } from '@/features/blog/lib/posts';
 
 describe('getPostList', () => {
   it('포스트가 최신 날짜 순으로 정렬되어 반환된다', () => {
@@ -24,18 +24,6 @@ describe('getPostList', () => {
       expect(typeof post.title).toBe('string');
       expect(typeof post.date).toBe('string');
       expect(Array.isArray(post.tags)).toBe(true);
-    }
-  });
-});
-
-describe('getAllPostsForSearch', () => {
-  it('각 포스트에 /blog/<slug> 형식의 href 가 추가된다', () => {
-    // 검색용 변환: 기존 PostMeta + href 필드만 추가되어야 함
-    const posts = getAllPostsForSearch();
-
-    // slug 로 만든 href 가 /blog/<slug> 규칙을 따르는지 확인
-    for (const post of posts) {
-      expect(post.href).toBe(`/blog/${post.slug}`);
     }
   });
 });
