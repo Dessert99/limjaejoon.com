@@ -8,29 +8,6 @@
 - **Backend**: NestJS 11, TypeScript 5
 - **공통**: TypeScript 5 (strict mode), npm workspaces
 
-## 디렉토리 구조
-
-```
-frontend/          # Next.js 프론트엔드
-  app/             # 라우트 페이지
-  features/        # 기능별 컴포넌트·훅·API·타입
-  lib/             # 도메인 비종속 인프라 (api client, auth helpers)
-  providers/       # 전역 Provider (QueryClient 등)
-  styles/          # 디자인 토큰, 글로벌 스타일
-  content/blog/    # MDX 블로그 포스트
-  public/          # 정적 에셋
-  proxy.ts         # Next.js 16 proxy
-backend/           # NestJS API 서버
-  src/
-    auth/          # 인증·세션
-    users/         # 사용자 도메인
-    config/        # env 검증
-    database/      # TypeORM DataSource
-    migrations/    # DB 스키마 변경 이력
-docs/
-  conventions/     # 코드/스타일 규칙 (CLAUDE.md에서 참조)
-```
-
 ## 개발 명령어
 
 ```sh
@@ -42,6 +19,10 @@ npm run lint       # 전체 린트
 npm run format     # 전체 포맷
 ```
 
+## 폴더 구조
+- @docs/conventions/folder-structure.md 참조.
+
+
 ## 코드 컨벤션
 
 - 프론트엔드 경로 alias: `@/*` (`frontend/` 기준)
@@ -50,7 +31,6 @@ npm run format     # 전체 포맷
 - NestJS 컨벤션은 @docs/conventions/nestjs-conventions.md 참조.
 - TanStack Query 컨벤션은 @docs/conventions/API-TQ-convention.md 참조.
 - React Hook Form 컨벤션은 @docs/conventions/RHF-convention.md 참조.
-- TDD 컨벤션은 @docs/conventions/tdd-conventions.md 참조.
 
 ## 개발 프로세스
 
