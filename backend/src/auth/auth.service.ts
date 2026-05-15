@@ -66,7 +66,7 @@ export class AuthService {
       throw err;
     }
 
-    return this.buildAuthResult(user);
+    return this.buildAuthResult(user); // 토큰 한 쌍 발급
   }
 
   // login(email, password) — 사용자 조회 → bcrypt.compare → AuthResult 조립. 미존재·불일치 모두 동일 401로 enumeration 차단
@@ -75,13 +75,13 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
-
+    // 같은 메시지로 두 번 던지는 이유: 사용자가 존재하는지 안 하는지를 응답으로 구분하지 못하게 해서 이메일 enumeration 공격을 막기 위해
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.buildAuthResult(user);
+    return this.buildAuthResult(user); // 토큰 한 쌍 발급
   }
 
   // refresh(userId, jti) — RefreshTokenGuard 통과 후 호출. 기존 jti 폐기 + 새 access·refresh 발급

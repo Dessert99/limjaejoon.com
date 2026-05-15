@@ -93,7 +93,7 @@ export class AuthController {
 
   // refresh(req, res) — RefreshTokenGuard가 쿠키→JWT→DB 활성 검증까지 처리 후 req.user={sub,jti}. 회전 실패는 가드 단계에서 401, 쿠키 청소는 가드가 못 하므로 catch에서
   @Post('refresh')
-  @UseGuards(RefreshTokenGuard)
+  @UseGuards(RefreshTokenGuard) // 컨트롤러 본문 들어가기 전에 가드가 먼저 실행된다.
   @ApiCookieAuth('refresh_token')
   @ApiOperation({ summary: 'Access 토큰 재발급 (refresh 쿠키 사용)' })
   @ApiResponse({ status: 200, description: '재발급 성공' })
