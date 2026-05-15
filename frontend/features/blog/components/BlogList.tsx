@@ -15,7 +15,11 @@ export function BlogList({ posts }: BlogListProps) {
 
   const filtered =
     activeTags.length > 0
-      ? posts.filter((p) => activeTags.every((tag) => p.tags.includes(tag)))
+      ? posts.filter((p) => {
+          return activeTags.every((tag) => {
+            return p.tags.includes(tag);
+          });
+        })
       : posts;
 
   if (filtered.length === 0) {
@@ -24,12 +28,14 @@ export function BlogList({ posts }: BlogListProps) {
 
   return (
     <section className={s.grid}>
-      {filtered.map((post) => (
-        <BlogCard
-          key={post.slug}
-          post={post}
-        />
-      ))}
+      {filtered.map((post) => {
+        return (
+          <BlogCard
+            key={post.slug}
+            post={post}
+          />
+        );
+      })}
     </section>
   );
 }

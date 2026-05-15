@@ -9,16 +9,20 @@ interface TagGridProps {
 export function TagGrid({ tags, activeTag, onTagSelect }: TagGridProps) {
   return (
     <ul className={s.grid}>
-      {tags.map((tag) => (
-        <li key={tag}>
-          <button
-            className={s.card}
-            data-active={activeTag === tag}
-            onClick={() => onTagSelect(tag)}>
-            {tag}
-          </button>
-        </li>
-      ))}
+      {tags.map((tag) => {
+        return (
+          <li key={tag}>
+            <button
+              className={s.card}
+              data-active={activeTag === tag}
+              onClick={() => {
+                return onTagSelect(tag);
+              }}>
+              {tag}
+            </button>
+          </li>
+        );
+      })}
     </ul>
   );
 }

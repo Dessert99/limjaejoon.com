@@ -4,4 +4,6 @@ export interface NavItem {
   label: string;
   // 클릭 시 이동할 경로입니다.
   href: string;
+  // true이면 로그인된 사용자에게만 노출 — SiteHeader의 user prop 기반 필터링
+  requiresAuth?: boolean;
 }

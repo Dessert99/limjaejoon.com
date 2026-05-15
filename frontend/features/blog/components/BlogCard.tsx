@@ -18,13 +18,15 @@ export function BlogCard({ post, href }: BlogCardProps) {
       <div className={s.meta}>
         {post.tags.length > 0 && (
           <ul className={s.tags}>
-            {post.tags.map((tag) => (
-              <li
-                key={tag}
-                className={s.tag}>
-                {tag}
-              </li>
-            ))}
+            {post.tags.map((tag) => {
+              return (
+                <li
+                  key={tag}
+                  className={s.tag}>
+                  {tag}
+                </li>
+              );
+            })}
           </ul>
         )}
         <time

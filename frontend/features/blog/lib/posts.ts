@@ -8,7 +8,9 @@ const BLOG_DIR = path.join(process.cwd(), 'content/blog');
 
 // 지정 디렉토리의 모든 MDX 파일을 읽어 날짜 내림차순으로 정렬된 목록 반환
 function getPostListFrom(dir: string): PostMeta[] {
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.mdx'));
+  const files = fs.readdirSync(dir).filter((f) => {
+    return f.endsWith('.mdx');
+  });
 
   const posts = files.map((filename) => {
     const filePath = path.join(dir, filename);
@@ -24,7 +26,9 @@ function getPostListFrom(dir: string): PostMeta[] {
     };
   });
 
-  return posts.sort((a, b) => (a.date < b.date ? 1 : -1));
+  return posts.sort((a, b) => {
+    return a.date < b.date ? 1 : -1;
+  });
 }
 
 // 지정 디렉토리에서 slug에 해당하는 MDX 파일을 읽어 본문 포함 반환. 파일 없으면 null
@@ -47,9 +51,9 @@ function getPostBySlugFrom(dir: string, slug: string): Post | null {
   };
 }
 
-const getCachedPostBySlug = cache((dir: string, slug: string) =>
-  getPostBySlugFrom(dir, slug)
-);
+const getCachedPostBySlug = cache((dir: string, slug: string) => {
+  return getPostBySlugFrom(dir, slug);
+});
 
 // 블로그 (지식 모음)
 export function getPostList(): PostMeta[] {
@@ -62,8 +66,10 @@ export function getPostBySlug(slug: string): Post | null {
 
 // 검색용: 블로그 포스트를 href 포함하여 반환
 export function getAllPostsForSearch(): SearchablePost[] {
-  return getPostListFrom(BLOG_DIR).map((p) => ({
-    ...p,
-    href: `/blog/${p.slug}`,
-  }));
+  return getPostListFrom(BLOG_DIR).map((p) => {
+    return {
+      ...p,
+      href: `/blog/${p.slug}`,
+    };
+  });
 }

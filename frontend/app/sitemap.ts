@@ -3,12 +3,14 @@ import { SITE_URL } from '@/features/shared/constants';
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const blogs = getPostList().map((post) => ({
-    url: `${SITE_URL}/blog/${post.slug}`,
-    lastModified: post.date,
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }));
+  const blogs = getPostList().map((post) => {
+    return {
+      url: `${SITE_URL}/blog/${post.slug}`,
+      lastModified: post.date,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    };
+  });
 
   const staticPages: MetadataRoute.Sitemap = [
     {

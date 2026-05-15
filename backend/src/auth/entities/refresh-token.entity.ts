@@ -1,3 +1,4 @@
+// refresh_tokens 테이블 매핑 — refresh JWT의 jti 클레임을 행 식별자로 저장. JWT 자체는 DB에 안 남고, jti(uuid)만으로 폐기·만료 추적
 import {
   Column,
   CreateDateColumn,
@@ -9,41 +10,34 @@ import {
 
 import { User } from '../../users/user.entity';
 
-// refresh_tokens 테이블 — ADR 0001 스키마 그대로. raw 토큰은 저장하지 않고 sha-256 해시만 보관
 @Entity('refresh_tokens')
-@Index('IDX_rt_token_hash', ['tokenHash'], { unique: true }) // 해시로 단일 토큰 조회 — atomic rotate 쿼리에 필수
-@Index('IDX_rt_family_revoked', ['familyId', 'revokedAt']) // family 일괄 폐기 시 풀스캔 방지 — ADR 0001 필수 인덱스
-@Index('IDX_rt_user_revoked', ['userId', 'revokedAt']) // 사용자별 활성 세션 조회용
+// jti 유니크 인덱스 — RefreshTokenStrategy.validate가 jti로 단일 행 조회. 풀스캔 방지 + 중복 jti 차단
+@Index('IDX_rt_jti', ['jti'], { unique: true })
 export class RefreshToken {
-  // UUID primary key
+  // PK는 row 식별자 — jti와는 별개(jti가 PK여도 되지만 표준 관례상 별도 PK)
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  // 소유 사용자 FK — users.id 참조
+  // 소유자 FK — users.id 참조. 사용자 삭제 시 cascade
   @Column({ type: 'uuid', nullable: false })
   userId!: string;
 
-  // 로그인 1회 = 1 family. 재사용 감지 시 같은 family 전체를 일괄 폐기한다
-  @Column({ type: 'uuid', nullable: false })
-  familyId!: string;
+  // JWT의 jti 클레임 — RefreshTokenService.issue가 randomUUID로 생성해 JWT payload에 담고 동시에 이 컬럼에 저장
+  @Column({ type: 'uuid', nullable: false, unique: true })
+  jti!: string;
 
-  // sha-256(raw token) hex 64자 — raw는 절대 DB에 들어오지 않는다
-  @Column({ type: 'char', length: 64, nullable: false, unique: true })
-  tokenHash!: string;
-
-  // null = 유효, not null = 폐기됨 — atomic UPDATE WHERE revokedAt IS NULL 로 중복 회전 방지
+  // null = 활성, Date = 폐기됨. 회전 시 기존 행을 폐기하고 새 jti로 새 행 INSERT
   @Column({ type: 'timestamptz', nullable: true, default: null })
   revokedAt!: Date | null;
 
-  // 토큰 만료 시각 — 이 시각 이후에는 revokedAt 상태와 무관하게 거부한다
+  // JWT_REFRESH_TTL 기반으로 issue 시점 계산 — JWT의 exp 클레임과 동일 시각, DB에서 한 번 더 검증
   @Column({ type: 'timestamptz', nullable: false })
   expiresAt!: Date;
 
-  // 행 생성 시각 자동 기록
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 
-  // 사용자 관계 — TypeORM 조인이 필요할 때를 위해 선언 (현재 쿼리는 userId 컬럼 직접 사용)
+  // 사용자 행 삭제 시 토큰도 자동 정리
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   user!: User;
 }

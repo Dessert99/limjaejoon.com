@@ -10,33 +10,45 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 // next/navigation: 라우터·쿼리스트링 mock
 const pushMock = vi.fn();
 const searchParamsMock = new URLSearchParams();
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: pushMock }),
-  useSearchParams: () => searchParamsMock,
-}));
+vi.mock('next/navigation', () => {
+  return {
+    useRouter: () => {
+      return { push: pushMock };
+    },
+    useSearchParams: () => {
+      return searchParamsMock;
+    },
+  };
+});
 
-// useLogin hook 자체를 mock — LoginForm은 mutate/isPending만 쓰면 충분
+// useLoginMutate hook 자체를 mock — LoginForm은 mutate/isPending만 쓰면 충분
 const mutateMock = vi.fn();
-vi.mock('@/features/auth/hooks/useLogin', () => ({
-  useLogin: () => ({
-    mutate: mutateMock,
-    isPending: false,
-    isError: false,
-    isSuccess: false,
-    error: null,
-  }),
-}));
+vi.mock('@/features/auth/hooks/mutations/useLoginMutate', () => {
+  return {
+    useLoginMutate: () => {
+      return {
+        mutate: mutateMock,
+        isPending: false,
+        isError: false,
+        isSuccess: false,
+        error: null,
+      };
+    },
+  };
+});
 
 import { LoginForm } from '@/features/auth/components/LoginForm';
 
-// QueryClientProvider로 감싸 렌더 — useLogin 내부의 useQueryClient가 동작하도록
+// QueryClientProvider로 감싸 렌더 — useLoginMutate 내부의 useQueryClient가 동작하도록
 function renderForm() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
-  const wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  const wrapper = ({ children }: { children: ReactNode }) => {
+    return (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+  };
   return render(<LoginForm />, { wrapper });
 }
 
@@ -96,7 +108,9 @@ describe('LoginForm', () => {
       // role=alert로 스크린리더에 즉시 전달되는 영역에 한국어 메시지
       const alerts = screen.getAllByRole('alert');
       expect(
-        alerts.some((el) => el.textContent?.includes('올바른 이메일'))
+        alerts.some((el) => {
+          return el.textContent?.includes('올바른 이메일');
+        })
       ).toBe(true);
 
       // 검증 실패 시 mutate는 호출되지 않아야 함
@@ -123,7 +137,7 @@ describe('LoginForm', () => {
   });
 
   describe('정상 흐름', () => {
-    it('정상 입력 후 submit → useLogin().mutate가 email/password로 호출된다', async () => {
+    it('정상 입력 후 submit → useLoginMutate().mutate가 email/password로 호출된다', async () => {
       renderForm();
 
       fireEvent.change(screen.getByLabelText(/이메일/), {
@@ -175,9 +189,9 @@ describe('LoginForm', () => {
       await waitFor(() => {
         const alerts = screen.getAllByRole('alert');
         expect(
-          alerts.some((el) =>
-            el.textContent?.includes('이메일 또는 비밀번호가 올바르지')
-          )
+          alerts.some((el) => {
+            return el.textContent?.includes('이메일 또는 비밀번호가 올바르지');
+          })
         ).toBe(true);
       });
     });

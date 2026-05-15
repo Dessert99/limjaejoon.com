@@ -11,19 +11,27 @@ import { clearAuth, setAccessExpiresAt } from '@/lib/api/tokenStore';
 const server = setupServer();
 
 // 모든 테스트 시작/종료 시 server lifecycle 관리
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+beforeAll(() => {
+  return server.listen({ onUnhandledRequest: 'error' });
+});
 afterEach(() => {
   server.resetHandlers(); // 매 테스트 후 핸들러 초기화 (테스트 간 영향 차단)
   clearAuth(); // tokenStore도 초기화 (accessExpiresAt + refreshPromise)
 });
-afterAll(() => server.close());
+afterAll(() => {
+  return server.close();
+});
 
 // 백엔드 베이스 URL — apiClient의 baseURL과 일치 (NEXT_PUBLIC_API_BASE_URL 미설정 시 기본값)
 const BASE = 'http://localhost:4000';
 
 // 테스트용 accessExpiresAt 값 — 만료 임박/충분 케이스 분리
-const FAR_FUTURE = () => Date.now() + 60 * 60 * 1000; // 1시간 뒤
-const NEAR_EXPIRY = () => Date.now() + 30 * 1000; // 30초 뒤 — 60초 임계 안쪽
+const FAR_FUTURE = () => {
+  return Date.now() + 60 * 60 * 1000;
+}; // 1시간 뒤
+const NEAR_EXPIRY = () => {
+  return Date.now() + 30 * 1000;
+}; // 30초 뒤 — 60초 임계 안쪽
 
 describe('apiClient 인터셉터', () => {
   describe('사전 refresh (request interceptor)', () => {
@@ -87,7 +95,9 @@ describe('apiClient 인터셉터', () => {
         http.post(`${BASE}/auth/refresh`, async () => {
           refreshCount++;
           // 약간의 지연 — 여러 요청이 같은 Promise를 await하도록
-          await new Promise((r) => setTimeout(r, 10));
+          await new Promise((r) => {
+            return setTimeout(r, 10);
+          });
           return HttpResponse.json({
             user: { id: 'u1', email: 'a@b.c', createdAt: '2026-01-01' },
             accessExpiresAt: Date.now() + 60 * 60 * 1000,
@@ -113,7 +123,11 @@ describe('apiClient 인터셉터', () => {
       // Assert — refresh는 단 1회만 (모두 같은 Promise를 공유)
       expect(refreshCount).toBe(1);
       expect(responses).toHaveLength(3);
-      expect(responses.every((r) => r.status === 200)).toBe(true);
+      expect(
+        responses.every((r) => {
+          return r.status === 200;
+        })
+      ).toBe(true);
     });
   });
 

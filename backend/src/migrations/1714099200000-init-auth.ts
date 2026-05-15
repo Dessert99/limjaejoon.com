@@ -1,10 +1,10 @@
+// 초기 인증 스키마 — users + refresh_tokens 두 테이블을 한 번에 만든다. typeorm-ts-node-commonjs CLI가 schema 적용 시 이 파일을 실행
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-// 초기 마이그레이션 — users + refresh_tokens 테이블과 인덱스를 한 번에 생성한다
 export class InitAuth1714099200000 implements MigrationInterface {
-  // 마이그레이션 적용 — users를 먼저 만들고 FK가 있는 refresh_tokens를 이어서 생성
+  // up — migration:run 시 호출. FK가 users를 참조하므로 users 먼저, refresh_tokens 나중 순서가 중요
   async up(queryRunner: QueryRunner): Promise<void> {
-    // users 테이블 생성
+    // users 테이블 — gen_random_uuid()는 PostgreSQL 13+ 내장(uuid-ossp 확장 불필요)
     await queryRunner.query(`
       CREATE TABLE "users" (
         "id"           UUID NOT NULL DEFAULT gen_random_uuid(),
@@ -16,18 +16,17 @@ export class InitAuth1714099200000 implements MigrationInterface {
       )
     `);
 
-    // 이메일 유니크 인덱스 — 중복 가입 DB 레벨 방어
+    // 이메일 유니크 인덱스 — DB 레벨 중복 가입 차단. 동시 INSERT 두 건이 와도 SQLSTATE 23505로 한쪽만 실패
     await queryRunner.query(`
       CREATE UNIQUE INDEX "IDX_users_email" ON "users" ("email")
     `);
 
-    // refresh_tokens 테이블 생성 — users.id FK 포함
+    // refresh_tokens 테이블 — JWT의 jti 클레임을 행 식별자로. userId FK + ON DELETE CASCADE로 사용자 삭제 시 토큰도 자동 정리
     await queryRunner.query(`
       CREATE TABLE "refresh_tokens" (
         "id"          UUID NOT NULL DEFAULT gen_random_uuid(),
         "userId"      UUID NOT NULL,
-        "familyId"    UUID NOT NULL,
-        "tokenHash"   CHAR(64) NOT NULL,
+        "jti"         UUID NOT NULL,
         "revokedAt"   TIMESTAMPTZ DEFAULT NULL,
         "expiresAt"   TIMESTAMPTZ NOT NULL,
         "createdAt"   TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -37,23 +36,13 @@ export class InitAuth1714099200000 implements MigrationInterface {
       )
     `);
 
-    // tokenHash 유니크 인덱스 — atomic rotate WHERE tokenHash = $1 의 성능 보장
+    // jti 유니크 인덱스 — RefreshTokenStrategy.validate가 jti로 단일 행 조회. 풀스캔 방지 + jti 중복 차단
     await queryRunner.query(`
-      CREATE UNIQUE INDEX "IDX_rt_token_hash" ON "refresh_tokens" ("tokenHash")
-    `);
-
-    // familyId + revokedAt 복합 인덱스 — family 일괄 폐기 풀스캔 방지 (ADR 0001 필수)
-    await queryRunner.query(`
-      CREATE INDEX "IDX_rt_family_revoked" ON "refresh_tokens" ("familyId", "revokedAt")
-    `);
-
-    // userId + revokedAt 복합 인덱스 — 사용자별 활성 세션 조회 최적화
-    await queryRunner.query(`
-      CREATE INDEX "IDX_rt_user_revoked" ON "refresh_tokens" ("userId", "revokedAt")
+      CREATE UNIQUE INDEX "IDX_rt_jti" ON "refresh_tokens" ("jti")
     `);
   }
 
-  // 마이그레이션 롤백 — FK 의존 순서를 역으로, refresh_tokens 먼저 삭제
+  // down — migration:revert 시 호출. up의 역순(자식 테이블 → 부모 테이블)으로 삭제해야 FK 위반 안 남
   async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`DROP TABLE IF EXISTS "refresh_tokens"`);
     await queryRunner.query(`DROP TABLE IF EXISTS "users"`);

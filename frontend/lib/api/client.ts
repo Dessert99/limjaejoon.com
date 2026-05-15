@@ -1,7 +1,7 @@
 // axios 인스턴스 — 사전 refresh 인터셉터 + 401 fallback 포함 (ADR 0004)
 import axios from 'axios';
 
-import { API_BASE_URL } from '../base-url';
+import { API_BASE_URL } from '@/lib/base-url';
 
 import {
   clearAuth,
@@ -70,7 +70,9 @@ apiClient.interceptors.request.use(async (config) => {
 
 // 응답 인터셉터 — 401 시 1회 refresh 후 원 요청 재시도 (ADR 0004)
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response;
+  },
   async (error: unknown) => {
     // axios 에러인지 확인
     if (!axios.isAxiosError(error)) {

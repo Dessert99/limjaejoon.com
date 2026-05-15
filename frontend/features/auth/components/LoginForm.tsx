@@ -1,16 +1,16 @@
 'use client';
-// 로그인 폼 — react-hook-form 기반, 클라 검증·서버 에러 모두 RHF errors로 통합
+// 로그인 폼 — react-hook-form + zod resolver, 클라 검증·서버 에러 모두 RHF errors로 통합
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
-import { useLogin } from '@/features/auth/hooks/useLogin';
+import { useLoginMutate } from '@/features/auth/hooks/mutations/useLoginMutate';
 import {
-  EMAIL_RE,
-  PASSWORD_MIN_LENGTH,
-} from '@/features/auth/constants/validation';
+  loginSchema,
+  type LoginFormValues,
+} from '@/features/auth/schemas/login';
 import { safeReturnTo } from '@/lib/auth/safeReturnTo';
-import type { LoginRequest } from '@/features/auth/types';
 
 import { FormField } from './FormField';
 import * as s from './LoginForm.css';
@@ -18,18 +18,20 @@ import * as s from './LoginForm.css';
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const loginMutation = useLogin();
+  const loginMutation = useLoginMutate();
 
-  // useForm — 도메인 타입 LoginRequest로 register·errors 자동 추론
+  // useForm — zodResolver가 loginSchema로 검증, 타입은 z.infer 단일 진실원
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginRequest>();
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
 
   // submit — 서버 에러는 onError에서 setError로 RHF errors에 합류시킨다
-  const onSubmit = (data: LoginRequest) => {
+  const onSubmit = (data: LoginFormValues) => {
     loginMutation.mutate(data, {
       onSuccess: () => {
         // open redirect 방어 — safeReturnTo로 검증된 경로만 사용
@@ -84,13 +86,7 @@ export function LoginForm() {
             required
             disabled={loginMutation.isPending}
             error={errors.email?.message}
-            {...register('email', {
-              required: '이메일을 입력해주세요.',
-              pattern: {
-                value: EMAIL_RE,
-                message: '올바른 이메일 형식을 입력해주세요.',
-              },
-            })}
+            {...register('email')}
           />
           <FormField
             id='login-password'
@@ -100,13 +96,7 @@ export function LoginForm() {
             required
             disabled={loginMutation.isPending}
             error={errors.password?.message}
-            {...register('password', {
-              required: '비밀번호를 입력해주세요.',
-              minLength: {
-                value: PASSWORD_MIN_LENGTH,
-                message: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상이어야 합니다.`,
-              },
-            })}
+            {...register('password')}
           />
         </div>
 

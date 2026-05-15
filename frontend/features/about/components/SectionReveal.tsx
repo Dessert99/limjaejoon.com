@@ -37,7 +37,9 @@ export function SectionReveal({
     );
 
     observer.observe(node);
-    return () => observer.disconnect();
+    return () => {
+      return observer.disconnect();
+    };
   }, []);
 
   const style: CSSProperties | undefined = delayMs

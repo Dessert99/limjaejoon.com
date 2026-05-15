@@ -7,8 +7,12 @@ import path from 'path';
 const blogDir = path.join(process.cwd(), 'content/blog');
 const slugs = fs
   .readdirSync(blogDir)
-  .filter((f) => f.endsWith('.mdx'))
-  .map((f) => f.replace(/\.mdx$/, ''));
+  .filter((f) => {
+    return f.endsWith('.mdx');
+  })
+  .map((f) => {
+    return f.replace(/\.mdx$/, '');
+  });
 
 test.describe('블로그 상세 페이지', () => {
   // 모든 블로그 포스트에 대해 렌더링 테스트를 동적으로 생성

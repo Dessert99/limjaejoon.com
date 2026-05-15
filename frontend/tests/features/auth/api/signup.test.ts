@@ -3,13 +3,17 @@ import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // apiClient: axios 인스턴스 통째로 가짜로. 실제 네트워크 호출은 일어나면 안 됨
-vi.mock('@/lib/api/client', () => ({
-  apiClient: { post: vi.fn() },
-}));
+vi.mock('@/lib/api/client', () => {
+  return {
+    apiClient: { post: vi.fn() },
+  };
+});
 // tokenStore: setAccessExpiresAt이 정확히 호출됐는지 추적용 mock
-vi.mock('@/lib/api/tokenStore', () => ({
-  setAccessExpiresAt: vi.fn(),
-}));
+vi.mock('@/lib/api/tokenStore', () => {
+  return {
+    setAccessExpiresAt: vi.fn(),
+  };
+});
 
 import { apiClient } from '@/lib/api/client';
 import { setAccessExpiresAt } from '@/lib/api/tokenStore';

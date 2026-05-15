@@ -2,12 +2,16 @@
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/lib/api/client', () => ({
-  apiClient: { post: vi.fn() },
-}));
-vi.mock('@/lib/api/tokenStore', () => ({
-  setAccessExpiresAt: vi.fn(),
-}));
+vi.mock('@/lib/api/client', () => {
+  return {
+    apiClient: { post: vi.fn() },
+  };
+});
+vi.mock('@/lib/api/tokenStore', () => {
+  return {
+    setAccessExpiresAt: vi.fn(),
+  };
+});
 
 import { apiClient } from '@/lib/api/client';
 import { setAccessExpiresAt } from '@/lib/api/tokenStore';

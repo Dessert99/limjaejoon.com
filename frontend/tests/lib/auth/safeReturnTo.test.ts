@@ -2,7 +2,7 @@
 // 외부 의존성 0인 순수 함수라 mock 없이 입력→출력만 검증하면 됨 (가장 단순한 형태의 단위 테스트)
 import { describe, expect, it } from 'vitest';
 
-import { safeReturnTo } from '../../../lib/auth/safeReturnTo';
+import { safeReturnTo } from '@/lib/auth/safeReturnTo';
 
 // describe — 관련 테스트들을 그룹핑하는 컨테이너. 결과 출력에서 들여쓰기로 구조가 보임
 describe('safeReturnTo', () => {

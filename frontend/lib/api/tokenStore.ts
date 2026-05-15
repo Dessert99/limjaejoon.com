@@ -13,7 +13,9 @@ export const setAccessExpiresAt = (v: number): void => {
 };
 
 // 현재 저장된 만료 시각을 반환한다 — 사전 refresh 판단에 사용
-export const getAccessExpiresAt = (): number | null => accessExpiresAt;
+export const getAccessExpiresAt = (): number | null => {
+  return accessExpiresAt;
+};
 
 // 현재 in-flight refresh Promise를 설정한다 — 동시 요청 뮤텍스
 export const setRefreshPromise = (p: Promise<void> | null): void => {
@@ -21,7 +23,9 @@ export const setRefreshPromise = (p: Promise<void> | null): void => {
 };
 
 // 현재 in-flight refresh Promise를 반환한다 — 동시 요청이 대기에 사용
-export const getRefreshPromise = (): Promise<void> | null => refreshPromise;
+export const getRefreshPromise = (): Promise<void> | null => {
+  return refreshPromise;
+};
 
 // 인증 상태를 전부 초기화한다 — 로그아웃 또는 인증 실패 시 호출
 export const clearAuth = (): void => {

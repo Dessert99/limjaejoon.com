@@ -15,7 +15,9 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 
   useEffect(() => {
     const elements = headings
-      .map((h) => document.getElementById(h.slug))
+      .map((h) => {
+        return document.getElementById(h.slug);
+      })
       .filter(Boolean) as HTMLElement[];
 
     if (elements.length === 0) {
@@ -41,7 +43,9 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       observer.observe(el);
     }
 
-    return () => observer.disconnect();
+    return () => {
+      return observer.disconnect();
+    };
   }, [headings]);
 
   function handleClick(slug: string) {
@@ -62,17 +66,21 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       aria-label='목차'>
       <p className={s.title}>목차</p>
       <ul className={s.list}>
-        {headings.map((heading) => (
-          <li key={heading.slug}>
-            <a
-              href={`#${heading.slug}`}
-              className={s.link}
-              data-active={activeSlug === heading.slug}
-              onClick={() => handleClick(heading.slug)}>
-              {heading.text}
-            </a>
-          </li>
-        ))}
+        {headings.map((heading) => {
+          return (
+            <li key={heading.slug}>
+              <a
+                href={`#${heading.slug}`}
+                className={s.link}
+                data-active={activeSlug === heading.slug}
+                onClick={() => {
+                  return handleClick(heading.slug);
+                }}>
+                {heading.text}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

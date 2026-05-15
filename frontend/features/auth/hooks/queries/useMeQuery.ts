@@ -1,0 +1,13 @@
+// 현재 로그인된 사용자 정보를 구독한다 — 보호 라우트 전용 (ADR 0007)
+// staleTime·retry는 QueryClient 전역 default(5분 / false)에 위임
+import { useQuery } from '@tanstack/react-query';
+
+import { getMe } from '@/features/auth/api/getMe';
+import { authKeys } from '@/features/auth/constants/authkeys';
+
+export const useMeQuery = () => {
+  return useQuery({
+    queryKey: authKeys.me(),
+    queryFn: getMe,
+  });
+};

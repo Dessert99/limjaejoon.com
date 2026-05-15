@@ -18,7 +18,9 @@ export function TagSidebar({ tags }: TagSidebarProps) {
 
     // 이미 선택된 태그면 제거, 아니면 추가
     const next = activeTags.includes(tag)
-      ? activeTags.filter((t) => t !== tag)
+      ? activeTags.filter((t) => {
+          return t !== tag;
+        })
       : [...activeTags, tag];
 
     // 선택된 태그가 있으면 정렬해서 URL에 세팅, 없으면 파라미터 삭제
@@ -42,20 +44,26 @@ export function TagSidebar({ tags }: TagSidebarProps) {
           <button
             className={s.tagButton}
             data-active={activeTags.length === 0}
-            onClick={() => router.push('/blog')}>
+            onClick={() => {
+              return router.push('/blog');
+            }}>
             전체
           </button>
         </li>
-        {tags.map((tag) => (
-          <li key={tag}>
-            <button
-              className={s.tagButton}
-              data-active={activeTags.includes(tag)}
-              onClick={() => handleTag(tag)}>
-              {tag}
-            </button>
-          </li>
-        ))}
+        {tags.map((tag) => {
+          return (
+            <li key={tag}>
+              <button
+                className={s.tagButton}
+                data-active={activeTags.includes(tag)}
+                onClick={() => {
+                  return handleTag(tag);
+                }}>
+                {tag}
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </aside>
   );

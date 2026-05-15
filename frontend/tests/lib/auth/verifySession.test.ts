@@ -5,20 +5,24 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // vi.mock 호출은 vitest가 파일 최상단으로 자동 hoisting하므로 import보다 먼저 실행됨
 // next/headers, next/navigation은 Next 런타임 의존이라 테스트에선 가짜 모듈로 대체 필수
-vi.mock('next/headers', () => ({
-  cookies: vi.fn(),
-}));
-vi.mock('next/navigation', () => ({
-  // 실제 Next의 redirect는 호출 시 throw로 흐름을 끊는데, 테스트도 같은 동작을 흉내내야 한다
-  redirect: vi.fn((url: string) => {
-    throw new Error(`NEXT_REDIRECT:${url}`);
-  }),
-}));
+vi.mock('next/headers', () => {
+  return {
+    cookies: vi.fn(),
+  };
+});
+vi.mock('next/navigation', () => {
+  return {
+    // 실제 Next의 redirect는 호출 시 throw로 흐름을 끊는데, 테스트도 같은 동작을 흉내내야 한다
+    redirect: vi.fn((url: string) => {
+      throw new Error(`NEXT_REDIRECT:${url}`);
+    }),
+  };
+});
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { verifySession } from '../../../lib/auth/verifySession';
+import { verifySession } from '@/lib/auth/verifySession';
 
 describe('verifySession', () => {
   // 각 테스트 시작 전 mock 호출 이력·구현을 초기화 — 테스트 간 독립성 보장
@@ -38,7 +42,7 @@ describe('verifySession', () => {
       // Act + Assert — redirect가 throw하므로 rejects matcher로 검증
       await expect(verifySession('/me')).rejects.toThrow(/NEXT_REDIRECT/);
 
-      // redirect 호출 인자 검증 — returnTo가 URL 인코딩되어 들어가야 함
+      // redirect 호출 인자 검증 — returnTo 파라미터에 currentPath가 URL 인코딩되어 들어가야 함
       expect(redirect).toHaveBeenCalledWith('/login?returnTo=%2Fme');
 
       // 쿠키 없을 때 백엔드 fetch는 호출되지 않아야 함 (불필요한 네트워크 차단)
@@ -82,7 +86,7 @@ describe('verifySession', () => {
         status: 401,
       });
 
-      // Act + Assert
+      // Act + Assert — 401도 access_token 부재와 동일하게 /login?returnTo=... 처리
       await expect(verifySession('/me')).rejects.toThrow(/NEXT_REDIRECT/);
       expect(redirect).toHaveBeenCalledWith('/login?returnTo=%2Fme');
     });
