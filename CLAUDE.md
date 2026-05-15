@@ -29,7 +29,6 @@ backend/           # NestJS API 서버
     migrations/    # DB 스키마 변경 이력
 docs/
   conventions/     # 코드/스타일 규칙 (CLAUDE.md에서 참조)
-  plans/           # 기능 단위 PRD/ADR/state
 ```
 
 ## 개발 명령어
@@ -47,6 +46,8 @@ npm run format     # 전체 포맷
 
 - 프론트엔드 경로 alias: `@/*` (`frontend/` 기준)
 - `frontend/features/` 아래에 기능별로 컴포넌트 분리
+- Next.js 컨벤션은 @docs/conventions/nextjs-conventions.md 참조.
+- NestJS 컨벤션은 @docs/conventions/nestjs-conventions.md 참조.
 - TanStack Query 컨벤션은 @docs/conventions/tanstack-query-conventions.md 참조.
 - React Hook Form 컨벤션은 @docs/conventions/react-hook-form-conventions.md 참조.
 - TDD 컨벤션은 @docs/conventions/tdd-conventions.md 참조.
