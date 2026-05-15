@@ -21,11 +21,11 @@ vi.mock('next/navigation', () => {
   };
 });
 
-// useLogin hook 자체를 mock — LoginForm은 mutate/isPending만 쓰면 충분
+// useLoginMutate hook 자체를 mock — LoginForm은 mutate/isPending만 쓰면 충분
 const mutateMock = vi.fn();
-vi.mock('@/features/auth/hooks/useLogin', () => {
+vi.mock('@/features/auth/hooks/mutations/useLoginMutate', () => {
   return {
-    useLogin: () => {
+    useLoginMutate: () => {
       return {
         mutate: mutateMock,
         isPending: false,
@@ -39,7 +39,7 @@ vi.mock('@/features/auth/hooks/useLogin', () => {
 
 import { LoginForm } from '@/features/auth/components/LoginForm';
 
-// QueryClientProvider로 감싸 렌더 — useLogin 내부의 useQueryClient가 동작하도록
+// QueryClientProvider로 감싸 렌더 — useLoginMutate 내부의 useQueryClient가 동작하도록
 function renderForm() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
@@ -137,7 +137,7 @@ describe('LoginForm', () => {
   });
 
   describe('정상 흐름', () => {
-    it('정상 입력 후 submit → useLogin().mutate가 email/password로 호출된다', async () => {
+    it('정상 입력 후 submit → useLoginMutate().mutate가 email/password로 호출된다', async () => {
       renderForm();
 
       fireEvent.change(screen.getByLabelText(/이메일/), {

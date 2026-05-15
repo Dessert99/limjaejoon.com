@@ -2,10 +2,10 @@
 // staleTime·retry는 QueryClient 전역 default(5분 / false)에 위임
 import { useQuery } from '@tanstack/react-query';
 
-import { getMe } from '../api/getMe';
-import { authKeys } from '../constants/keys';
+import { getMe } from '@/features/auth/api/getMe';
+import { authKeys } from '@/features/auth/constants/authkeys';
 
-export const useMe = () => {
+export const useMeQuery = () => {
   return useQuery({
     queryKey: authKeys.me(),
     queryFn: getMe,

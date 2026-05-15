@@ -1,32 +1,35 @@
 'use client';
-// 회원가입 폼 — react-hook-form 기반, 409(중복 이메일)는 email 필드에 매핑
+// 회원가입 폼 — react-hook-form + zod resolver, 409(중복 이메일)는 email 필드에 매핑
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
-import { useSignup } from '@/features/auth/hooks/useSignup';
+import { useSignupMutate } from '@/features/auth/hooks/mutations/useSignupMutate';
+import { PASSWORD_MIN_LENGTH } from '@/features/auth/constants/validation';
 import {
-  EMAIL_RE,
-  PASSWORD_MIN_LENGTH,
-} from '@/features/auth/constants/validation';
-import type { SignupRequest } from '@/features/auth/types';
+  signupSchema,
+  type SignupFormValues,
+} from '@/features/auth/schemas/signup';
 
 import { FormField } from './FormField';
 import * as s from './SignupForm.css';
 
 export function SignupForm() {
   const router = useRouter();
-  const signupMutation = useSignup();
+  const signupMutation = useSignupMutate();
 
-  // useForm — 도메인 타입 SignupRequest로 register·errors 자동 추론
+  // useForm — zodResolver가 signupSchema로 검증, 타입은 z.infer 단일 진실원
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<SignupRequest>();
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+  });
 
-  const onSubmit = (data: SignupRequest) => {
+  const onSubmit = (data: SignupFormValues) => {
     signupMutation.mutate(data, {
       onSuccess: () => {
         // 가입 직후 returnTo는 무시하고 항상 /me로 이동 (PRD 정책)
@@ -79,13 +82,7 @@ export function SignupForm() {
             required
             disabled={signupMutation.isPending}
             error={errors.email?.message}
-            {...register('email', {
-              required: '이메일을 입력해주세요.',
-              pattern: {
-                value: EMAIL_RE,
-                message: '올바른 이메일 형식을 입력해주세요.',
-              },
-            })}
+            {...register('email')}
           />
           <FormField
             id='signup-password'
@@ -96,13 +93,7 @@ export function SignupForm() {
             disabled={signupMutation.isPending}
             helper={`${PASSWORD_MIN_LENGTH}자 이상 입력해주세요.`}
             error={errors.password?.message}
-            {...register('password', {
-              required: '비밀번호를 입력해주세요.',
-              minLength: {
-                value: PASSWORD_MIN_LENGTH,
-                message: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상이어야 합니다.`,
-              },
-            })}
+            {...register('password')}
           />
         </div>
 

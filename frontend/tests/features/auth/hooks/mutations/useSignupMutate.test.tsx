@@ -1,4 +1,4 @@
-// useSignup hook 단위 테스트 — TanStack mutation + me 캐시 갱신 검증
+// useSignupMutate hook 단위 테스트 — TanStack mutation + me 캐시 갱신 검증
 // 핵심: hook은 QueryClientProvider 컨텍스트가 필요 → renderHook의 wrapper로 주입
 import type { ReactNode } from 'react';
 import type { Mock } from 'vitest';
@@ -15,8 +15,8 @@ vi.mock('@/features/auth/api/signup', () => {
 });
 
 import { signup } from '@/features/auth/api/signup';
-import { authKeys } from '@/features/auth/constants/keys';
-import { useSignup } from '@/features/auth/hooks/useSignup';
+import { authKeys } from '@/features/auth/constants/authkeys';
+import { useSignupMutate } from '@/features/auth/hooks/mutations/useSignupMutate';
 
 // 매 테스트마다 fresh QueryClient + Provider wrapper를 생성하는 헬퍼
 // queryClient를 외부로 노출해 캐시 상태를 직접 검증할 수 있게 한다
@@ -33,7 +33,7 @@ function setup() {
   return { queryClient, wrapper };
 }
 
-describe('useSignup', () => {
+describe('useSignupMutate', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -49,7 +49,7 @@ describe('useSignup', () => {
     // renderHook — hook을 테스트용 컴포넌트 안에서 실행해주는 헬퍼
     const { result } = renderHook(
       () => {
-        return useSignup();
+        return useSignupMutate();
       },
       { wrapper }
     );
@@ -80,7 +80,7 @@ describe('useSignup', () => {
     const { queryClient, wrapper } = setup();
     const { result } = renderHook(
       () => {
-        return useSignup();
+        return useSignupMutate();
       },
       { wrapper }
     );
@@ -100,7 +100,7 @@ describe('useSignup', () => {
     const { queryClient, wrapper } = setup();
     const { result } = renderHook(
       () => {
-        return useSignup();
+        return useSignupMutate();
       },
       { wrapper }
     );

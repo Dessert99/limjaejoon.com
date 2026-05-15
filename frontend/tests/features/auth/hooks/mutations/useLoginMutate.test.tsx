@@ -1,4 +1,4 @@
-// useLogin hook 단위 테스트 — useSignup과 동일한 mutation + me 캐시 갱신 패턴
+// useLoginMutate hook 단위 테스트 — useSignupMutate와 동일한 mutation + me 캐시 갱신 패턴
 import type { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
@@ -13,8 +13,8 @@ vi.mock('@/features/auth/api/login', () => {
 });
 
 import { login } from '@/features/auth/api/login';
-import { authKeys } from '@/features/auth/constants/keys';
-import { useLogin } from '@/features/auth/hooks/useLogin';
+import { authKeys } from '@/features/auth/constants/authkeys';
+import { useLoginMutate } from '@/features/auth/hooks/mutations/useLoginMutate';
 
 function setup() {
   const queryClient = new QueryClient({
@@ -28,7 +28,7 @@ function setup() {
   return { queryClient, wrapper };
 }
 
-describe('useLogin', () => {
+describe('useLoginMutate', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -42,7 +42,7 @@ describe('useLogin', () => {
     const { wrapper } = setup();
     const { result } = renderHook(
       () => {
-        return useLogin();
+        return useLoginMutate();
       },
       { wrapper }
     );
@@ -65,7 +65,7 @@ describe('useLogin', () => {
     const { queryClient, wrapper } = setup();
     const { result } = renderHook(
       () => {
-        return useLogin();
+        return useLoginMutate();
       },
       { wrapper }
     );
@@ -84,7 +84,7 @@ describe('useLogin', () => {
     const { queryClient, wrapper } = setup();
     const { result } = renderHook(
       () => {
-        return useLogin();
+        return useLoginMutate();
       },
       { wrapper }
     );

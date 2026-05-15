@@ -1,4 +1,4 @@
-// useMe hook 단위 테스트 — useQuery로 /auth/me 자동 조회
+// useMeQuery hook 단위 테스트 — useQuery로 /auth/me 자동 조회
 import type { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
@@ -13,7 +13,7 @@ vi.mock('@/features/auth/api/getMe', () => {
 });
 
 import { getMe } from '@/features/auth/api/getMe';
-import { useMe } from '@/features/auth/hooks/useMe';
+import { useMeQuery } from '@/features/auth/hooks/queries/useMeQuery';
 
 function setup() {
   const queryClient = new QueryClient({
@@ -27,7 +27,7 @@ function setup() {
   return { queryClient, wrapper };
 }
 
-describe('useMe', () => {
+describe('useMeQuery', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -39,7 +39,7 @@ describe('useMe', () => {
     const { wrapper } = setup();
     renderHook(
       () => {
-        return useMe();
+        return useMeQuery();
       },
       { wrapper }
     );
@@ -57,7 +57,7 @@ describe('useMe', () => {
     const { wrapper } = setup();
     const { result } = renderHook(
       () => {
-        return useMe();
+        return useMeQuery();
       },
       { wrapper }
     );
@@ -75,7 +75,7 @@ describe('useMe', () => {
     const { wrapper } = setup();
     const { result } = renderHook(
       () => {
-        return useMe();
+        return useMeQuery();
       },
       { wrapper }
     );

@@ -1,4 +1,4 @@
-// useLogout hook 단위 테스트 — 성공 시 모든 query 캐시 제거(queryClient.clear())
+// useLogoutMutate hook 단위 테스트 — 성공 시 모든 query 캐시 제거(queryClient.clear())
 import type { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
@@ -13,8 +13,8 @@ vi.mock('@/features/auth/api/logout', () => {
 });
 
 import { logout } from '@/features/auth/api/logout';
-import { authKeys } from '@/features/auth/constants/keys';
-import { useLogout } from '@/features/auth/hooks/useLogout';
+import { authKeys } from '@/features/auth/constants/authkeys';
+import { useLogoutMutate } from '@/features/auth/hooks/mutations/useLogoutMutate';
 
 function setup() {
   const queryClient = new QueryClient({
@@ -28,7 +28,7 @@ function setup() {
   return { queryClient, wrapper };
 }
 
-describe('useLogout', () => {
+describe('useLogoutMutate', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -39,7 +39,7 @@ describe('useLogout', () => {
     const { wrapper } = setup();
     const { result } = renderHook(
       () => {
-        return useLogout();
+        return useLogoutMutate();
       },
       { wrapper }
     );
@@ -66,7 +66,7 @@ describe('useLogout', () => {
 
     const { result } = renderHook(
       () => {
-        return useLogout();
+        return useLogoutMutate();
       },
       { wrapper }
     );
@@ -87,7 +87,7 @@ describe('useLogout', () => {
 
     const { result } = renderHook(
       () => {
-        return useLogout();
+        return useLogoutMutate();
       },
       { wrapper }
     );

@@ -2,7 +2,7 @@
 import { apiClient } from '@/lib/api/client';
 import { setAccessExpiresAt } from '@/lib/api/tokenStore';
 
-import type { LoginRequest, LoginResponse } from '../types';
+import type { LoginRequest, LoginResponse } from '@/features/auth/types';
 
 export const login = async (body: LoginRequest): Promise<LoginResponse> => {
   const { data } = await apiClient.post<LoginResponse>('/auth/login', body);

@@ -1,9 +1,9 @@
 // 로그아웃 mutation — 성공 시 모든 QueryClient 캐시를 제거한다 (ADR 0007: B3)
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { logout } from '../api/logout';
+import { logout } from '@/features/auth/api/logout';
 
-export const useLogout = () => {
+export const useLogoutMutate = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
