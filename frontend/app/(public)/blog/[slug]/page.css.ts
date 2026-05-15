@@ -159,4 +159,24 @@ globalStyle(`${prose} blockquote`, {
 globalStyle(`${prose} blockquote p`, { paddingLeft: 0 });
 globalStyle(`${prose} blockquote p:last-child`, { marginBottom: 0 });
 
+// 읽고 있는 섹션 강조 (rehype-section-wrap이 만든 <section> 단위)
+// 모든 섹션에 투명 2px 좌측 바를 미리 둬, 활성화 시 색만 바뀌고 레이아웃이 밀리지 않게 함.
+// 세로 패딩은 두지 않음 — 헤딩 marginTop의 margin collapse를 유지해 섹션 간 간격이 흔들리지 않도록.
+globalStyle(`${prose} section`, {
+  borderLeft: '2px solid transparent',
+  borderRadius: vars.radius.md,
+  paddingRight: '1rem',
+  transition: 'background-color 200ms ease, border-color 200ms ease',
+});
+// 넓은 면은 중립 grayscale(bgSoft)로 차분하게, teal은 2px 좌측 바 하나에만 — accent를 아껴 씀
+globalStyle(`${prose} section[data-active="true"]`, {
+  backgroundColor: vars.color.bgSoft,
+  borderLeftColor: vars.color.accentStrong,
+});
+globalStyle(`${prose} section`, {
+  '@media': {
+    '(prefers-reduced-motion: reduce)': { transition: 'none' },
+  },
+});
+
 applyHeadingAnchorStyles(prose);
