@@ -1,4 +1,5 @@
 import { BlogList } from '@/features/blog/components/BlogList';
+import { SearchBox } from '@/features/blog/components/SearchBox';
 import { TagSidebar } from '@/features/blog/components/TagSidebar';
 import { getPostList } from '@/features/blog/lib/posts';
 import type { Metadata } from 'next';
@@ -32,6 +33,13 @@ export default function BlogPage() {
           개념 정리와 레퍼런스를 모아두는 공간입니다.
         </p>
       </header>
+
+      {/* useSearchParams 사용 클라이언트 컴포넌트는 Suspense 경계 안에 둬야 함 (Next 요구) */}
+      <div className={s.searchWrap}>
+        <Suspense>
+          <SearchBox />
+        </Suspense>
+      </div>
 
       <div className={s.layout}>
         <Suspense>

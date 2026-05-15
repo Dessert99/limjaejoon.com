@@ -1,7 +1,8 @@
-import { vars } from '@/styles/theme.css';
 import { bp } from '@/styles/breakpoints';
+import { vars } from '@/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
+// 검색 입력창 — 단일 accent 규칙: 포커스 시에만 teal 보더, 평소엔 중립
 export const input = style({
   width: '100%',
   padding: '0.75rem 1rem',
@@ -27,17 +28,4 @@ export const input = style({
       transition: 'none',
     },
   },
-});
-
-export const results = style({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '0.75rem',
-  marginTop: '1.5rem',
-});
-
-export const emptyText = style({
-  paddingTop: '2rem',
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textMuted,
 });
