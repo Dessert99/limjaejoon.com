@@ -145,4 +145,18 @@ globalStyle(`${prose} pre code`, {
   color: vars.color.textPrimary,
 });
 
+// 인용문: 브랜드의 "강조 = 2px accent 좌측 바" 모티프를 적용. pre처럼 본문(1rem)에 정렬
+globalStyle(`${prose} blockquote`, {
+  marginLeft: '1rem',
+  marginBottom: '1.25rem',
+  paddingLeft: '1rem',
+  paddingBlock: '0.5rem',
+  borderLeft: `2px solid ${vars.color.accentStrong}`,
+  backgroundColor: vars.color.accentSoft,
+  borderRadius: vars.radius.md,
+});
+// blockquote 안의 p는 prose 기본값(paddingLeft 1rem, 끝 margin)을 상속해 이중 들여쓰기·여백이 생기므로 상쇄
+globalStyle(`${prose} blockquote p`, { paddingLeft: 0 });
+globalStyle(`${prose} blockquote p:last-child`, { marginBottom: 0 });
+
 applyHeadingAnchorStyles(prose);
