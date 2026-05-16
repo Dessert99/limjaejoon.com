@@ -1,6 +1,7 @@
 import { BlogList } from '@/features/blog/components/BlogList/BlogList';
 import { SearchBox } from '@/features/blog/components/SearchBox/SearchBox';
 import { TagSidebar } from '@/features/blog/components/TagSidebar/TagSidebar';
+import { BLOG_TAGS } from '@/features/blog/constants/tags';
 import { getPostList } from '@/features/blog/lib/posts';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -17,13 +18,6 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const posts = getPostList();
-  const tags = [
-    ...new Set(
-      posts.flatMap((p) => {
-        return p.tags;
-      })
-    ),
-  ].sort();
 
   return (
     <main className={s.main}>
@@ -43,7 +37,7 @@ export default function BlogPage() {
 
       <div className={s.layout}>
         <Suspense>
-          <TagSidebar tags={tags} />
+          <TagSidebar tags={BLOG_TAGS} />
         </Suspense>
         <Suspense>
           <BlogList posts={posts} />

@@ -4,7 +4,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import * as s from './TagSidebar.css';
 
 interface TagSidebarProps {
-  tags: string[];
+  // 공유 상수 BLOG_TAGS를 그대로 받으므로 readonly — 컴포넌트는 .map 으로 읽기만 함
+  tags: readonly string[];
 }
 
 export function TagSidebar({ tags }: TagSidebarProps) {
