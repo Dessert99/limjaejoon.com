@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { TourCard } from '@/features/tour/components/TourCard';
+import { TourCard } from '@/features/tour/components/TourCard/TourCard';
 import { useDebouncedValue } from '@/features/tour/hooks/useDebouncedValue';
 import { useInfiniteScroll } from '@/features/tour/hooks/useInfiniteScroll';
 import { useTourSearchQuery } from '@/features/tour/hooks/queries/useTourSearchQuery';

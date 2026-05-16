@@ -2,7 +2,7 @@
 // LoginForm 내부의 useSearchParams는 Next.js 15+에서 Suspense boundary 필수
 import { Suspense } from 'react';
 
-import { LoginForm } from '@/features/auth/components/LoginForm';
+import { LoginForm } from '@/features/auth/components/LoginForm/LoginForm';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -1,7 +1,7 @@
 'use client';
 
 import type { MouseEvent } from 'react';
-import { SectionReveal } from '@/features/about/components/SectionReveal';
+import { SectionReveal } from '@/features/about/components/SectionReveal/SectionReveal';
 import { projects } from '@/features/about/data/projects';
 import * as s from './ProjectsSection.css';
 

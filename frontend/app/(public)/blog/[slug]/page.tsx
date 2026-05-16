@@ -1,6 +1,6 @@
-import { Mention } from '@/features/blog/components/Mention';
-import { TableOfContents } from '@/features/blog/components/TableOfContents';
-import { Tooltip } from '@/features/blog/components/Tooltip';
+import { Mention } from '@/features/blog/components/Mention/Mention';
+import { TableOfContents } from '@/features/blog/components/TableOfContents/TableOfContents';
+import { Tooltip } from '@/features/blog/components/Tooltip/Tooltip';
 import { extractHeadings } from '@/features/blog/lib/extract-headings';
 import { mdxOptions } from '@/features/blog/lib/mdx-options';
 import { getPostBySlug, getPostList } from '@/features/blog/lib/posts';

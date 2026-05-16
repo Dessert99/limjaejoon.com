@@ -1,6 +1,6 @@
-import { BlogList } from '@/features/blog/components/BlogList';
-import { SearchBox } from '@/features/blog/components/SearchBox';
-import { TagSidebar } from '@/features/blog/components/TagSidebar';
+import { BlogList } from '@/features/blog/components/BlogList/BlogList';
+import { SearchBox } from '@/features/blog/components/SearchBox/SearchBox';
+import { TagSidebar } from '@/features/blog/components/TagSidebar/TagSidebar';
 import { getPostList } from '@/features/blog/lib/posts';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';

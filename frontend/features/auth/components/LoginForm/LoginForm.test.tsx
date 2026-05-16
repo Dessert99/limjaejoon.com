@@ -37,7 +37,7 @@ vi.mock('@/features/auth/hooks/mutations/useLoginMutate', () => {
   };
 });
 
-import { LoginForm } from '@/features/auth/components/LoginForm';
+import { LoginForm } from '@/features/auth/components/LoginForm/LoginForm';
 
 // QueryClientProvider로 감싸 렌더 — useLoginMutate 내부의 useQueryClient가 동작하도록
 function renderForm() {

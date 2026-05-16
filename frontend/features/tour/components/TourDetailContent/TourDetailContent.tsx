@@ -4,7 +4,7 @@
 // (이전 RSC + Promise.all 병렬 패턴에서 전환된 이유: detailIntro2가 contentTypeId 필수 → common 응답 의존)
 import Image from 'next/image';
 
-import { WishlistButton } from '@/features/tour/components/WishlistButton';
+import { WishlistButton } from '@/features/tour/components/WishlistButton/WishlistButton';
 import { useTourCommonSuspenseQuery } from '@/features/tour/hooks/queries/useTourCommonSuspenseQuery';
 import { useTourIntroSuspenseQuery } from '@/features/tour/hooks/queries/useTourIntroSuspenseQuery';
 

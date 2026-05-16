@@ -1,7 +1,7 @@
-import { HeroSection } from '@/features/about/components/HeroSection';
-import { ProjectsSection } from '@/features/about/components/ProjectsSection';
-import { SkillsSection } from '@/features/about/components/SkillsSection';
-import { Timeline } from '@/features/about/components/Timeline';
+import { HeroSection } from '@/features/about/components/HeroSection/HeroSection';
+import { ProjectsSection } from '@/features/about/components/ProjectsSection/ProjectsSection';
+import { SkillsSection } from '@/features/about/components/SkillsSection/SkillsSection';
+import { Timeline } from '@/features/about/components/Timeline/Timeline';
 import { activities } from '@/features/about/data/activities';
 import { education } from '@/features/about/data/education';
 import { experience } from '@/features/about/data/experience';

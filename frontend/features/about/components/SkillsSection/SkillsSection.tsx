@@ -7,9 +7,9 @@ import {
   SiReact,
   SiTypescript,
 } from 'react-icons/si';
-import { SectionReveal } from '@/features/about/components/SectionReveal';
+import { SectionReveal } from '@/features/about/components/SectionReveal/SectionReveal';
 import { skills } from '@/features/about/data/skills';
-import { IconTile } from './IconTile';
+import { IconTile } from '@/features/about/components/IconTile/IconTile';
 import * as s from './SkillsSection.css';
 
 const iconBySkill: Record<string, IconType> = {

@@ -2,7 +2,7 @@
 // proxy.ts가 x-pathname 헤더를 세팅 → headers()로 읽어 verifySession에 동적 경로 전달
 import { headers } from 'next/headers';
 
-import { SiteHeader } from '@/features/navigation/components/SiteHeader';
+import { SiteHeader } from '@/features/navigation/components/SiteHeader/SiteHeader';
 import { verifySession } from '@/lib/auth/verifySession';
 import { contentWrapper } from '@/app/layout.css';
 

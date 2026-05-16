@@ -12,7 +12,7 @@ import {
 } from '@/features/auth/schemas/login';
 import { safeReturnTo } from '@/lib/auth/safeReturnTo';
 
-import { FormField } from './FormField';
+import { FormField } from '@/features/auth/components/FormField/FormField';
 import * as s from './LoginForm.css';
 
 export function LoginForm() {

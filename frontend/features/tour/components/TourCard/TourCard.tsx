@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import type { TourItem } from '@/features/tour/types';
-import { WishlistButton } from './WishlistButton';
+import { WishlistButton } from '@/features/tour/components/WishlistButton/WishlistButton';
 import * as s from './TourCard.css';
 
 interface TourCardProps {

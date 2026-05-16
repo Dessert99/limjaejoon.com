@@ -5,7 +5,7 @@
 import type { PostMeta } from '@/features/blog/types';
 import { filterPosts } from '@/features/blog/lib/filter-posts';
 import { useSearchParams } from 'next/navigation';
-import { BlogCard } from './BlogCard';
+import { BlogCard } from '@/features/blog/components/BlogCard/BlogCard';
 import * as s from './BlogList.css';
 
 interface BlogListProps {

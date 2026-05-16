@@ -1,4 +1,4 @@
-import { ContactLinks } from '@/features/about/components/ContactLinks';
+import { ContactLinks } from '@/features/about/components/ContactLinks/ContactLinks';
 import { profile } from '@/features/about/data/profile';
 import type { CSSProperties, ReactNode } from 'react';
 import * as s from './HeroSection.css';

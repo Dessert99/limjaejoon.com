@@ -1,4 +1,4 @@
-import { SectionReveal } from '@/features/about/components/SectionReveal';
+import { SectionReveal } from '@/features/about/components/SectionReveal/SectionReveal';
 import type { TimelineItem } from '@/features/about/types';
 import * as s from './Timeline.css';
 

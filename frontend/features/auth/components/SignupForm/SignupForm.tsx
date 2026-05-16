@@ -12,7 +12,7 @@ import {
   type SignupFormValues,
 } from '@/features/auth/schemas/signup';
 
-import { FormField } from './FormField';
+import { FormField } from '@/features/auth/components/FormField/FormField';
 import * as s from './SignupForm.css';
 
 export function SignupForm() {
