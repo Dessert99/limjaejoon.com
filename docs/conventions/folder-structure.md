@@ -17,17 +17,19 @@ src/
 └── types/              # 전역 공용 타입. 관심사별 파일 분할, barrel `index.ts` 금지
 ```
 
-
 ## 2. features/{domain}/
 
 ```
 features/{domain}/
 ├── api/                # API 함수 — 1함수 1파일. camelCase. 파일명 = 함수명
-├── components/         # 도메인 UI. PascalCase, 1파일 1컴포넌트
-│   ├── {Shared}.tsx    # 2+ 페이지 공통은 루트에 평탄 배치
-│   ├── skeletons/      # 도메인 공용 로딩 UI
+├── components/         # 도메인 UI. 컴포넌트당 폴더 1개 (§3)
+│   ├── {Name}/         # PascalCase 폴더. 진입 파일명 = 폴더명, barrel(index) 금지
+│   │   ├── {Name}.tsx      # 컴포넌트 본체
+│   │   ├── {Name}.css.ts   # Vanilla Extract 스타일 (그 컴포넌트 전용)
+│   │   └── {Name}.test.tsx # 단위 테스트 co-located
+│   ├── skeletons/      # 도메인 공용 로딩 UI (각 스켈레톤도 {Name}/ 규칙)
 │   └── {page}/         # 라우트가 여럿이면 페이지별 하위 폴더
-│       └── forms/      # RHF 자식 (FormProvider 하위)
+│       └── forms/      # RHF 자식 (FormProvider 하위). 그 안도 {Name}/ 규칙
 ├── constants/
 │   └── {domain}Keys.ts # queryKey 팩토리
 ├── hooks/
@@ -43,6 +45,15 @@ features/{domain}/
 ### 파일명 케이스
 
 | 폴더 | 케이스 |
-|---|---|
-| `components/*.tsx` | PascalCase |
+| --- | --- |
+| `components/{Name}/` 폴더 + `{Name}.tsx` / `{Name}.css.ts` / `{Name}.test.tsx` | PascalCase |
 | `api/`, `types/`, `utils/`, `schemas/`, `hooks/`, `constants/` | camelCase |
+
+## 3. 테스트 위치 (co-located)
+
+테스트는 별도 `tests/` 디렉토리 없이 **검증 대상 소스 바로 옆**에 둔다 (백엔드 `.spec.ts` 와 동일 모델).
+
+- 컴포넌트: `components/{Name}/{Name}.test.tsx` — 컴포넌트 폴더 안
+- 그 외(api·hooks·lib·utils): 대상 파일과 같은 디렉토리에 `{name}.test.ts`
+- E2E 만 예외 — `frontend/e2e/` (Playwright)
+- `vitest.config.ts` 의 `include` 는 `features/**` · `lib/**` 의 `*.test.{ts,tsx}` 를 스캔

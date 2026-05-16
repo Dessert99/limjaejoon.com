@@ -6,14 +6,14 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { fetchTourIntro } from '@/features/tour/api/tour';
 import { tourKeys } from '@/features/tour/constants/tourkeys';
 
-export const useTourIntroSuspenseQuery = (
+export function useTourIntroSuspenseQuery(
   contentId: string,
   contentTypeId: string
-) => {
+) {
   return useSuspenseQuery({
     queryKey: tourKeys.intro(contentId, contentTypeId),
     queryFn: () => {
       return fetchTourIntro(contentId, contentTypeId);
     },
   });
-};
+}

@@ -9,7 +9,7 @@ import { API_BASE_URL } from '@/lib/base-url';
 import type { TourDetail } from '@/features/tour/types';
 
 // apiClient(axios)는 withCredentials가 브라우저 전용이라 서버에선 쿠키 자동 전송이 안 됨 → 수동 전달
-async function serverFetch<T>(path: string): Promise<T> {
+const serverFetch = async <T>(path: string): Promise<T> => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('access_token');
 
@@ -30,7 +30,7 @@ async function serverFetch<T>(path: string): Promise<T> {
   }
 
   return response.json() as Promise<T>;
-}
+};
 
 // React cache()로 같은 요청 내 중복 호출 dedup — generateMetadata + page.tsx 동시 호출 시 fetch 1회만 (ADR 0004 §4)
 export const fetchTourCommonOnServer = cache(

@@ -16,6 +16,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
-    include: ['tests/**/*.test.{ts,tsx}'],
+    // 테스트는 대상 소스 옆에 co-located — features/ 와 lib/ 만 스캔 (e2e/ 는 Playwright라 제외)
+    include: ['features/**/*.test.{ts,tsx}', 'lib/**/*.test.{ts,tsx}'],
   },
 });

@@ -19,7 +19,7 @@ interface HastRoot {
 const HEADING_TAG = /^h[1-3]$/;
 
 // 입력: 블록들이 한 줄로 나열된 hast root → 출력: 헤딩 단위 <section>으로 그룹핑된 root
-export function rehypeSectionWrap() {
+export const rehypeSectionWrap = () => {
   return (tree: HastRoot) => {
     const grouped: HastNode[] = [];
     // 현재 누적 중인 섹션. 헤딩을 만나기 전엔 아직 없음(null)
@@ -61,4 +61,4 @@ export function rehypeSectionWrap() {
     // 변환 후 모양: [도입부 노드..., <section>..., <section>...]
     tree.children = [...preamble, ...grouped];
   };
-}
+};

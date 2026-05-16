@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { removeWishlist } from '@/features/tour/api/wishlist';
 import { wishlistKeys } from '@/features/tour/constants/wishlistkeys';
 
-export const useRemoveWishlistMutate = () => {
+export function useRemoveWishlistMutate() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -13,4 +13,4 @@ export const useRemoveWishlistMutate = () => {
       return queryClient.invalidateQueries({ queryKey: wishlistKeys.list() });
     },
   });
-};
+}

@@ -5,11 +5,11 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { fetchTourCommon } from '@/features/tour/api/tour';
 import { tourKeys } from '@/features/tour/constants/tourkeys';
 
-export const useTourCommonSuspenseQuery = (contentId: string) => {
+export function useTourCommonSuspenseQuery(contentId: string) {
   return useSuspenseQuery({
     queryKey: tourKeys.common(contentId),
     queryFn: () => {
       return fetchTourCommon(contentId);
     },
   });
-};
+}

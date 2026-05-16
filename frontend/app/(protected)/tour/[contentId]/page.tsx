@@ -4,7 +4,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
-import { TourDetailContent } from '@/features/tour/components/TourDetailContent';
+import { TourDetailContent } from '@/features/tour/components/TourDetailContent/TourDetailContent';
 import { fetchTourCommonOnServer } from '@/features/tour/api/tour.server';
 
 interface PageProps {

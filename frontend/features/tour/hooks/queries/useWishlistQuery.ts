@@ -4,9 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { listWishlist } from '@/features/tour/api/wishlist';
 import { wishlistKeys } from '@/features/tour/constants/wishlistkeys';
 
-export const useWishlistQuery = () => {
+export function useWishlistQuery() {
   return useQuery({
     queryKey: wishlistKeys.list(),
     queryFn: listWishlist,
   });
-};
+}

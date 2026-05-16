@@ -21,12 +21,14 @@ export default function WishlistPage() {
       {/* 로딩 — 첫 fetch 또는 invalidation 후 데이터가 없는 시점 */}
       {wishlistQuery.isPending && (
         <div className={s.skeletonGrid}>
-          {Array.from({ length: 6 }).map((_, i) => (
+          {Array.from({ length: 6 }).map((_, i) => {
+return (
             <div
               key={i}
               className={s.skeletonCard}
             />
-          ))}
+          )
+})}
         </div>
       )}
 
@@ -48,7 +50,8 @@ export default function WishlistPage() {
           </p>
         ) : (
           <div className={s.grid}>
-            {wishlistQuery.data.map((item) => (
+            {wishlistQuery.data.map((item) => {
+return (
               <div
                 key={item.id}
                 className={s.card}>
@@ -75,7 +78,9 @@ export default function WishlistPage() {
                 <div className={s.removeBtn}>
                   <IconToggleButton
                     pressed={false}
-                    onToggle={() => removeMutation.mutate(item.id)}
+                    onToggle={() => {
+return removeMutation.mutate(item.id)
+}}
                     pressedIcon={<HiOutlineXMark aria-hidden='true' />}
                     unpressedIcon={<HiOutlineXMark aria-hidden='true' />}
                     ariaLabel={`${item.title} 위시리스트에서 제거`}
@@ -83,7 +88,8 @@ export default function WishlistPage() {
                   />
                 </div>
               </div>
-            ))}
+            )
+})}
           </div>
         ))}
     </main>
