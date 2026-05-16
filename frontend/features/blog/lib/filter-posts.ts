@@ -10,10 +10,10 @@ interface FilterOptions {
 }
 
 // 입력: 전체 posts + {선택 태그들, 검색어} → 출력: 필터·정렬된 posts
-export function filterPosts(
+export const filterPosts = (
   posts: PostMeta[],
   { tags, query }: FilterOptions
-): PostMeta[] {
+): PostMeta[] => {
   // 1) 태그 AND 필터 — 선택 태그를 "모두" 가진 글만 (TagSidebar의 기존 규칙 유지)
   const byTags =
     tags.length > 0
@@ -58,4 +58,4 @@ export function filterPosts(
         return item.post;
       })
   );
-}
+};

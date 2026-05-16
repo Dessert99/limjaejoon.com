@@ -46,7 +46,9 @@ describe('useAddWishlistMutate', () => {
     });
 
     const { wrapper } = setup();
-    const { result } = renderHook(() => useAddWishlistMutate(), { wrapper });
+    const { result } = renderHook(() => {
+return useAddWishlistMutate()
+}, { wrapper });
 
     result.current.mutate({ contentId: '99999', title: '남산타워' });
 
@@ -74,7 +76,9 @@ describe('useAddWishlistMutate', () => {
     const { queryClient, wrapper } = setup();
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useAddWishlistMutate(), { wrapper });
+    const { result } = renderHook(() => {
+return useAddWishlistMutate()
+}, { wrapper });
     result.current.mutate({ contentId: '99999', title: '남산타워' });
 
     await waitFor(() => {
@@ -90,7 +94,9 @@ describe('useAddWishlistMutate', () => {
     (addWishlist as Mock).mockRejectedValue(new Error('500 Server Error'));
 
     const { wrapper } = setup();
-    const { result } = renderHook(() => useAddWishlistMutate(), { wrapper });
+    const { result } = renderHook(() => {
+return useAddWishlistMutate()
+}, { wrapper });
 
     result.current.mutate({ contentId: '99999', title: '남산타워' });
 

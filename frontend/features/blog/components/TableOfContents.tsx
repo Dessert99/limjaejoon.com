@@ -31,7 +31,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     // 활성 = 기준선을 이미 지나친(위로 올라간) 헤딩 중 가장 마지막 것.
     // "좁은 띠 안에 있을 때만" 방식과 달리, 페이지 끝에 닿으면 마지막 헤딩이
     // 자연히 활성으로 남아 마지막 섹션이 누락되지 않는다.
-    function syncActive() {
+    const syncActive = () => {
       // 클릭 점프로 부드럽게 스크롤되는 동안엔 중간 헤딩으로 깜빡이지 않도록 건너뜀
       if (isClickScrolling.current) {
         return;
@@ -44,7 +44,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
         }
       }
       setActiveSlug(current);
-    }
+    };
 
     // 새로고침·딥링크 진입 시 현재 스크롤 위치 기준으로 1회 계산
     syncActive();
@@ -69,13 +69,13 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     }
   }, [activeSlug]);
 
-  function handleClick(slug: string) {
+  const handleClick = (slug: string) => {
     setActiveSlug(slug);
     isClickScrolling.current = true;
     setTimeout(() => {
       isClickScrolling.current = false;
     }, 800);
-  }
+  };
 
   if (headings.length === 0) {
     return null;

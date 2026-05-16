@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { login } from '@/features/auth/api/login';
 import { authKeys } from '@/features/auth/constants/authkeys';
 
-export const useLoginMutate = () => {
+export function useLoginMutate() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -14,4 +14,4 @@ export const useLoginMutate = () => {
       queryClient.setQueryData(authKeys.me(), data.user);
     },
   });
-};
+}

@@ -39,7 +39,9 @@ describe('useRemoveWishlistMutate', () => {
     (removeWishlist as Mock).mockResolvedValue(undefined);
 
     const { wrapper } = setup();
-    const { result } = renderHook(() => useRemoveWishlistMutate(), { wrapper });
+    const { result } = renderHook(() => {
+return useRemoveWishlistMutate()
+}, { wrapper });
 
     result.current.mutate('w1');
 
@@ -56,7 +58,9 @@ describe('useRemoveWishlistMutate', () => {
     const { queryClient, wrapper } = setup();
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useRemoveWishlistMutate(), { wrapper });
+    const { result } = renderHook(() => {
+return useRemoveWishlistMutate()
+}, { wrapper });
     result.current.mutate('w1');
 
     await waitFor(() => {
@@ -72,7 +76,9 @@ describe('useRemoveWishlistMutate', () => {
     (removeWishlist as Mock).mockRejectedValue(new Error('404 Not Found'));
 
     const { wrapper } = setup();
-    const { result } = renderHook(() => useRemoveWishlistMutate(), { wrapper });
+    const { result } = renderHook(() => {
+return useRemoveWishlistMutate()
+}, { wrapper });
 
     result.current.mutate('w1');
 

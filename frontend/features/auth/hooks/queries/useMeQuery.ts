@@ -5,9 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 import { getMe } from '@/features/auth/api/getMe';
 import { authKeys } from '@/features/auth/constants/authkeys';
 
-export const useMeQuery = () => {
+export function useMeQuery() {
   return useQuery({
     queryKey: authKeys.me(),
     queryFn: getMe,
   });
-};
+}
