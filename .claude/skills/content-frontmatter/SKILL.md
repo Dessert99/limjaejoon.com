@@ -1,6 +1,6 @@
 ---
 name: content-frontmatter
-description: content/blog 또는 content/stories의 MDX 파일에 frontmatter 메타데이터를 자동 생성한다. 사용자가 본문을 작성한 뒤 호출하면, 파일 내용을 분석하고 기존 태그를 확인하여 title, date, description, tags를 작성한다.
+description: content/blog 또는 content/stories의 MDX 파일에 frontmatter 메타데이터를 자동 생성한다. 사용자가 본문을 작성한 뒤 호출하면, 파일 내용을 분석하고 기존 태그를 확인하여 title, date, description, tags를 작성하고, 날짜만 있는 파일명에 영문 slug를 보강한다.
 ---
 
 # Content Frontmatter 생성
@@ -108,6 +108,23 @@ After:
 
 코드 블록이 있는 섹션은 그대로 유지한다.
 
+### Step 4.6: 파일명 slug 보강
+
+블로그/스토리 파일명 규칙은 `YYYY-MM-DD-<slug>.mdx` 이다. 본문 편집(Step 4·4.5)을 모두 마친 **뒤 마지막에** 적용한다 (편집은 기존 경로 기준이므로 rename 을 먼저 하면 안 된다).
+
+1. 현재 파일명을 판별한다.
+   - `YYYY-MM-DD-<slug>.mdx` 처럼 날짜와 slug 가 모두 있으면 **변경하지 않는다**.
+   - `YYYY-MM-DD.mdx` 처럼 날짜만 있고 slug 가 없으면 slug 를 추가한다.
+   - 날짜가 없으면 Step 3 의 date 에서 정한 날짜를 붙여 `YYYY-MM-DD-<slug>.mdx` 형태로 만든다.
+
+2. slug 는 글의 핵심 주제를 영문 kebab-case 로 만든다.
+   - 소문자만, 단어 구분은 `-`. 한글·공백·대문자·특수문자 금지.
+   - title 을 음차하지 말고 주제어로 변환한다. 예: title `'React Hook Form: register vs Controller'` → `rhf-register-vs-controller`, `'TypeScript 제네릭'` → `typescript-generic`.
+
+3. rename 전에 `git status --porcelain <파일>` 로 추적 여부를 확인한다.
+   - untracked(`??`) 면 일반 `mv`, tracked 면 `git mv` 로 변경한다.
+   - 커밋·push 는 하지 않는다 (사용자 몫).
+
 ### Step 5: 결과 보고
 
 생성한 frontmatter를 보여주고 간단히 설명한다:
@@ -117,6 +134,7 @@ After:
 - description: 어떤 키워드를 포함했는지
 - tags: 기존 태그에서 가져온 것과 새로 만든 것을 구분 표시
 - 태그 목록 갱신: 새로 추가된 태그가 있으면 어떤 태그가 목록에 추가됐는지 안내
+- 파일명: slug 를 보강했으면 어떤 이름으로 바꿨는지, 변경이 불필요했으면 그 사유
 
 ### Step 6: 태그 목록 갱신
 
