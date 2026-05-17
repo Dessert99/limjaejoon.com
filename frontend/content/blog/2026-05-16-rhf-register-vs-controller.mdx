@@ -1,0 +1,247 @@
+---
+title: 'React Hook Form: register vs Controller'
+date: '2026-05-16'
+description: 'RHF register는 외부 트리거 시점에만 ref로 값을 꽂는 비제어, Controller는 매 렌더 value prop으로 다시 바인딩하는 제어 방식이라, 비동기로 옵션이 늦게 오는 select에서 기존 값이 표시되지 않는 이유를 제어/비제어 컴포넌트, defaultValues vs values, hydration 타임라인으로 설명한다.'
+tags: ['React Hook Form', 'React', 'hydration', 'TanStack Query', 'DOM']
+---
+
+# RHF register vs Controller: 비동기 옵션 select에서 기존 값이 안 보이는 이유
+
+> RHF의 `register`는 외부 트리거가 있을 때만 ref로 값을 imperative하게 꽂는 비제어 방식이고, `Controller`는 매 렌더 `value` prop을 reconciliation으로 다시 바인딩하는 제어 방식이기에, 비동기 옵션 select·radio·controlled 서드파티는 `Controller`로 묶어야 한다.
+> 
+
+## 1. 문제 상황 한눈에 보기
+
+1. 수정 페이지에 들어가면 TanStack Query가 카테고리 데이터를 가져와 폼에 심는 구조였다.
+2. `type` 필드는 기존 값이 표시됐지만, 같은 `<select>`임에도 `team` 필드만 빈칸으로 떴다.
+3. 코드로 옮기면 다음 한 줄짜리 선택의 차이가 전부였다.
+    
+    ```tsx
+    function EditForm({ category }) {
+      // 값 출처: categoryQuery → "123" (편집 대상의 현재 team id)
+      const form = useForm({ values: category && { team: String(category.team.id) } });
+      // 옵션 출처: teamsQuery → 비동기로 늦게 도착
+      const teams = teamsQuery.data ?? [];
+    
+      return (
+        <>
+          {/* ❌ BUG: register = 비제어, ref로 값을 외부 트리거 시점에만 꽂는다.
+                     그 순간 teams가 []라 <option value="123">이 없음 → 값 버려짐. */}
+          <select {...form.register('team')}>
+            <option value="">선택</option>
+            {teams.map(t => <option key={t.id} value={String(t.id)}>{t.name}</option>)}
+          </select>
+    
+          {/* ✅ FIX: Controller = 제어, value를 "매 렌더" 다시 prop으로 내려준다.
+                     teams 도착 → 리렌더 → 그 렌더에서 value 재바인딩 → 표시됨. */}
+          <Controller name="team" control={form.control} render={({ field }) => (
+            <select {...field}>
+              <option value="">선택</option>
+              {teams.map(t => <option key={t.id} value={String(t.id)}>{t.name}</option>)}
+            </select>
+          )} />
+        </>
+      );
+    }
+    ```
+    
+4. `type`의 옵션은 정적 상수에서 와서 컴포넌트가 그려지는 순간부터 이미 DOM에 존재했다.
+    
+    ```tsx
+    export const CONTENT_CATEGORY_TYPES = ['test', 'book'] as const;
+    ```
+    
+5. 반면 `team`의 옵션은 별도 쿼리에서 비동기로 와서, hydration이 일어나는 시점엔 DOM에 없었다.
+6. 같은 `register`인데 한쪽만 동작하지 않은 이 현상을, 내부 원리까지 따라가는 것이 이 글의 목적이다.
+
+## 2. 배경: 수정 페이지의 hydration이라는 작업
+
+1. 수정 페이지는 본질적으로 기존 데이터를 폼이라는 그릇에 다시 채워 넣는 작업이다.
+
+2. 이렇게 외부에서 받아온 값을 폼 초기값으로 채우는 행위를 보통 hydration이라 부른다.
+
+3. 만약 데이터가 mount 시점에 이미 손에 있다면 hydration은 한순간에 끝난다.
+
+4. 그러나 TanStack Query처럼 데이터를 비동기로 받아오면, 폼이 처음 렌더된 이후에 값이 도착한다.
+
+5. 즉 hydration은 1회성 사건이 아니라, 데이터 도착 순서에 따라 여러 단계로 나뉠 수 있는 과정이 된다.
+
+6. 게다가 본 상황처럼 "값" 쿼리(`categoryQuery`)와 "옵션" 쿼리(`teamsQuery`)가 따로 있으면, 둘이 도착하는 순서까지 변수가 된다.
+
+7. 이 비동기성·다단계성이 본 문제의 출발점이다.
+
+## 3. 제어 컴포넌트와 비제어 컴포넌트
+
+1. React에서 form input은 크게 비제어와 제어 두 가지 방식으로 다룰 수 있다.
+
+2. 비제어(uncontrolled)는 input의 현재 값을 DOM 자기 자신이 가지고 있고, React는 거기에 관여하지 않는 방식이다.
+
+3. 값을 알고 싶으면 `ref`로 DOM을 잡아 `inputRef.current.value`를 읽고, 값을 넣고 싶으면 같은 방식으로 직접 쓴다.
+
+4. 이때 값을 쓰는 동작은 React 렌더링 사이클과 무관한 imperative 호출, 즉 브라우저 DOM API를 직접 호출하는 행위다.
+
+5. 반면 제어(controlled)는 React state가 값의 단일 진실원(source of truth)이고, input의 `value` prop으로 매 렌더마다 그 값을 동기화한다.
+
+6. 동기화 메커니즘 자체도 다른데, 비제어는 DOM API 직접 호출인 반면 제어는 React의 reconciliation을 거쳐 prop 변경이 DOM 속성으로 반영되는 선언적 흐름이다.
+
+7. 사용자가 input을 바꾸면 `onChange`가 발생하고, 그 이벤트에서 state를 업데이트하면 다음 렌더에서 다시 `value` prop으로 반영되는 단방향 흐름이다.
+
+8. 둘의 차이는 시점이다: 비제어는 누가 명시적으로 호출했을 때만 꽂고, 제어는 매 렌더마다 다시 꽂는다.
+
+## 4. RHF의 두 API: register와 Controller
+
+1. React Hook Form은 비제어를 기본 철학으로 설계된 라이브러리이며, 이는 리렌더 최소화를 위한 의도적 선택이다.
+2. `register(name)`은 input에 ref를 달아서 RHF가 직접 DOM의 `value`를 imperative하게 읽고 쓰는 비제어 API다.
+3. 개념적으로 `register`가 input에 꽂는 props는 다음과 같다.
+    
+    ```jsx
+    // register('team')이 반환하는 props의 본질
+    <input
+      ref={(el) => { rhfInternalRefs.team = el; }}  // RHF가 DOM 참조를 잡음
+      name="team"
+      onChange={...}
+      onBlur={...}
+    />
+    // 값을 채울 땐 rhfInternalRefs.team.value = "123" 식으로 직접 쓴다.
+    ```
+    
+4. 그래서 `register`는 값을 ref에 imperative하게 써넣는 호출이며, React의 render 흐름을 타지 않는다.
+5. 반면 `Controller`는 RHF store의 값을 매 렌더마다 prop으로 내려주는 제어 API다.
+6. `Controller`의 `render` prop이 받는 `field` 객체에는 `value`, `onChange`, `onBlur`, `ref`가 들어 있고, 이 `value`는 store가 바뀔 때마다 새로 계산되어 자식 컴포넌트에 declarative하게 전달된다.
+    
+    ```jsx
+    <Controller name="team" control={control} render={({ field }) => (
+      // field.value는 store에서 매 렌더 새로 읽어온 값
+      <select {...field}>...</select>
+    )} />
+    ```
+    
+7. 결과적으로 같은 RHF라도 `register`는 비제어, `Controller`는 제어로 동작 방식이 다르다.
+
+## 5. defaultValues와 values: 초기값을 넣는 두 가지 방법
+
+1. RHF에서 외부 데이터를 초기값으로 넣는 방법은 `defaultValues`와 `values`가 있다.
+
+2. `defaultValues`는 폼이 처음 만들어질 때 한 번만 사용되고, 이후 값이 변경되어도 폼은 다시 hydrate되지 않는다.
+
+3. 즉 `defaultValues`는 mount 시점에 데이터가 이미 손에 있는 경우에 적합하다.
+
+4. `values`는 반응형이라, 값이 바뀌면 RHF가 폼 전체를 새 값으로 재hydrate한다.
+
+5. 단 `values`는 deep equality로 변경 여부를 판단하기 때문에, 동일한 객체 참조를 반복해 넘기거나 매 렌더 새 객체를 만들어 넘기면 재hydrate가 안 되거나 불필요한 hydrate가 반복될 수 있다.
+
+6. TanStack Query처럼 데이터가 늦게 도착하는 경우에는 `values` 또는 수동 `reset()` 호출이 필요하다.
+
+7. 본 상황의 폼은 `useForm({ values: category && {...} })` 형태였고, `category`가 도착하는 시점에 `values`가 바뀌면서 RHF store에 `team: "123"`이 들어갔다.
+
+8. 여기까지는 `register`든 `Controller`든 똑같이 일어나며, store에 값이 들어가는 것 자체는 두 API 모두 동일하다.
+
+## 6. 값을 set하는 것과 값을 표현하는 것은 다르다
+
+1. RHF store에 `team: "123"`이라는 값이 들어가는 것과, 화면의 `<select>`가 "123"에 해당하는 옵션을 보여주는 것은 별개의 사건이다.
+
+2. store는 자바스크립트 객체 안의 한 칸일 뿐이고, 화면 표시는 DOM의 `<select>`가 자기 자식 `<option>` 중 `value`가 일치하는 것을 골라야 일어난다.
+
+3. 만약 일치하는 `<option>`이 그 순간 존재하지 않으면, `<select>`는 그 값을 표현할 방법이 없다.
+
+4. 즉 값이 set되어 있더라도, 표현 가능 여부는 형제 DOM의 존재에 달려 있다.
+
+## 7. select라는 엘리먼트의 특수성
+
+1. text input은 값과 표현이 동일하다: 값이 "abc"면 `<input value="abc">`가 "abc"를 그대로 표시한다.
+2. 표현하는 데 필요한 형제 엘리먼트가 따로 없다는 뜻이다.
+3. 단 겉모습이 input이라도 datepicker처럼 내부적으로 controlled 컴포넌트라면 이 명제는 깨지며, 같은 비동기 hydration 문제를 겪을 수 있다.
+4. 반면 네이티브 `<select>`는 그렇지 않다.
+5. 브라우저 입장에서 `<select>`의 value를 "123"으로 설정한다는 것은, 자식 `<option>` 중 `value="123"`인 것을 `selectedIndex`로 잡는다는 의미다.
+6. 그 옵션이 DOM 트리에 없으면 `selectedIndex`는 placeholder 유무에 따라 결과가 갈린다.
+7. 즉 `<option value="">선택</option>` 같은 placeholder가 있으면 그것으로 fallback되어 "빈 칸"으로 보이지만, placeholder가 없으면 첫 번째 실제 옵션이 자동 선택되어 의도치 않은 값이 잡힌다.
+8. 본 예시에서 단순히 "빈 칸"으로 보였던 것은 placeholder option 덕분에 결과가 부드럽게 가려졌기 때문이다.
+    
+    ```html
+    <!-- 옵션이 없으면 value="123"은 적용될 곳이 없다 -->
+    <select value="123">
+      <option value="">선택</option>
+      <!-- value="123"인 option이 여기 있어야 표시 가능 -->
+    </select>
+    ```
+    
+9. 그래서 select·radio·checkbox 그룹처럼 "값을 가진 형제 엘리먼트"가 필요한 input은, 옵션 DOM이 먼저 마련되어 있어야만 값을 화면에 표현할 수 있다.
+10. 비동기로 옵션이 늦게 오는 상황에서 이 특성이 문제로 작용한다.
+
+## 8. 외부 트리거 hydrate vs 매 렌더 hydrate
+
+1. 이 지점이 `register`와 `Controller`의 동작 차이를 설명한다.
+
+2. `register`는 RHF가 store 값을 ref를 통해 DOM에 imperative하게 꽂는데, 그 호출은 아무 때나 일어나지 않는다.
+
+3. 정확히는 `reset`, `setValue`, `values` prop 변경처럼 RHF 내부에서 명시적으로 "동기화하라"는 트리거가 발생했을 때만 ref를 통해 다시 쓴다.
+
+4. 본 상황에서 그 트리거는 `category` 데이터가 도착해 `values`가 갱신되는 시점이다.
+
+5. 만약 그 시점에 `<option value="123">`이 아직 DOM에 없다면, `select.value = "123"` 시도는 브라우저에 의해 무시되고 `selectedIndex`는 placeholder에 머문다.
+
+6. 그리고 이후 `teamsQuery`가 해소되어 옵션이 추가되어도, 그것은 RHF 입장에서 외부 트리거가 아니라 단순한 부모 리렌더에 불과하다.
+
+7. 즉 RHF는 "값을 다시 꽂으라"는 신호를 받지 않았으므로 ref에 다시 쓰지 않고, 화면은 빈 칸으로 남는다.
+
+8. 반면 `Controller`는 매 렌더마다 `field.value`를 prop으로 내려주고, React의 reconciliation이 매 렌더 `<select>`의 `value` 속성과 자식 `<option>`의 `selected` 상태를 다시 계산한다.
+
+9. 옵션이 없을 때의 첫 시도는 똑같이 실패하지만, `teams`가 도착해 리렌더되면 그 렌더에서 `<option value="123">`이 새로 그려지면서 동시에 `value="123"`도 다시 prop으로 들어간다.
+
+10. 이때 React가 controlled select를 reconcile하며 `value` prop과 일치하는 option을 매칭시키기에, `selectedIndex`가 올바르게 잡힌다.
+
+11. 즉 `Controller`는 옵션이 늦게 와도 그 렌더에서 자동으로 동기화되며, 이는 "외부 트리거를 기다리지 않고 React의 매 렌더 자체가 트리거"이기 때문이다.
+
+## 9. 왜 type은 됐고 team은 안 됐나
+
+1. 같은 `register`를 썼는데 `type`이 표시된 이유는 옵션의 출처에 있다.
+
+2. `type`의 옵션은 정적 상수 배열 `CONTENT_CATEGORY_TYPES`에서 왔다.
+
+3. 이 상수는 컴포넌트가 처음 그려지는 순간 이미 메모리에 존재하므로, `<option value="test">` 등은 폼이 처음 렌더되는 시점에 이미 DOM에 있었다.
+
+4. 그래서 `category` 데이터가 도착해 RHF가 `values` 변경 트리거로 `select.value = "test"`를 시도할 때, 매칭될 옵션이 있어 hydrate가 성공한 것이다.
+
+5. 반대로 `team`의 옵션은 별도 `teamsQuery`에서 비동기로 왔다.
+
+6. `category`가 먼저 도착해 hydrate를 시도하는 시점에는 `teams`가 아직 `[]`였기에, `select.value = "123"` 시도가 매칭될 옵션을 찾지 못해 무시된 것이다.
+
+7. 결국 차이는 라이브러리가 아니라 "RHF의 동기화 트리거가 일어나는 그 순간, 옵션 DOM이 존재하는가"였다.
+
+## 10. 값 흐름 타임라인
+
+1. 전체 시나리오를 시점 순으로 정리하면 다음과 같다.
+    
+    ```
+    [t=0] categoryQuery pending
+          store: {}                     DOM: 폼 미렌더(스켈레톤)
+    
+    [t=1] categoryQuery 해소 → values 갱신 → RHF의 외부 트리거 발생 (hydrate)
+          store: { team: "123" }        DOM: <select>에 옵션 없음 (teams=[])
+          ├ register : ref로 select.value="123" 호출 → 매칭 옵션 X → 무시, ""
+          └ Controller: prop value="123" 전달 → reconcile 매칭 X → 일단 ""
+    
+    [t=2] teamsQuery 해소 → 리렌더 → <option value="123">팀A</option> 생성
+          store: { team: "123" }        DOM: 옵션 존재
+          ├ register : RHF 트리거 없음 → ⭐️ ref 재호출 없음 → 화면 계속 "" ❌
+          └ Controller: 매 렌더가 트리거 → value="123" prop 재바인딩 → reconcile 매칭 성공 → "팀A" 표시 ✅
+    ```
+    
+2. 핵심은 t=1에서는 두 방식 모두 똑같이 실패한다는 점이다.
+3. 차이는 t=2의 리렌더 시점에 "한 번 더 시도해 주느냐"로 갈리고, 그것이 비제어와 제어의 차이다.
+
+## 11. 어떤 상황에서 이 문제가 생기는가
+
+1. 이 문제는 네이티브 select에만 국한되지 않고, 같은 구조를 가진 모든 input에서 발생한다.
+
+2. 비동기로 옵션이 늦게 오는 select가 흔한 사례다.
+
+3. radio 그룹과 checkbox 그룹도 마찬가지로, 각 옵션이 별개 엘리먼트로 존재해야만 선택 상태를 표현할 수 있다.
+
+4. `react-select`, MUI의 `Autocomplete`, 각종 datepicker처럼 내부 state로 값을 표현하는 controlled 서드파티 컴포넌트는 비동기 여부와 무관하게 구조적으로 `register`를 쓸 수 없다.
+
+5. 이들은 ref가 일반 DOM input을 가리키지 않거나, 표시를 자신의 내부 state로만 결정하기 때문이다.
+
+6. 반대로 항상 렌더되는 네이티브 text·number·textarea는 값=표현이라 이 문제에서 자유롭다.
+
+7. 그래서 `register`를 사용할 수 있는 영역은 "값=표현, 항상 렌더되는 네이티브 input"으로 한정된다.
