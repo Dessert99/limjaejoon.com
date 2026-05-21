@@ -3,8 +3,6 @@ import '@/styles/global.css';
 import { darkTheme, lightTheme } from '@/styles/theme.css';
 import type { Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
-// QueryClient + 401 핸들러를 포함한 클라이언트 프로바이더 — 모든 route group이 TanStack Query 컨텍스트를 쓰므로 root에 유지
-import QueryProvider from '@/providers/QueryProvider';
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
@@ -58,10 +56,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>
-        {/* QueryProvider가 전체 트리를 감쌈 — SiteHeader/contentWrapper는 각 route group layout에서 처리 */}
-        <QueryProvider>{children}</QueryProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

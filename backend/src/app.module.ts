@@ -1,15 +1,11 @@
-// 앱 루트 모듈 — 환경 변수·DB 커넥션 같은 인프라를 먼저 구성하고 도메인 모듈(Users/Auth/Tour/Wishlist)을 등록한다
+// 앱 루트 모듈 — 환경 변수·DB 커넥션 같은 인프라를 구성한다
 import * as path from 'path';
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AuthModule } from './auth/auth.module';
 import { envValidationSchema } from './config/env.validation';
-import { TourModule } from './tour/tour.module';
-import { UsersModule } from './users/users.module';
-import { WishlistModule } from './wishlist/wishlist.module';
 
 // @Module — Nest IoC 컨테이너에 어떤 모듈/프로바이더/컨트롤러를 묶을지 선언하는 메타데이터
 @Module({
@@ -43,11 +39,6 @@ import { WishlistModule } from './wishlist/wishlist.module';
         synchronize: false,
       }),
     }),
-    // 도메인 모듈 — Auth는 Users 의존, Tour/Wishlist는 Auth(AccessTokenGuard) 의존
-    UsersModule,
-    AuthModule,
-    TourModule,
-    WishlistModule,
   ],
   // 루트 모듈은 직접 라우팅·서비스를 두지 않고 도메인 모듈에 위임
   controllers: [],

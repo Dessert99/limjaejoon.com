@@ -1,7 +1,4 @@
 // NestJS 앱 부트스트랩 — Express 어댑터 위에 글로벌 미들웨어·파이프·CORS·Swagger를 얹어 4000번 포트에서 listen 시작
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import cookieParser = require('cookie-parser');
-
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -16,9 +13,6 @@ async function bootstrap() {
   // 환경 변수 접근용 — ConfigModule이 등록한 ConfigService를 컨테이너에서 직접 꺼낸다
   const cs = app.get(ConfigService);
 
-  // cookie-parser 미들웨어 — Set-Cookie 헤더로 들어온 raw 문자열을 req.cookies 객체로 파싱, 가드/컨트롤러가 쿠키 기반 인증을 쓰려면 필수
-  app.use(cookieParser());
-
   // 글로벌 ValidationPipe — 모든 컨트롤러의 @Body/@Query DTO에 class-validator 규칙을 자동 적용
   app.useGlobalPipes(
     new ValidationPipe({
@@ -30,7 +24,7 @@ async function bootstrap() {
     })
   );
 
-  // CORS — 프론트(다른 origin)에서 withCredentials:true로 쿠키를 보낼 수 있게 credentials:true 필수
+  // CORS — 프론트(다른 origin)에서 API 호출을 허용
   app.enableCors({
     origin: cs.get<string>('FRONTEND_ORIGIN'),
     credentials: true,
@@ -41,8 +35,6 @@ async function bootstrap() {
     const doc = new DocumentBuilder()
       .setTitle('limjaejoon API')
       .setVersion('0.1')
-      // access_token 쿠키 인증 스킴 — 컨트롤러의 @ApiCookieAuth('access_token')와 이름이 일치해야 Swagger UI에 자물쇠 아이콘이 뜬다
-      .addCookieAuth('access_token')
       .build();
     SwaggerModule.setup(
       'api/docs',
