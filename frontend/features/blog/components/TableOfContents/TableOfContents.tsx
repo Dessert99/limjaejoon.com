@@ -57,18 +57,6 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     };
   }, [headings]);
 
-  // 스크롤 스파이가 정한 activeSlug를 본문 섹션 배경에 그대로 반영.
-  // 관찰자를 새로 두지 않고 이 단일 출처를 공유해 TOC 강조와 섹션 강조가 어긋나지 않게 함.
-  useEffect(() => {
-    // rehype-section-wrap이 만든 <section data-heading-section="slug"> 들을 훑어 활성 1개만 표시
-    const sections = document.querySelectorAll<HTMLElement>(
-      '[data-heading-section]'
-    );
-    for (const el of sections) {
-      el.dataset.active = String(el.dataset.headingSection === activeSlug);
-    }
-  }, [activeSlug]);
-
   const handleClick = (slug: string) => {
     setActiveSlug(slug);
     isClickScrolling.current = true;

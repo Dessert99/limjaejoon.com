@@ -14,7 +14,6 @@ const stripInlineMarkdown = (text: string): string => {
     .replace(/_(.+?)_/g, '$1')
     .replace(/~~(.+?)~~/g, '$1')
     .replace(/`(.+?)`/g, '$1')
-    .replace(/<Tooltip[^>]*>(.+?)<\/Tooltip>/g, '$1')
     .trim();
 };
 

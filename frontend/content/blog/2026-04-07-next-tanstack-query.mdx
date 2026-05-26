@@ -117,7 +117,9 @@ tags: ['Next.js', 'TanStack Query', 'RSC', 'hydration', 'Streaming']
       await queryClient.prefetchQuery({ queryKey: ['posts'], queryFn: getPosts })
     
       return (
-        <<Tooltip text='그 JSON을 HTML 안에 심어 클라이언트로 전송한다.'>HydrationBoundary</Tooltip> state={<ToolTip text='서버의 캐시 상태를 JSON으로 직렬화한다.'>dehydrate(queryClient)</Tooltip>}>
+        // HydrationBoundary: dehydrate된 JSON을 HTML 안에 심어 클라이언트로 전송
+        // dehydrate(queryClient): 서버의 캐시 상태를 JSON으로 직렬화
+        <HydrationBoundary state={dehydrate(queryClient)}>
           <Posts /> {/* 클라이언트 컴포넌트*/}
         </HydrationBoundary>
       )
@@ -130,7 +132,8 @@ tags: ['Next.js', 'TanStack Query', 'RSC', 'hydration', 'Streaming']
     // app/posts/posts.tsx
     'use client'
     export default function Posts() {
-      const { data } = useQuery({ <Tooltip text='서버의 key와 동일해야 캐시가 연결됨'>queryKey: ['posts']</Tooltip>, queryFn: getPosts })
+      // queryKey는 서버의 key와 동일해야 캐시가 연결된다
+      const { data } = useQuery({ queryKey: ['posts'], queryFn: getPosts })
       // ...
     }
     ```
@@ -170,7 +173,7 @@ tags: ['Next.js', 'TanStack Query', 'RSC', 'hydration', 'Streaming']
     
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-         <Tooltip text='fetchQuery로 가져온 데이터를 서버에서 직접 렌더링한 경우'> <div>게시글 수: {posts.length}</div> </Tooltip>{/* 서버에서 직접 렌더링 */}
+          <div>게시글 수: {posts.length}</div> {/* fetchQuery로 가져온 데이터를 서버에서 직접 렌더링한 경우 */}
           <Posts /> {/* 내부에서 useQuery로 같은 데이터 사용 */}
         </HydrationBoundary>
       )

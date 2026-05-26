@@ -9,7 +9,8 @@ export const nav = style({
       display: 'block',
       position: 'sticky',
       top: '10rem',
-      maxHeight: 'calc(100vh - 6rem)',
+      // top(10rem) + 하단 여유(1rem) 만큼 빼야 TOC 박스가 뷰포트 안에 완전히 들어와 짤리지 않음
+      maxHeight: 'calc(100vh - 11rem)',
       overflowY: 'auto',
       scrollbarWidth: 'thin',
       borderLeft: `1px solid ${vars.color.lineSoft}`,

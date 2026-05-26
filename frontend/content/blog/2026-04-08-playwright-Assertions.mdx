@@ -5,7 +5,7 @@ description: 'Playwright의 expect() 기반 Assertion 종류와 사용법을 정
 tags: ['Playwright', 'testing', 'E2E']
 ---
 
-## <Tooltip text="Playwright의 Assertion은 자동 재시도 여부를 중심으로 설계되어 있으며, soft assertion, poll, toPass, 커스텀 매처까지 조합하면 비동기 웹 환경에서도 안정적이고 유연한 테스트를 작성할 수 있다.">무엇인가?</Tooltip>
+## 무엇인가?
 
 1. 테스트에서 "이 값이 이래야 한다"는 기대를 코드로 표현하는 것을 Assertion이라고 한다.
 
@@ -16,6 +16,8 @@ tags: ['Playwright', 'testing', 'E2E']
 4. 그런데 웹 페이지는 데이터를 비동기로 보여주는 경우가 많아, 단순한 즉시 검사만으로는 타이밍 문제가 생길 수 있다.
 
 5. 이 문제를 해결하기 위해 Playwright는 조건이 충족될 때까지 자동으로 재시도하는 비동기 매처를 별도로 제공한다.
+
+6. 정리하면, Playwright의 Assertion은 자동 재시도 여부를 중심으로 설계되어 있으며, soft assertion, poll, toPass, 커스텀 매처까지 조합하면 비동기 웹 환경에서도 안정적이고 유연한 테스트를 작성할 수 있다.
 
 ## 자동 재시도로 테스트하고 싶을 때: Auto-retrying Assertions
 
