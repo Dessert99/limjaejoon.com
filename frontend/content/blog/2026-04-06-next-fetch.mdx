@@ -13,7 +13,7 @@ tags: ['Next.js', '캐싱', 'fetch', 'revalidate']
 
 3. 응답은 서버 측 Data Cache에 저장되며, 이 캐시는 요청 간, 배포 간에도 영구적으로 유지된다.
 
-4. Data Cache는 단순한 메모리 캐시가 아니라, <Tooltip text='프로그램이 실행되는 동안만 유지되는 메모리(RAM)와 달리, 파일 시스템은 서버의 디스크(SSD/HDD)에 데이터를 저장하는 곳'>파일 시스템 수준</Tooltip>에서 지속되는 영구 저장소다.
+4. Data Cache는 단순한 메모리 캐시가 아니라, 파일 시스템 수준(프로그램이 실행되는 동안만 유지되는 메모리(RAM)와 달리, 파일 시스템은 서버의 디스크(SSD/HDD)에 데이터를 저장하는 곳)에서 지속되는 영구 저장소다.
 
 5. 여기서 중요한 점은 “`fetch` 확장 기능과 `Data Cache` 관련 내용은 오직 서버 사이드에 해당된다는 것”이다.
 
@@ -53,11 +53,11 @@ tags: ['Next.js', '캐싱', 'fetch', 'revalidate']
 
 ## fetch 캐싱 방법
 
-<Mention href='https://nextjs.org/docs/app/api-reference/functions/fetch#optionscache'>options.cache</Mention>
+[options.cache](https://nextjs.org/docs/app/api-reference/functions/fetch#optionscache)
 
 1. 여기서부터는 서버 컴포넌트, 서버 환경을 가정한다.
 2. `fetch` 요청에 `cache` 옵션을 붙여 캐싱 동작을 제어한다.
-3. <Tooltip text='Next.js 14 버전까지 해당된다. Nest.js 15 부터는 no-store가 기본값이다.'>기본값은 `'force-cache'`로</Tooltip>, 캐시가 존재하면 그것을 반환하고 없으면 새로 요청 후 저장한다.
+3. 기본값은 `'force-cache'`로(Next.js 14까지 해당, Next.js 15부터는 `'no-store'`가 기본값), 캐시가 존재하면 그것을 반환하고 없으면 새로 요청 후 저장한다.
     
     ```tsx
     // force-cache: 캐시 우선 전략 (기본값)
@@ -83,7 +83,7 @@ tags: ['Next.js', '캐싱', 'fetch', 'revalidate']
 
 ## 재검증1) 시간 기반
 
-<Mention href='https://nextjs.org/docs/app/api-reference/functions/fetch#optionsnextrevalidate'>options.next.revalidate</Mention>
+[options.next.revalidate](https://nextjs.org/docs/app/api-reference/functions/fetch#optionsnextrevalidate)
 
 1. `next.revalidate` 옵션은 일정 시간(초) 이후 캐시를 자동으로 재검증하도록 예약한다.
 2. 이 방식은 stale-while-revalidate 전략을 따른다.
