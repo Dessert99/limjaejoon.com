@@ -13,10 +13,7 @@
     "build:be": "npm run build -w backend",
     "lint": "npm run lint --workspaces --if-present",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "test:fe": "npm run test -w frontend",
-    "test:fe:watch": "npm run test:watch -w frontend",
-    "test:be": "npm run test -w backend"
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "prettier": "^3.8.1"
