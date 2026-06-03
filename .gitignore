@@ -32,8 +32,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-AGENTS.md
-
 # Playwright
 test-results/
 playwright-report/

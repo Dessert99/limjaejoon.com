@@ -2,6 +2,17 @@
 
 개인 포트폴리오 & 기술 블로그 + API 서버. npm workspaces 모노레포.
 
+## CLAUDE.md 컨벤션
+- frontend/
+    - @docs/conventions/api-convention.md
+    - @docs/conventions/folder-structure.md
+    - @docs/conventions/nextjs-conventions.md
+    - @docs/conventions/rhf-convention.md
+    - @docs/conventions/zod-convention.md
+- backend/
+    - @docs/conventions/nestjs-conventions.md
+
+
 ## 개발 명령어
 
 ```sh
