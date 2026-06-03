@@ -1,10 +1,10 @@
-import { bp } from '@/styles/breakpoints';
-import { vars } from '@/styles/theme.css';
+import { bp } from '@/shared/styles/breakpoints';
+import { vars } from '@/shared/styles/theme.css';
 import {
   applyHeadingAnchorStyles,
   contentLayout,
   tocAside,
-} from '@/styles/utils.css';
+} from '@/shared/styles/utils.css';
 import { globalStyle, style } from '@vanilla-extract/css';
 
 export { contentLayout, tocAside };

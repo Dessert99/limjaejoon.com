@@ -1,7 +1,7 @@
-import { BlogList } from '@/features/blog/components/BlogList/BlogList';
-import { SearchBox } from '@/features/blog/components/SearchBox/SearchBox';
-import { TagSidebar } from '@/features/blog/components/TagSidebar/TagSidebar';
-import { BLOG_TAGS } from '@/features/blog/constants/tags';
+import { BlogList } from '@/features/blog/ui/BlogList/BlogList';
+import { SearchBox } from '@/features/blog/ui/SearchBox/SearchBox';
+import { TagSidebar } from '@/features/blog/ui/TagSidebar/TagSidebar';
+import { BLOG_TAGS } from '@/features/blog/model/tags';
 import { getPostList } from '@/features/blog/lib/posts';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';

@@ -1,5 +1,5 @@
-import { bp } from '@/styles/breakpoints';
-import { vars } from '@/styles/theme.css';
+import { bp } from '@/shared/styles/breakpoints';
+import { vars } from '@/shared/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
 export const main = style({

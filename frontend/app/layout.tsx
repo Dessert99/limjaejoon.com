@@ -1,6 +1,6 @@
-import { SITE_URL } from '@/features/shared/constants';
-import '@/styles/global.css';
-import { darkTheme, lightTheme } from '@/styles/theme.css';
+import { SITE_URL } from '@/shared/config/site';
+import '@/shared/styles/global.css';
+import { darkTheme, lightTheme } from '@/shared/styles/theme.css';
 import type { Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
 

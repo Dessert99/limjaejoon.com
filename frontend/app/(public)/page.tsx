@@ -1,10 +1,10 @@
-import { HeroSection } from '@/features/about/components/HeroSection/HeroSection';
-import { ProjectsSection } from '@/features/about/components/ProjectsSection/ProjectsSection';
-import { SkillsSection } from '@/features/about/components/SkillsSection/SkillsSection';
-import { Timeline } from '@/features/about/components/Timeline/Timeline';
-import { activities } from '@/features/about/data/activities';
-import { education } from '@/features/about/data/education';
-import { experience } from '@/features/about/data/experience';
+import { HeroSection } from '@/features/about/ui/HeroSection/HeroSection';
+import { ProjectsSection } from '@/features/about/ui/ProjectsSection/ProjectsSection';
+import { SkillsSection } from '@/features/about/ui/SkillsSection/SkillsSection';
+import { Timeline } from '@/features/about/ui/Timeline/Timeline';
+import { activities } from '@/features/about/model/activities';
+import { education } from '@/features/about/model/education';
+import { experience } from '@/features/about/model/experience';
 import * as s from './page.css';
 
 export default function Home() {

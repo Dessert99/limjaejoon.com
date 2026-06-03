@@ -1,4 +1,4 @@
-import type { PostMeta } from '@/features/blog/types';
+import type { PostMeta } from '@/features/blog/model/types';
 
 // 블로그 결합 필터의 단일 진실원.
 // 호출처: BlogList가 URL의 ?tags=·?q= 를 읽어 호출 → 화면에 뿌릴 목록을 반환.

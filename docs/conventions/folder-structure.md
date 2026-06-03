@@ -1,7 +1,6 @@
 # 폴더·파일 구조 표준
 
-이 프로젝트의 프론트엔드는 FSD(Feature-Sliced Design)를 연습 기준으로 삼는다.
-문서는 위치 / 명명 / 분할의 기본값을 정하지만, 단순한 작업을 위해 파일을 과하게 쪼개지 않는다.
+이 프로젝트의 프론트엔드는 FSD(Feature-Sliced Design)를 연습 기준으로 삼는다. 문서는 위치 / 명명 / 분할의 기본값을 정하지만, 단순한 작업을 위해 파일을 과하게 쪼개지 않는다.
 
 ## 1. FSD 레이어
 
@@ -15,6 +14,7 @@ frontend/
     ├── ui/             # Button, Input 같은 디자인 프리미티브
     ├── api/            # apiClient, 공용 API 타입/헬퍼
     ├── lib/            # 공용 유틸
+    ├── styles/         # 전역 테마·토큰·breakpoint 등 도메인 무관 스타일
     ├── config/         # 전역 설정
     └── types/          # 전역 공용 타입
 ```
@@ -27,9 +27,7 @@ frontend/
 - `entities` -> `shared`
 - `shared` -> 상위 레이어 참조 금지
 
-같은 레이어 안의 슬라이스끼리는 서로 import 하지 않는다 (slice 격리).
-`features/a` 가 `features/b` 를, `entities/x` 가 `entities/y` 를 직접 참조 금지.
-공유가 필요하면 공통 부분을 아래 레이어 (`entities` / `shared`) 로 내린다.
+같은 레이어 안의 슬라이스끼리는 서로 import 하지 않는다 (slice 격리). `features/a` 가 `features/b` 를, `entities/x` 가 `entities/y` 를 직접 참조 금지. 공유가 필요하면 공통 부분을 아래 레이어 (`entities` / `shared`) 로 내린다.
 
 ## 2. Slice 내부 구조
 
@@ -57,11 +55,11 @@ features/{slice}/
 
 ## 4. 파일명 케이스
 
-| 대상 | 케이스 |
-| --- | --- |
-| React 컴포넌트 | PascalCase |
-| API, hook, util, schema, config | camelCase |
-| 테스트 파일 | 대상 파일명 + `.test.ts(x)` |
+| 대상                            | 케이스                      |
+| ------------------------------- | --------------------------- |
+| React 컴포넌트                  | PascalCase                  |
+| API, hook, util, schema, config | camelCase                   |
+| 테스트 파일                     | 대상 파일명 + `.test.ts(x)` |
 
 ## 5. 테스트 위치
 

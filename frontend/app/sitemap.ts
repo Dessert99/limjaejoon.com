@@ -1,5 +1,5 @@
 import { getPostList } from '@/features/blog/lib/posts';
-import { SITE_URL } from '@/features/shared/constants';
+import { SITE_URL } from '@/shared/config/site';
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {

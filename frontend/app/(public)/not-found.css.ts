@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
-import { vars } from '@/styles/theme.css';
-import { surfaceCard } from '@/styles/utils.css';
-import { bp } from '@/styles/breakpoints';
+import { vars } from '@/shared/styles/theme.css';
+import { surfaceCard } from '@/shared/styles/utils.css';
+import { bp } from '@/shared/styles/breakpoints';
 
 export const main = style({
   margin: '0 auto',
