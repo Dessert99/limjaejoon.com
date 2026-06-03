@@ -1,26 +1,29 @@
 ---
 name: limjaejoon-blog-design
-description: Use this skill to generate well-branded interfaces and assets for 임재준's personal tech blog (Korean, Next.js, Mantine-teal accent on neutral grayscale, dark-first), either for production or throwaway prototypes/mocks. Contains design tokens (colors, type, spacing, radii, shadows), the avatar logo, a blog UI kit with reusable React components, and written guidelines for tone, iconography, and layout.
+description: Use this skill to generate well-branded interfaces and assets for 임재준's personal tech blog (limjaejoon.com) — a Korean blog/portfolio styled in Material Design 3 with FIVE seasonal themes (봄 spring / 여름 summer / 가을 autumn / 겨울 winter / 밤 night = dark). Contains MD3 design tokens (color roles, type scale, shape, elevation, state layers) as both plain CSS and Vanilla Extract patterns, the avatar logo, a Material component library, and a click-thru blog UI kit. Use for production code or throwaway prototypes/mocks.
 user-invocable: true
 ---
 
-Read the `README.md` file within this skill, then explore the other available files:
+Read `README.md` first, then explore:
 
-- `colors_and_type.css` — drop-in CSS variables (dark default, `.light` class flips to light theme). Source of truth: `frontend/styles/theme.css.ts`.
-- `assets/logo.png` — circular avatar logo (header renders at 48px).
-- `preview/*.html` — small cards for every token, type specimen, and component state. Read any you need as examples.
-- `ui_kits/blog/` — `index.html` + JSX components that recreate home / blog index / post / search screens. Copy the relevant component + `kit.css` snippets rather than rewriting them.
+- `colors_and_type.css` — MD3 sys tokens + the 5 season color classes. `:root` defaults to 봄(spring); apply `.theme-spring` / `.theme-summer` / `.theme-autumn` / `.theme-winter` / `.theme-night` to a root element to reskin. Drop-in for any static HTML.
+- `material-components.css` — plain-CSS Material Design 3 components (buttons, FAB, cards, chips, fields, selection controls, app bar, nav bar/rail, lists, menu, dialog, snackbar, segmented switcher, state layers). Compose with the token classes.
+- `material/*.css.ts` — the Vanilla Extract port (createGlobalTheme + createThemeContract + 5 createTheme + sprinkles + recipes). Use these patterns when writing production code for the real Next.js + vanilla-extract codebase.
+- `assets/logo.png` — circular avatar (app bar = 40px).
+- `preview/*.html` — one small card per token/component. Read any as a worked example.
+- `ui_kits/blog/` — `index.html` + JSX recreating the blog with a working 5-season switcher.
 
-When creating visual artifacts (slides, throwaway prototypes, one-off mocks), copy the needed assets and CSS out of this skill and produce static HTML files for the user to view. When working on production code, read the rules, copy assets, and become an expert in designing with this brand — match the tone, copy style, and visual motifs described in README.
+When making visual artifacts (slides, prototypes, mocks): copy `colors_and_type.css` + `material-components.css` + needed assets out, write static HTML, pick a season by setting the root class. When working on production code: follow the `material/` Vanilla Extract patterns.
 
 **Essential rules to honor**:
 
-- Korean-first. Body text in Pretendard Variable; code in JetBrains Mono. Blog prose body is 18px / line-height 1.8.
-- Exactly one accent color (Mantine teal: `#12b886` dark / `#0ca678` light). Everything else is neutral grayscale. Do not introduce new hues.
-- Hover = `accent-strong` color + `accent-soft` background + `accent-strong` border, as a set.
-- Borders are always 1px. Shadows have only two levels (`card-sm`, `card-md`) + a subtle tooltip glow.
-- Never use emoji, decorative gradients, or illustrated backgrounds. Backgrounds are solid color. Header is the one surface with backdrop-blur.
-- Copy voice for UI is `-습니다` (하십시오체); blog body is `-다` (평서형). No exclamation marks. Short, numbered, logical sentences in posts.
-- Icons come from Heroicons v2 outline (UI) and Simple Icons (brand logos). Do not hand-draw decorative SVGs.
+- **Material Design 3.** Reference colors ONLY via `--md-sys-color-*` roles — never raw hex in components. The active season class swaps the values.
+- **Five seasons, not dark/light.** 봄·여름·가을·겨울 are light schemes; 밤 is the dark scheme. Switch with one root class; never hardcode a single palette.
+- Type = Roboto (Latin) + Pretendard (Korean) + Roboto Mono (code), via the MD3 type scale (`--md-sys-typescale-*` / `.headline-medium` etc.).
+- Shape: buttons/chips = `corner-full`, cards = `corner-medium`, dialogs = `corner-extra-large`.
+- Interactive surfaces get a `.state` layer (hover .08 / focus .12 / pressed .12) — tone overlay, not a color swap.
+- Elevation uses surface-container tone + shadow together (level 0–5). Backgrounds are solid; no decorative gradients.
+- Icons: Material Symbols shape, inline SVG, `currentColor`. No emoji, no decorative unicode.
+- Korean-first copy. UI = `~합니다`(하십시오체), blog body = `~다`(평서형). No exclamation marks. Menu label is "지식 모음".
 
-If the user invokes this skill without other guidance, ask what they want to build or design, ask a few clarifying questions (surface, audience, dark vs light, fidelity), and act as an expert designer who outputs either HTML artifacts or production code, depending on the need.
+If invoked without guidance, ask what to build, ask a few clarifying questions (surface, which season(s), fidelity), and act as an expert MD3 designer who outputs HTML artifacts or production-ready Vanilla Extract code.

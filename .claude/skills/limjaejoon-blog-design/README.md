@@ -1,207 +1,186 @@
-# 임재준 Blog — Design System
+# 임재준 Blog — Material Design 3 × 5계절 디자인 시스템
 
-개인 기술 블로그를 위한 디자인 시스템입니다. Next.js 16 + vanilla-extract 기반의 실제 코드베이스에서 토큰·스타일을 그대로 추출하여, 다른 화면이나 보조 자료를 만들 때 브랜드 일관성을 유지할 수 있도록 구성했습니다.
+개인 기술 블로그 **limjaejoon.com**(개인 포트폴리오 + "지식 모음" 아카이브)을 위한
+디자인 시스템입니다. **Google Material Design 3 (Material You)** 를 기반으로,
+다크/라이트 모드 대신 **다섯 개의 계절 테마 — 봄·여름·가을·겨울·밤** 으로 색을 운용합니다.
+(밤 = 사실상 다크 모드.) 구현은 실제 코드베이스 스택인 **Vanilla Extract** 패턴을
+연습할 수 있도록 레이어드 토큰 구조로 정리했습니다.
 
-## 이 블로그는 무엇인가요?
+> **소스 저장소: <https://github.com/Dessert99/limjaejoon.com>** (Next.js 16 · React 19 · vanilla-extract · NestJS 모노레포)
+> 블로그의 콘텐츠 구조·라우트·카피는 이 저장소에서 가져왔습니다. 더 정확한 화면 재현이
+> 필요하면 저장소를 직접 탐색하세요. (단, **비주얼 방향은 기존 코드의 teal 모노톤을 버리고
+> Material Design 3로 새로 설계**했습니다 — 사용자 요청.)
 
-- **이름 / 주인**: 임재준 (Lim Jae-joon). 사이트 헤더는 "임재준 | 프론트엔드 개발자".
-- **성격**: 개인 기술 블로그 겸 포트폴리오. 공부한 내용을 정리·공유하는 "지식 모음(knowledge archive)" 컨셉.
-- **홈(`/`)**: 자기소개 + 경력 / 활동 / 프로젝트 / 기술 / 학력 타임라인.
-- **블로그(`/blog`)**: 태그 필터가 달린 포스트 리스트. 현재 Git, Next.js, Playwright, DNS, zshrc 등 개발 기본기 노트 17편.
-- **포스트(`/blog/[slug]`)**: MDX 본문 + 자동 생성 목차(TOC) + `<Tooltip>` / `<Mention>` 인라인 컴포넌트.
-- **검색(`/search`)**: 제목·설명·태그 기반 클라이언트 사이드 필터.
-- **제품 수**: 1개 (블로그 웹사이트). 모바일 앱은 없음.
-- **언어**: 100% 한국어. 코드 안 식별자는 영어.
+## 무엇을 만드나
 
-## 소스
-
-- **Codebase**: `frontend/` (이 프로젝트에는 **복사되지 않음** — 사용자 로컬에 마운트된 상태로 읽기 전용 접근).
-  - 주요 토큰: `frontend/styles/theme.css.ts`
-  - 전역 스타일: `frontend/styles/global.css.ts`, `frontend/styles/utils.css.ts`
-  - 브레이크포인트: `frontend/styles/breakpoints.ts` (md 768 / lg 1024 / xl 1280)
-  - 헤더: `frontend/features/navigation/components/SiteHeader.*`
-  - 홈 위젯: `frontend/features/about/components/*`
-  - 블로그 위젯: `frontend/features/blog/components/*`
-  - 프로필 데이터: `frontend/features/about/data/profile.ts`
-- **Figma / 디자인 파일**: 없음. 모든 디자인 근거는 코드.
-- **로고 / 이미지**: `frontend/public/images/logo.png` (복사본이 `assets/logo.png`).
+- **제품**: 개인 기술 블로그 1종(웹). 홈(자기소개·프로젝트·기술), 지식 모음(태그 필터 글 목록),
+  포스트(본문), 검색, 소개.
+- **주인**: 임재준 (Lim Jae-joon) · 프론트엔드 개발자.
+- **언어**: 100% 한국어 UI. 코드 식별자는 영어.
 
 ---
 
-## CONTENT FUNDAMENTALS
+## 디자인 결정 (요청 반영)
 
-**톤 — 정돈된 학습 노트.** 가볍거나 농담조가 아님. 그렇다고 격식 높은 비즈니스 문서도 아닌, "나를 위해 정리하면서 같은 공부를 하는 사람에게 공유한다"는 톤. 단정적이고 설명적인 평서문이 많음.
-
-### 인칭 / 어미
-
-- **인칭 주어는 거의 생략.** "입니다", "~한다", "지향합니다" 같이 주어 없는 문장이 기본.
-- **포스트 본문**: "~한다", "~다", "~이다" (해라체 / 평서형). 예: *"macOS와 리눅스에서 기본으로 많이 쓰이는 셸이 바로 `zsh`이다."*
-- **홈페이지 / UI 카피**: "~합니다", "~입니다" (하십시오체). 예: *"프로젝트를 단순히 기능 구현에 그치지 않고..."*, *"검색어를 입력해 주세요."*
-- **"I vs you"**: 둘 다 드묾. 블로그 포스트는 문제 중심 서술. 홈은 "나"를 주어로 쓰지만 대체로 생략.
-
-### 스타일 규칙
-
-- **문장은 짧고 논리적으로 끊어 번호 매김.** 포스트 대부분이 `1. ... 2. ... 3. ...` 구조. 한 문장 = 한 아이디어.
-- **정의 → 맥락 → 예시** 순서. "X는 Y다. 그 이유는 Z다. 예를 들어..."로 흐름.
-- **기술 용어는 영문 + backtick**. 예: `.zshrc`, `HEAD`, `useSyncExternalStore`. 한글 풀이는 뒤나 앞에 자연스럽게.
-- **강조**는 `**볼드**`로 핵심 단어만. 예: *"근거 없는 코드를 **지양**하며 ... 합리적인 개발을 **지향**합니다."* 대조 쌍을 강조하는 버릇이 있음.
-- **느낌표 / 이모지 / 밈 없음.** 전무.
-
-### 마이크로카피 (UI) 예시
-
-| 위치 | 원문 |
+| 항목 | 결정 |
 |---|---|
-| 검색 placeholder | `제목, 설명, 태그로 검색...` |
-| 검색 empty (초기) | `검색어를 입력해 주세요.` |
-| 검색 empty (결과 없음) | `검색 결과가 없습니다.` |
-| 블로그 empty | `해당 태그의 포스트가 없습니다.` |
-| 블로그 페이지 설명 | `개념 정리와 레퍼런스를 모아두는 공간입니다.` |
-| 태그 사이드바 라벨 | `태그` / `전체` |
-| 테마 토글 aria | `라이트 모드로 전환` / `다크 모드로 전환` |
-| 네비 | `지식 모음` (← "Blog"/"Posts" 대신 쓰는 고유 네이밍) |
-| 섹션 헤딩 | `경력`, `활동`, `프로젝트`, `보유 기술`, `학력`, `목차` |
+| 디자인 언어 | **Material Design 3 (Material You)** — 톤 팔레트, color roles, state layer, shape scale, elevation tone |
+| 테마 | 다크/라이트 ❌ → **5계절**: 봄·여름·가을·겨울·**밤**(다크) |
+| 색 | 각 계절을 시드 색으로 반영 (봄=벚꽃 핑크, 여름=청량 시안, 가을=호박 오렌지, 겨울=쿨 블루, 밤=인디고 다크) |
+| 구현 패턴 | **Vanilla Extract** — `createGlobalTheme` + `createThemeContract` + `createTheme` ×5 + `sprinkles` + `recipes` (중급~대규모 대비) |
+| 타이포 | **Roboto**(라틴) + **Pretendard**(한글) + Roboto Mono(코드) |
+| 전환 UX | **세그먼트 스위처** (봄·여름·가을·겨울·밤 칩) |
 
-### 이름 짓기의 버릇
+---
 
-- 메뉴는 영어 일반 명사("Blog", "Posts") 대신 **한국어 고유 표현**("지식 모음")을 씀 → 개인 아카이브 느낌을 강화.
-- 섹션 헤딩은 **2글자 단어** 선호(경력 / 활동 / 학력 / 목차).
-- 설명문에서 "**기여하고 있습니다**", "**학습했습니다**", "**고민하며**" 같은 진행/과정형 동사를 자주 사용 → 결과보다 **과정 중심**의 자기서술.
+## 이식 가이드 — Claude Code 스킬로 쓰기
+
+> **이 스킬은 UI를 "자동 교체"하지 않습니다.** 에이전트가 읽고 따라 만드는 **참고 자료**입니다.
+> 즉, 스킬을 부르면 Claude가 이 토큰·컴포넌트·규칙을 근거로 **새 화면을 만들거나 기존 코드를
+> 이 스타일로 고쳐줍니다.** 살아있는 사이트가 한 번에 바뀌는 마법이 아니라, "이 브랜드를 아는
+> 동료 디자이너"를 옆에 두는 것에 가깝습니다.
+
+### 설치 (Agent Skill)
+
+1. 이 폴더(`limjaejoon-blog-design/`)를 통째로 프로젝트의 `.claude/skills/` 아래에 둡니다.
+   (또는 개인 스킬로 `~/.claude/skills/`.)
+2. `SKILL.md`의 frontmatter(`name`, `description`)가 진입점입니다 — Claude가 필요할 때 자동 인식합니다.
+3. 대화에서 "이 스킬로 …을 만들어줘"라고 하거나, 디자인 작업 시 Claude가 알아서 불러옵니다.
+
+### 실제 코드베이스(Next.js + vanilla-extract)로 옮기는 단계
+
+이 스킬은 당신의 실제 스택에 맞춰 **거의 드롭인**입니다:
+
+1. `material/tokens.css.ts` · `theme-contract.css.ts` · `themes/*` 를 `frontend/styles/` 로 복사.
+2. 기존 `theme.css.ts`(teal 단일 테마)를 **걷어내고**, 루트 레이아웃에서 활성 계절 클래스를 부여:
+   `document.documentElement.className = seasonThemes['night']`.
+3. 컴포넌트가 참조하던 옛 토큰(`vars.color.accentStrong` 등)을 **MD3 역할**(`color.primary`,
+   `color.surfaceContainer` …)로 치환. ← 여기가 유일한 "수작업" 단계입니다(컴포넌트 수만큼).
+4. 신규 컴포넌트는 `sprinkles` / `recipes` 패턴으로 작성. `material-components.css`·`ui_kits/blog`가
+   각 컴포넌트의 정답 모양입니다.
+5. 계절 스위처 UI는 `ui_kits/blog`의 헤더 팝오버를 그대로 참고.
+
+> 요약: **토큰·테마 교체는 거의 자동, 컴포넌트의 토큰 참조 치환은 반자동(에이전트가 대신 해줄 수 있음).**
+> "UI 통째로 바꿔치기"를 원하면, 스킬을 켠 상태에서 "기존 컴포넌트를 이 디자인 시스템으로 마이그레이션해줘"
+> 라고 시키면 됩니다 — 한 번에 다 바뀌는 게 아니라, 파일을 하나씩 정확히 고쳐 나갑니다.
 
 ---
 
 ## VISUAL FOUNDATIONS
 
-### 큰 그림 — "디지털 노트"
+### 큰 그림 — "계절이 바뀌는 Material 블로그"
 
-전체 분위기는 **깔끔한 모노톤 위에 단 하나의 teal 액센트**. 종이 느낌도, 그라디언트 과시도 없음. "잘 정리된 마크다운 파일"을 브라우저로 번역한 미감. 가독성이 최우선이고 장식은 최소.
+순수 MD3 표면 위에서 **단 하나의 루트 클래스**(`.theme-봄/…/.theme-밤`)를 바꾸면 전체 UI가
+그 계절의 팔레트로 리스킨됩니다. 구조(톤·shape·elevation·타입)는 5계절이 공유하고, **색만**
+계절별로 회전합니다. 이것이 MD3 color roles의 핵심 — 간접 참조(indirection)입니다.
 
-### 컬러
+### 컬러 — MD3 color roles, oklch로 표현
 
-- **중립 그레이스케일 + teal 액센트 1개.**
-- 다크(기본): `#121212` 페이지, `#1a1a1a` 엘레베이티드, `#2a2a2a` soft. 텍스트 `#f5f5f5` / `#d4d4d8` / `#a1a1aa` 3단. 라인 `#303030` / `#4a4a4a`.
-- 라이트: `#ffffff` 페이지, `#f8f9fa` 엘레베이티드, `#f1f3f5` soft. 텍스트 `#1a1a1a` / `#495057` / `#868e96`. 라인 `#e9ecef` / `#ced4da`.
-- **액센트**: Mantine teal — 다크에서 `#12b886`, 라이트에서 `#0ca678`. `accent-soft`는 15% / 10% 알파. 링크, 활성 상태, 태그, 타임라인 마커, 포커스 링 전부 이것만 사용.
-- **그 외 색 없음.** 경고/에러/성공 semantic color도 정의되지 않음 (블로그이기 때문).
+- 모든 색은 `--md-sys-color-*` **역할(role)** 로만 참조합니다. 절대 raw hex를 컴포넌트에 직접 쓰지 않습니다.
+- 역할: `primary` / `on-primary` / `primary-container` / `on-primary-container`, 동일 패턴의
+  `secondary` · `tertiary` · `error`, 그리고 surface 계열(`surface`, `surface-container-lowest…highest`,
+  `surface-variant`, `on-surface`, `on-surface-variant`), `outline` / `outline-variant`,
+  `inverse-surface` / `inverse-primary` 등.
+- 값은 **`oklch(L C H)`** 로 적습니다. 계절은 같은 톤(L·C 구조)을 공유하고 **H(색상)만 회전** →
+  파생이 일관됩니다. 시드: 봄 `#E8A1C4`, 여름 `#3FB6C9`, 가을 `#E08A3C`, 겨울 `#7E9BD4`, 밤 `#3A3550`.
+- 봄·여름·가을·겨울은 **light scheme**, 밤은 **dark scheme** 매핑.
 
-### 타이포그래피
+### 타이포그래피 — MD3 type scale
 
-- **Body**: Pretendard Variable (한국어 + 라틴), 현재 코드는 시스템 기본 스택이지만 Pretendard로 대체 → **유저 확인 필요** (flag).
-- **Mono / 코드**: JetBrains Mono (시스템 `ui-monospace` 폴백). 코드 하이라이팅은 Shiki `github-dark` / `github-light`.
-- **스케일** (rem, 1rem = 16): xs 12, sm 14, base 16, lg 18, xl 20, 2xl 24, 3xl 30, 4xl 36, 5xl 48.
-- **라인 하이트**: 본문 1.6, 프로즈(블로그 본문) 1.8, 타이틀 1.3.
-- **Letter-spacing**: 제목은 `-0.02em` ~ `-0.025em`. 캡션 라벨은 `0.08em` + uppercase.
-- **Weight**: 400 / 500 / 600 / 700. 본문은 400, 강조·타이틀은 600–700.
-- **프로즈 본문 크기**는 18px(`fs-lg`) — 블로그 가독성에 커밋한 선택.
+- Roboto(라틴) + Pretendard Variable(한글) 페어링. 코드는 Roboto Mono.
+- 스케일: display(L/M/S) · headline(L/M/S) · title(L/M/S) · body(L/M/S) · label(L/M/S).
+  값은 `--md-sys-typescale-*` 로, `font:` 단축 + 클래스(`.headline-medium` 등)로 제공.
 
-### 공간 · 리듬
+### Shape · Elevation · State · Motion
 
-- 페이지 좌우 패딩: 모바일 `1rem`, ≥md `6rem`.
-- 콘텐츠 최대 폭: 홈 `60rem`, 블로그 리스트 `72rem`, 포스트 `85rem` (사이드 TOC 포함).
-- 섹션 상·하 패딩: 모바일 `2.5rem`, ≥md `3.5rem`.
-- 카드 내부 패딩: `1rem 1.125rem` ~ `1.125rem 1.25rem`.
+- **Shape scale**: none 0 · extra-small 4 · small 8 · medium 12 · large 16 · extra-large 28 · full.
+  버튼/칩 = full, 카드 = medium, 다이얼로그 = extra-large.
+- **Elevation**: MD3는 그림자 + **surface-container 톤**을 함께 사용해 높이를 표현(level 0–5).
+- **State layer**: 인터랙티브 표면 위 `currentColor` 오버레이 — hover .08 / focus .12 / pressed .12.
+  (`.state` 클래스 = `::before` 오버레이 패턴.)
+- **Motion**: standard easing `cubic-bezier(.2,0,0,1)`; short 150 / medium 250 / long 400ms.
 
-### 배경 / 이미지
+### 카드 / 버튼 / 인터랙션 규칙
 
-- **텍스처·패턴·그라디언트 없음.** 배경은 solid color만. 헤더만 `backdrop-filter: blur(8px)` + 80% alpha로 살짝 반투명.
-- **풀블리드 이미지 없음.** 유일한 이미지 자산은 로고 1장 (수채화 일러스트 아바타).
-- **일러스트 / 포토그래피 없음.** 블로그 카드나 포스트에 썸네일 없음.
-- **아이콘 외 SVG 장식 없음** (`<Mention>` 컴포넌트의 "외부링크 화살표" 인라인 SVG 1개가 예외).
+- 버튼 5종: filled(primary) · tonal(secondary-container) · elevated(surface-low+shadow) · outlined · text.
+- 카드 3종: elevated · filled(surface-container-highest) · outlined(outline-variant).
+- 모든 클릭 가능 표면은 `.state` 오버레이로 hover/press 피드백. 별도 색 변경 대신 톤 오버레이가 시그니처.
+- 표면 배경은 **solid**(그라디언트 장식 없음). 단 hero·primary-container 같은 강조 표면은 풀 컬러.
 
-### 모션
+---
 
-- 이징은 **전역 `ease`** 하나 (커스텀 베지어 없음).
-- **지속시간**: `150ms` (hover 전환), `200ms` (global 테마 전환), `600-800ms` (reveal, fadeUp).
-- **효과**: `fadeUp`(IntersectionObserver로 뷰포트 진입 시 `translateY(20px) → 0`, `opacity 0 → 1`). Hero tagline은 `index * 0.15s` 스태거.
-- **반드시 `prefers-reduced-motion: reduce` 를 존중** — 모든 애니메이션 블록에 reduce 가드 있음.
-- 바운스 / 오버슈트 / 스프링 없음.
+## CONTENT FUNDAMENTALS
 
-### Hover / Press / Focus
+블로그 카피 톤은 원본 코드베이스를 유지합니다(Material로 바뀐 건 비주얼뿐).
 
-- **Hover**: 링크·네비·칩 → `color: accent-strong`, `border-color: accent-strong`, `background: accent-soft`. 3가지가 세트로 같이 켜지는 게 시그니처.
-- **프로젝트 카드 hover**: `translateY(-2px)` + border → accent + `shadow-card-md`. 카드에만 들어가는 미세한 리프트.
-- **Press 상태 전용 스타일 없음.** (`:active` 별도 정의 없음 → 브라우저 기본)
-- **Focus-visible**: `outline: 2px solid var(--accent-strong); outline-offset: 2px` 전역 규칙. 포커스도 액센트 색으로 통일.
-
-### Border / Shadow
-
-- **Border 1px 실선**이 기본 구분선. `line-soft`(경계), `line-strong`(더 강한 윤곽), `accent-strong`(활성/hover).
-- **Shadow**는 두 단계뿐: `card-sm` (`0 1px 3px rgba(0,0,0,.24)` / 라이트 `.08`)과 `card-md` (`0 10px 28px rgba(0,0,0,.36)` / 라이트 `.12`).
-- **Inner shadow / glow / neon 없음** — 예외로 Tooltip 팝오버에 `0 0 8px accent-soft` (은은한 teal glow).
-
-### 모서리 Radius
-
-- `md 6px` — 인라인 코드, 작은 요소
-- `lg 8px` — 카드, pre
-- `xl 12px` — 네비 링크, 검색 입력, 태그 그리드 카드, 테마 버튼
-- `2xl 16px` — 거의 사용 안 함 (정의만 존재)
-- `full 9999px` — 태그 칩, 프로필 로고 원형, 마커, 아이콘 버튼, 타임라인 레일
-
-### 투명도 / 블러
-
-- **`backdrop-filter: blur(8px)` + 80% alpha**는 **사이트 헤더에만** 쓰임. 나머지는 불투명.
-- `accent-soft` 15% / 10% alpha는 호버·활성 배경으로 쓰이는 유일한 반투명 컬러.
-- Glassmorphism 아님 — 한 곳에서만 쓰이는 기능적 사용.
-
-### 카드
-
-- `1px solid line-soft` + `radius-lg` + `bg-surface` + `shadow-card-sm` — 4점 세트. 프로젝트 카드만 hover 시 `-2px` lift + accent border로 전이.
-- 그림자는 매우 subtle (눈에 띄지 않음). "카드가 떠있는" 느낌보다 "담아둔 섹션"에 가까움.
-
-### 레이아웃 규칙
-
-- 헤더 `position: fixed`, `top: 0`, `z-index: 50`. `content-wrapper`가 `padding-top: 7rem`으로 비껴줌.
-- 타임라인: 왼쪽에 `2px` 세로 레일 + 항목마다 `0.75rem` teal dot marker (`box-shadow: 0 0 0 3px bg-page`로 레일을 뚫은 듯이).
-- TOC: 본문 옆에 `grid-template-columns: 1fr 15rem` (≥lg), sticky `top: 10rem`, 왼쪽 `1px solid line-soft` 구분선.
-- 태그 사이드바: 모바일은 가로 플로우(`flex-wrap`), ≥md부터 sticky 세로 컬럼.
-
-### 다크/라이트 테마 전환
-
-- 둘 다 퍼스트클래스. 테마 토큰이 완전히 대응.
-- 토글은 아이콘 버튼 (`HiOutlineSun` / `HiOutlineMoon`). `localStorage.theme = 'dark'|'light'`.
-- html `data-loading` 플래그로 hydration 시 플래시 방지.
-- **전환은 200ms bg/color 크로스페이드**.
-
-### 한국어 조판 세부
-
-- `<html lang="ko">`.
-- `break-word`, `word-break: break-word` 사용 (TagGrid 카드 등). 한글+영문 혼합 시 박스 터짐 방지.
-- 자간(letter-spacing) 제목 `-0.02em` — 한글에서도 살짝 타이트하게.
+- **톤**: 정돈된 학습 노트. 농담·밈·이모지·느낌표 없음.
+- **어미**: UI 카피는 `~합니다/~입니다`(하십시오체), 포스트 본문은 `~한다/~다`(평서형).
+- **인칭**: 주어 생략이 기본. 과정 중심 서술("기여하고 있습니다", "고민하며").
+- **고유 네이밍**: 메뉴는 "Blog/Posts" 대신 **"지식 모음"**. 섹션 헤딩은 2글자 선호(소개·프로젝트·기술).
+- **마이크로카피 예**: `제목, 설명, 태그로 검색...` · `검색어를 입력해 주세요.` ·
+  `검색 결과가 없습니다.` · `개념 정리와 레퍼런스를 모아두는 공간입니다.`
+- 기술 용어는 영문 + `backtick`. 강조는 핵심 단어만.
 
 ---
 
 ## ICONOGRAPHY
 
-- **라이브러리**: [`react-icons`](https://react-icons.github.io/react-icons/) 5.5.
-- **사용되는 세트**:
-  - `Hi2` (Heroicons v2 outline) — `HiOutlineSun`, `HiOutlineMoon`, `HiOutlineMagnifyingGlass`, `HiOutlineEnvelope`, `HiOutlinePhone`
-  - `Si` (Simple Icons — 브랜드 로고) — `SiGithub`, `SiLinkedin`, `SiNextdotjs`, `SiReact`, `SiTypescript`, `SiJavascript`, `SiExpo`, `SiNestjs`
-- **스타일**: **Heroicons outline + Simple Icons 브랜드**. stroke-based 아이콘과 fill-based 브랜드 로고 혼용. 사이즈는 글자 크기 상속(`font-size: var(--fs-xl)` 정도가 기본).
-- **SVG는 `currentColor`**로 렌더 → 테마·hover에 맞춰 자동 변색.
-- **에모지 / 유니코드 장식 문자 쓰지 않음.** 마커로 "•" 같은 문자 대신 실제 원형 `<span>` + 배경색.
-- **로고 / 프로필**: `assets/logo.png` — 수채화 스타일 일러스트. 사이트 헤더에서 48×48 원형 크롭으로 표시.
-- **인라인 SVG**: `<Mention>`의 외부링크 화살표 1개만 하드코드(16x16 viewBox, `fill: currentColor`).
-
-**이 디자인 시스템에서의 아이콘 대체**: `react-icons`는 브라우저 직접 로드할 수 없으므로, 프리뷰·샘플에서는 Heroicons / Simple Icons 를 **CDN SVG** 로 불러오거나 인라인 SVG로 대체합니다. 스타일(outline weight, corners)이 맞으면 모양 동등.
+- **Material Symbols** 스타일 아이콘(24px, `currentColor` fill)을 인라인 SVG로 사용 →
+  테마·state에 맞춰 자동 변색. (원본 코드베이스는 `react-icons`를 썼지만, MD3로 옮기며
+  Material Symbols 셰입으로 통일. **대체 플래그**: 정적 HTML이라 라이브러리 대신 동등한 인라인
+  SVG path를 직접 넣었습니다.)
+- 자주 쓰는 글리프: menu · search · add · edit · favorite(+border) · check · more_vert ·
+  home · article · person · share · arrow_back · 그리고 브랜드 GitHub.
+- **에모지 / 유니코드 장식 문자 안 씀.**
+- **로고 / 프로필**: `assets/logo.png` — 수채화 일러스트 아바타. 앱바에서 40px 원형.
 
 ---
 
-## INDEX — 이 폴더의 파일들
+## INDEX — 폴더 안내
 
 | 경로 | 내용 |
 |---|---|
 | `README.md` | (이 파일) |
-| `SKILL.md` | Claude / Agent Skill용 진입 지침 |
-| `colors_and_type.css` | 토큰 CSS — `:root`에 컬러·타이포 변수. 다크 기본, `.light`로 플립 |
-| `assets/logo.png` | 임재준 아바타 로고 (원본 1024x1536, 헤더에선 48x48 원형) |
-| `preview/` | Design System 탭에 보여줄 카드 HTML 모음 |
-| `ui_kits/blog/` | 블로그 UI 키트 — `index.html` + JSX 컴포넌트들 |
+| `SKILL.md` | Claude / Agent Skill 진입 지침 |
+| `colors_and_type.css` | **토큰 CSS** — MD3 sys 토큰 + 5계절 색 클래스. `:root`=봄 기본, `.theme-*`로 전환 |
+| `material-components.css` | MD3 컴포넌트의 플레인-CSS 구현 (`recipes.css.ts`의 미러). preview·kit이 공유 |
+| `material/` | **Vanilla Extract 레퍼런스** (연습용) — 아래 표 |
+| `assets/logo.png` | 아바타 로고 |
+| `preview/` | Design System 탭 카드 (아래 목록) |
+| `ui_kits/blog/` | MD3 × 5계절 블로그 클릭형 프로토타입 |
 
-**UI 키트 목록**: 제품이 블로그 웹사이트 1개뿐이므로 `ui_kits/blog` 하나만 존재. 슬라이드 템플릿은 원본 프로젝트에 없어 생성하지 않음.
+**`material/` (Vanilla Extract 패턴)**
+
+| 파일 | 역할 |
+|---|---|
+| `tokens.css.ts` | `createGlobalTheme(:root)` — 계절 무관 정적 토큰(타입·shape·state·elevation·motion) |
+| `theme-contract.css.ts` | `createThemeContract` — 계절별 색 역할의 "모양만" |
+| `themes/{spring,summer,autumn,winter,night}.css.ts` | `createTheme` — 계절별 실제 값 |
+| `themes/index.css.ts` | `seasonThemes` 레지스트리 + 월→계절 헬퍼 |
+| `sprinkles.css.ts` | 반응형 atomic props + 색 역할 바인딩 |
+| `recipes.css.ts` | 컴포넌트 변형(button·card·chip) + state layer |
+| `README.md` | 레이어 구조 설명 + CSS 프리뷰와의 매핑 |
+
+**`preview/` 카드**
+
+| 그룹 | 파일 |
+|---|---|
+| Type | `type-scale` |
+| Colors | `color-roles`, `seasons-overview`, `surfaces` |
+| Spacing | `shape-scale`, `elevation`, `state-layers` |
+| Components | `season-switcher`, `buttons`, `fab`, `cards`, `chips`, `text-fields`, `selection-controls`, `app-bar`, `navigation`, `lists`, `menu-dialog-snackbar` |
+| Brand | `logo` |
 
 ---
 
 ## CAVEATS
 
-- **폰트 파일**: 코드베이스는 시스템 기본 스택을 사용 중. 이 디자인 시스템은 **Pretendard Variable + JetBrains Mono**를 CDN으로 가정했습니다. 사용자가 실제로 어떤 폰트를 원하는지 확인 필요.
-- **아이콘**: 원본은 `react-icons`(JS 번들) 사용. 정적 HTML에서는 동일한 아이콘 세트를 CDN SVG / 인라인으로 대체했습니다. 모양은 동일.
-- **Figma 없음**: 모든 근거가 코드. 변형이 필요하면 코드가 정답.
+- **폰트**: Roboto + Pretendard + Roboto Mono를 CDN으로 로드. 원본 코드베이스는 시스템 스택을
+  쓰므로, 실제 도입 시 폰트 파일 번들 여부 확인 필요.
+- **계절 팔레트는 oklch 수식 파생값**입니다 — Google이 쓰는 HCT 알고리즘의 정밀 톤 팔레트가
+  아니라, 같은 시드 방향을 oklch로 근사한 것. 특정 계절 색을 더 채도 높게/낮게 원하면
+  `colors_and_type.css`의 계절 `hp/cp` 값(또는 `material/themes/*`)만 조정하면 전 컴포넌트에 반영됩니다.
+- **아이콘**: Material Symbols 라이브러리 대신 동등 인라인 SVG path 사용(정적 HTML 제약).
+- **Vanilla Extract `.css.ts`** 파일은 **타입/패턴 레퍼런스**이며 이 프로젝트에서 직접 컴파일되지
+  않습니다. 브라우저 프리뷰(`colors_and_type.css`)와 값이 동일하도록 같은 oklch에서 생성했습니다.
+- **밤(Night)** 이 요청대로 다크 스킴 역할을 합니다. 별도 "라이트/다크 토글"은 없습니다.

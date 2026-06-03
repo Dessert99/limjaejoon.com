@@ -1,0 +1,45 @@
+import { createThemeContract } from '@vanilla-extract/css';
+
+// CONTRACT: 계절 색 팔레트의 "모양"만 정의(값 없음). 각 계절(themes/*.css.ts)이
+// createTheme 으로 이 모양을 정확히 만족시킨다. 컴포넌트는 color.primary 등 역할만
+// 참조하고, 조상에 걸린 계절 클래스가 실제 값을 바꾼다 — MD3 color-roles 간접참조의 핵심.
+// 역할 이름은 Material Design 3 sys-color 네이밍을 따른다.
+export const color = createThemeContract({
+  primary: null,
+  onPrimary: null,
+  primaryContainer: null,
+  onPrimaryContainer: null,
+  secondary: null,
+  onSecondary: null,
+  secondaryContainer: null,
+  onSecondaryContainer: null,
+  tertiary: null,
+  onTertiary: null,
+  tertiaryContainer: null,
+  onTertiaryContainer: null,
+  error: null,
+  onError: null,
+  errorContainer: null,
+  onErrorContainer: null,
+  background: null,
+  onBackground: null,
+  surface: null,
+  onSurface: null,
+  surfaceVariant: null,
+  onSurfaceVariant: null,
+  surfaceDim: null,
+  surfaceBright: null,
+  surfaceContainerLowest: null,
+  surfaceContainerLow: null,
+  surfaceContainer: null,
+  surfaceContainerHigh: null,
+  surfaceContainerHighest: null,
+  outline: null,
+  outlineVariant: null,
+  inverseSurface: null,
+  inverseOnSurface: null,
+  inversePrimary: null,
+  shadow: null,
+  scrim: null,
+  surfaceTint: null,
+});

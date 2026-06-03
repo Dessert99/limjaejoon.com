@@ -1,12 +1,19 @@
-import { SITE_URL } from '@/features/shared/constants';
-import '@/styles/global.css';
-import { darkTheme, lightTheme } from '@/styles/theme.css';
+import { SITE_URL } from '@/shared/config/site';
+import '@/shared/styles/global.css';
+import { seasonThemes } from '@/shared/styles/themes/index.css';
 import type { Metadata } from 'next';
-import { JetBrains_Mono } from 'next/font/google';
+import { Roboto, Roboto_Mono } from 'next/font/google';
 
-const jetbrainsMono = JetBrains_Mono({
+const roboto = Roboto({
   subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
+  weight: ['400', '500', '700'],
+  variable: '--font-roboto',
+  display: 'swap',
+});
+
+const robotoMono = Roboto_Mono({
+  subsets: ['latin'],
+  variable: '--font-roboto-mono',
   display: 'swap',
 });
 
@@ -46,14 +53,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const themeScript = `(function(){try{var t=localStorage.getItem('theme');var el=document.documentElement;el.setAttribute('data-loading','');if(t==='light'){el.classList.remove('${darkTheme}');el.classList.add('${lightTheme}');}requestAnimationFrame(function(){el.removeAttribute('data-loading');});}catch(e){}})();`;
+  // FOUC 방지: 첫 페인트 전에 localStorage 의 계절을 읽어 <html> 클래스를 교정한다.
+  // 기본 className 은 봄(spring) 해시이므로, 저장값이 봄이면 그대로·다르면 교체한다.
+  const seasonMap = JSON.stringify(seasonThemes);
+  const themeScript = `(function(){try{var m=${seasonMap};var s=localStorage.getItem('season');if(!m[s])s='spring';var el=document.documentElement;el.setAttribute('data-loading','');Object.keys(m).forEach(function(k){el.classList.remove(m[k]);});el.classList.add(m[s]);requestAnimationFrame(function(){el.removeAttribute('data-loading');});}catch(e){}})();`;
 
   return (
     <html
       lang='ko'
-      className={`${darkTheme} ${jetbrainsMono.variable}`}
+      className={`${seasonThemes.spring} ${roboto.variable} ${robotoMono.variable}`}
       suppressHydrationWarning>
       <head>
+        {/* Pretendard(한글) — Google Fonts 미제공이라 CDN 으로 로드. Latin 은 next/font Roboto */}
+        <link
+          rel='stylesheet'
+          href='https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/variable/pretendardvariable.min.css'
+        />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>{children}</body>

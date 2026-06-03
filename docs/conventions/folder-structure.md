@@ -1,59 +1,70 @@
 # 폴더·파일 구조 표준
 
-위치 / 명명 / 분할의 단일 출처. RHF / TQ 컨벤션 문서는 이 문서를 참조한다.
+이 프로젝트의 프론트엔드는 FSD(Feature-Sliced Design)를 연습 기준으로 삼는다. 문서는 위치 / 명명 / 분할의 기본값을 정하지만, 단순한 작업을 위해 파일을 과하게 쪼개지 않는다.
 
-## 1. 최상위 구조
-
-```
-src/
-├── features/{domain}/  # 도메인 단위 응집 (핵심) — §2
-├── components/         # 도메인 무관 공용 UI. 도메인 UI 금지
-│   ├── ui/             # 디자인 프리미티브 (Button, Input 등)
-│   └── common/         # 도메인 무관 공용
-├── lib/                # 전역 인프라 (apiClient, queryClient, providers 등)
-├── hooks/              # 도메인 무관 공용 훅
-├── utils/              # 도메인 무관 공용 유틸
-├── constants/          # 전역 상수
-└── types/              # 전역 공용 타입. 관심사별 파일 분할, barrel `index.ts` 금지
-```
-
-## 2. features/{domain}/
+## 1. FSD 레이어
 
 ```
-features/{domain}/
-├── api/                # API 함수 — 1함수 1파일. camelCase. 파일명 = 함수명
-├── components/         # 도메인 UI. 컴포넌트당 폴더 1개 (§3)
-│   ├── {Name}/         # PascalCase 폴더. 진입 파일명 = 폴더명, barrel(index) 금지
-│   │   ├── {Name}.tsx      # 컴포넌트 본체
-│   │   ├── {Name}.css.ts   # Vanilla Extract 스타일 (그 컴포넌트 전용)
-│   │   └── {Name}.test.tsx # 단위 테스트 co-located
-│   ├── skeletons/      # 도메인 공용 로딩 UI (각 스켈레톤도 {Name}/ 규칙)
-│   └── {page}/         # 라우트가 여럿이면 페이지별 하위 폴더
-│       └── forms/      # RHF 자식 (FormProvider 하위). 그 안도 {Name}/ 규칙
-├── constants/
-│   └── {domain}Keys.ts # queryKey 팩토리
-├── hooks/
-│   ├── queries/        # useXxxQuery — 1훅 1파일, 파일명 = export 훅명
-│   ├── mutations/      # useXxxMutation — 1훅 1파일
-│   └── *.ts            # TQ 가 아닌 일반 훅
-├── schemas/            # zod 스키마. camelCase. 폼이 있는 도메인만 생성
-│   └── {name}Schema.ts # export {name}Schema + type {Name}FormValues = z.infer<...>
-├── utils/              # 도메인 유틸. camelCase. 1파일 1책임, 평탄 배치
-└── types/              # 도메인 타입 (API 응답·모델). camelCase
+frontend/
+├── app/                # Next.js App Router. 라우팅, layout, provider 조립
+├── widgets/            # 여러 feature/entity 를 조합한 큰 UI 블록
+├── features/           # 사용자 행동 단위 기능
+├── entities/           # 핵심 도메인 모델과 그 모델 중심 UI/API
+└── shared/             # 도메인 무관 공용 코드
+    ├── ui/             # Button, Input 같은 디자인 프리미티브
+    ├── api/            # apiClient, 공용 API 타입/헬퍼
+    ├── lib/            # 공용 유틸
+    ├── styles/         # 전역 테마·토큰·breakpoint 등 도메인 무관 스타일
+    ├── config/         # 전역 설정
+    └── types/          # 전역 공용 타입
 ```
 
-### 파일명 케이스
+의존 방향은 위에서 아래로만 둔다.
 
-| 폴더 | 케이스 |
-| --- | --- |
-| `components/{Name}/` 폴더 + `{Name}.tsx` / `{Name}.css.ts` / `{Name}.test.tsx` | PascalCase |
-| `api/`, `types/`, `utils/`, `schemas/`, `hooks/`, `constants/` | camelCase |
+- `app` -> `widgets` / `features` / `entities` / `shared`
+- `widgets` -> `features` / `entities` / `shared`
+- `features` -> `entities` / `shared`
+- `entities` -> `shared`
+- `shared` -> 상위 레이어 참조 금지
 
-## 3. 테스트 위치 (co-located)
+같은 레이어 안의 슬라이스끼리는 서로 import 하지 않는다 (slice 격리). `features/a` 가 `features/b` 를, `entities/x` 가 `entities/y` 를 직접 참조 금지. 공유가 필요하면 공통 부분을 아래 레이어 (`entities` / `shared`) 로 내린다.
 
-테스트는 별도 `tests/` 디렉토리 없이 **검증 대상 소스 바로 옆**에 둔다 (백엔드 `.spec.ts` 와 동일 모델).
+## 2. Slice 내부 구조
 
-- 컴포넌트: `components/{Name}/{Name}.test.tsx` — 컴포넌트 폴더 안
-- 그 외(api·hooks·lib·utils): 대상 파일과 같은 디렉토리에 `{name}.test.ts`
-- E2E 만 예외 — `frontend/e2e/` (Playwright)
-- `vitest.config.ts` 의 `include` 는 `features/**` · `lib/**` 의 `*.test.{ts,tsx}` 를 스캔
+`features/{slice}`, `entities/{slice}`, `widgets/{slice}` 는 필요한 segment 만 만든다.
+
+```
+features/{slice}/
+├── ui/                 # 이 slice 의 화면 컴포넌트
+├── api/                # 이 slice 의 API 함수와 query/mutation hook
+├── model/              # 상태, schema, query key 등 도메인 모델
+├── lib/                # 이 slice 전용 유틸
+└── config/             # 이 slice 전용 설정
+```
+
+- `api/` 내부 분할 (`queries/` / `mutations/`) 과 명명은 api-convention.md 를 따른다.
+- segment 는 필요할 때만 만든다. 빈 폴더나 미래 대비 폴더 생성 금지.
+- 작은 컴포넌트는 `ui/{Name}.tsx` 단일 파일 허용.
+- 스타일, 테스트, 하위 컴포넌트가 생기면 `ui/{Name}/{Name}.tsx` 형태로 폴더화한다.
+
+## 3. Public API
+
+- slice 밖에서 여러 파일을 직접 깊게 import 해야 하면 `index.ts` public API 를 둘 수 있다.
+- 내부 파일끼리 순환 참조를 만들기 쉬운 barrel 은 피한다.
+- 단순한 slice 에서는 `index.ts` 를 만들지 않아도 된다.
+
+## 4. 파일명 케이스
+
+| 대상                            | 케이스                      |
+| ------------------------------- | --------------------------- |
+| React 컴포넌트                  | PascalCase                  |
+| API, hook, util, schema, config | camelCase                   |
+| 테스트 파일                     | 대상 파일명 + `.test.ts(x)` |
+
+## 5. 테스트 위치
+
+테스트는 검증 대상 소스 가까이에 둔다.
+
+- 컴포넌트: 대상 컴포넌트 옆의 `{Name}.test.tsx`
+- API, hook, lib, util: 대상 파일 옆의 `{name}.test.ts`
+- E2E: `frontend/e2e/`
