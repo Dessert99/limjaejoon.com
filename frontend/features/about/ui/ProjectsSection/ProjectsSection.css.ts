@@ -1,5 +1,7 @@
 import { bp } from '@/shared/styles/breakpoints';
-import { vars } from '@/shared/styles/theme.css';
+import { card as cardRecipe } from '@/shared/styles/recipes.css';
+import { color } from '@/shared/styles/theme-contract.css';
+import { tokens } from '@/shared/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
 
 export const section = style({
@@ -14,9 +16,8 @@ export const section = style({
 });
 
 export const heading = style({
-  fontSize: vars.fontSize['2xl'],
-  fontWeight: 700,
-  color: vars.color.textPrimary,
+  font: tokens.typescale.titleLarge,
+  color: color.onSurface,
   margin: '0 0 1.5rem',
 });
 
@@ -34,133 +35,30 @@ export const grid = style({
   },
 });
 
-export const card = style({
-  position: 'relative',
-  isolation: 'isolate',
-  overflow: 'hidden',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '0.625rem',
-  border: `1px solid ${vars.color.lineSoft}`,
-  borderRadius: vars.radius.lg,
-  background: vars.color.bgSurface,
-  boxShadow: vars.shadow.cardSm,
-  padding: '1.125rem 1.25rem',
-  vars: {
-    '--mx': '50%',
-    '--my': '50%',
-  },
-  transition:
-    'transform 250ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 250ms ease, box-shadow 250ms ease',
-
-  '::before': {
-    content: '""',
-    position: 'absolute',
-    inset: '-1px',
-    borderRadius: 'inherit',
-    pointerEvents: 'none',
-    zIndex: 0,
-    background: `radial-gradient(240px circle at var(--mx) var(--my), color-mix(in oklab, ${vars.color.accentStrong} 14%, transparent) 0%, transparent 60%)`,
-    opacity: 0,
-    transition: 'opacity 300ms ease',
-  },
-  '::after': {
-    content: '""',
-    position: 'absolute',
-    left: '12px',
-    right: '12px',
-    top: 0,
-    height: '1px',
-    background: `linear-gradient(90deg, transparent, ${vars.color.accentStrong}, transparent)`,
-    opacity: 0,
-    transform: 'scaleX(0.4)',
-    transformOrigin: 'center',
-    transition:
-      'opacity 300ms ease, transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1)',
-    zIndex: 1,
-  },
-
-  ':hover': {
-    transform: 'translateY(-3px)',
-    borderColor: vars.color.accentStrong,
-    boxShadow: `${vars.shadow.cardMd}, 0 0 0 4px color-mix(in oklab, ${vars.color.accentStrong} 10%, transparent)`,
-  },
-
-  selectors: {
-    '&:hover::before': {
-      opacity: 1,
+// MD3 outlined 카드 — recipe(surface + outline-variant) + 프로젝트 카드 레이아웃 override
+export const card = style([
+  cardRecipe({ variant: 'outlined' }),
+  {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.625rem',
+    padding: '1.125rem 1.25rem',
+    height: '100%',
+    transition: `border-color ${tokens.motion.durationShort} ${tokens.motion.easingStandard}, box-shadow ${tokens.motion.durationMedium} ${tokens.motion.easingStandard}, transform ${tokens.motion.durationMedium} ${tokens.motion.easingEmphasized}`,
+    ':hover': {
+      borderColor: color.outline,
+      boxShadow: tokens.elevation.level2,
+      transform: 'translateY(-2px)',
     },
-    '&:hover::after': {
-      opacity: 1,
-      transform: 'scaleX(1)',
-    },
-  },
-
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transition: 'none',
-      selectors: {
-        '&::before': {
-          transition: 'none',
-        },
-        '&::after': {
-          transition: 'none',
-        },
+    '@media': {
+      '(prefers-reduced-motion: reduce)': {
+        transition: 'none',
       },
     },
   },
-});
-
-export const corner = style({
-  position: 'absolute',
-  top: '10px',
-  right: '10px',
-  width: '12px',
-  height: '12px',
-  pointerEvents: 'none',
-  zIndex: 2,
-  opacity: 0,
-  transform: 'translate(4px, -4px)',
-  transition: 'opacity 300ms ease, transform 300ms ease',
-
-  '::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: '12px',
-    height: '1.5px',
-    background: vars.color.accentStrong,
-    borderRadius: '1px',
-  },
-  '::after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: '1.5px',
-    height: '12px',
-    background: vars.color.accentStrong,
-    borderRadius: '1px',
-  },
-
-  selectors: {
-    [`${card}:hover &`]: {
-      opacity: 1,
-      transform: 'translate(0, 0)',
-    },
-  },
-
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transition: 'none',
-    },
-  },
-});
+]);
 
 export const cardHeader = style({
-  position: 'relative',
-  zIndex: 2,
   display: 'flex',
   flexDirection: 'column',
   gap: '0.125rem',
@@ -175,106 +73,85 @@ export const cardHeader = style({
 });
 
 export const name = style({
-  fontSize: vars.fontSize.lg,
+  font: tokens.typescale.titleMedium,
   fontWeight: 600,
-  color: vars.color.textPrimary,
+  color: color.onSurface,
   margin: 0,
 });
 
 export const period = style({
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textMuted,
+  font: tokens.typescale.labelMedium,
+  color: color.onSurfaceVariant,
+  whiteSpace: 'nowrap',
 });
 
 export const description = style({
-  position: 'relative',
-  zIndex: 2,
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textSecondary,
+  font: tokens.typescale.bodyMedium,
+  color: color.onSurfaceVariant,
   lineHeight: 1.6,
-  margin: 0,
+  margin: '0.25rem 0 0.5rem',
 });
 
 export const stackList = style({
-  position: 'relative',
-  zIndex: 2,
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '0.375rem',
-  listStyle: 'none',
-  padding: 0,
-  margin: 0,
-});
-
-export const stackChip = style({
-  fontSize: vars.fontSize.xs,
-  color: vars.color.textSecondary,
-  border: `1px solid ${vars.color.lineSoft}`,
-  borderRadius: vars.radius.full,
-  padding: '0.125rem 0.5rem',
-  background: vars.color.bgSoft,
-});
-
-export const linkList = style({
-  position: 'relative',
-  zIndex: 2,
   display: 'flex',
   flexWrap: 'wrap',
   gap: '0.5rem',
   listStyle: 'none',
   padding: 0,
-  margin: '0.25rem 0 0',
+  margin: 0,
 });
 
-export const link = style({
-  position: 'relative',
+// 디스플레이 전용 스택 칩 — MD3 input chip 톤
+export const stackChip = style({
+  font: tokens.typescale.labelLarge,
+  color: color.onSurfaceVariant,
+  background: color.surfaceContainerHighest,
+  borderRadius: tokens.shape.small,
+  height: '32px',
   display: 'inline-flex',
   alignItems: 'center',
-  gap: '0.375rem',
-  fontSize: vars.fontSize.sm,
-  color: vars.color.accentStrong,
-  textDecoration: 'none',
-  padding: '0.3rem 0.8rem',
-  border: `1px solid ${vars.color.accentStrong}`,
-  borderRadius: vars.radius.full,
-  background: 'transparent',
-  overflow: 'hidden',
-  isolation: 'isolate',
-  transition:
-    'color 200ms ease, padding 200ms ease, box-shadow 200ms ease, background-color 200ms ease',
+  paddingInline: '12px',
+});
 
+export const linkList = style({
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '0.25rem',
+  listStyle: 'none',
+  padding: 0,
+  margin: '0.5rem 0 0',
+});
+
+// MD3 text 버튼 톤 링크 — primary 색 + hover state-layer
+export const link = style({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '0.25rem',
+  font: tokens.typescale.labelLarge,
+  color: color.primary,
+  textDecoration: 'none',
+  paddingInline: '12px',
+  height: '36px',
+  borderRadius: tokens.shape.full,
+  background: 'transparent',
+  transition: `background-color ${tokens.motion.durationShort} ${tokens.motion.easingStandard}`,
   ':hover': {
-    background: vars.color.accentSoft,
-    paddingRight: '1rem',
-    boxShadow: `0 0 0 3px color-mix(in oklab, ${vars.color.accentStrong} 18%, transparent)`,
+    background: `color-mix(in oklab, ${color.primary} 8%, transparent)`,
   },
   ':focus-visible': {
-    outline: `2px solid ${vars.color.accentStrong}`,
+    outline: `2px solid ${color.primary}`,
     outlineOffset: '2px',
-  },
-
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transition: 'none',
-    },
   },
 });
 
 export const linkArrow = style({
   display: 'inline-block',
-  width: 0,
-  opacity: 0,
-  overflow: 'hidden',
-  transition: 'width 220ms ease, opacity 220ms ease, margin-left 220ms ease',
-
+  transition: 'transform 200ms ease',
   selectors: {
     [`${link}:hover &`]: {
-      width: '0.9em',
-      opacity: 1,
-      marginLeft: '0.1rem',
+      transform: 'translateX(2px)',
     },
   },
-
   '@media': {
     '(prefers-reduced-motion: reduce)': {
       transition: 'none',

@@ -1,24 +1,16 @@
 import { style } from '@vanilla-extract/css';
-import { vars } from '@/shared/styles/theme.css';
-import { bp } from '@/shared/styles/breakpoints';
+import { color } from '@/shared/styles/theme-contract.css';
+import { tokens } from '@/shared/styles/tokens.css';
 
-// 모바일 1열 → md 2열 → lg 3열로 카드 그리드 분기
+// 컬러 커버 post-card 그리드 — 준정사각 카드가 폭에 맞춰 자동 채워진다
 export const grid = style({
   display: 'grid',
-  gridTemplateColumns: '1fr',
-  gap: '1rem',
-  '@media': {
-    [bp.md]: {
-      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-    },
-    [bp.lg]: {
-      gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-    },
-  },
+  gridTemplateColumns: 'repeat(auto-fill, minmax(236px, 1fr))',
+  gap: '16px',
 });
 
 export const emptyText = style({
   paddingTop: '2rem',
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textMuted,
+  font: tokens.typescale.bodyMedium,
+  color: color.onSurfaceVariant,
 });

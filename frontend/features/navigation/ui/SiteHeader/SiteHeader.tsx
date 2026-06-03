@@ -1,72 +1,85 @@
 'use client';
-// 전역 헤더 — 네비게이션 메뉴 + 테마 토글
+// 전역 헤더 (MD3 top app bar) — 브랜드 + 네비게이션 + GitHub + 계절 테마 메뉴
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { HiOutlineMoon, HiOutlineSun } from 'react-icons/hi2';
+import { useEffect, useState } from 'react';
+import { FaGithub } from 'react-icons/fa';
 
 import { navItems } from '@/features/navigation/config/navItems';
-import { useTheme } from '@/features/navigation/lib/useTheme';
+import { ThemeMenu } from '@/features/navigation/ui/ThemeMenu/ThemeMenu';
+import { stateLayer } from '@/shared/styles/recipes.css';
 
 import * as s from './SiteHeader.css';
 
+const GITHUB_URL = 'https://github.com/Dessert99';
+
 export function SiteHeader() {
   const pathname = usePathname();
-  const { theme, toggleTheme } = useTheme();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 4);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
 
   return (
-    <header className={s.header}>
+    <header
+      className={s.header}
+      data-scrolled={scrolled}>
       <div className={s.inner}>
         <Link
           href='/'
           aria-label='홈으로 이동'
-          className={s.logoLink}>
+          className={`${s.brand} ${stateLayer}`}>
           <Image
             src='/images/logo.png'
-            alt='프로필 로고'
-            width={48}
-            height={48}
-            className={s.logoImg}
+            alt='임재준 프로필'
+            width={40}
+            height={40}
+            className={s.avatar}
           />
+          <span className={s.wordmark}>임재준</span>
         </Link>
 
-        <nav aria-label='주요 메뉴'>
-          <ul className={s.navList}>
-            {navItems.map((item) => {
-              return (
-                <li key={item.href}>
-                  <Link
-                    className={s.navLink}
-                    href={item.href}
-                    data-active={
-                      pathname === item.href ||
-                      pathname.startsWith(item.href + '/')
-                    }>
-                    <span
-                      className={s.navDot}
-                      aria-hidden='true'
-                    />
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-            <li>
-              <button
-                className={s.iconBtn}
-                onClick={toggleTheme}
-                aria-label={
-                  theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'
-                }>
-                {theme === 'dark' ? (
-                  <HiOutlineSun aria-hidden='true' />
-                ) : (
-                  <HiOutlineMoon aria-hidden='true' />
-                )}
-              </button>
-            </li>
-          </ul>
+        <nav
+          className={s.nav}
+          aria-label='주요 메뉴'>
+          {navItems.map((item) => {
+            const active =
+              item.href === '/'
+                ? pathname === '/'
+                : pathname === item.href ||
+                  pathname.startsWith(item.href + '/');
+            return (
+              <Link
+                key={item.href}
+                className={`${s.navLink} ${stateLayer}`}
+                href={item.href}
+                data-active={active}>
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
+
+        <div className={s.actions}>
+          <a
+            className={`${s.iconBtn} ${stateLayer}`}
+            href={GITHUB_URL}
+            target='_blank'
+            rel='noopener noreferrer'
+            aria-label='GitHub'>
+            <FaGithub aria-hidden='true' />
+          </a>
+          <ThemeMenu />
+        </div>
       </div>
     </header>
   );

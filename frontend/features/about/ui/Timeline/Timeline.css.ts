@@ -1,16 +1,18 @@
 import { bp } from '@/shared/styles/breakpoints';
-import { vars } from '@/shared/styles/theme.css';
+import { card as cardRecipe } from '@/shared/styles/recipes.css';
+import { color } from '@/shared/styles/theme-contract.css';
+import { tokens } from '@/shared/styles/tokens.css';
 import { keyframes, style } from '@vanilla-extract/css';
 
 const pulse = keyframes({
   '0%': {
-    boxShadow: `0 0 0 0 color-mix(in oklab, ${vars.color.accentStrong} 50%, transparent), 0 0 0 3px ${vars.color.bgPage}`,
+    boxShadow: `0 0 0 0 color-mix(in oklab, ${color.primary} 50%, transparent), 0 0 0 3px ${color.background}`,
   },
   '70%': {
-    boxShadow: `0 0 0 8px color-mix(in oklab, ${vars.color.accentStrong} 0%, transparent), 0 0 0 3px ${vars.color.bgPage}`,
+    boxShadow: `0 0 0 8px color-mix(in oklab, ${color.primary} 0%, transparent), 0 0 0 3px ${color.background}`,
   },
   '100%': {
-    boxShadow: `0 0 0 0 color-mix(in oklab, ${vars.color.accentStrong} 0%, transparent), 0 0 0 3px ${vars.color.bgPage}`,
+    boxShadow: `0 0 0 0 color-mix(in oklab, ${color.primary} 0%, transparent), 0 0 0 3px ${color.background}`,
   },
 });
 
@@ -26,9 +28,8 @@ export const section = style({
 });
 
 export const heading = style({
-  fontSize: vars.fontSize['2xl'],
-  fontWeight: 700,
-  color: vars.color.textPrimary,
+  font: tokens.typescale.titleLarge,
+  color: color.onSurface,
   margin: '0 0 1.5rem',
 });
 
@@ -45,8 +46,8 @@ export const list = style({
     bottom: '0.5rem',
     left: '0.3125rem',
     width: '2px',
-    background: vars.color.lineSoft,
-    borderRadius: vars.radius.full,
+    background: color.outlineVariant,
+    borderRadius: tokens.shape.full,
   },
   '::after': {
     content: '""',
@@ -55,8 +56,8 @@ export const list = style({
     left: '0.3125rem',
     width: '2px',
     height: 'calc(100% - 1.5rem)',
-    background: `linear-gradient(180deg, ${vars.color.accentStrong}, color-mix(in oklab, ${vars.color.accentStrong} 30%, transparent))`,
-    borderRadius: vars.radius.full,
+    background: `linear-gradient(180deg, ${color.primary}, color-mix(in oklab, ${color.primary} 30%, transparent))`,
+    borderRadius: tokens.shape.full,
     WebkitMaskImage: 'linear-gradient(180deg, #000 0 60%, transparent 100%)',
     maskImage: 'linear-gradient(180deg, #000 0 60%, transparent 100%)',
   },
@@ -78,9 +79,9 @@ export const marker = style({
   top: '0.4375rem',
   width: '0.75rem',
   height: '0.75rem',
-  borderRadius: vars.radius.full,
-  background: vars.color.accentStrong,
-  boxShadow: `0 0 0 3px ${vars.color.bgPage}`,
+  borderRadius: tokens.shape.full,
+  background: color.primary,
+  boxShadow: `0 0 0 3px ${color.background}`,
   transition: 'transform 150ms ease',
 
   selectors: {
@@ -101,74 +102,25 @@ export const marker = style({
   },
 });
 
-export const card = style({
-  position: 'relative',
-  isolation: 'isolate',
-  overflow: 'hidden',
-  border: `1px solid ${vars.color.lineSoft}`,
-  borderRadius: vars.radius.lg,
-  background: vars.color.bgSurface,
-  boxShadow: vars.shadow.cardSm,
-  padding: '1rem 1.25rem 1rem 1.25rem',
-  transition:
-    'transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease',
-
-  '::before': {
-    content: '""',
-    position: 'absolute',
-    left: 0,
-    top: '10px',
-    bottom: '10px',
-    width: '2px',
-    background: vars.color.accentStrong,
-    borderRadius: '2px',
-    transform: 'scaleY(0.35)',
-    transformOrigin: 'top',
-    transition: 'transform 300ms ease',
-  },
-  '::after': {
-    content: '""',
-    position: 'absolute',
-    inset: 0,
-    pointerEvents: 'none',
-    zIndex: 0,
-    background: `radial-gradient(120% 60% at 100% 0%, color-mix(in oklab, ${vars.color.accentStrong} 7%, transparent), transparent 55%)`,
-    opacity: 0,
-    transition: 'opacity 300ms ease',
-  },
-
-  ':hover': {
-    borderColor: `color-mix(in oklab, ${vars.color.accentStrong} 40%, ${vars.color.lineSoft})`,
-    boxShadow: vars.shadow.cardMd,
-  },
-
-  selectors: {
-    '&:hover::before': {
-      transform: 'scaleY(1)',
+// MD3 outlined 카드 — recipe(surface + outline-variant) + 타임라인 카드 레이아웃 override
+export const card = style([
+  cardRecipe({ variant: 'outlined' }),
+  {
+    padding: '1rem 1.25rem',
+    transition: `border-color ${tokens.motion.durationShort} ${tokens.motion.easingStandard}, box-shadow ${tokens.motion.durationMedium} ${tokens.motion.easingStandard}`,
+    ':hover': {
+      borderColor: color.outline,
+      boxShadow: tokens.elevation.level1,
     },
-    '&:hover::after': {
-      opacity: 1,
-    },
-  },
-
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transition: 'none',
-      selectors: {
-        '&::before': {
-          transition: 'none',
-        },
-        '&::after': {
-          transition: 'none',
-        },
+    '@media': {
+      '(prefers-reduced-motion: reduce)': {
+        transition: 'none',
       },
     },
   },
-});
+]);
 
 export const cardHeader = style({
-  position: 'relative',
-  zIndex: 1,
   display: 'flex',
   flexDirection: 'column',
   gap: '0.125rem',
@@ -183,51 +135,49 @@ export const cardHeader = style({
 });
 
 export const title = style({
-  fontSize: vars.fontSize.lg,
+  font: tokens.typescale.titleMedium,
   fontWeight: 600,
-  color: vars.color.textPrimary,
+  color: color.onSurface,
   margin: 0,
 });
 
 export const period = style({
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textMuted,
+  font: tokens.typescale.labelMedium,
+  color: color.onSurfaceVariant,
+  whiteSpace: 'nowrap',
 });
 
 export const subtitle = style({
-  position: 'relative',
-  zIndex: 1,
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textSecondary,
+  font: tokens.typescale.bodyMedium,
+  color: color.onSurfaceVariant,
   marginTop: '0.25rem',
 });
 
 export const description = style({
-  position: 'relative',
-  zIndex: 1,
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textSecondary,
+  font: tokens.typescale.bodyMedium,
+  color: color.onSurfaceVariant,
   lineHeight: 1.6,
   marginTop: '0.625rem',
   whiteSpace: 'pre-line',
 });
 
 export const stackList = style({
-  position: 'relative',
-  zIndex: 1,
   display: 'flex',
   flexWrap: 'wrap',
-  gap: '0.375rem',
+  gap: '0.5rem',
   listStyle: 'none',
   padding: 0,
   margin: '0.75rem 0 0',
 });
 
+// 디스플레이 전용 스택 칩 — MD3 input chip 톤(surface-container-highest)
 export const stackChip = style({
-  fontSize: vars.fontSize.xs,
-  color: vars.color.textSecondary,
-  border: `1px solid ${vars.color.lineSoft}`,
-  borderRadius: vars.radius.full,
-  padding: '0.125rem 0.5rem',
-  background: vars.color.bgSoft,
+  font: tokens.typescale.labelLarge,
+  color: color.onSurfaceVariant,
+  background: color.surfaceContainerHighest,
+  borderRadius: tokens.shape.small,
+  height: '32px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  paddingInline: '12px',
 });

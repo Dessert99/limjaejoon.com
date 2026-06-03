@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Chip } from '@/shared/ui/Chip/Chip';
 import * as s from './TagSidebar.css';
 
 interface TagSidebarProps {
@@ -42,26 +43,26 @@ export function TagSidebar({ tags }: TagSidebarProps) {
       <p className={s.label}>태그</p>
       <ul className={s.list}>
         <li>
-          <button
-            className={s.tagButton}
-            data-active={activeTags.length === 0}
+          <Chip
+            variant='filter'
+            selected={activeTags.length === 0}
             onClick={() => {
-              return router.push('/blog');
+              router.push('/blog');
             }}>
             전체
-          </button>
+          </Chip>
         </li>
         {tags.map((tag) => {
           return (
             <li key={tag}>
-              <button
-                className={s.tagButton}
-                data-active={activeTags.includes(tag)}
+              <Chip
+                variant='filter'
+                selected={activeTags.includes(tag)}
                 onClick={() => {
-                  return handleTag(tag);
+                  handleTag(tag);
                 }}>
                 {tag}
-              </button>
+              </Chip>
             </li>
           );
         })}

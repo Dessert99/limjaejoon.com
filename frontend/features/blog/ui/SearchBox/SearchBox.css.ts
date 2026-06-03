@@ -1,5 +1,6 @@
 import { bp } from '@/shared/styles/breakpoints';
-import { vars } from '@/shared/styles/theme.css';
+import { color } from '@/shared/styles/theme-contract.css';
+import { tokens } from '@/shared/styles/tokens.css';
 import { keyframes, style } from '@vanilla-extract/css';
 
 // 펼칠 때 검색 아이콘 버튼이 제자리에서 한 바퀴 도는 연출 (회전 끝난 뒤 컨테이너가 늘어남)
@@ -16,10 +17,10 @@ export const root = style({
   alignItems: 'center',
   width: '2.75rem', // 접힘: 아이콘 1개만 들어가는 정사각
   height: '2.75rem',
-  backgroundColor: vars.color.bgSoft,
-  border: `1px solid ${vars.color.lineSoft}`,
-  borderRadius: vars.radius.xl,
-  color: vars.color.textMuted,
+  background: color.surfaceContainerHighest,
+  border: `1px solid ${color.outlineVariant}`,
+  borderRadius: tokens.shape.medium,
+  color: color.onSurfaceVariant,
   overflow: 'hidden', // 접힘 동안 input·닫기버튼을 잘라내 자연스럽게 "자라나게"
   // 평소(접힐 때 포함) 전환: width 즉시 시작
   transition:
@@ -29,16 +30,15 @@ export const root = style({
     '&[data-expanded]': {
       width: '100%',
     },
-    // 접힘 상태 hover = 시그니처 accent 3종 세트(color + soft bg + border)
+    // 접힘 상태 hover = primary 강조
     '&:not([data-expanded]):hover': {
-      color: vars.color.accentStrong,
-      borderColor: vars.color.accentStrong,
-      backgroundColor: vars.color.accentSoft,
+      color: color.primary,
+      borderColor: color.primary,
     },
   },
-  // 펼침 상태 포커스 = 검색 입력 규약과 동일하게 보더만 accent
+  // 펼침 상태 포커스 = 보더만 primary(2px)
   ':focus-within': {
-    borderColor: vars.color.accentStrong,
+    borderColor: color.primary,
   },
   '@media': {
     [bp.md]: {
@@ -61,7 +61,6 @@ export const searchBtn = style({
   border: 'none',
   background: 'transparent',
   color: 'inherit',
-  fontSize: vars.fontSize.xl, // react-icons 는 1em 기준 → 아이콘 ≈ 20px
   cursor: 'pointer',
   transition: 'color 150ms ease',
   selectors: {
@@ -91,8 +90,8 @@ export const input = style({
   border: 'none',
   outline: 'none',
   background: 'transparent',
-  color: vars.color.textPrimary,
-  fontSize: vars.fontSize.base,
+  color: color.onSurface,
+  font: tokens.typescale.bodyLarge,
   transition: 'opacity 150ms ease',
   selectors: {
     // 접힘일 땐 입력부를 투명하게 (overflow:hidden 와 함께 "사라진 듯" 보이게)
@@ -101,12 +100,9 @@ export const input = style({
     },
   },
   '::placeholder': {
-    color: vars.color.textMuted,
+    color: color.onSurfaceVariant,
   },
   '@media': {
-    [bp.md]: {
-      fontSize: vars.fontSize.lg,
-    },
     '(prefers-reduced-motion: reduce)': {
       transition: 'none',
     },
@@ -123,15 +119,13 @@ export const collapseBtn = style({
   height: '2.75rem',
   border: 'none',
   background: 'transparent',
-  borderRadius: vars.radius.md,
-  color: vars.color.textMuted,
-  fontSize: vars.fontSize.xl,
+  borderRadius: tokens.shape.full,
+  color: color.onSurfaceVariant,
   cursor: 'pointer',
   transition:
     'opacity 150ms ease, color 150ms ease, background-color 150ms ease',
   ':hover': {
-    color: vars.color.accentStrong,
-    backgroundColor: vars.color.accentSoft,
+    color: color.primary,
   },
   selectors: {
     // 접힘일 땐 보이지도, 눌리지도 않게

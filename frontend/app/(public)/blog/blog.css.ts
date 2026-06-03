@@ -1,5 +1,6 @@
 import { bp } from '@/shared/styles/breakpoints';
-import { vars } from '@/shared/styles/theme.css';
+import { color } from '@/shared/styles/theme-contract.css';
+import { tokens } from '@/shared/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
 
 export const main = style({
@@ -7,13 +8,11 @@ export const main = style({
   minHeight: '100vh',
   width: '100%',
   maxWidth: '80rem',
-  paddingLeft: vars.spacing.pagePadMobile,
-  paddingRight: vars.spacing.pagePadMobile,
+  paddingInline: '1rem',
   paddingBottom: '4rem',
   '@media': {
     [bp.md]: {
-      paddingLeft: '3rem',
-      paddingRight: '3rem',
+      paddingInline: '3rem',
     },
   },
 });
@@ -21,26 +20,24 @@ export const main = style({
 export const header = style({
   marginBottom: '2rem',
   paddingBottom: '1.5rem',
-  borderBottom: `1px solid ${vars.color.lineSoft}`,
+  borderBottom: `1px solid ${color.outlineVariant}`,
 });
 
 export const heading = style({
-  fontSize: vars.fontSize['3xl'],
-  fontWeight: 700,
-  color: vars.color.textPrimary,
-  letterSpacing: '-0.02em',
+  font: tokens.typescale.headlineMedium,
+  color: color.onSurface,
+  letterSpacing: '-0.01em',
   '@media': {
     [bp.md]: {
-      fontSize: vars.fontSize['4xl'],
+      font: tokens.typescale.displaySmall,
     },
   },
 });
 
 export const description = style({
   marginTop: '0.5rem',
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textMuted,
-  lineHeight: '1.6',
+  font: tokens.typescale.bodyLarge,
+  color: color.onSurfaceVariant,
 });
 
 // 검색창 영역 — 헤더와 태그/리스트 그리드 사이 간격

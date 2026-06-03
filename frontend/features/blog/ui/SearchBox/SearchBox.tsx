@@ -5,7 +5,7 @@
 // 호출처: blog/page.tsx 헤더 영역.
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useRef, useState, useTransition } from 'react';
-import { HiOutlineMagnifyingGlass, HiOutlineXMark } from 'react-icons/hi2';
+import { Icon } from '@/shared/ui/Icon/Icon';
 import * as s from './SearchBox.css';
 
 export function SearchBox() {
@@ -95,7 +95,10 @@ export function SearchBox() {
         aria-label='검색 열기'
         aria-expanded={expanded}
         tabIndex={expanded ? -1 : 0}>
-        <HiOutlineMagnifyingGlass aria-hidden />
+        <Icon
+          name='search'
+          size={22}
+        />
       </button>
 
       <input
@@ -125,7 +128,10 @@ export function SearchBox() {
         onClick={handleCollapse}
         aria-label='검색 닫기'
         tabIndex={expanded ? 0 : -1}>
-        <HiOutlineXMark aria-hidden />
+        <Icon
+          name='close'
+          size={20}
+        />
       </button>
     </div>
   );

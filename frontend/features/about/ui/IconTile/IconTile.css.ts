@@ -1,4 +1,5 @@
-import { vars } from '@/shared/styles/theme.css';
+import { color } from '@/shared/styles/theme-contract.css';
+import { tokens } from '@/shared/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
 
 // 카드 + 라벨을 세로로 묶는 wrapper
@@ -16,23 +17,23 @@ export const card = style({
   justifyContent: 'center',
   width: '3rem',
   height: '3rem',
-  borderRadius: vars.radius.x2l,
-  border: `1px solid ${vars.color.lineSoft}`,
-  background: vars.color.bgElevated,
-  color: vars.color.textSecondary,
-  fontSize: vars.fontSize.xl,
-  boxShadow: vars.shadow.cardSm,
+  borderRadius: tokens.shape.large,
+  border: `1px solid ${color.outlineVariant}`,
+  background: color.surfaceContainerLow,
+  color: color.onSurfaceVariant,
+  fontSize: '1.25rem',
+  boxShadow: tokens.elevation.level1,
   textDecoration: 'none',
   transition:
     'color 200ms ease, border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease',
   ':hover': {
-    color: vars.color.accentStrong,
-    borderColor: vars.color.accentStrong,
+    color: color.primary,
+    borderColor: color.primary,
     transform: 'translateY(-4px)',
-    boxShadow: vars.shadow.cardMd,
+    boxShadow: tokens.elevation.level3,
   },
   ':focus-visible': {
-    outline: `2px solid ${vars.color.accentStrong}`,
+    outline: `2px solid ${color.primary}`,
     outlineOffset: '2px',
   },
   '@media': {
@@ -58,6 +59,6 @@ export const icon = style({
 });
 
 export const label = style({
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textSecondary,
+  font: tokens.typescale.bodyMedium,
+  color: color.onSurfaceVariant,
 });

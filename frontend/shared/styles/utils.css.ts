@@ -1,19 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { bp } from './breakpoints';
-import { vars } from './theme.css';
-
-export const surfaceCard = style({
-  border: `1px solid ${vars.color.lineSoft}`,
-  borderRadius: vars.radius.lg,
-  background: vars.color.bgSurface,
-  boxShadow: vars.shadow.cardSm,
-});
-
-export const surfaceSubtle = style({
-  border: `1px solid ${vars.color.lineSoft}`,
-  borderRadius: vars.radius.md,
-  background: vars.color.bgSoft,
-});
+import { color } from './theme-contract.css';
 
 export const contentLayout = style({
   '@media': {
@@ -41,7 +28,7 @@ export function applyHeadingAnchorStyles(prose: string) {
   });
 
   globalStyle(`${prose} .heading-anchor`, {
-    color: vars.color.textMuted,
+    color: color.onSurfaceVariant,
     textDecoration: 'none',
     opacity: 0,
     marginRight: '0.375rem',
@@ -57,10 +44,10 @@ export function applyHeadingAnchorStyles(prose: string) {
     opacity: 1,
   });
   globalStyle(`${prose} .heading-anchor:hover`, {
-    color: vars.color.accentStrong,
+    color: color.primary,
   });
   globalStyle(`${prose} .heading-anchor:focus-visible`, {
     opacity: 1,
-    color: vars.color.accentStrong,
+    color: color.primary,
   });
 }

@@ -1,5 +1,6 @@
 import { bp } from '@/shared/styles/breakpoints';
-import { vars } from '@/shared/styles/theme.css';
+import { color } from '@/shared/styles/theme-contract.css';
+import { tokens } from '@/shared/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
 
 export const section = style({
@@ -14,9 +15,8 @@ export const section = style({
 });
 
 export const heading = style({
-  fontSize: vars.fontSize['2xl'],
-  fontWeight: 700,
-  color: vars.color.textPrimary,
+  font: tokens.typescale.titleLarge,
+  color: color.onSurface,
   margin: '0 0 1.5rem',
 });
 

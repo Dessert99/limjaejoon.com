@@ -1,95 +1,23 @@
 import { bp } from '@/shared/styles/breakpoints';
-import { vars } from '@/shared/styles/theme.css';
+import { color } from '@/shared/styles/theme-contract.css';
+import { tokens } from '@/shared/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
 
+// MD3 top app bar — surface 톤, 스크롤 시 surface-container + elevation 1 로 떠오름
 export const header = style({
   position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
   zIndex: 50,
-  borderBottom: `1px solid ${vars.color.lineSoft}`,
-  backgroundColor: vars.color.bgPageTranslucent,
-  backdropFilter: 'blur(8px)',
-});
-
-export const inner = style({
-  margin: '0 auto',
-  display: 'flex',
-  width: '100%',
-  maxWidth: '80rem',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingTop: '0.875rem',
-  paddingBottom: '0.875rem',
-  paddingLeft: vars.spacing.pagePadMobile,
-  paddingRight: vars.spacing.pagePadMobile,
-  '@media': {
-    [bp.md]: {
-      paddingLeft: vars.spacing.pagePad,
-      paddingRight: vars.spacing.pagePad,
-    },
-  },
-});
-
-export const logoLink = style({
-  display: 'inline-flex',
-  height: '3rem',
-  width: '3rem',
-  overflow: 'hidden',
-  borderRadius: vars.radius.full,
-  border: `1px solid ${vars.color.lineSoft}`,
-  backgroundColor: vars.color.bgSoft,
-});
-
-export const logoImg = style({
-  height: '3rem',
-  width: '3rem',
-  objectFit: 'cover',
-});
-
-export const navList = style({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '0.75rem',
-  listStyle: 'none',
-  '@media': {
-    [bp.md]: {
-      gap: '1.5rem',
-    },
-  },
-});
-
-export const iconBtn = style({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '2rem',
-  height: '2rem',
-  borderRadius: vars.radius.xl,
-  border: '1px solid transparent',
-  backgroundColor: 'transparent',
-  color: vars.color.textSecondary,
-  fontSize: vars.fontSize.xl,
-  cursor: 'pointer',
-  transition:
-    'color 150ms ease, border-color 150ms ease, background-color 150ms ease',
-  ':hover': {
-    color: vars.color.accentStrong,
-    backgroundColor: vars.color.accentSoft,
-    borderColor: vars.color.accentStrong,
-  },
-  ':focus-visible': {
-    color: vars.color.accentStrong,
-    backgroundColor: vars.color.accentSoft,
-    borderColor: vars.color.accentStrong,
-  },
+  background: color.surface,
+  borderBottom: `1px solid ${color.outlineVariant}`,
+  transition: `background-color ${tokens.motion.durationShort} ${tokens.motion.easingStandard}, box-shadow ${tokens.motion.durationShort} ${tokens.motion.easingStandard}`,
   selectors: {
-    '&[data-active="true"]': {
-      color: vars.color.accentStrong,
-      backgroundColor: vars.color.accentSoft,
-      borderColor: vars.color.accentStrong,
+    '&[data-scrolled="true"]': {
+      background: color.surfaceContainer,
+      borderBottomColor: 'transparent',
+      boxShadow: tokens.elevation.level1,
     },
   },
   '@media': {
@@ -99,57 +27,99 @@ export const iconBtn = style({
   },
 });
 
+export const inner = style({
+  margin: '0 auto',
+  display: 'flex',
+  width: '100%',
+  maxWidth: '80rem',
+  height: '64px',
+  alignItems: 'center',
+  gap: '8px',
+  paddingInline: '1rem',
+  '@media': {
+    [bp.md]: {
+      paddingInline: '6rem',
+    },
+  },
+});
+
+// 브랜드(아바타 + 워드마크) — full corner pill, state layer 합성
+export const brand = style({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '10px',
+  textDecoration: 'none',
+  borderRadius: tokens.shape.full,
+  padding: '4px 10px 4px 4px',
+});
+
+export const avatar = style({
+  width: '40px',
+  height: '40px',
+  borderRadius: tokens.shape.full,
+  objectFit: 'cover',
+  border: `1px solid ${color.outlineVariant}`,
+});
+
+export const wordmark = style({
+  font: tokens.typescale.titleLarge,
+  color: color.onSurface,
+  letterSpacing: '-0.01em',
+  whiteSpace: 'nowrap',
+});
+
+export const nav = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+  marginLeft: '8px',
+  flex: 1,
+});
+
+// nav 링크 — 활성/hover 시 primary 밑줄(scaleX 전환)
 export const navLink = style({
   position: 'relative',
   display: 'inline-flex',
   alignItems: 'center',
-  gap: '0.375rem',
-  paddingTop: '0.375rem',
-  paddingBottom: '0.375rem',
-  paddingLeft: '0.125rem',
-  paddingRight: '0.125rem',
-  fontSize: vars.fontSize.sm,
-  fontWeight: 600,
-  color: vars.color.textSecondary,
+  height: '64px',
+  paddingInline: '14px',
   textDecoration: 'none',
-  backgroundColor: 'transparent',
-  border: 'none',
-  transition: 'color 180ms ease',
+  color: color.onSurfaceVariant,
+  font: tokens.typescale.titleSmall,
+  whiteSpace: 'nowrap',
+  transition: `color ${tokens.motion.durationShort} ${tokens.motion.easingStandard}`,
 
   '::after': {
     content: '""',
     position: 'absolute',
-    left: '0.125rem',
-    right: '0.125rem',
-    bottom: '0.125rem',
-    height: '2px',
-    background: vars.color.accentStrong,
-    borderRadius: '2px',
-    transformOrigin: 'left center',
+    left: '14px',
+    right: '14px',
+    bottom: 0,
+    height: '3px',
+    borderRadius: '3px 3px 0 0',
+    background: color.primary,
     transform: 'scaleX(0)',
-    transition: 'transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+    transformOrigin: 'center',
+    transition: `transform ${tokens.motion.durationMedium} ${tokens.motion.easingEmphasized}`,
   },
 
   ':hover': {
-    color: vars.color.textPrimary,
+    color: color.onSurface,
   },
 
   selectors: {
-    '&:hover::after': {
-      transform: 'scaleX(1)',
-    },
     '&[data-active="true"]': {
-      color: vars.color.textPrimary,
+      color: color.primary,
     },
     '&[data-active="true"]::after': {
+      transform: 'scaleX(1)',
+    },
+    '&:hover::after': {
       transform: 'scaleX(1)',
     },
   },
 
   '@media': {
-    [bp.md]: {
-      fontSize: vars.fontSize.base,
-    },
     '(prefers-reduced-motion: reduce)': {
       transition: 'none',
       selectors: {
@@ -161,29 +131,23 @@ export const navLink = style({
   },
 });
 
-export const navDot = style({
-  width: '5px',
-  height: '5px',
-  borderRadius: vars.radius.full,
-  background: vars.color.accentStrong,
-  opacity: 0,
-  transform: 'translateX(-4px)',
-  transition: 'opacity 200ms ease, transform 200ms ease',
+export const actions = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+});
 
-  selectors: {
-    [`${navLink}:hover &`]: {
-      opacity: 1,
-      transform: 'translateX(0)',
-    },
-    [`${navLink}[data-active="true"] &`]: {
-      opacity: 1,
-      transform: 'translateX(0)',
-    },
-  },
-
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transition: 'none',
-    },
-  },
+// 아이콘 버튼(GitHub) — state layer 는 컴포넌트에서 합성
+export const iconBtn = style({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '40px',
+  height: '40px',
+  borderRadius: tokens.shape.full,
+  border: 'none',
+  background: 'transparent',
+  color: color.onSurfaceVariant,
+  cursor: 'pointer',
+  fontSize: '22px',
 });

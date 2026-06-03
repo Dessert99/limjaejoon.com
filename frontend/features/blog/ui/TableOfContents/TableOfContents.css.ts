@@ -1,5 +1,6 @@
 import { bp } from '@/shared/styles/breakpoints';
-import { vars } from '@/shared/styles/theme.css';
+import { color } from '@/shared/styles/theme-contract.css';
+import { tokens } from '@/shared/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
 
 export const nav = style({
@@ -13,16 +14,15 @@ export const nav = style({
       maxHeight: 'calc(100vh - 11rem)',
       overflowY: 'auto',
       scrollbarWidth: 'thin',
-      borderLeft: `1px solid ${vars.color.lineSoft}`,
+      borderLeft: `1px solid ${color.outlineVariant}`,
       paddingLeft: '0.75rem',
     },
   },
 });
 
 export const title = style({
-  fontSize: vars.fontSize.xs,
-  fontWeight: 600,
-  color: vars.color.textMuted,
+  font: tokens.typescale.labelMedium,
+  color: color.onSurfaceVariant,
   textTransform: 'uppercase',
   letterSpacing: '0.08em',
   marginBottom: '0.75rem',
@@ -37,8 +37,8 @@ export const list = style({
 
 export const link = style({
   display: 'block',
-  fontSize: vars.fontSize.sm,
-  color: vars.color.textMuted,
+  font: tokens.typescale.bodyMedium,
+  color: color.onSurfaceVariant,
   textDecoration: 'none',
   paddingBlock: '0.2rem',
   paddingLeft: '0',
@@ -47,16 +47,16 @@ export const link = style({
   paddingInlineStart: '0.625rem',
   transition: 'color 150ms ease, border-color 150ms ease',
   ':hover': {
-    color: vars.color.textPrimary,
+    color: color.onSurface,
   },
   ':focus-visible': {
-    color: vars.color.textPrimary,
-    borderLeftColor: vars.color.accentStrong,
+    color: color.onSurface,
+    borderLeftColor: color.primary,
   },
   selectors: {
     '&[data-active="true"]': {
-      color: vars.color.accentStrong,
-      borderLeftColor: vars.color.accentStrong,
+      color: color.primary,
+      borderLeftColor: color.primary,
     },
   },
   '@media': {

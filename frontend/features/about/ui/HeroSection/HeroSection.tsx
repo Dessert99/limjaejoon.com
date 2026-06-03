@@ -1,5 +1,8 @@
+import Link from 'next/link';
 import { ContactLinks } from '@/features/about/ui/ContactLinks/ContactLinks';
 import { profile } from '@/features/about/model/profile';
+import { button } from '@/shared/styles/recipes.css';
+import { sprinkles } from '@/shared/styles/sprinkles.css';
 import type { CSSProperties, ReactNode } from 'react';
 import * as s from './HeroSection.css';
 
@@ -36,8 +39,22 @@ export function HeroSection() {
             </li>
           );
         })}
-      </ul>{' '}
-      <ContactLinks contacts={profile.contacts} />
+      </ul>
+      <div
+        className={sprinkles({
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '16',
+          marginTop: '24',
+        })}>
+        <Link
+          href='/blog'
+          className={button({ variant: 'filled' })}>
+          지식 모음 보기
+        </Link>
+        <ContactLinks contacts={profile.contacts} />
+      </div>
     </section>
   );
 }
