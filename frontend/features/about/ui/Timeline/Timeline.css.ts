@@ -1,5 +1,6 @@
 import { bp } from '@/shared/styles/breakpoints';
 import { card as cardRecipe } from '@/shared/styles/recipes.css';
+import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { color } from '@/shared/styles/theme-contract.css';
 import { tokens } from '@/shared/styles/tokens.css';
 import { keyframes, style } from '@vanilla-extract/css';
@@ -16,97 +17,120 @@ const pulse = keyframes({
   },
 });
 
-export const section = style({
-  paddingTop: '2.5rem',
-  paddingBottom: '2.5rem',
-  '@media': {
-    [bp.md]: {
-      paddingTop: '3.5rem',
-      paddingBottom: '3.5rem',
+export const section = style([
+  sprinkles({
+    paddingTop: '40',
+    paddingBottom: '40',
+  }),
+  {
+    '@media': {
+      [bp.md]: {
+        paddingTop: '3.5rem',
+        paddingBottom: '3.5rem',
+      },
     },
   },
-});
+]);
 
-export const heading = style({
-  font: tokens.typescale.titleLarge,
-  color: color.onSurface,
-  margin: '0 0 1.5rem',
-});
+export const heading = style([
+  sprinkles({
+    c: 'onSurface',
+    marginTop: 'none',
+    marginInline: 'none',
+    marginBottom: '24',
+  }),
+  {
+    font: tokens.typescale.titleLarge,
+  },
+]);
 
-export const list = style({
-  position: 'relative',
-  listStyle: 'none',
-  padding: 0,
-  margin: 0,
-  paddingLeft: '1.5rem',
-  '::before': {
-    content: '""',
+export const list = style([
+  sprinkles({
+    padding: 'none',
+    margin: 'none',
+    paddingLeft: '24',
+  }),
+  {
+    position: 'relative',
+    listStyle: 'none',
+    '::before': {
+      content: '""',
+      position: 'absolute',
+      top: '0.5rem',
+      bottom: '0.5rem',
+      left: '0.3125rem',
+      width: '2px',
+      background: color.outlineVariant,
+      borderRadius: tokens.shape.full,
+    },
+    '::after': {
+      content: '""',
+      position: 'absolute',
+      top: '0.5rem',
+      left: '0.3125rem',
+      width: '2px',
+      height: 'calc(100% - 1.5rem)',
+      background: `linear-gradient(180deg, ${color.primary}, color-mix(in oklab, ${color.primary} 30%, transparent))`,
+      borderRadius: tokens.shape.full,
+      WebkitMaskImage: 'linear-gradient(180deg, #000 0 60%, transparent 100%)',
+      maskImage: 'linear-gradient(180deg, #000 0 60%, transparent 100%)',
+    },
+  },
+]);
+
+export const item = style([
+  sprinkles({ paddingBottom: '24' }),
+  {
+    position: 'relative',
+    selectors: {
+      '&:last-child': {
+        paddingBottom: 0,
+      },
+    },
+  },
+]);
+
+export const marker = style([
+  sprinkles({
+    borderRadius: 'full',
+    bg: 'primary',
+  }),
+  {
     position: 'absolute',
-    top: '0.5rem',
-    bottom: '0.5rem',
-    left: '0.3125rem',
-    width: '2px',
-    background: color.outlineVariant,
-    borderRadius: tokens.shape.full,
-  },
-  '::after': {
-    content: '""',
-    position: 'absolute',
-    top: '0.5rem',
-    left: '0.3125rem',
-    width: '2px',
-    height: 'calc(100% - 1.5rem)',
-    background: `linear-gradient(180deg, ${color.primary}, color-mix(in oklab, ${color.primary} 30%, transparent))`,
-    borderRadius: tokens.shape.full,
-    WebkitMaskImage: 'linear-gradient(180deg, #000 0 60%, transparent 100%)',
-    maskImage: 'linear-gradient(180deg, #000 0 60%, transparent 100%)',
-  },
-});
+    left: '-1.4375rem',
+    top: '0.4375rem',
+    width: '0.75rem',
+    height: '0.75rem',
+    boxShadow: `0 0 0 3px ${color.background}`,
+    transition: 'transform 150ms ease',
 
-export const item = style({
-  position: 'relative',
-  paddingBottom: '1.5rem',
-  selectors: {
-    '&:last-child': {
-      paddingBottom: 0,
+    selectors: {
+      [`${item}:first-child &`]: {
+        animation: `${pulse} 2.2s ease-out infinite`,
+      },
     },
-  },
-});
 
-export const marker = style({
-  position: 'absolute',
-  left: '-1.4375rem',
-  top: '0.4375rem',
-  width: '0.75rem',
-  height: '0.75rem',
-  borderRadius: tokens.shape.full,
-  background: color.primary,
-  boxShadow: `0 0 0 3px ${color.background}`,
-  transition: 'transform 150ms ease',
-
-  selectors: {
-    [`${item}:first-child &`]: {
-      animation: `${pulse} 2.2s ease-out infinite`,
-    },
-  },
-
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transition: 'none',
-      selectors: {
-        [`${item}:first-child &`]: {
-          animation: 'none',
+    '@media': {
+      '(prefers-reduced-motion: reduce)': {
+        transition: 'none',
+        selectors: {
+          [`${item}:first-child &`]: {
+            animation: 'none',
+          },
         },
       },
     },
   },
-});
+]);
 
 // MD3 outlined 카드 — recipe(surface + outline-variant) + 타임라인 카드 레이아웃 override
 export const card = style([
   cardRecipe({ variant: 'outlined' }),
+  sprinkles({
+    paddingBlock: '16',
+    paddingInline: '20',
+  }),
   {
-    padding: '1rem 1.25rem',
     transition: `border-color ${tokens.motion.durationShort} ${tokens.motion.easingStandard}, box-shadow ${tokens.motion.durationMedium} ${tokens.motion.easingStandard}`,
     ':hover': {
       borderColor: color.outline,
@@ -120,64 +144,82 @@ export const card = style([
   },
 ]);
 
-export const cardHeader = style({
+export const cardHeader = sprinkles({
   display: 'flex',
-  flexDirection: 'column',
-  gap: '0.125rem',
-  '@media': {
-    [bp.md]: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'baseline',
-      gap: '1rem',
-    },
+  flexDirection: { mobile: 'column', tablet: 'row' },
+  justifyContent: { tablet: 'space-between' },
+  alignItems: { tablet: 'baseline' },
+  gap: { mobile: '2', tablet: '16' },
+});
+
+export const title = style([
+  sprinkles({
+    c: 'onSurface',
+    margin: 'none',
+  }),
+  {
+    font: tokens.typescale.titleMedium,
+    fontWeight: 600,
   },
-});
+]);
 
-export const title = style({
-  font: tokens.typescale.titleMedium,
-  fontWeight: 600,
-  color: color.onSurface,
-  margin: 0,
-});
+export const period = style([
+  sprinkles({ c: 'onSurfaceVariant' }),
+  {
+    font: tokens.typescale.labelMedium,
+    whiteSpace: 'nowrap',
+  },
+]);
 
-export const period = style({
-  font: tokens.typescale.labelMedium,
-  color: color.onSurfaceVariant,
-  whiteSpace: 'nowrap',
-});
+export const subtitle = style([
+  sprinkles({
+    c: 'onSurfaceVariant',
+    marginTop: '4',
+  }),
+  {
+    font: tokens.typescale.bodyMedium,
+  },
+]);
 
-export const subtitle = style({
-  font: tokens.typescale.bodyMedium,
-  color: color.onSurfaceVariant,
-  marginTop: '0.25rem',
-});
+export const description = style([
+  sprinkles({
+    c: 'onSurfaceVariant',
+    marginTop: '10',
+  }),
+  {
+    font: tokens.typescale.bodyMedium,
+    lineHeight: 1.6,
+    whiteSpace: 'pre-line',
+  },
+]);
 
-export const description = style({
-  font: tokens.typescale.bodyMedium,
-  color: color.onSurfaceVariant,
-  lineHeight: 1.6,
-  marginTop: '0.625rem',
-  whiteSpace: 'pre-line',
-});
-
-export const stackList = style({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '0.5rem',
-  listStyle: 'none',
-  padding: 0,
-  margin: '0.75rem 0 0',
-});
+export const stackList = style([
+  sprinkles({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8',
+    padding: 'none',
+    marginTop: '12',
+    marginInline: 'none',
+    marginBottom: 'none',
+  }),
+  {
+    listStyle: 'none',
+  },
+]);
 
 // 디스플레이 전용 스택 칩 — MD3 input chip 톤(surface-container-highest)
-export const stackChip = style({
-  font: tokens.typescale.labelLarge,
-  color: color.onSurfaceVariant,
-  background: color.surfaceContainerHighest,
-  borderRadius: tokens.shape.small,
-  height: '32px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  paddingInline: '12px',
-});
+export const stackChip = style([
+  sprinkles({
+    c: 'onSurfaceVariant',
+    bg: 'surfaceContainerHighest',
+    borderRadius: 'small',
+    display: 'inline-flex',
+    alignItems: 'center',
+    paddingInline: '12',
+  }),
+  {
+    font: tokens.typescale.labelLarge,
+    height: '32px',
+  },
+]);

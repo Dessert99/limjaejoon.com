@@ -1,27 +1,28 @@
 import { bp } from '@/shared/styles/breakpoints';
+import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { color } from '@/shared/styles/theme-contract.css';
 import { tokens } from '@/shared/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
 
-export const main = style({
-  margin: '0 auto',
-  minHeight: '100vh',
-  width: '100%',
-  maxWidth: '80rem',
-  paddingInline: '1rem',
-  paddingBottom: '4rem',
-  '@media': {
-    [bp.md]: {
-      paddingInline: '3rem',
-    },
+export const main = style([
+  sprinkles({
+    marginInline: 'auto',
+    paddingInline: { mobile: '16', tablet: '48' },
+    paddingBottom: '64',
+  }),
+  {
+    minHeight: '100vh',
+    width: '100%',
+    maxWidth: '80rem',
   },
-});
+]);
 
-export const header = style({
-  marginBottom: '2rem',
-  paddingBottom: '1.5rem',
-  borderBottom: `1px solid ${color.outlineVariant}`,
-});
+export const header = style([
+  sprinkles({ marginBottom: '32', paddingBottom: '24' }),
+  {
+    borderBottom: `1px solid ${color.outlineVariant}`,
+  },
+]);
 
 export const heading = style({
   font: tokens.typescale.headlineMedium,
@@ -34,24 +35,25 @@ export const heading = style({
   },
 });
 
-export const description = style({
-  marginTop: '0.5rem',
-  font: tokens.typescale.bodyLarge,
-  color: color.onSurfaceVariant,
-});
+export const description = style([
+  sprinkles({ marginTop: '8' }),
+  {
+    font: tokens.typescale.bodyLarge,
+    color: color.onSurfaceVariant,
+  },
+]);
 
 // 검색창 영역 — 헤더와 태그/리스트 그리드 사이 간격
-export const searchWrap = style({
-  marginBottom: '1.5rem',
-});
+export const searchWrap = sprinkles({ marginBottom: '24' });
 
-export const layout = style({
-  display: 'grid',
-  gap: '1.5rem',
-  '@media': {
-    [bp.md]: {
-      gridTemplateColumns: '9rem 1fr',
-      alignItems: 'start',
+export const layout = style([
+  sprinkles({ display: 'grid', gap: '24' }),
+  {
+    '@media': {
+      [bp.md]: {
+        gridTemplateColumns: '9rem 1fr',
+        alignItems: 'start',
+      },
     },
   },
-});
+]);

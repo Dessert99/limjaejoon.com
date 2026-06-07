@@ -1,4 +1,5 @@
 import { bp } from '@/shared/styles/breakpoints';
+import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { color } from '@/shared/styles/theme-contract.css';
 import { tokens } from '@/shared/styles/tokens.css';
 import {
@@ -10,70 +11,81 @@ import { globalStyle, style } from '@vanilla-extract/css';
 
 export { contentLayout, tocAside };
 
-export const main = style({
-  margin: '0 auto',
-  minHeight: '100vh',
-  width: '100%',
-  maxWidth: '85rem',
-  paddingInline: '1rem',
-  paddingBottom: '4rem',
-  '@media': {
-    [bp.md]: {
-      paddingInline: '6rem',
+export const main = style([
+  sprinkles({ marginInline: 'auto', paddingBottom: '64' }),
+  {
+    minHeight: '100vh',
+    width: '100%',
+    maxWidth: '85rem',
+    paddingInline: '1rem',
+    '@media': {
+      [bp.md]: {
+        paddingInline: '6rem',
+      },
     },
   },
-});
+]);
 
-export const header = style({
-  marginBottom: '2.5rem',
-  paddingBottom: '2rem',
-  borderBottom: `1px solid ${color.outlineVariant}`,
-});
+export const header = style([
+  sprinkles({ marginBottom: '40', paddingBottom: '32' }),
+  {
+    borderBottom: `1px solid ${color.outlineVariant}`,
+  },
+]);
 
-export const date = style({
-  font: tokens.typescale.labelLarge,
-  fontFamily: tokens.typeface.mono,
-  color: color.onSurfaceVariant,
-  display: 'block',
-  marginBottom: '1rem',
-});
+export const date = style([
+  sprinkles({ display: 'block', marginBottom: '16' }),
+  {
+    font: tokens.typescale.labelLarge,
+    fontFamily: tokens.typeface.mono,
+    color: color.onSurfaceVariant,
+  },
+]);
 
-export const title = style({
-  font: tokens.typescale.headlineMedium,
-  color: color.onSurface,
-  letterSpacing: '-0.02em',
-  lineHeight: '1.3',
-  marginBottom: '0.75rem',
-  '@media': {
-    [bp.md]: {
-      font: tokens.typescale.displaySmall,
+export const title = style([
+  sprinkles({ marginBottom: '12' }),
+  {
+    font: tokens.typescale.headlineMedium,
+    color: color.onSurface,
+    letterSpacing: '-0.02em',
+    lineHeight: '1.3',
+    '@media': {
+      [bp.md]: {
+        font: tokens.typescale.displaySmall,
+      },
     },
   },
-});
+]);
 
-export const description = style({
-  font: tokens.typescale.bodyLarge,
-  color: color.onSurfaceVariant,
-  marginBottom: '1rem',
-});
+export const description = style([
+  sprinkles({ marginBottom: '16' }),
+  {
+    font: tokens.typescale.bodyLarge,
+    color: color.onSurfaceVariant,
+  },
+]);
 
-export const tags = style({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '0.375rem',
-  listStyle: 'none',
-  padding: 0,
-  margin: 0,
-});
+export const tags = style([
+  sprinkles({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '6',
+    padding: 'none',
+    margin: 'none',
+  }),
+  {
+    listStyle: 'none',
+  },
+]);
 
-export const tag = style({
-  font: tokens.typescale.labelSmall,
-  color: color.primary,
-  background: `color-mix(in oklab, ${color.primary} 12%, transparent)`,
-  borderRadius: tokens.shape.small,
-  paddingInline: '0.625rem',
-  paddingBlock: '0.2rem',
-});
+export const tag = style([
+  sprinkles({ c: 'primary', borderRadius: 'small', paddingInline: '10' }),
+  {
+    font: tokens.typescale.labelSmall,
+    background: `color-mix(in oklab, ${color.primary} 12%, transparent)`,
+    paddingBlock: '0.2rem',
+  },
+]);
 
 // MDX 본문 prose 스타일
 // globalStyle을 쓰는 이유: MDXRemote가 렌더링한 임의의 HTML 자식 요소를 스타일링해야 하기 때문

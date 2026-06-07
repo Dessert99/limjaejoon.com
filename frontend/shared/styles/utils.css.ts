@@ -1,5 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { bp } from './breakpoints';
+import { sprinkles } from './sprinkles.css';
 import { color } from './theme-contract.css';
 
 export const contentLayout = style({
@@ -12,13 +13,8 @@ export const contentLayout = style({
   },
 });
 
-export const tocAside = style({
-  display: 'none',
-  '@media': {
-    [bp.lg]: {
-      display: 'block',
-    },
-  },
+export const tocAside = sprinkles({
+  display: { mobile: 'none', desktop: 'block' },
 });
 
 // prose 셀렉터를 받아 heading-anchor 관련 globalStyle을 등록

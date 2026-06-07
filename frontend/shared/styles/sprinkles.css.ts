@@ -2,12 +2,11 @@ import { defineProperties, createSprinkles } from '@vanilla-extract/sprinkles';
 import { color } from './theme-contract.css';
 import { tokens } from './tokens.css';
 
-// SPRINKLES — 빌드 타임에 생성되는 atomic·반응형 유틸 prop.
-// 일회성 style({}) 남발 대신 타입 안전한 prop 으로 layout/spacing/color 를 조합한다:
-//   <div className={sprinkles({ display: 'flex', gap: '12', p: '16', bg: 'surfaceContainer' })} />
-// 두 property set 을 합친다: (1) 반응형(breakpoint 조건) (2) 색 역할(계절 contract 바인딩).
+// SPRINKLES — 빌드 타임 atomic·반응형 유틸 prop. 레이아웃/간격/색의 "리듬"을 담당한다.
+// style({}) 안에서도 합성된다: style([sprinkles({ display: 'flex', p: '16' }), { ...고유 연출 }]).
+// 치수(width/height)·위치(position)·타이포·애니메이션은 sprinkles 영역이 아니라 style() 에 남긴다.
 
-// rem 기반 간격 스케일 — gap/padding/margin 에서 공유. 키는 px 감각의 숫자 문자열.
+// rem 기반 간격 스케일 — gap/padding/margin 에서 공유. 키는 px 감각의 숫자 문자열(2px 그리드).
 const space = {
   none: '0',
   '2': '0.125rem',
@@ -16,6 +15,7 @@ const space = {
   '8': '0.5rem',
   '10': '0.625rem',
   '12': '0.75rem',
+  '14': '0.875rem',
   '16': '1rem',
   '20': '1.25rem',
   '24': '1.5rem',
@@ -25,6 +25,9 @@ const space = {
   '64': '4rem',
 } as const;
 
+// 마진은 중앙 정렬용 auto 도 허용한다(예: marginInline: 'auto').
+const margins = { ...space, auto: 'auto' } as const;
+
 const responsiveProperties = defineProperties({
   conditions: {
     mobile: {},
@@ -33,7 +36,15 @@ const responsiveProperties = defineProperties({
   },
   defaultCondition: 'mobile',
   properties: {
-    display: ['none', 'flex', 'grid', 'block', 'inline-flex', 'inline-block'],
+    display: [
+      'none',
+      'flex',
+      'grid',
+      'block',
+      'inline-flex',
+      'inline-block',
+      'contents',
+    ],
     flexDirection: ['row', 'column'],
     flexWrap: ['wrap', 'nowrap'],
     alignItems: ['flex-start', 'center', 'flex-end', 'stretch', 'baseline'],
@@ -50,14 +61,23 @@ const responsiveProperties = defineProperties({
     paddingBottom: space,
     paddingLeft: space,
     paddingRight: space,
-    marginTop: space,
-    marginBottom: space,
+    paddingInline: space,
+    paddingBlock: space,
+    margin: margins,
+    marginTop: margins,
+    marginBottom: margins,
+    marginLeft: margins,
+    marginRight: margins,
+    marginInline: margins,
     borderRadius: tokens.shape,
   },
   shorthands: {
     p: ['padding'],
     px: ['paddingLeft', 'paddingRight'],
     py: ['paddingTop', 'paddingBottom'],
+    m: ['margin'],
+    mx: ['marginLeft', 'marginRight'],
+    my: ['marginTop', 'marginBottom'],
     r: ['borderRadius'],
   },
 });
@@ -76,4 +96,3 @@ const colorProperties = defineProperties({
 });
 
 export const sprinkles = createSprinkles(responsiveProperties, colorProperties);
-export type Sprinkles = Parameters<typeof sprinkles>[0];

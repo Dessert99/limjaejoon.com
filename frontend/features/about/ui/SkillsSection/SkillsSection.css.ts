@@ -1,30 +1,44 @@
 import { bp } from '@/shared/styles/breakpoints';
-import { color } from '@/shared/styles/theme-contract.css';
+import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { tokens } from '@/shared/styles/tokens.css';
 import { style } from '@vanilla-extract/css';
 
-export const section = style({
-  paddingTop: '2.5rem',
-  paddingBottom: '2.5rem',
-  '@media': {
-    [bp.md]: {
-      paddingTop: '3.5rem',
-      paddingBottom: '3.5rem',
+export const section = style([
+  sprinkles({
+    paddingTop: '40',
+    paddingBottom: '40',
+  }),
+  {
+    '@media': {
+      [bp.md]: {
+        paddingTop: '3.5rem',
+        paddingBottom: '3.5rem',
+      },
     },
   },
-});
+]);
 
-export const heading = style({
-  font: tokens.typescale.titleLarge,
-  color: color.onSurface,
-  margin: '0 0 1.5rem',
-});
+export const heading = style([
+  sprinkles({
+    c: 'onSurface',
+    marginTop: 'none',
+    marginInline: 'none',
+    marginBottom: '24',
+  }),
+  {
+    font: tokens.typescale.titleLarge,
+  },
+]);
 
-export const list = style({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '1rem',
-  listStyle: 'none',
-  padding: 0,
-  margin: 0,
-});
+export const list = style([
+  sprinkles({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '16',
+    padding: 'none',
+    margin: 'none',
+  }),
+  {
+    listStyle: 'none',
+  },
+]);

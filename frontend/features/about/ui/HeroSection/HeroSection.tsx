@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { ContactLinks } from '@/features/about/ui/ContactLinks/ContactLinks';
 import { profile } from '@/features/about/model/profile';
 import { button } from '@/shared/styles/recipes.css';
-import { sprinkles } from '@/shared/styles/sprinkles.css';
 import type { CSSProperties, ReactNode } from 'react';
 import * as s from './HeroSection.css';
 
@@ -40,14 +39,7 @@ export function HeroSection() {
           );
         })}
       </ul>
-      <div
-        className={sprinkles({
-          display: 'flex',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '16',
-          marginTop: '24',
-        })}>
+      <div className={s.actions}>
         <Link
           href='/blog'
           className={button({ variant: 'filled' })}>
