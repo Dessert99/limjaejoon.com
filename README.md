@@ -32,21 +32,7 @@ backend/           # NestJS API 서버
 docs/
   conventions/     # 코드/스타일 규칙 (CLAUDE.md에서 참조)
   plans/           # 기능 단위 PRD/ADR/state
-reports/           # 작업 기술서·학습 정리
 ```
-
-## 작업 기술서 (Reports)
-
-프로젝트 진행 과정에서 주요 작업을 기록한 기술서는 `reports/`에 있다.
-
-- [SEO 최적화 구현 보고서](reports/2026-04-03-seo-implementation.md)
-- [모노레포 마이그레이션](reports/2026-04-09-monorepo-migration.md)
-- [Claude Code 훅 시스템](reports/2026-04-10-claude-code-hooks.md)
-- [하네스 엔지니어링](reports/2026-04-17-harness-engineering.md)
-- [Docker 로컬 셋업](reports/2026-04-26-docker-local-setup.md)
-- [NestJS 아키텍처](reports/2026-04-26-nestjs-architecture.md)
-- [auth-session 회고](reports/2026-04-30-auth-session.md)
-- [IconTile 글라스모피즘 카드 — vanilla-extract 단일 클래스 규칙과 selectors 패턴](reports/2026-05-01-icon-tile-glass-card.md)
 
 ## 개발 명령어
 
