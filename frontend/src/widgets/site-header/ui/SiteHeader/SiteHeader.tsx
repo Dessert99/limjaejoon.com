@@ -2,7 +2,7 @@
 // 전역 헤더 (MD3 top app bar) — 브랜드 + 네비게이션 + GitHub + 계절 테마 메뉴
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/shared/lib';
 import { useEffect, useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
 

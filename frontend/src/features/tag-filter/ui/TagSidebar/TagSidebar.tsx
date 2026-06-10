@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/shared/lib';
 import { Chip } from '@/shared/ui';
 import * as s from './TagSidebar.css';
 

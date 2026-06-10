@@ -1,1 +1,1 @@
-export { BlogPage as default, metadata } from '@/views/blog';
+export { BlogPage as default, metadata } from '@/pages/blog';

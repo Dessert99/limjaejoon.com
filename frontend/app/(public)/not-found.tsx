@@ -1,1 +1,1 @@
-export { NotFoundPage as default } from '@/views/not-found';
+export { NotFoundPage as default } from '@/pages/not-found';

@@ -10,7 +10,8 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "ci": "npm run lint && npm run type-check && npm run test && npm run build"
+    "fsd": "steiger ./src",
+    "ci": "npm run fsd && npm run lint && npm run type-check && npm run test && npm run build"
   },
   "dependencies": {
     "@vanilla-extract/css": "^1.20.1",
@@ -31,6 +32,7 @@
     "shiki": "^4.0.2"
   },
   "devDependencies": {
+    "@feature-sliced/steiger-plugin": "^0.6.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -44,6 +46,7 @@
     "eslint-config-next": "16.1.1",
     "jsdom": "^29.1.1",
     "msw": "^2.14.6",
+    "steiger": "^0.5.13",
     "typescript": "^5",
     "vitest": "^4.1.8"
   }

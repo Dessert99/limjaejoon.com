@@ -2,4 +2,4 @@ export {
   BlogPostPage as default,
   generateMetadata,
   generateStaticParams,
-} from '@/views/blog-post';
+} from '@/pages/blog-post';

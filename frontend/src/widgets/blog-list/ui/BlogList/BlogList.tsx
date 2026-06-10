@@ -4,7 +4,7 @@
 // (검색창 SearchBox·태그 TagSidebar는 URL에만 쓰고, 실제 필터는 여기 한곳).
 import { BlogCard, type PostMeta } from '@/entities/post';
 import { filterPosts } from '@/features/post-search';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from '@/shared/lib';
 import * as s from './BlogList.css';
 
 interface BlogListProps {

@@ -3,7 +3,7 @@
 // /blog 결합 검색 입력부. 평소엔 아이콘으로 접혀 있다 클릭 시 검색창으로 펼쳐진다.
 // 검색어를 URL ?q= 에 써서 BlogList 가 태그와 함께 읽는다("필터=URL" 모델).
 // 호출처: blog/page.tsx 헤더 영역.
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/shared/lib';
 import { useRef, useState, useTransition } from 'react';
 import { Icon } from '@/shared/ui';
 import * as s from './SearchBox.css';
