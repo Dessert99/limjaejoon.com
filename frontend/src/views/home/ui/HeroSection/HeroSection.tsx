@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ContactLinks } from '@/features/about/ui/ContactLinks/ContactLinks';
+import { ContactLinks } from '../ContactLinks/ContactLinks';
 import { profile } from '@/entities/profile';
 import { button } from '@/shared/styles/recipes.css';
 import type { CSSProperties, ReactNode } from 'react';
