@@ -23,6 +23,8 @@
 
 각 책임이 어느 segment 에 속하는지 아래에서 정한다. segment 의 위치·명명 정의 자체는 folder-structure.md 가 출처다.
 
+슬라이스를 어느 **레이어**에 둘지는 책임으로 가른다: `entities`(핵심 도메인 모델·데이터), `features`(사용자 행동 단위), `widgets`(여러 슬라이스를 엮은 큰 UI 블록), `pages`(라우트 단위 화면 조립). 아래 segment 책임은 어느 레이어의 슬라이스에든 동일하게 적용된다.
+
 `model/` 은 상태 coordinator hook 과 도메인 타입·스키마를 함께 품지만, 같은 segment 안의 **다른 파일**로 나눈다.
 
 ### app page → `app/`
@@ -78,7 +80,7 @@ page client 가 커지면 "데이터 소유", "화면 배치", "사용자 액션
 
 ### 순수 규칙 → `features/{slice}/lib/`
 
-`features/{slice}/lib` 은 React 없이 실행 가능한 도메인 순수 로직을 둔다.
+`features/{slice}/lib`(및 `shared/lib`)은 도메인 순수 로직을 둔다. 대부분 React 없이 검증 가능한 순수 함수지만, 도메인에 매이지 않은 재사용 훅·래퍼(예: `shared/lib/navigation`)도 여기 속한다(바닐라 FSD). 화면 workflow 의 상태 coordinator 훅은 `model/` 로 보낸다.
 
 - 서버 응답을 화면 모델로 변환.
 - 입력값을 도메인 상태로 판정.
