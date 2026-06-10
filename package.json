@@ -11,6 +11,7 @@
     "dev:be": "npm run dev -w backend",
     "build:fe": "npm run build -w frontend",
     "build:be": "npm run build -w backend",
+    "test:fe": "npm run test -w frontend",
     "lint": "npm run lint --workspaces --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
