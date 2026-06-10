@@ -1,10 +1,8 @@
 import { HeroSection } from '@/features/about/ui/HeroSection/HeroSection';
 import { ProjectsSection } from '@/features/about/ui/ProjectsSection/ProjectsSection';
 import { SkillsSection } from '@/features/about/ui/SkillsSection/SkillsSection';
-import { Timeline } from '@/features/about/ui/Timeline/Timeline';
-import { activities } from '@/features/about/model/activities';
-import { education } from '@/features/about/model/education';
-import { experience } from '@/features/about/model/experience';
+import { Timeline } from '@/shared/ui';
+import { activities, education, experience } from '@/entities/profile';
 import * as s from './page.css';
 
 export default function Home() {

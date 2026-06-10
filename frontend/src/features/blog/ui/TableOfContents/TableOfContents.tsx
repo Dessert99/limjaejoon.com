@@ -1,6 +1,6 @@
 'use client';
 
-import type { TocHeading } from '@/features/blog/lib/extract-headings';
+import type { TocHeading } from '@/entities/post';
 import { useEffect, useRef, useState } from 'react';
 import * as s from './TableOfContents.css';
 

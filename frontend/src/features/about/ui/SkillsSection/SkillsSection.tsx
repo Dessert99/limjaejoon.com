@@ -7,9 +7,9 @@ import {
   SiReact,
   SiTypescript,
 } from 'react-icons/si';
-import { SectionReveal } from '@/features/about/ui/SectionReveal/SectionReveal';
-import { skills } from '@/features/about/model/skills';
-import { IconTile } from '@/features/about/ui/IconTile/IconTile';
+import { SectionReveal } from '@/shared/ui';
+import { skills } from '@/entities/profile';
+import { IconTile } from '@/shared/ui';
 import * as s from './SkillsSection.css';
 
 const iconBySkill: Record<string, IconType> = {

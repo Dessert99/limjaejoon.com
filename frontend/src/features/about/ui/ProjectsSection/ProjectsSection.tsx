@@ -1,5 +1,5 @@
-import { SectionReveal } from '@/features/about/ui/SectionReveal/SectionReveal';
-import { projects } from '@/features/about/model/projects';
+import { SectionReveal } from '@/shared/ui';
+import { projects } from '@/entities/profile';
 import * as s from './ProjectsSection.css';
 
 export function ProjectsSection() {

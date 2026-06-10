@@ -1,8 +1,8 @@
-import { BlogList } from '@/features/blog/ui/BlogList/BlogList';
-import { SearchBox } from '@/features/blog/ui/SearchBox/SearchBox';
-import { TagSidebar } from '@/features/blog/ui/TagSidebar/TagSidebar';
-import { BLOG_TAGS } from '@/features/blog/model/tags';
-import { getPostList } from '@/features/blog/lib/posts';
+import { BlogList } from '@/widgets/blog-list';
+import { SearchBox } from '@/features/post-search';
+import { TagSidebar } from '@/features/tag-filter';
+import { BLOG_TAGS } from '@/entities/post';
+import { getPostList } from '@/entities/post/server';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import * as s from './blog.css';

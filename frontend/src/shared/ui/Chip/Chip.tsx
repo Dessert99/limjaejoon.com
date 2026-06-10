@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react';
-import { Icon } from '@/shared/ui/Icon/Icon';
+import { Icon } from '../Icon/Icon';
 import { chip, type ChipVariants } from '@/shared/styles/recipes.css';
 
 type ChipProps = ButtonHTMLAttributes<HTMLButtonElement> & ChipVariants;

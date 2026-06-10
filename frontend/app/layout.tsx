@@ -1,4 +1,4 @@
-import { SITE_URL } from '@/shared/config/site';
+import { SITE_URL } from '@/shared/config';
 import '@/shared/styles/global.css';
 import { seasonThemes } from '@/shared/styles/themes/index.css';
 import type { Metadata } from 'next';

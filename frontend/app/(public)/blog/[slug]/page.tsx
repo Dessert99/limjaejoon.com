@@ -1,8 +1,7 @@
 import { TableOfContents } from '@/features/blog/ui/TableOfContents/TableOfContents';
-import { extractHeadings } from '@/features/blog/lib/extract-headings';
-import { mdxOptions } from '@/features/blog/lib/mdx-options';
-import { getPostBySlug, getPostList } from '@/features/blog/lib/posts';
-import { SITE_URL } from '@/shared/config/site';
+import { extractHeadings } from '@/entities/post';
+import { getPostBySlug, getPostList, mdxOptions } from '@/entities/post/server';
+import { SITE_URL } from '@/shared/config';
 import type { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { notFound } from 'next/navigation';

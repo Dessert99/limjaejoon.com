@@ -1,7 +1,7 @@
 import type { IconType } from 'react-icons';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import type { ContactKind, ContactLink } from '@/features/about/model/types';
-import { IconTile } from '@/features/about/ui/IconTile/IconTile';
+import type { ContactKind, ContactLink } from '@/entities/profile';
+import { IconTile } from '@/shared/ui';
 import * as s from './ContactLinks.css';
 
 interface ContactLinksProps {

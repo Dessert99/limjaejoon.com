@@ -1,4 +1,4 @@
-import { SITE_URL } from '@/shared/config/site';
+import { SITE_URL } from '@/shared/config';
 import type { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
