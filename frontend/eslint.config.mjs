@@ -27,12 +27,10 @@ const eslintConfig = defineConfig([
   // #1 api·lib·utils(순수 로직 계층): 함수 선언문 금지, 화살표/표현식만 허용
   {
     files: [
-      'features/*/api/**/*.ts',
-      'lib/**/*.ts',
-      'utils/**/*.ts',
-      'features/*/utils/**/*.ts',
-      // features/blog/lib 처럼 도메인 내부 인프라도 로직 계층으로 동일 취급
-      'features/*/lib/**/*.ts',
+      // src/ 하위 모든 레이어(entities/features/widgets/shared)의 순수 로직 계층
+      'src/**/api/**/*.ts',
+      'src/**/lib/**/*.ts',
+      'src/**/utils/**/*.ts',
     ],
     rules: {
       // 'expression' = 함수 선언문(function f(){}) 금지 → 화살표/함수 표현식만 (표현식은 관례상 허용)
