@@ -57,6 +57,13 @@ page client 가 커지면 "데이터 소유", "화면 배치", "사용자 액션
 
 컴포넌트가 API 응답 shape 을 직접 해석하거나 저장 payload 를 깊게 조립하기 시작하면 `model/` 또는 `lib/` 로 옮긴다.
 
+Storybook story 는 props 기반 렌더링 컴포넌트의 주요 UI 상태를 문서화한다.
+
+- `shared/ui`, `entities/*/ui`, `features/*/ui`, `widgets/*/ui` 중 재사용되거나 상태 조합이 있는 컴포넌트를 우선한다.
+- 기본, 선택됨, 비활성, 오류, 로딩, 긴 텍스트, 빈 상태처럼 실제로 깨지기 쉬운 상태를 story 로 남긴다.
+- fetch, router, page shell 에 강하게 묶인 컴포넌트는 우선 container 와 props 기반 렌더링 컴포넌트로 분리한 뒤 렌더링 컴포넌트를 story 대상으로 삼는다.
+- 네트워크 응답 자체를 보여줘야 하는 예외적인 story 는 MSW mock 을 사용하되, 단순 UI 확인만 위해 실제 fetch 를 실행하지 않는다.
+
 ### api query/mutation hook → `features/{slice}/api/`
 
 `features/{slice}/api` 는 서버 통신 계약을 담당한다. 요청 함수·query 팩토리·훅은 관심사별 파일로 나눈다 (folder-structure.md §2).

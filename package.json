@@ -9,7 +9,9 @@
   "scripts": {
     "dev:fe": "npm run dev -w frontend",
     "dev:be": "npm run dev -w backend",
+    "storybook:fe": "npm run storybook -w frontend",
     "build:fe": "npm run build -w frontend",
+    "build-storybook:fe": "npm run build-storybook -w frontend",
     "build:be": "npm run build -w backend",
     "test:fe": "npm run test -w frontend",
     "lint": "npm run lint --workspaces --if-present",

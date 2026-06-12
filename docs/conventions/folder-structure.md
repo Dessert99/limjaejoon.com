@@ -57,7 +57,7 @@ features/{slice}/
 - queryKey 와 queryOptions 는 `api/` 의 query 팩토리에 모은다. 명명·작성 규칙은 api-convention.md 를 따른다.
 - segment 는 필요할 때만 만든다. 빈 폴더나 미래 대비 폴더 생성 금지.
 - 작은 컴포넌트는 `ui/{Name}.tsx` 단일 파일 허용.
-- 스타일, 테스트, 하위 컴포넌트가 생기면 `ui/{Name}/{Name}.tsx` 형태로 폴더화한다.
+- 스타일, 테스트, Storybook story, 하위 컴포넌트가 생기면 `ui/{Name}/{Name}.tsx` 형태로 폴더화한다.
 
 ## 3. Public API
 
@@ -73,11 +73,14 @@ features/{slice}/
 | React 컴포넌트                  | PascalCase                  |
 | API, hook, util, schema, config | camelCase                   |
 | 테스트 파일                     | 대상 파일명 + `.test.ts(x)` |
+| Storybook story 파일            | 대상 파일명 + `.stories.tsx` |
 
-## 5. 테스트 위치
+## 5. 테스트·스토리 위치
 
-테스트는 검증 대상 소스 가까이에 둔다.
+테스트와 Storybook story 는 검증·문서화 대상 소스 가까이에 둔다.
 
 - 컴포넌트: 대상 컴포넌트 옆의 `{Name}.test.tsx`
 - API, hook, lib, util: 대상 파일 옆의 `{name}.test.ts`
 - E2E: `frontend/e2e/`
+- Storybook story: 대상 컴포넌트 옆의 `{Name}.stories.tsx`
+- `.stories.tsx` 는 UI 상태 문서화용 파일이므로 slice/segment public API 에서 export 하지 않는다.
