@@ -1,6 +1,5 @@
 import { defineProperties, createSprinkles } from '@vanilla-extract/sprinkles';
-import { color } from './theme-contract.css';
-import { tokens } from './tokens.css';
+import { vars } from './theme.css';
 
 // SPRINKLES — 빌드 타임 atomic·반응형 유틸 prop. 레이아웃/간격/색의 "리듬"을 담당한다.
 // style({}) 안에서도 합성된다: style([sprinkles({ display: 'flex', p: '16' }), { ...고유 연출 }]).
@@ -69,7 +68,7 @@ const responsiveProperties = defineProperties({
     marginLeft: margins,
     marginRight: margins,
     marginInline: margins,
-    borderRadius: tokens.shape,
+    borderRadius: vars.radius,
   },
   shorthands: {
     p: ['padding'],
@@ -82,12 +81,11 @@ const responsiveProperties = defineProperties({
   },
 });
 
-// 색 prop 은 CONTRACT 를 읽으므로 조상에 활성화된 계절 값으로 해석된다.
 const colorProperties = defineProperties({
   properties: {
-    background: color,
-    color: color,
-    borderColor: color,
+    background: vars.color,
+    color: vars.color,
+    borderColor: vars.color,
   },
   shorthands: {
     bg: ['background'],

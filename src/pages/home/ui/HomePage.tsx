@@ -1,29 +1,18 @@
-import { Timeline } from '@/shared/ui';
-import { activities, education, experience } from '@/entities/profile';
-import { HeroSection } from './HeroSection/HeroSection';
-import { ProjectsSection } from './ProjectsSection/ProjectsSection';
-import { SkillsSection } from './SkillsSection/SkillsSection';
+import { GsapSmoke } from './GsapSmoke';
 import * as s from './HomePage.css';
 
 export function HomePage() {
   return (
     <main className={s.main}>
-      <HeroSection />
-      <SkillsSection />
-      <Timeline
-        title='경력'
-        items={experience}
-      />
-      <Timeline
-        title='활동'
-        items={activities}
-      />
-      <ProjectsSection />
-
-      <Timeline
-        title='학력'
-        items={education}
-      />
+      <section className={s.panel}>
+        <p className={s.eyebrow}>limjaejoon.com</p>
+        <h1 className={s.title}>Shell ready</h1>
+        <p className={s.description}>
+          FSD, Supabase, vanilla-extract, GSAP, TDD를 다시 올리기 위한 빈
+          골격입니다.
+        </p>
+        <GsapSmoke />
+      </section>
     </main>
   );
 }
