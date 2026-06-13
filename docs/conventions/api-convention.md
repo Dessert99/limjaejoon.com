@@ -1,11 +1,13 @@
 # API + TanStack Query 컨벤션
 
+> 현재 프로젝트는 백엔드가 없는 단일 Next.js 앱이다. TanStack Query 가이드는 향후 외부 데이터 소스(Supabase 등)를 도입할 때 재방문한다.
+
 ## API
 
 ### 파일 배치
 
 - 파일·폴더 배치는 folder-structure.md 를 따른다.
-- `api/` 는 외부 데이터 소스 경계다 — HTTP 백엔드뿐 아니라 빌드타임 콘텐츠(fs MDX 등)도 포함한다(예: `entities/post/api/posts.ts`). HTTP fetcher 의 "한 줄 위임" 규칙은 HTTP 에 한하며, fs 콘텐츠 로더는 파싱·정렬 로직을 가질 수 있다.
+- `api/` 는 외부 데이터 소스 경계다 — HTTP API뿐 아니라 빌드타임 콘텐츠(fs MDX 등)도 포함한다(예: `entities/post/api/posts.ts`). HTTP fetcher 의 "한 줄 위임" 규칙은 HTTP 에 한하며, fs 콘텐츠 로더는 파싱·정렬 로직을 가질 수 있다.
 - fs 기반 서버 전용 로더는 클라이언트 번들 오염을 막기 위해 slice 의 `server.ts` entrypoint 로만 노출한다(예: `entities/post/server.ts`). 자세한 건 folder-structure.md §3.
 
 ### 요청 함수 (fetcher)
@@ -14,7 +16,7 @@
 
 ### 응답 처리
 
-- 백엔드 응답을 변환 없이 위임 (`apiClient.xxx(...)` 한 줄)
+- HTTP 응답을 변환 없이 위임 (`apiClient.xxx(...)` 한 줄)
 - unwrap, 평탄화, 필드 추출은 API 함수에서 하지 않는다. 화면 소비 형태 변환은 TQ 훅의 `select` 에서 한다.
 - try-catch 를 API 단에서 씌우지 않음 (호출처에서 처리)
 

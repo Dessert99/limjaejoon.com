@@ -5,7 +5,7 @@
 ## 1. FSD 레이어
 
 ```
-frontend/
+/
 ├── app/                    # Next.js App Router(라우터 전용). page.tsx 는 src/pages 를 re-export 하는 껍데기
 ├── pages/                  # 빈 폴더(.gitkeep) — Next 가 src/pages 를 레거시 Pages Router 로 오인하지 않게 슬롯 점유
 └── src/                    # 모든 FSD 레이어
@@ -31,7 +31,7 @@ frontend/
 - `entities` -> `shared`
 - `shared` -> 상위 레이어 참조 금지
 
-**Next.js 적응:** FSD 레이어는 `frontend/src/` 아래 둔다(`@/* → ./src/*`). Next 라우터는 `frontend/app/` 에 남기고 `page.tsx` 는 `@/pages/*` 를 re-export 하는 껍데기로만 쓴다. FSD `pages` 레이어는 `src/pages` 인데, Next 가 이를 레거시 Pages Router 로 오인하지 않도록 루트에 빈 `pages/` 를 둔다. 그 부작용으로 `useSearchParams`·`usePathname` 타입이 nullable 로 과대추정되므로 `shared/lib/navigation` 래퍼에서 non-null 로 가둔다. 구조는 Steiger(`npm run fsd`)로 강제한다.
+**Next.js 적응:** FSD 레이어는 `src/` 아래 둔다(`@/* → ./src/*`). Next 라우터는 `app/` 에 남기고 `page.tsx` 는 `@/pages/*` 를 re-export 하는 껍데기로만 쓴다. FSD `pages` 레이어는 `src/pages` 인데, Next 가 이를 레거시 Pages Router 로 오인하지 않도록 루트에 빈 `pages/` 를 둔다. 그 부작용으로 `useSearchParams`·`usePathname` 타입이 nullable 로 과대추정되므로 `shared/lib/navigation` 래퍼에서 non-null 로 가둔다. 구조는 Steiger(`npm run fsd`)로 강제한다.
 
 같은 레이어 안의 슬라이스끼리는 서로 import 하지 않는다 (slice 격리). `features/a` 가 `features/b` 를, `entities/x` 가 `entities/y` 를 직접 참조 금지. 공유가 필요하면 공통 부분을 아래 레이어 (`entities` / `shared`) 로 내린다.
 
@@ -42,7 +42,7 @@ frontend/
 ```
 features/{slice}/
 ├── ui/                 # 이 slice 의 화면 컴포넌트
-├── api/                # 백엔드 연동 (요청 함수·query 팩토리·훅)
+├── api/                # 외부 데이터 소스 경계 (요청 함수·query 팩토리·훅)
 │   ├── getProblems.ts        # 요청 함수(fetcher)
 │   ├── createProblem.ts      # 변경 요청 함수
 │   ├── problemQueries.ts     # query 팩토리 (key + options)
@@ -81,6 +81,6 @@ features/{slice}/
 
 - 컴포넌트: 대상 컴포넌트 옆의 `{Name}.test.tsx`
 - API, hook, lib, util: 대상 파일 옆의 `{name}.test.ts`
-- E2E: `frontend/e2e/`
+- E2E: `e2e/`
 - Storybook story: 대상 컴포넌트 옆의 `{Name}.stories.tsx`
 - `.stories.tsx` 는 UI 상태 문서화용 파일이므로 slice/segment public API 에서 export 하지 않는다.

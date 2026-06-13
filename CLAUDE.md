@@ -1,21 +1,20 @@
 # limjaejoon.com
 
-개인 포트폴리오 & 기술 블로그 + API 서버. npm workspaces 모노레포.
+개인 포트폴리오 & 기술 블로그.
 
 ## 구조
 
-프론트엔드는 FSD(Feature-Sliced Design)를 따른다. 레이어 의존은 위에서 아래로만: `app → pages → widgets → features → entities → shared`. FSD 레이어는 `frontend/src/` 아래, Next 라우터는 `frontend/app/`(`@/pages/*` 를 re-export 하는 껍데기)에 둔다. 구조는 Steiger(`npm run fsd`)로 강제한다. 상세 규칙은 [folder-structure.md](docs/conventions/folder-structure.md) 참고.
+프론트엔드는 FSD(Feature-Sliced Design)를 따른다. 레이어 의존은 위에서 아래로만: `app → pages → widgets → features → entities → shared`. FSD 레이어는 `src/` 아래, Next 라우터는 `app/`(`@/pages/*` 를 re-export 하는 껍데기)에 둔다. 구조는 Steiger(`npm run fsd`)로 강제한다. 상세 규칙은 [folder-structure.md](docs/conventions/folder-structure.md) 참고.
 
 코드 변경 작업은 기본적으로 [tdd-convention.md](docs/conventions/tdd-convention.md)의 RED -> GREEN -> REFACTOR 루프를 따른다.
 
 ## 개발 명령어
 
 ```sh
-npm run dev:fe     # 프론트엔드 개발 서버
-npm run dev:be     # 백엔드 개발 서버
-npm run build:fe   # 프론트엔드 빌드
-npm run build:be   # 백엔드 빌드
-npm run lint       # 전체 린트
+npm run dev        # 개발 서버
+npm run build      # 프로덕션 빌드
+npm run lint       # 린트
+npm run ci         # fsd + lint + type-check + test + build
 npm run format     # 전체 포맷
 ```
 

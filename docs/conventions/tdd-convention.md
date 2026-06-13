@@ -57,13 +57,13 @@
 
 - 컴포넌트: 대상 컴포넌트 옆의 `{Name}.test.tsx`
 - API, hook, lib, util: 대상 파일 옆의 `{name}.test.ts`
-- E2E: `frontend/e2e/`
+- E2E: `e2e/`
 
 ## 5. 검증 명령
 
 작업 범위에 맞는 가장 작은 검증부터 실행한다.
 
 - 단일 테스트가 가능하면 해당 테스트만 먼저 실행한다.
-- 관련 테스트가 통과하면 필요에 따라 `npm run test -w frontend`로 넓힌다.
-- 구조 변경이 있으면 `npm run fsd -w frontend`를 실행한다.
-- 최종 확인이 필요하면 `npm run lint`, `npm run build:fe`를 실행한다.
+- 관련 테스트가 통과하면 필요에 따라 `npm run test`로 넓힌다.
+- 구조 변경이 있으면 `npm run fsd`를 실행한다.
+- 최종 확인이 필요하면 `npm run lint`, `npm run build`를 실행한다.

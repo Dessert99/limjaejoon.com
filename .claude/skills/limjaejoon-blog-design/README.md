@@ -6,7 +6,7 @@
 (밤 = 사실상 다크 모드.) 구현은 실제 코드베이스 스택인 **Vanilla Extract** 패턴을
 연습할 수 있도록 레이어드 토큰 구조로 정리했습니다.
 
-> **소스 저장소: <https://github.com/Dessert99/limjaejoon.com>** (Next.js 16 · React 19 · vanilla-extract · NestJS 모노레포)
+> **소스 저장소: <https://github.com/Dessert99/limjaejoon.com>** (Next.js 16 · React 19 · vanilla-extract 단일 앱)
 > 블로그의 콘텐츠 구조·라우트·카피는 이 저장소에서 가져왔습니다. 더 정확한 화면 재현이
 > 필요하면 저장소를 직접 탐색하세요. (단, **비주얼 방향은 기존 코드의 teal 모노톤을 버리고
 > Material Design 3로 새로 설계**했습니다 — 사용자 요청.)
@@ -51,7 +51,7 @@
 
 이 스킬은 당신의 실제 스택에 맞춰 **거의 드롭인**입니다:
 
-1. `material/tokens.css.ts` · `theme-contract.css.ts` · `themes/*` 를 `frontend/styles/` 로 복사.
+1. `material/tokens.css.ts` · `theme-contract.css.ts` · `themes/*` 를 `src/shared/styles/` 로 복사.
 2. 기존 `theme.css.ts`(teal 단일 테마)를 **걷어내고**, 루트 레이아웃에서 활성 계절 클래스를 부여:
    `document.documentElement.className = seasonThemes['night']`.
 3. 컴포넌트가 참조하던 옛 토큰(`vars.color.accentStrong` 등)을 **MD3 역할**(`color.primary`,
