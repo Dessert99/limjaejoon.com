@@ -15,7 +15,8 @@
     "fsd": "CHOKIDAR_USEPOLLING=1 steiger ./src",
     "ci": "npm run fsd && npm run lint && npm run type-check && npm run test && npm run build",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:types": "supabase gen types typescript --local > src/shared/api/supabase/database.types.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
