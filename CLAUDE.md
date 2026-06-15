@@ -4,7 +4,7 @@
 
 ## 구조
 
-프론트엔드는 FSD(Feature-Sliced Design)를 따른다. 레이어 의존은 위에서 아래로만: `app → pages → widgets → features → entities → shared`. FSD 레이어는 `src/` 아래, Next 라우터는 `app/`(`@/pages/*` 를 re-export 하는 껍데기)에 둔다. 구조는 Steiger(`npm run fsd`)로 강제한다. 상세 규칙은 [folder-structure.md](docs/conventions/folder-structure.md) 참고.
+프론트엔드는 FSD(Feature-Sliced Design)를 따른다. 레이어 의존은 위에서 아래로만: `app → pages → widgets → features → entities → shared`. FSD 레이어는 `src/` 아래, Next 라우터는 `app/`(`@/pages/*` 를 re-export 하는 껍데기)에 둔다. 구조는 Steiger(`npm run fsd`)로 강제한다. 상세 규칙은 [folder-structure.md](docs/conventions/folder-structure.md) 참고. 컴포넌트 구현 기본값은 [component-convention.md](docs/conventions/component-convention.md) 참고.
 
 코드 변경 작업은 기본적으로 [tdd-convention.md](docs/conventions/tdd-convention.md)의 RED -> GREEN -> REFACTOR 루프를 따른다.
 

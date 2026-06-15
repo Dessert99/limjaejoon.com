@@ -14,7 +14,7 @@
     ├── features/           # 사용자 행동 단위 기능
     ├── entities/           # 핵심 도메인 모델과 그 모델 중심 UI/API
     └── shared/             # 도메인 무관 공용 코드
-        ├── ui/             # Button, Input 같은 디자인 프리미티브
+        ├── ui/             # Button, Input 같은 디자인 프리미티브 (컴포넌트 기본값은 component-convention.md)
         ├── api/            # apiClient, 공용 API 타입/헬퍼 (MSW 목 포함)
         ├── lib/            # 공용 유틸 (navigation 훅 래퍼 등)
         ├── styles/         # 전역 테마·토큰·breakpoint 등 (vanilla-extract)

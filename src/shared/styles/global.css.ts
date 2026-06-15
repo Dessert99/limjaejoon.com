@@ -29,6 +29,11 @@ globalStyle('button, input, textarea, select', {
   font: 'inherit',
 });
 
+// 버튼 UA 기본 배경(회색) 제거 — 실제 배경색은 variant가 책임진다
+globalStyle('button', {
+  backgroundColor: 'transparent',
+});
+
 globalStyle('a', {
   color: 'inherit',
   textDecoration: 'none',
