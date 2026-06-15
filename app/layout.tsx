@@ -1,6 +1,6 @@
 import { SITE_URL } from '@/shared/config';
 import '@/shared/styles/global.css';
-import { defaultThemeClass } from '@/shared/styles/theme.css';
+import { afternoonThemeClass } from '@/shared/styles/theme.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang='ko'
-      className={defaultThemeClass}>
+      className={afternoonThemeClass}>
       <body>{children}</body>
     </html>
   );

@@ -1,3 +1,9 @@
 export { bp } from './breakpoints';
 export { sprinkles } from './sprinkles.css';
-export { defaultThemeClass, vars } from './theme.css';
+export {
+  vars,
+  afternoonThemeClass,
+  sunsetThemeClass,
+  nightThemeClass,
+  dawnThemeClass,
+} from './theme.css';

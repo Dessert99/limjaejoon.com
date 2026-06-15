@@ -1,5 +1,10 @@
 import { createTheme, createThemeContract } from '@vanilla-extract/css';
+import { afternoon } from './themes/afternoon';
+import { sunset } from './themes/sunset';
+import { night } from './themes/night';
+import { dawn } from './themes/dawn';
 
+/** 토큰 컨트랙트 — 모든 테마가 채우는 색·폰트·라운드의 "모양" */
 export const vars = createThemeContract({
   color: {
     background: null,
@@ -20,22 +25,11 @@ export const vars = createThemeContract({
   },
 });
 
-export const defaultThemeClass = createTheme(vars, {
-  color: {
-    background: '#f7f8fa',
-    surface: '#ffffff',
-    text: '#17181c',
-    muted: '#626976',
-    border: '#d9dde5',
-    accent: '#2563eb',
-  },
-  font: {
-    body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    mono: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
-  },
-  radius: {
-    sm: '0.25rem',
-    md: '0.5rem',
-    lg: '0.75rem',
-  },
-});
+/** 오후(라이트) — 기본 적용 테마 */
+export const afternoonThemeClass = createTheme(vars, afternoon);
+/** 노을 */
+export const sunsetThemeClass = createTheme(vars, sunset);
+/** 밤 */
+export const nightThemeClass = createTheme(vars, night);
+/** 새벽 */
+export const dawnThemeClass = createTheme(vars, dawn);
