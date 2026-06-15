@@ -67,3 +67,14 @@
 - 관련 테스트가 통과하면 필요에 따라 `npm run test`로 넓힌다.
 - 구조 변경이 있으면 `npm run fsd`를 실행한다.
 - 최종 확인이 필요하면 `npm run lint`, `npm run build`를 실행한다.
+
+## 6. 테스트 설명
+
+`describe`·`it`의 설명문은 한국어로 쓴다. 컴포넌트명·prop·`ref` 같은 고유 식별자는 원문(영문) 그대로 두되, 문장은 한국어로 동작을 서술한다.
+
+```ts
+it('asChild가 설정되면 자식 엘리먼트로 렌더한다'); // 좋음
+it('renders as the child element when asChild is set'); // 피함
+```
+
+설명에는 구현 방식이 아니라 관찰 가능한 동작을 적는다.

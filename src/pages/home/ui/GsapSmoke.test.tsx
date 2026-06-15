@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { GsapSmoke } from './GsapSmoke';
 
 describe('GsapSmoke', () => {
-  it('mounts the GSAP smoke component', () => {
+  it('GSAP smoke 컴포넌트를 마운트한다', () => {
     render(<GsapSmoke />);
 
     expect(screen.getByTestId('gsap-smoke')).toBeInTheDocument();

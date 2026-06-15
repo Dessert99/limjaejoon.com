@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { HomePage } from './HomePage';
 
 describe('HomePage', () => {
-  it('renders the shell placeholder', () => {
+  it('shell 플레이스홀더를 렌더한다', () => {
     render(<HomePage />);
 
     expect(

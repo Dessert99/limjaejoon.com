@@ -7,15 +7,15 @@ const validEnv = {
   SUPABASE_SERVICE_ROLE_KEY: 'service-role-key',
 };
 
-describe('env config', () => {
-  it('reads public Supabase env values', () => {
+describe('env 설정', () => {
+  it('public Supabase env 값을 읽는다', () => {
     expect(readPublicEnv(validEnv)).toEqual({
       supabaseUrl: 'http://127.0.0.1:54321',
       supabaseAnonKey: 'anon-key',
     });
   });
 
-  it('throws when a public env value is missing', () => {
+  it('public env 값이 없으면 throw 한다', () => {
     expect(() => {
       readPublicEnv({});
     }).toThrow(
@@ -23,7 +23,7 @@ describe('env config', () => {
     );
   });
 
-  it('reads server-only Supabase env values', () => {
+  it('server 전용 Supabase env 값을 읽는다', () => {
     expect(readServerEnv(validEnv)).toEqual({
       supabaseUrl: 'http://127.0.0.1:54321',
       supabaseAnonKey: 'anon-key',
