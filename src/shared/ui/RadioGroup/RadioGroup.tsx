@@ -5,7 +5,7 @@ import { indicator, item, root } from './RadioGroup.css';
 
 /** 묶음 — Radix RadioGroup.Root props + 외부 className 병합 */
 const Root = forwardRef<
-  React.ElementRef<typeof RadioGroupPrimitive.Root>,
+  React.ComponentRef<typeof RadioGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
 >(({ className, ...props }, ref) => {
   return (
@@ -20,7 +20,7 @@ Root.displayName = 'RadioGroup.Root';
 
 /** 항목 — 각 선택지(value 필수) */
 const Item = forwardRef<
-  React.ElementRef<typeof RadioGroupPrimitive.Item>,
+  React.ComponentRef<typeof RadioGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
 >(({ className, ...props }, ref) => {
   return (
@@ -35,7 +35,7 @@ Item.displayName = 'RadioGroup.Item';
 
 /** 선택 점 — 선택된 항목에서만 Radix가 마운트 */
 const Indicator = forwardRef<
-  React.ElementRef<typeof RadioGroupPrimitive.Indicator>,
+  React.ComponentRef<typeof RadioGroupPrimitive.Indicator>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Indicator>
 >(({ className, ...props }, ref) => {
   return (

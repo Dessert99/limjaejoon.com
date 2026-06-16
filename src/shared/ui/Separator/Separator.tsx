@@ -10,7 +10,7 @@ type SeparatorProps = React.ComponentPropsWithoutRef<
 
 /** 가로/세로 구분선 — decorative면 보조기기에서 숨김 */
 export const Separator = forwardRef<
-  React.ElementRef<typeof SeparatorPrimitive.Root>,
+  React.ComponentRef<typeof SeparatorPrimitive.Root>,
   SeparatorProps
 >(({ className, ...props }, ref) => {
   return (

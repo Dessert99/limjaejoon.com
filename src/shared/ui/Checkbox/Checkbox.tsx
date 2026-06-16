@@ -5,7 +5,7 @@ import { indicator, root } from './Checkbox.css';
 
 /** 박스 — Radix Checkbox.Root props + 외부 className 병합 */
 const Root = forwardRef<
-  React.ElementRef<typeof CheckboxPrimitive.Root>,
+  React.ComponentRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
 >(({ className, ...props }, ref) => {
   return (
@@ -20,7 +20,7 @@ Root.displayName = 'Checkbox.Root';
 
 /** 체크 표시 — children(아이콘/문자)을 받아 표시 */
 const Indicator = forwardRef<
-  React.ElementRef<typeof CheckboxPrimitive.Indicator>,
+  React.ComponentRef<typeof CheckboxPrimitive.Indicator>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Indicator>
 >(({ className, ...props }, ref) => {
   return (

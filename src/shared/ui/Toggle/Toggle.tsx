@@ -8,7 +8,7 @@ type ToggleProps = React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root>;
 
 /** 단일 토글 버튼 — 눌림 상태를 스스로/외부 제어로 관리 */
 export const Toggle = forwardRef<
-  React.ElementRef<typeof TogglePrimitive.Root>,
+  React.ComponentRef<typeof TogglePrimitive.Root>,
   ToggleProps
 >(({ className, ...props }, ref) => {
   return (

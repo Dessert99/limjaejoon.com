@@ -5,7 +5,7 @@ import { root, thumb } from './Switch.css';
 
 /** 트랙 — Radix Switch.Root props + 외부 className 병합 */
 const Root = forwardRef<
-  React.ElementRef<typeof SwitchPrimitive.Root>,
+  React.ComponentRef<typeof SwitchPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>
 >(({ className, ...props }, ref) => {
   return (
@@ -20,7 +20,7 @@ Root.displayName = 'Switch.Root';
 
 /** 손잡이 — 위치 연출만 우리 몫, data-state는 Radix가 채운다 */
 const Thumb = forwardRef<
-  React.ElementRef<typeof SwitchPrimitive.Thumb>,
+  React.ComponentRef<typeof SwitchPrimitive.Thumb>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Thumb>
 >(({ className, ...props }, ref) => {
   return (

@@ -10,7 +10,7 @@ type ProgressProps = React.ComponentPropsWithoutRef<
 
 /** value(0~max) 비율만큼 막대를 채운다. value 미지정이면 Radix가 indeterminate 처리 */
 export const Progress = forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
+  React.ComponentRef<typeof ProgressPrimitive.Root>,
   ProgressProps
 >(({ className, value, max = 100, ...props }, ref) => {
   return (

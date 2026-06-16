@@ -8,7 +8,7 @@ type LabelProps = React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>;
 
 /** label 요소를 렌더하고 연결된 컨트롤로 포커스를 넘긴다 */
 export const Label = forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentRef<typeof LabelPrimitive.Root>,
   LabelProps
 >(({ className, ...props }, ref) => {
   return (

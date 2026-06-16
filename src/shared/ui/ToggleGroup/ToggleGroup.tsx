@@ -5,7 +5,7 @@ import { item, root } from './ToggleGroup.css';
 
 /** 묶음 — Radix ToggleGroup.Root props(type·value 포함) + 외부 className */
 const Root = forwardRef<
-  React.ElementRef<typeof ToggleGroupPrimitive.Root>,
+  React.ComponentRef<typeof ToggleGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root>
 >(({ className, ...props }, ref) => {
   return (
@@ -20,7 +20,7 @@ Root.displayName = 'ToggleGroup.Root';
 
 /** 항목 — 각 토글(value 필수) */
 const Item = forwardRef<
-  React.ElementRef<typeof ToggleGroupPrimitive.Item>,
+  React.ComponentRef<typeof ToggleGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item>
 >(({ className, ...props }, ref) => {
   return (
