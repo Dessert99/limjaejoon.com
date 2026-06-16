@@ -24,3 +24,9 @@
 - 키보드: Space/Enter로 토글
 - 폼: 숨은 input으로 `name`/`value` 제출 연동
 - 스타일 훅: 트랙·썸에 `data-state="checked|unchecked"`
+
+## Checkbox — Radix가 해주는 것
+- 상태: `checked`에 `boolean | "indeterminate"` 허용(3-상태)
+- 접근성: `role="checkbox"` + `aria-checked`(true/false/mixed)
+- 마운트: Indicator는 checked·indeterminate일 때만 렌더
+- 폼: 숨은 input으로 제출 연동
