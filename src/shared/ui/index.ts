@@ -4,3 +4,4 @@ export type { ButtonProps } from './Button/Button';
 export { Label } from './Label/Label';
 export { Separator } from './Separator/Separator';
 export { Toggle } from './Toggle/Toggle';
+export { Switch } from './Switch/Switch';

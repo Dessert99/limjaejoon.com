@@ -17,3 +17,10 @@
 - 상태: controlled(`pressed`)/uncontrolled(`defaultPressed`) 둘 다
 - 접근성: 버튼에 `aria-pressed` 부여
 - 스타일 훅: 눌림을 `data-state="on|off"`로 노출
+
+## Switch — Radix가 해주는 것
+- 상태: controlled(`checked`)/uncontrolled(`defaultChecked`) 둘 다
+- 접근성: `role="switch"` + `aria-checked`
+- 키보드: Space/Enter로 토글
+- 폼: 숨은 input으로 `name`/`value` 제출 연동
+- 스타일 훅: 트랙·썸에 `data-state="checked|unchecked"`
