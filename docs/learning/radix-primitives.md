@@ -12,3 +12,8 @@
 
 - 접근성: `decorative=false`면 `role="separator"`, `true`면 역할 제거(순수 장식)
 - 방향: `orientation`을 `aria-orientation` + `data-orientation`으로 노출(세로/가로 스타일 분기 근거)
+
+## Toggle — Radix가 해주는 것
+- 상태: controlled(`pressed`)/uncontrolled(`defaultPressed`) 둘 다
+- 접근성: 버튼에 `aria-pressed` 부여
+- 스타일 훅: 눌림을 `data-state="on|off"`로 노출
