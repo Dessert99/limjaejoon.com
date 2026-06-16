@@ -24,12 +24,14 @@
 - 키보드: Space/Enter로 토글
 - 폼: 숨은 input으로 `name`/`value` 제출 연동
 - 스타일 훅: 트랙·썸에 `data-state="checked|unchecked"`
+- 내 몫: 컨트롤에 글자가 없으니 접근성 이름은 소비자가 `Label`(htmlFor)나 `aria-label`로 직접 준다
 
 ## Checkbox — Radix가 해주는 것
 - 상태: `checked`에 `boolean | "indeterminate"` 허용(3-상태)
 - 접근성: `role="checkbox"` + `aria-checked`(true/false/mixed)
 - 마운트: Indicator는 checked·indeterminate일 때만 렌더
 - 폼: 숨은 input으로 제출 연동
+- 내 몫: 컨트롤에 글자가 없으니 접근성 이름은 소비자가 `Label`(htmlFor)나 `aria-label`로 직접 준다
 
 ## RadioGroup — Radix가 해주는 것
 - 접근성: 묶음 `role="radiogroup"`, 항목 `role="radio"` + `aria-checked`
