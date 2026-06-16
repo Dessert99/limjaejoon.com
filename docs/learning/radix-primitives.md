@@ -46,7 +46,7 @@ const semanticProps = decorative
 ```
 
 - `aria-orientation`을 **세로일 때만** 넣는다 — 가로가 ARIA 기본값이라 중복 표기를 피하는 스펙 준수.
-- `decorative` → `role="none"`: 시각적 칸막이일 뿐 의미가 없을 때 스크린리더가 "구분자"로 읽지 않게 끈다(네이티브 `<hr>`엔 이 "끄기"가 없음).
+- `decorative` → `role="none"`: 시각적 칸막이일 뿐 의미가 없을 때 스크린리더가 "구분자"로 읽지 않게 끈다 — Radix는 이걸 `decorative` prop 하나로 쉽게 붙여준다(`<hr>`에도 `role="none"`을 직접 달 수는 있다).
 - orientation 값 검증(이상하면 horizontal 폴백) + 항상 `data-orientation` 노출(CSS 방향 분기 훅).
 
 출처: `@radix-ui/react-separator/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/separator
@@ -86,7 +86,7 @@ const [pressed, setPressed] = useControllableState({
 **Radix가 더하는 것 = ARIA switch + 완전 스타일 + 네이티브 폼 전송 패리티.** 3겹 구조다.
 
 1. 보이는 컨트롤 = `<button role="switch" aria-checked data-state>`. 상태는 `useControllableState`.
-2. **숨은 폼 입력(BubbleInput):** 버튼 뒤에 시각적으로 숨긴 `<input type="checkbox" aria-hidden tabIndex={-1}>`를 같이 렌더한다. `name`/`value`/`required`/`form`을 이 input이 들고 있어 **JS 없이도 네이티브 `<form>` 전송·리셋에 잡힌다.** 위치는 `absolute`+`opacity:0`, 버튼 크기에 맞춰 `useSize`로 사이즈 동기화.
+2. **숨은 폼 입력(BubbleInput):** **폼 안에서 쓰일 때**(`form` prop이 있거나 `control.closest("form")`이 잡힐 때) 버튼 뒤에 시각적으로 숨긴 `<input type="checkbox" aria-hidden tabIndex={-1}>`를 함께 렌더한다. `name`/`value`/`required`/`form`을 이 input이 들고 있어 **네이티브 `<form>` 제출 시 값이 함께 전송된다.** (Switch는 Checkbox와 달리 form `reset` 리스너는 두지 않는다.) 위치는 `absolute`+`opacity:0`, 버튼 크기에 맞춰 `useSize`로 사이즈 동기화.
 3. **그 숨은 input의 `checked`를 "진짜 이벤트"와 함께 동기화하는 트릭:**
 
 ```jsx
@@ -120,7 +120,7 @@ if (prevChecked !== checked) {
 
 2. **Enter 가드:** `onKeyDown`에서 `if (event.key === 'Enter') event.preventDefault()`. 체크박스는 Space로만 토글하고 Enter로 활성/제출하면 안 되는 게 네이티브 동작인데, 버튼은 폼에서 Enter로 submit될 수 있어 Radix가 막는다.
 3. onClick 토글 규칙: `isIndeterminate(prev) ? true : !prev`(indeterminate에서 누르면 checked로).
-4. **숨은 input + indeterminate 명령형 동기화:** Switch와 같은 prototype-setter 트릭에 더해, HTML엔 indeterminate "속성"이 없으므로 숨은 input에 프로퍼티를 직접 대입한다:
+4. **숨은 input(폼 안에서 쓰일 때) + indeterminate 명령형 동기화:** Switch와 같은 prototype-setter 트릭에 더해, HTML엔 indeterminate "속성"이 없으므로 숨은 input에 프로퍼티를 직접 대입한다(Checkbox는 Switch와 달리 form `reset` 리스너로 초기값도 복원):
 
 ```jsx
 input.indeterminate = isIndeterminate(checked); // 속성이 아니라 JS 프로퍼티라 직접 set
@@ -141,7 +141,7 @@ input.dispatchEvent(new Event('click', { bubbles }));
 **Radix가 더하는 것:** 동일한 키보드/단일선택 의미를 완전 스타일 가능한 버튼으로 재현 + 폼 패리티.
 
 1. 그룹 = `RovingFocusGroup.Root`로 감싼 `<div role="radiogroup" aria-required aria-orientation>`. **roving tabindex** = 그룹 전체가 Tab 정지 하나만 갖고, 안에서는 화살표로 이동(네이티브 라디오 그룹과 같은 패턴). 상태는 `useControllableState`(value/onValueChange).
-2. 각 항목 = `<button role="radio" aria-checked>` + 숨은 `<input type="radio">`(폼 전송용, Switch와 같은 bubble 패턴).
+2. 각 항목 = `<button role="radio" aria-checked>` + **폼 안에서 쓰일 때** 숨은 `<input type="radio">`(폼 전송용, Switch와 같은 bubble 패턴).
 3. **"화살표 이동 = 즉시 선택"의 실제 구현(WAI-ARIA radio 패턴):**
 
 ```jsx
@@ -173,7 +173,7 @@ throw new Error('Missing prop `type` expected on `ToggleGroup`');
 
 2. 그룹 = `RovingFocusGroup.Root`로 감싼 `<div role="group">`. 화살표 이동·loop는 roving focus가 처리.
 3. 각 항목은 **base `Toggle` 컴포넌트를 재사용**하고, `onPressedChange`로 그룹 값에 activate/deactivate(single=교체, multiple=배열 추가/제거).
-4. **single 모드에선 항목의 역할을 `role="radio" aria-checked`로 바꾼다(aria-pressed 제거):** 단일 선택 토글 그룹은 의미상 라디오 그룹이기 때문.
+4. **single 모드에선 항목(item)을 `role="radio" aria-checked`로 노출한다(aria-pressed 제거):** root는 여전히 `role="group"`이고 공식 문서도 RadioGroup이 아니라 ToggleGroup으로 다룬다 — 단일 선택일 때 **항목만** 라디오처럼 보이게 하는 것이지 그룹 자체가 라디오 그룹이 되는 건 아니다.
 
 ```jsx
 const singleProps = { role: 'radio', 'aria-checked': pressed, 'aria-pressed': undefined };

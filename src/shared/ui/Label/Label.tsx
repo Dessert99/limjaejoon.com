@@ -1,5 +1,5 @@
 /** 공용 Label — Radix Label 위에 타이포만 입힌 폼 라벨 */
-import { Label as LabelPrimitive } from 'radix-ui'; // htmlFor 연결·더블클릭 텍스트선택 방지를 Radix가 처리
+import { Label as LabelPrimitive } from 'radix-ui'; // htmlFor 연결은 native, Radix는 더블클릭 텍스트선택 방지만 더함
 import { forwardRef } from 'react';
 import { label } from './Label.css';
 
