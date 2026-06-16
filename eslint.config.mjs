@@ -96,6 +96,8 @@ const eslintConfig = defineConfig([
     'out/**',
     // 기타 빌드 디렉터리(build)도 제외합니다.
     'build/**',
+    // Storybook 정적 빌드 산출물은 검사 대상에서 제외합니다.
+    'storybook-static/**',
     // Claude 스킬 자료는 앱 소스가 아니므로 검사 대상에서 제외합니다.
     '.claude/**',
     // Next 자동 생성 타입 파일은 제외합니다.
