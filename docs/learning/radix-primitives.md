@@ -36,3 +36,9 @@
 - 키보드: roving tabindex로 화살표 이동, 이동 시 단일 선택
 - 상태: controlled(`value`)/uncontrolled(`defaultValue`), `onValueChange` 알림
 - 폼: 숨은 input으로 제출 연동
+
+## ToggleGroup — Radix가 해주는 것
+- 선택 모드: `type="single"`(string 값)/`type="multiple"`(string[] 값)
+- 키보드: roving focus로 화살표 이동
+- 접근성: 묶음 그룹 의미론, 항목 `data-state="on|off"`
+- 상태: controlled(`value`)/uncontrolled(`defaultValue`), `onValueChange` 알림
