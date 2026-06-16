@@ -2,3 +2,4 @@
 export { Button } from './Button/Button';
 export type { ButtonProps } from './Button/Button';
 export { Label } from './Label/Label';
+export { Separator } from './Separator/Separator';
