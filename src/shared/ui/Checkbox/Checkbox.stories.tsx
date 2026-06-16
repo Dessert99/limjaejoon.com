@@ -9,29 +9,35 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
-    <Checkbox.Root aria-label='동의'>
-      <Checkbox.Indicator>✓</Checkbox.Indicator>
-    </Checkbox.Root>
-  ),
+  render: () => {
+    return (
+      <Checkbox.Root aria-label='동의'>
+        <Checkbox.Indicator>✓</Checkbox.Indicator>
+      </Checkbox.Root>
+    );
+  },
 };
 
 export const Checked: Story = {
-  render: () => (
-    <Checkbox.Root
-      aria-label='동의'
-      defaultChecked>
-      <Checkbox.Indicator>✓</Checkbox.Indicator>
-    </Checkbox.Root>
-  ),
+  render: () => {
+    return (
+      <Checkbox.Root
+        aria-label='동의'
+        defaultChecked>
+        <Checkbox.Indicator>✓</Checkbox.Indicator>
+      </Checkbox.Root>
+    );
+  },
 };
 
 export const Indeterminate: Story = {
-  render: () => (
-    <Checkbox.Root
-      aria-label='전체'
-      checked='indeterminate'>
-      <Checkbox.Indicator>−</Checkbox.Indicator>
-    </Checkbox.Root>
-  ),
+  render: () => {
+    return (
+      <Checkbox.Root
+        aria-label='전체'
+        checked='indeterminate'>
+        <Checkbox.Indicator>−</Checkbox.Indicator>
+      </Checkbox.Root>
+    );
+  },
 };

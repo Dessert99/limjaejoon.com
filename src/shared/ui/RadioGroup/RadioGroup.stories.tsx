@@ -10,26 +10,28 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
-    <RadioGroup.Root
-      aria-label='요금제'
-      defaultValue='free'>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <RadioGroup.Item
-          id='r-free'
-          value='free'>
-          <RadioGroup.Indicator />
-        </RadioGroup.Item>
-        <Label htmlFor='r-free'>무료</Label>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <RadioGroup.Item
-          id='r-pro'
-          value='pro'>
-          <RadioGroup.Indicator />
-        </RadioGroup.Item>
-        <Label htmlFor='r-pro'>프로</Label>
-      </div>
-    </RadioGroup.Root>
-  ),
+  render: () => {
+    return (
+      <RadioGroup.Root
+        aria-label='요금제'
+        defaultValue='free'>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <RadioGroup.Item
+            id='r-free'
+            value='free'>
+            <RadioGroup.Indicator />
+          </RadioGroup.Item>
+          <Label htmlFor='r-free'>무료</Label>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <RadioGroup.Item
+            id='r-pro'
+            value='pro'>
+            <RadioGroup.Indicator />
+          </RadioGroup.Item>
+          <Label htmlFor='r-pro'>프로</Label>
+        </div>
+      </RadioGroup.Root>
+    );
+  },
 };

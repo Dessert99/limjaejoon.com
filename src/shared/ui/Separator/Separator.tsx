@@ -12,12 +12,14 @@ type SeparatorProps = React.ComponentPropsWithoutRef<
 export const Separator = forwardRef<
   React.ElementRef<typeof SeparatorPrimitive.Root>,
   SeparatorProps
->(({ className, ...props }, ref) => (
-  <SeparatorPrimitive.Root
-    ref={ref}
-    className={[separator, className].filter(Boolean).join(' ')}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <SeparatorPrimitive.Root
+      ref={ref}
+      className={[separator, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 
 Separator.displayName = 'Separator';

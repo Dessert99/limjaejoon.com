@@ -10,12 +10,14 @@ type LabelProps = React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>;
 export const Label = forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   LabelProps
->(({ className, ...props }, ref) => (
-  <LabelPrimitive.Root
-    ref={ref}
-    className={[label, className].filter(Boolean).join(' ')}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <LabelPrimitive.Root
+      ref={ref}
+      className={[label, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 
 Label.displayName = 'Label';

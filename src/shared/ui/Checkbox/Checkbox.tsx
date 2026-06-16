@@ -7,26 +7,30 @@ import { indicator, root } from './Checkbox.css';
 const Root = forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <CheckboxPrimitive.Root
-    ref={ref}
-    className={[root, className].filter(Boolean).join(' ')}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <CheckboxPrimitive.Root
+      ref={ref}
+      className={[root, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 Root.displayName = 'Checkbox.Root';
 
 /** 체크 표시 — children(아이콘/문자)을 받아 표시 */
 const Indicator = forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Indicator>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Indicator>
->(({ className, ...props }, ref) => (
-  <CheckboxPrimitive.Indicator
-    ref={ref}
-    className={[indicator, className].filter(Boolean).join(' ')}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <CheckboxPrimitive.Indicator
+      ref={ref}
+      className={[indicator, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 Indicator.displayName = 'Checkbox.Indicator';
 
 /** 네임스페이스 — <Checkbox.Root><Checkbox.Indicator>✓</Checkbox.Indicator></Checkbox.Root> */

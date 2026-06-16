@@ -12,19 +12,23 @@ type ProgressProps = React.ComponentPropsWithoutRef<
 export const Progress = forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   ProgressProps
->(({ className, value, max = 100, ...props }, ref) => (
-  <ProgressPrimitive.Root
-    ref={ref}
-    value={value}
-    max={max}
-    className={[root, className].filter(Boolean).join(' ')}
-    {...props}>
-    {/* 채움 막대 위치 연출만 우리 몫 — 부족분만큼 왼쪽으로 밀어 비율 표시 */}
-    <ProgressPrimitive.Indicator
-      className={indicator}
-      style={{ transform: `translateX(-${100 - ((value ?? 0) / max) * 100}%)` }}
-    />
-  </ProgressPrimitive.Root>
-));
+>(({ className, value, max = 100, ...props }, ref) => {
+  return (
+    <ProgressPrimitive.Root
+      ref={ref}
+      value={value}
+      max={max}
+      className={[root, className].filter(Boolean).join(' ')}
+      {...props}>
+      {/* 채움 막대 위치 연출만 우리 몫 — 부족분만큼 왼쪽으로 밀어 비율 표시 */}
+      <ProgressPrimitive.Indicator
+        className={indicator}
+        style={{
+          transform: `translateX(-${100 - ((value ?? 0) / max) * 100}%)`,
+        }}
+      />
+    </ProgressPrimitive.Root>
+  );
+});
 
 Progress.displayName = 'Progress';

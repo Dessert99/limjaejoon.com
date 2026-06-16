@@ -14,13 +14,15 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { args: { children: '이메일' } };
 
 export const WithControl: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-      <Label htmlFor='email'>이메일</Label>
-      <input
-        id='email'
-        placeholder='you@example.com'
-      />
-    </div>
-  ),
+  render: () => {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <Label htmlFor='email'>이메일</Label>
+        <input
+          id='email'
+          placeholder='you@example.com'
+        />
+      </div>
+    );
+  },
 };

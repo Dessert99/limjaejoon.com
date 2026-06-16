@@ -9,29 +9,35 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
-    <Switch.Root aria-label='알림'>
-      <Switch.Thumb />
-    </Switch.Root>
-  ),
+  render: () => {
+    return (
+      <Switch.Root aria-label='알림'>
+        <Switch.Thumb />
+      </Switch.Root>
+    );
+  },
 };
 
 export const On: Story = {
-  render: () => (
-    <Switch.Root
-      aria-label='알림'
-      defaultChecked>
-      <Switch.Thumb />
-    </Switch.Root>
-  ),
+  render: () => {
+    return (
+      <Switch.Root
+        aria-label='알림'
+        defaultChecked>
+        <Switch.Thumb />
+      </Switch.Root>
+    );
+  },
 };
 
 export const Disabled: Story = {
-  render: () => (
-    <Switch.Root
-      aria-label='알림'
-      disabled>
-      <Switch.Thumb />
-    </Switch.Root>
-  ),
+  render: () => {
+    return (
+      <Switch.Root
+        aria-label='알림'
+        disabled>
+        <Switch.Thumb />
+      </Switch.Root>
+    );
+  },
 };

@@ -10,12 +10,14 @@ type ToggleProps = React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root>;
 export const Toggle = forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
   ToggleProps
->(({ className, ...props }, ref) => (
-  <TogglePrimitive.Root
-    ref={ref}
-    className={[toggle, className].filter(Boolean).join(' ')}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <TogglePrimitive.Root
+      ref={ref}
+      className={[toggle, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 
 Toggle.displayName = 'Toggle';

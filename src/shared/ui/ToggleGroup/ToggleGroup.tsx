@@ -7,26 +7,30 @@ import { item, root } from './ToggleGroup.css';
 const Root = forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <ToggleGroupPrimitive.Root
-    ref={ref}
-    className={[root, className].filter(Boolean).join(' ')}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <ToggleGroupPrimitive.Root
+      ref={ref}
+      className={[root, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 Root.displayName = 'ToggleGroup.Root';
 
 /** 항목 — 각 토글(value 필수) */
 const Item = forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item>
->(({ className, ...props }, ref) => (
-  <ToggleGroupPrimitive.Item
-    ref={ref}
-    className={[item, className].filter(Boolean).join(' ')}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <ToggleGroupPrimitive.Item
+      ref={ref}
+      className={[item, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 Item.displayName = 'ToggleGroup.Item';
 
 /** 네임스페이스 — <ToggleGroup.Root type="single"><ToggleGroup.Item /></ToggleGroup.Root> */

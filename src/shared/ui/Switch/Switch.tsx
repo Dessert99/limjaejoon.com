@@ -7,26 +7,30 @@ import { root, thumb } from './Switch.css';
 const Root = forwardRef<
   React.ElementRef<typeof SwitchPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <SwitchPrimitive.Root
-    ref={ref}
-    className={[root, className].filter(Boolean).join(' ')}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <SwitchPrimitive.Root
+      ref={ref}
+      className={[root, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 Root.displayName = 'Switch.Root';
 
 /** 손잡이 — 위치 연출만 우리 몫, data-state는 Radix가 채운다 */
 const Thumb = forwardRef<
   React.ElementRef<typeof SwitchPrimitive.Thumb>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Thumb>
->(({ className, ...props }, ref) => (
-  <SwitchPrimitive.Thumb
-    ref={ref}
-    className={[thumb, className].filter(Boolean).join(' ')}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <SwitchPrimitive.Thumb
+      ref={ref}
+      className={[thumb, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 Thumb.displayName = 'Switch.Thumb';
 
 /** 네임스페이스 — <Switch.Root><Switch.Thumb /></Switch.Root> */
