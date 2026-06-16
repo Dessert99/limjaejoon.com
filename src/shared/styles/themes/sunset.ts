@@ -4,7 +4,15 @@ import { font, radius } from './base';
 
 /** 저녁 6~7시 웜 더스크 — accent=잉걸불 */
 export const sunset: ThemeValues = {
-  color: { background: '#2c2030', surface: '#3a2b3c', text: '#f6e7d6', muted: '#c2a18d', border: '#4f3b49', accent: '#e07a45' },
+  color: {
+    background: '#2c2030',
+    surface: '#3a2b3c',
+    text: '#f6e7d6',
+    muted: '#c2a18d',
+    border: '#4f3b49',
+    accent: '#e07a45',
+    accentForeground: '#2c2030',
+  },
   font,
   radius,
 };

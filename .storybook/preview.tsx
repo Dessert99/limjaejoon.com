@@ -1,11 +1,11 @@
-import type { Preview } from '@storybook/nextjs-vite';
 import '@/shared/styles/global.css';
-import { defaultThemeClass } from '@/shared/styles/theme.css';
+import { afternoonThemeClass } from '@/shared/styles/theme.css';
+import type { Preview } from '@storybook/nextjs-vite'; // TypeScript 타입 체크용
 
 const preview: Preview = {
   decorators: [
     (Story) => {
-      document.documentElement.classList.add(defaultThemeClass);
+      document.documentElement.classList.add(afternoonThemeClass);
 
       return <Story />;
     },
@@ -18,7 +18,7 @@ const preview: Preview = {
       },
     },
     docs: {
-      codePanel: true,
+      codePanel: true, // 코드 패널 켜기
     },
   },
 };

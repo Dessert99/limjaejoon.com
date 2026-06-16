@@ -13,6 +13,7 @@ export const vars = createThemeContract({
     muted: null,
     border: null,
     accent: null,
+    accentForeground: null,
   },
   font: {
     body: null,

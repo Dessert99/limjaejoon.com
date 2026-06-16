@@ -4,7 +4,15 @@ import { font, radius } from './base';
 
 /** 10시 이후 검은색에 가까운 차가운 밤 — accent=달빛 아이보리 */
 export const night: ThemeValues = {
-  color: { background: '#0a0b10', surface: '#14161e', text: '#e7eaf3', muted: '#8a93ac', border: '#232838', accent: '#d8c39a' },
+  color: {
+    background: '#0a0b10',
+    surface: '#14161e',
+    text: '#e7eaf3',
+    muted: '#8a93ac',
+    border: '#232838',
+    accent: '#d8c39a',
+    accentForeground: '#14161e',
+  },
   font,
   radius,
 };

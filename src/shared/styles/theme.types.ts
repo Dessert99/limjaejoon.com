@@ -9,6 +9,7 @@ export interface ThemeValues {
     muted: string;
     border: string;
     accent: string;
+    accentForeground: string;
   };
   font: { body: string; mono: string };
   radius: { sm: string; md: string; lg: string };
