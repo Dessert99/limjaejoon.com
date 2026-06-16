@@ -8,3 +8,4 @@ export { Switch } from './Switch/Switch';
 export { Checkbox } from './Checkbox/Checkbox';
 export { RadioGroup } from './RadioGroup/RadioGroup';
 export { ToggleGroup } from './ToggleGroup/ToggleGroup';
+export { Progress } from './Progress/Progress';

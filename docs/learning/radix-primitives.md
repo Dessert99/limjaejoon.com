@@ -42,3 +42,8 @@
 - 키보드: roving focus로 화살표 이동
 - 접근성: 묶음 그룹 의미론, 항목 `data-state="on|off"`
 - 상태: controlled(`value`)/uncontrolled(`defaultValue`), `onValueChange` 알림
+
+## Progress — Radix가 해주는 것
+- 접근성: `role="progressbar"` + `aria-valuenow`/`aria-valuemax`/`aria-valuemin`
+- 상태: `value`가 `null`/미지정이면 indeterminate(`data-state="indeterminate"`)
+- 단위: `max`로 분모 지정(기본 100)
