@@ -30,3 +30,9 @@
 - 접근성: `role="checkbox"` + `aria-checked`(true/false/mixed)
 - 마운트: Indicator는 checked·indeterminate일 때만 렌더
 - 폼: 숨은 input으로 제출 연동
+
+## RadioGroup — Radix가 해주는 것
+- 접근성: 묶음 `role="radiogroup"`, 항목 `role="radio"` + `aria-checked`
+- 키보드: roving tabindex로 화살표 이동, 이동 시 단일 선택
+- 상태: controlled(`value`)/uncontrolled(`defaultValue`), `onValueChange` 알림
+- 폼: 숨은 input으로 제출 연동
