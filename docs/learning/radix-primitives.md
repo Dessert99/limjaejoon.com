@@ -292,3 +292,25 @@ trapFocus: false, disableOutsidePointerEvents: false
 - `data-state="open|closed"`가 스타일 훅. 트리거 스타일은 `asChild`로 소비자 몫(우리는 Trigger를 통과만 한다).
 
 출처: `@radix-ui/react-popover/dist/index.mjs`(+ `@radix-ui/react-popper`·`react-dismissable-layer`·`react-focus-scope`) · https://www.radix-ui.com/primitives/docs/components/popover
+
+## HoverCard — Radix가 해주는 것
+
+Popover와 **토대(popper·Portal·DismissableLayer)는 공유**하되, 트리거 방식과 의미가 다르다 — hover/focus로 열리는 **비대화형 보조 정보**다.
+
+**네이티브:** `title` 속성이 hover 툴팁을 주지만 텍스트 전용·타이밍 조절 불가·리치 콘텐츠 불가다. "유저명에 올리면 뜨는 프로필 카드" 같은 건 네이티브에 없다.
+
+**Radix가 더하는 것 = 지연 hover/focus 디스클로저 + 포인터가 카드로 넘어가도 유지 + 터치 제외.**
+
+1. **트리거는 `<a>`(`Primitive.a`), 클릭 의미 없음:** `PopperPrimitive.Anchor`로 감싼 링크라 `aria-haspopup`/`aria-expanded`가 **없다**(Popover와의 결정적 차이 — Popover는 클릭으로 여는 대화형이라 그 aria를 가진다). `data-state="open|closed"`만 노출.
+
+```jsx
+onPointerEnter: excludeTouch(context.onOpen), // 터치는 hover 개념이 없어 제외
+onPointerLeave: excludeTouch(context.onClose),
+onFocus: context.onOpen, onBlur: context.onClose, // 키보드 접근성: 포커스로도 열림
+```
+
+2. **지연 타이머(`openDelay=700`·`closeDelay=300`):** `setTimeout`으로 열고닫음을 늦춰 스치는 hover에 깜빡이지 않게 한다. Content에도 `onPointerEnter/Leave`가 있어 **트리거→카드로 포인터를 옮기는 사이 닫히지 않는다**(close 타이머를 카드 진입이 취소).
+
+3. **Content는 `DismissableLayer`만, `FocusScope` 없음:** 보조 정보라 포커스를 가두지 않는다(Popover의 modal 분기·focus trap과 대비). Portal+`Presence`로 닫히면 언마운트하는 건 동일. **우리 규약 동일 — Portal을 Content에 내장.**
+
+출처: `@radix-ui/react-hover-card/dist/index.mjs`(+ `@radix-ui/react-popper`·`react-dismissable-layer`) · https://www.radix-ui.com/primitives/docs/components/hover-card

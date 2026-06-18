@@ -12,3 +12,4 @@ export { Progress } from './Progress/Progress';
 export { Accordion } from './Accordion/Accordion';
 export { Tabs } from './Tabs/Tabs';
 export { Popover } from './Popover/Popover';
+export { HoverCard } from './HoverCard/HoverCard';
