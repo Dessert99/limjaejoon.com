@@ -336,3 +336,23 @@ role: "menuitem",
 4. **선택=`onSelect`:** Item 클릭/Enter가 `onSelect`를 부르고 **기본으로 메뉴를 닫는다**(`event.preventDefault()`로 유지 가능). Separator=`role="separator"`.
 
 출처: `@radix-ui/react-dropdown-menu`(토대 `@radix-ui/react-menu/dist/index.mjs` + `react-roving-focus`·`react-focus-scope`) · https://www.radix-ui.com/primitives/docs/components/dropdown-menu
+
+## Menubar — Radix가 해주는 것
+
+DropdownMenu와 **같은 `react-menu` 토대**를 쓰되, 데스크톱 앱의 메뉴 막대처럼 **여러 메뉴를 가로로 묶는** 한 겹을 더한다(각 메뉴의 패널·항목 동작은 DropdownMenu와 동일).
+
+**네이티브:** 없다(앱 메뉴 막대용 HTML 요소 부재).
+
+**Radix가 더하는 것 = menubar 한 겹(가로 roving + 열린 채 메뉴 전환).**
+
+1. **Root=`role="menubar"` + `RovingFocusGroup`(가로):** 최상위 Trigger들이 메뉴바 안에서 ←→로 이동(전체가 Tab 정지 하나). Trigger는 `RovingFocusGroup.Item`이자 `role="menuitem"` `aria-haspopup="menu"` `aria-expanded`.
+
+```jsx
+// 트리거는 roving 항목이면서 메뉴를 여는 버튼
+role: "menuitem", "aria-haspopup": "menu", "aria-expanded": open, "data-state": open ? "open" : "closed"
+```
+
+2. **열린 채 이웃 메뉴로 전환:** 한 메뉴가 열려 있을 때 옆 Trigger로 포커스를 옮기면 그 메뉴가 바로 열린다(데스크톱 메뉴바 특유의 동작). 각 `Menu`의 패널 안쪽은 DropdownMenu와 똑같이 react-menu(roving·타입어헤드·FocusScope·Portal).
+3. **우리 노출/스타일 동일:** Root·Menu·Trigger·Content·Item·Label·Separator. Trigger는 `data-state="open"`·`data-highlighted`에 accent 배경(바 위에서 활성 메뉴를 드러냄). 나머지는 DropdownMenu 규약 그대로.
+
+출처: `@radix-ui/react-menubar/dist/index.mjs`(토대 `react-menu` + `react-roving-focus`) · https://www.radix-ui.com/primitives/docs/components/menubar
