@@ -479,3 +479,24 @@ ReactDOM.createPortal(<Primitive.li tabIndex={0} data-state={...}>, viewport) //
 3. **자동 닫힘 + 스와이프:** `duration` 후 닫히고(hover하면 타이머 일시정지), `swipeThreshold`만큼 밀면 dismiss. Action은 `altText`(SR 대체 문구) 필수 — 시각 버튼과 청각 설명을 가른다. **우리 노출:** Provider·Viewport·Root·Title·Description·Action·Close.
 
 출처: `@radix-ui/react-toast/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/toast
+
+## OneTimePasswordField — Radix가 해주는 것 (⚠️ unstable)
+
+`radix-ui`에서 `unstable_OneTimePasswordField`로 들어온다 — **실험적 API라 이름·구조가 바뀔 수 있다**(진입 시 재검토 대상이었음). 인증코드(OTP) 입력의 "칸 여러 개" UX를 묶어준다.
+
+**네이티브:** `<input autocomplete="one-time-code">` 한 칸이면 OS의 SMS 자동완성은 받지만, **칸을 쪼갠(6박스) UX**(자동 이동·붙여넣기 분배·백스페이스 역이동)는 직접 다 짜야 한다.
+
+**Radix가 더하는 것 = 분절 입력 묶음 + 자동완성 유지.**
+
+1. **Root(`role="group"`)가 N개 Input을 조율:** 한 칸을 채우면 다음 칸으로 포커스가 넘어가고, 붙여넣기하면 코드가 칸마다 분배되며(`PASTE` 액션), 백스페이스로 역이동한다. `type`(numeric·alpha·alphanumeric)이 `inputMode`를 정한다.
+
+```jsx
+autoComplete: "one-time-code",  // 칸을 쪼개도 SMS 자동완성 유지
+role: "group",
+// 입력 시 dispatch({ type: 'CHAR', index, char }) → 값 배열 갱신 + 다음 칸 focus
+```
+
+2. **HiddenInput = 폼 전송용 합본:** 보이는 칸들의 값을 하나로 합쳐 숨은 input에 담아 폼이 단일 값으로 전송하게 한다.
+3. **우리 규약:** 칸·HiddenInput은 standalone 의미가 없는 필수 plumbing이라 **`length` prop 단일 컴포넌트로 번들** — `<OneTimePasswordField length={6} name='code' />`. (ScrollArea·Select와 같은 흡수 전략.)
+
+출처: `@radix-ui/react-one-time-password-field/dist/index.mjs`(`radix-ui`의 `unstable_*`) · https://www.radix-ui.com/primitives/docs/components/one-time-password-field

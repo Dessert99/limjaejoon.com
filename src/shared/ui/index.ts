@@ -21,3 +21,4 @@ export { Dialog } from './Dialog/Dialog';
 export { AlertDialog } from './AlertDialog/AlertDialog';
 export { ScrollArea } from './ScrollArea/ScrollArea';
 export { Toast } from './Toast/Toast';
+export { OneTimePasswordField } from './OneTimePasswordField/OneTimePasswordField';
