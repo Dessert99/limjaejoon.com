@@ -314,3 +314,25 @@ onFocus: context.onOpen, onBlur: context.onClose, // 키보드 접근성: 포커
 3. **Content는 `DismissableLayer`만, `FocusScope` 없음:** 보조 정보라 포커스를 가두지 않는다(Popover의 modal 분기·focus trap과 대비). Portal+`Presence`로 닫히면 언마운트하는 건 동일. **우리 규약 동일 — Portal을 Content에 내장.**
 
 출처: `@radix-ui/react-hover-card/dist/index.mjs`(+ `@radix-ui/react-popper`·`react-dismissable-layer`) · https://www.radix-ui.com/primitives/docs/components/hover-card
+
+## DropdownMenu — Radix가 해주는 것
+
+Wave 2 **메뉴 패밀리의 첫 프리미티브**. 토대는 `@radix-ui/react-menu`(Menubar·ContextMenu도 같은 토대를 공유) — 플로팅(popper·Portal)에 **WAI-ARIA 메뉴 패턴**을 얹는다. 우리는 흔한 "액션 메뉴"만 노출(Root·Trigger·Content·Item·Label·Separator) — CheckboxItem·RadioItem·Sub(서브메뉴)·Group·Arrow는 소비자가 요구할 때(예: 테마 전환기→radio) 추가(YAGNI).
+
+**네이티브:** 버튼으로 여는 앱 메뉴용 HTML 요소가 없다(`<select>`는 폼 컨트롤, 우클릭 컨텍스트 메뉴는 브라우저 것). role·roving·타입어헤드를 전부 손으로 붙여야 한다.
+
+**Radix가 더하는 것 = 메뉴 ARIA + roving 포커스 + 타입어헤드 + 포커스 트랩.**
+
+1. **roving 포커스(`RovingFocusGroup`):** Content=`role="menu"` `aria-orientation="vertical"`, Item=`role="menuitem"`. 메뉴 전체가 Tab 정지 하나, 안에서는 ↑↓로 이동하며 포커스된 항목에 `data-highlighted=""`(비활성은 `data-disabled=""`)를 단다 — **이게 우리 스타일 훅: `&[data-highlighted]`에 accent 배경**(키보드 위치 표시는 장식 아닌 기능적 접근성이라 deferred 안 함).
+
+```jsx
+role: "menuitem",
+"data-highlighted": isFocused ? "" : void 0,
+"data-disabled": disabled ? "" : void 0,
+```
+
+2. **타입어헤드:** 글자를 타이핑하면 그 접두사로 시작하는 항목으로 점프한다(`searchRef`에 누적 → `getNextMatch`, 잠시 후 초기화). `<select>`의 그 동작을 메뉴에 이식.
+3. **FocusScope 트랩 + Portal:** 열리면 포커스를 메뉴 안에 가두고(Esc·바깥클릭으로 닫으면 트리거로 복귀), `Portal`+`Presence`로 닫히면 언마운트. Trigger=`aria-haspopup="menu"` `aria-expanded` `aria-controls`.
+4. **선택=`onSelect`:** Item 클릭/Enter가 `onSelect`를 부르고 **기본으로 메뉴를 닫는다**(`event.preventDefault()`로 유지 가능). Separator=`role="separator"`.
+
+출처: `@radix-ui/react-dropdown-menu`(토대 `@radix-ui/react-menu/dist/index.mjs` + `react-roving-focus`·`react-focus-scope`) · https://www.radix-ui.com/primitives/docs/components/dropdown-menu
