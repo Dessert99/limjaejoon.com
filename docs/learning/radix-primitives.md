@@ -208,3 +208,56 @@ multiple 모드는 그대로 토글 버튼(`aria-pressed`).
 - **트레이드오프:** 네이티브 `<progress>`는 ARIA를 공짜로 주지만 스타일이 막힌다. Radix는 그 ARIA를 div로 손수 깔아주는 대신 **완전한 스타일 자유 + data-state**를 얻는다.
 
 출처: `@radix-ui/react-progress/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/progress
+
+## Accordion — Radix가 해주는 것
+
+**네이티브:** `<details>/<summary>`가 디스클로저(열고/접기)를 JS 없이 해준다. 하지만 ① **항목 하나**짜리라 "한 번에 하나만 열림(single)" 같은 그룹 조정이 없고, ② 항목 간 화살표 이동이 없고, ③ 마커·애니메이션 스타일이 제한적이다.
+
+**Radix가 더하는 것 = 그룹 상태 조정 + 항목 간 키보드 내비 + region aria + 애니메이션 훅.** 토대는 `Collapsible` 프리미티브(`Item`=`Collapsible.Root`, `Trigger`=`Collapsible.Trigger`, `Content`=`Collapsible.Content`) — 한 항목의 열고닫기·`aria-expanded`/`aria-controls`는 Collapsible 몫이고, Accordion은 그 위에 **여러 항목의 조정**을 얹는다.
+
+1. **single/multiple 판별 유니온 + collapsible:** `type="single"`은 value가 string(`useControllableState`, 기본 `""`), `multiple`은 string[]. single에서 `collapsible=false`면 열린 항목을 다시 눌러 닫을 수 없다 — 그 가드를 트리거의 `aria-disabled`로 노출한다.
+
+```jsx
+// AccordionImplSingle: collapsible일 때만 닫기를 허용
+onItemClose: useCallback(() => collapsible && setValue(''), [collapsible, setValue]),
+// AccordionTrigger: 열려있고 collapsible 아니면 비활성(닫기 불가)
+'aria-disabled': (itemContext.open && !collapsibleContext.collapsible) || undefined,
+```
+
+2. **화살표 내비는 roving이 아니라 "포커스 이동 enhancement"다(중요한 구분):** RadioGroup/ToggleGroup은 roving tabindex로 그룹이 Tab 정지 하나만 갖지만, Accordion은 **모든 트리거가 평범히 tabbable**하고 그 위에 ↑↓·Home/End를 더 얹어 트리거 사이를 순환 이동시킨다. 구현은 트리거 `Collection`을 모아 키다운에서 다음 트리거로 `focus()`:
+
+```jsx
+const triggerCollection = getItems().filter((item) => !item.ref.current?.disabled);
+// ArrowDown(vertical) → moveNext, 끝이면 처음으로 래핑
+triggerCollection[nextIndex % triggerCount].ref.current?.focus();
+```
+
+3. **Content = `role="region"` + `aria-labelledby={triggerId}`** — 패널이 어느 트리거의 영역인지 스크린리더에 연결. 닫히면 `Collapsible`의 `Presence`로 언마운트(그래서 테스트에서 닫힌 패널은 DOM에 없다).
+4. **애니메이션 훅:** Content가 측정된 높이를 `--radix-accordion-content-height` CSS 변수로 노출한다(`auto` 높이도 keyframes로 슬라이드 가능하게). **우리는 이 연출을 deferred** — 정적으로 마운트/언마운트만 한다.
+
+- `data-state="open|closed"`(+ Header/Item에도) = 스타일 훅. 트리거 텍스트는 소비자가 채운다.
+
+출처: `@radix-ui/react-accordion/dist/index.mjs`(+ `@radix-ui/react-collapsible`) · https://www.radix-ui.com/primitives/docs/components/accordion
+
+## Tabs — Radix가 해주는 것
+
+**네이티브:** 탭 UI를 위한 HTML 요소가 없다. 버튼+패널을 직접 짜고 `role="tab/tablist/tabpanel"`·`aria-selected`·`aria-controls`/`aria-labelledby`·roving tabindex·화살표 이동을 전부 손으로 붙여야 한다.
+
+**Radix가 더하는 것 = WAI-ARIA 탭 패턴 통째.**
+
+1. **Roving focus(단일 Tab 정지):** `TabsList`가 `RovingFocusGroup.Root`를 `asChild`로 감싼다 → tablist 전체가 Tab 정지 하나만 갖고 안에서는 화살표로 이동(`loop=true` 순환). **Accordion과 대비되는 핵심 — Accordion은 모든 트리거가 tabbable(화살표는 보조), Tabs는 roving(화살표가 주 이동 수단).**
+2. **자동 vs 수동 활성화(`activationMode`, 기본 `automatic`):** Trigger `onFocus`에서 automatic이면 포커스가 닿는 순간 선택까지 일으킨다 — 화살표로 포커스 이동 = 즉시 패널 전환. `manual`이면 포커스만 옮기고 Space/Enter로 확정.
+
+```jsx
+onFocus: () => {
+  const isAutomaticActivation = context.activationMode !== 'manual';
+  if (!isSelected && !disabled && isAutomaticActivation) context.onValueChange(value);
+};
+```
+
+3. **ARIA id 자동 배선:** `baseId`로 `trigger-${value}`/`content-${value}` id를 만들어 Trigger `aria-controls` ↔ Content `aria-labelledby`를 짝짓는다. Trigger=`role="tab" aria-selected`, List=`role="tablist"`, Content=`role="tabpanel" tabIndex={0}`(패널 자체로도 키보드 포커스 가능).
+4. **Content는 `Presence`로 선택된 것만 마운트** — 비선택 패널은 DOM에서 빠진다(테스트에서 비활성 패널을 `queryByText`로 못 찾는 이유). 상태 보존이 필요하면 `forceMount`.
+
+- 클릭은 `onMouseDown`에서 처리(좌클릭·non-ctrl일 때만 선택). `data-state="active|inactive"`가 밑줄·색 스타일 훅.
+
+출처: `@radix-ui/react-tabs/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/tabs

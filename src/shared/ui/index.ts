@@ -9,3 +9,5 @@ export { Checkbox } from './Checkbox/Checkbox';
 export { RadioGroup } from './RadioGroup/RadioGroup';
 export { ToggleGroup } from './ToggleGroup/ToggleGroup';
 export { Progress } from './Progress/Progress';
+export { Accordion } from './Accordion/Accordion';
+export { Tabs } from './Tabs/Tabs';
