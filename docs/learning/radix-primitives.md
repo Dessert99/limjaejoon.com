@@ -378,3 +378,26 @@ onClick: () => { context.onItemSelect(itemContext.value); wasClickCloseRef.curre
 - `Indicator`(활성 트리거 아래 화살표, `data-state="visible|hidden"`)는 장식이라 **deferred**.
 
 출처: `@radix-ui/react-navigation-menu/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/navigation-menu
+
+## Select — Radix가 해주는 것
+
+Wave 2의 마지막이자 **파트가 가장 깊은** 프리미티브. 네이티브 `<select>`의 의미는 유지하되 **OS가 그리는 옵션 목록을 완전히 스타일 가능한 listbox로** 대체한다.
+
+**네이티브:** `<select>/<option>`은 키보드·타입어헤드·폼 전송을 공짜로 주지만 **열린 옵션 목록은 OS가 그려서 스타일 불가**(폰트·색·여백·체크표시 못 건드림). 디자인 시스템에선 이게 한계.
+
+**Radix가 더하는 것 = 스타일 가능한 listbox + 그 의미(combobox/option/selected) 보존.**
+
+1. **깊은 필수 구조 → 우리는 plumbing을 Content에 흡수:** 원래 `Trigger>Value` + `Portal>Content>Viewport>Item>(ItemText+ItemIndicator)`로 깊다. **우리 규약: Portal과 (필수인) Viewport를 Content 래퍼에 함께 내장** — 소비자는 `<Select.Content>` 안에 `Item`만 둔다. Item·ItemText·ItemIndicator는 얇은 파트로 유지(`ItemText`는 Value가 선택값 표시에 **재사용**하므로 children만으로 대체 불가 → 별도 파트로 노출).
+
+2. **ARIA:** Trigger=`role="combobox"` `aria-expanded`(+값 없으면 `data-placeholder`), Content=`role="listbox"`, Item=`role="option"` `aria-selected` + 포커스 시 `data-highlighted`(우리 스타일 훅=accent 배경). 위치는 기본 item-aligned(선택 항목이 트리거 위에 겹침) / `position="popper"`로 Popover식 전환 가능 — 둘 다 통과.
+
+3. **테스트 함정(jsdom):** Radix Select가 `target.hasPointerCapture`·`scrollIntoView`를 호출하는데 jsdom엔 없어 `TypeError`가 난다. `vitest.setup.ts`에 두 메서드 셔임을 넣어 해결(폼/플로팅 인터랙티브 공통 인프라).
+
+```ts
+Element.prototype.hasPointerCapture = () => false;
+Element.prototype.scrollIntoView = () => {};
+```
+
+- defer: Group·Label·Separator(옵션 그룹), ScrollUpButton/ScrollDownButton(긴 목록 스크롤 affordance) — 짧은 목록엔 불필요(YAGNI).
+
+출처: `@radix-ui/react-select/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/select

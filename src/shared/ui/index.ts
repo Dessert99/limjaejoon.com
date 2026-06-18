@@ -16,3 +16,4 @@ export { HoverCard } from './HoverCard/HoverCard';
 export { DropdownMenu } from './DropdownMenu/DropdownMenu';
 export { Menubar } from './Menubar/Menubar';
 export { NavigationMenu } from './NavigationMenu/NavigationMenu';
+export { Select } from './Select/Select';
