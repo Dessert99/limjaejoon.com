@@ -500,3 +500,22 @@ role: "group",
 3. **우리 규약:** 칸·HiddenInput은 standalone 의미가 없는 필수 plumbing이라 **`length` prop 단일 컴포넌트로 번들** — `<OneTimePasswordField length={6} name='code' />`. (ScrollArea·Select와 같은 흡수 전략.)
 
 출처: `@radix-ui/react-one-time-password-field/dist/index.mjs`(`radix-ui`의 `unstable_*`) · https://www.radix-ui.com/primitives/docs/components/one-time-password-field
+
+## PasswordToggleField — Radix가 해주는 것 (⚠️ unstable)
+
+`radix-ui`의 `unstable_PasswordToggleField`. 비밀번호 입력 + 가시성 토글. "type을 password↔text로 바꾸는 버튼" 자체는 쉬워 보이지만 **함정 두 개**를 Radix가 막아준다.
+
+**네이티브:** `<input type=password>` + 버튼으로 `type`을 바꾸면 ① 브라우저가 **포커스·커서 위치를 잃고**, ② 토글 버튼의 의미("지금 보임/숨김")를 스크린리더에 알릴 방법이 없다.
+
+**Radix가 더하는 것 = 포커스/커서 보존 + 토글 라벨 자동화 + 상태반응 렌더.**
+
+1. **type 전환 시 포커스·선택 보존:** Toggle을 눌러 `visible`을 뒤집으면 `Input`의 `type`이 `visible ? "text" : "password"`로 바뀌는데, Radix가 포커스와 캐럿 위치를 유지한다(네이티브로 하면 리셋됨).
+
+```jsx
+type: visible ? "text" : "password", autoComplete: "current-password"
+```
+
+2. **Toggle aria-label 자동(단, 텍스트 없을 때만):** 버튼에 보이는 텍스트가 없으면(아이콘만) `aria-label`을 "Show password"↔"Hide password"로 자동 부여한다. **보이는 텍스트가 있으면(우리 Slot '보기'/'숨기기') 그 텍스트가 접근명이 되어 aria-label을 안 건다** — 그래서 테스트에서 버튼을 텍스트 '보기'로 찾는다(MutationObserver로 텍스트 유무 감지).
+3. **Icon/Slot = 가시성 반응 렌더:** `Icon`은 `visible`/`hidden` 두 svg 중, `Slot`은 두 노드 중 현재 상태 것을 그린다 — 아이콘이든 텍스트든 토글 모양이 상태따라 바뀐다. **우리 노출:** Root(provider)·Input·Toggle·Icon·Slot. 아이콘 글리프는 소비자 몫.
+
+출처: `@radix-ui/react-password-toggle-field/dist/index.mjs`(`radix-ui`의 `unstable_*`) · https://www.radix-ui.com/primitives/docs/components/password-toggle-field
