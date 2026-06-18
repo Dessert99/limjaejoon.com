@@ -12,6 +12,7 @@ export const vars = createThemeContract({
     text: null,
     muted: null,
     border: null,
+    overlay: null,
     accent: null,
     accentForeground: null,
   },

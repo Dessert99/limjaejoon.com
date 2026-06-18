@@ -10,6 +10,7 @@ export const afternoon: ThemeValues = {
     text: '#1c2630',
     muted: '#5d6b7a',
     border: '#d8e2ee',
+    overlay: 'rgba(28, 38, 48, 0.45)',
     accent: '#c79338',
     accentForeground: '#1c2630',
   },

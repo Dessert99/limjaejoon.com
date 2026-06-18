@@ -8,6 +8,7 @@ export interface ThemeValues {
     text: string;
     muted: string;
     border: string;
+    overlay: string;
     accent: string;
     accentForeground: string;
   };

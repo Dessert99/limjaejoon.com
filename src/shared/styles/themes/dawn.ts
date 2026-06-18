@@ -10,6 +10,7 @@ export const dawn: ThemeValues = {
     text: '#e9eaf6',
     muted: '#a3a8cb',
     border: '#353b59',
+    overlay: 'rgba(8, 10, 24, 0.6)',
     accent: '#cf8f86',
     accentForeground: '#1b2038',
   },

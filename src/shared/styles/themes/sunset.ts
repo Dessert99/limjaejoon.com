@@ -10,6 +10,7 @@ export const sunset: ThemeValues = {
     text: '#f6e7d6',
     muted: '#c2a18d',
     border: '#4f3b49',
+    overlay: 'rgba(20, 12, 22, 0.6)',
     accent: '#e07a45',
     accentForeground: '#2c2030',
   },

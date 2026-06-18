@@ -10,6 +10,7 @@ export const night: ThemeValues = {
     text: '#e7eaf3',
     muted: '#8a93ac',
     border: '#232838',
+    overlay: 'rgba(0, 0, 0, 0.65)',
     accent: '#d8c39a',
     accentForeground: '#14161e',
   },
