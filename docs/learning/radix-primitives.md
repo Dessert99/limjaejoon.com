@@ -458,3 +458,24 @@ Wave 4(특수)의 첫 프리미티브. **네이티브 스크롤은 살리되 스
 2. **표시 정책 `type`(auto·always·scroll·hover):** 언제 스크롤바를 보일지. 기본은 hover-friendly. **우리 규약:** 필수 plumbing(Viewport·Scrollbar·Thumb·Corner)은 standalone 의미가 없어 **단일 컴포넌트로 번들** — 소비자는 `<ScrollArea style={{height}}>children</ScrollArea>`만. 세로 스크롤바만 노출(가로는 필요 시 추가=YAGNI), 높이는 소비자가 className/style로.
 
 출처: `@radix-ui/react-scroll-area/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/scroll-area
+
+## Toast — Radix가 해주는 것
+
+지금까지의 floating과 **마운트 패턴이 다르다** — 트리거 옆이 아니라 **앱 루트에 Provider+Viewport를 한 번** 두고, 토스트는 거기로 쌓인다.
+
+**네이티브:** 없다. ARIA 라이브 영역(`role="status"`/`aria-live`)이 토대지만, 큐·자동 닫힘 타이밍·스와이프·포커스 복귀·"SR이 놓치지 않게 알리기"를 직접 짜야 한다.
+
+**Radix가 더하는 것 = 큐 관리 + 타이머 + 스와이프 dismiss + 이중 렌더(보이는 토스트 / 들리는 announce).**
+
+1. **Provider(큐·설정) + Viewport(쌓이는 자리):** Provider가 `duration=5000`·`swipeDirection`·hotkey를 쥐고, Viewport(`role="region"`, `<ol tabIndex=-1>`)가 화면 한 모서리에 토스트를 모은다. 우리는 Viewport를 고정 우하단에 배치.
+
+2. **이중 렌더가 핵심 (시각 ↔ 청각 분리):** 한 토스트가 **두 군데**에 난다 — ① 보이는 토스트는 `<li>`로 **Viewport에 포털**되고, ② 스크린리더용 `ToastAnnounce`(`role="status"` `aria-live`)가 별도로 텍스트만 읽어준다. **그래서 테스트에서 `getByRole('status')`는 빈 announce 영역을 잡고, 실제 토스트는 `getByRole('listitem')`** (포털된 li).
+
+```jsx
+announceTextContent && <ToastAnnounce role="status" aria-live={...}>{announceTextContent}</ToastAnnounce>
+ReactDOM.createPortal(<Primitive.li tabIndex={0} data-state={...}>, viewport) // 보이는 토스트
+```
+
+3. **자동 닫힘 + 스와이프:** `duration` 후 닫히고(hover하면 타이머 일시정지), `swipeThreshold`만큼 밀면 dismiss. Action은 `altText`(SR 대체 문구) 필수 — 시각 버튼과 청각 설명을 가른다. **우리 노출:** Provider·Viewport·Root·Title·Description·Action·Close.
+
+출처: `@radix-ui/react-toast/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/toast
