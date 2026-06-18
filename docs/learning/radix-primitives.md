@@ -356,3 +356,25 @@ role: "menuitem", "aria-haspopup": "menu", "aria-expanded": open, "data-state": 
 3. **우리 노출/스타일 동일:** Root·Menu·Trigger·Content·Item·Label·Separator. Trigger는 `data-state="open"`·`data-highlighted`에 accent 배경(바 위에서 활성 메뉴를 드러냄). 나머지는 DropdownMenu 규약 그대로.
 
 출처: `@radix-ui/react-menubar/dist/index.mjs`(토대 `react-menu` + `react-roving-focus`) · https://www.radix-ui.com/primitives/docs/components/menubar
+
+## NavigationMenu — Radix가 해주는 것
+
+메뉴 패밀리(react-menu)와 **별개 계열**이다. 액션 실행이 아니라 **사이트 이동(링크)**용이라, Portal·포커스 트랩이 없고 hover 인텐트로 패널을 연다.
+
+**네이티브:** `<nav>` + `<ul>`/`<a>`로 내비 골격은 되지만, "항목에 올리면 펼쳐지는 메가메뉴"의 hover 인텐트·열림 상태·active 표시는 직접 붙여야 한다.
+
+**Radix가 더하는 것 = hover 인텐트 열기 + active 링크 의미 + nav ARIA.**
+
+1. **Portal 없음 — Content는 인라인:** 메뉴 패밀리와 달리 Content를 body로 포털하지 않고 항목 자리에 렌더한다. **우리 규약: 그래서 Content 래퍼에 Portal을 안 넣고**, 항목(`position: relative`) 아래로 CSS(`absolute; top:100%`)로 띄운다. 단일 공유 패널·사이즈 애니메이션을 원하면 `Viewport`를 쓰지만 **모션 deferred라 생략**(생략 시 `--radix-navigation-menu-viewport-*` 변수도 불필요).
+
+2. **트리거는 hover 인텐트 + 클릭 토글:** `delayDuration=200`로 스치는 hover를 거르고(`onPointerMove`에서 한 번만 열기), 클릭으로도 토글(`onItemSelect`). Trigger=`button` `aria-expanded` `aria-controls`, Content=`aria-labelledby={triggerId}`.
+
+```jsx
+onClick: () => { context.onItemSelect(itemContext.value); wasClickCloseRef.current = open; }
+```
+
+3. **Link의 active = 현재 페이지 의미:** `active` prop이 `aria-current="page"` + `data-active`를 단다(우리 스타일 훅: accent 색·굵게). 링크 선택은 커스텀 이벤트로 열린 패널을 닫는다. **포커스 트랩 없음** — 내비라 링크 사이를 Tab으로 지나간다.
+
+- `Indicator`(활성 트리거 아래 화살표, `data-state="visible|hidden"`)는 장식이라 **deferred**.
+
+출처: `@radix-ui/react-navigation-menu/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/navigation-menu

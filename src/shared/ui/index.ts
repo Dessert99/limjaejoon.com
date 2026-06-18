@@ -15,3 +15,4 @@ export { Popover } from './Popover/Popover';
 export { HoverCard } from './HoverCard/HoverCard';
 export { DropdownMenu } from './DropdownMenu/DropdownMenu';
 export { Menubar } from './Menubar/Menubar';
+export { NavigationMenu } from './NavigationMenu/NavigationMenu';

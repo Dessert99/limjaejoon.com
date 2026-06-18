@@ -1,0 +1,77 @@
+/** NavigationMenu — 사이트 내비 바 + 트리거로 여는 링크 패널 (정적; 그림자·모션·Indicator·Viewport는 deferred) */
+import { sprinkles } from '@/shared/styles/sprinkles.css';
+import { vars } from '@/shared/styles/theme.css';
+import { style } from '@vanilla-extract/css';
+
+/** 목록 — 항목을 가로로, 기본 목록 마커 제거하고 테두리로 감싼 바 */
+export const list = style([
+  sprinkles({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4',
+    p: '4',
+    r: 'md',
+  }),
+  {
+    listStyle: 'none',
+    margin: 0,
+    border: `1px solid ${vars.color.border}`,
+    background: vars.color.surface,
+  },
+]);
+
+/** 항목 — 콘텐츠 패널의 위치 기준(relative); Portal을 안 쓰므로 CSS로 항목 아래 띄운다 */
+export const item = style({ position: 'relative' });
+
+/** 트리거 — 패널을 여는 메뉴 이름, 열림(data-state) 시 accent 배경 */
+export const trigger = style([
+  sprinkles({ px: '12', py: '6', r: 'sm' }),
+  {
+    background: 'transparent',
+    border: 'none',
+    color: vars.color.text,
+    font: 'inherit',
+    cursor: 'pointer',
+    outline: 'none',
+    selectors: {
+      '&[data-state="open"]': {
+        background: vars.color.accent,
+        color: vars.color.accentForeground,
+      },
+    },
+  },
+]);
+
+/** 패널 — 항목 바로 아래로 떨어지는 링크 묶음, 불투명 surface */
+export const content = style([
+  sprinkles({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2',
+    p: '8',
+    r: 'md',
+  }),
+  {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    marginTop: '0.25rem',
+    minWidth: '12rem',
+    background: vars.color.surface,
+    border: `1px solid ${vars.color.border}`,
+  },
+]);
+
+/** 링크 — 내비/패널 공용, 현재 페이지(aria-current=page → data-active)는 accent 강조 */
+export const link = style([
+  sprinkles({ px: '8', py: '6', r: 'sm' }),
+  {
+    color: vars.color.text,
+    textDecoration: 'none',
+    cursor: 'pointer',
+    outline: 'none',
+    selectors: {
+      '&[data-active]': { color: vars.color.accent, fontWeight: 600 },
+    },
+  },
+]);
