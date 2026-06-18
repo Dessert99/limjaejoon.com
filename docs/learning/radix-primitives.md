@@ -261,3 +261,34 @@ onFocus: () => {
 - 클릭은 `onMouseDown`에서 처리(좌클릭·non-ctrl일 때만 선택). `data-state="active|inactive"`가 밑줄·색 스타일 훅.
 
 출처: `@radix-ui/react-tabs/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/tabs
+
+## Popover — Radix가 해주는 것
+
+> Wave 2(플로팅)의 첫 프리미티브. 여기서 세우는 토대 — Portal·popper 위치계산·DismissableLayer·FocusScope·modal 분기 — 를 HoverCard·DropdownMenu·Select가 공유한다.
+
+**네이티브:** HTML Popover API(`popover` 속성 + `popovertarget` 버튼)가 top-layer 렌더·바깥클릭/Esc 라이트 디스미스를 JS 없이 해준다. 하지만 **트리거 기준 위치**는 CSS Anchor Positioning(`anchor-name`/`position-anchor`)이 필요한데 2026 초 기준 Chromium 중심 지원이라(Firefox·Safari 제한적) 크로스브라우저 위치계산은 여전히 JS 몫이다.
+
+**Radix가 더하는 것 = 크로스브라우저 위치계산 + 잘림 회피 Portal + 디스미스 계층 + 포커스 관리(modal 분기).**
+
+1. **위치계산은 `react-popper`(=`@floating-ui` 래퍼):** `side="bottom"`·`align="center"` 기본, `sideOffset`·충돌 회피(`flip`·`shift`). 결과를 `data-radix-popper-side/align`과 CSS 변수로 노출한다 — 우리는 연출 deferred라 변수를 안 쓰지만 side/align은 소비자가 지정한다.
+
+```jsx
+contentStyle.setProperty('--radix-popper-available-width', `${availableWidth}px`);
+// data-radix-popper-side / --radix-popper-transform-origin 등도 노출
+```
+
+2. **Portal + `Presence`:** Content가 `Portal`로 body에 붙어 `overflow:hidden`/`transform` 조상에 잘리지 않는다. `present = forceMount || open`이라 닫히면 언마운트(테스트에서 닫힌 패널을 못 찾는 이유). **우리 규약: Portal을 Content 래퍼에 내장** — 소비자는 `<Popover.Content>` 하나만 둔다(shadcn 스타일).
+
+3. **modal 분기(기본 `modal={false}`=비모달)가 핵심:**
+
+```jsx
+// 비모달: 페이지가 살아있다 — 포커스 가둠 없음, 바깥 포인터 통과
+trapFocus: false, disableOutsidePointerEvents: false
+// 모달: RemoveScroll로 스크롤 잠금 + 포커스 트랩 + 바깥 포인터 차단
+```
+
+4. **디스미스·aria:** `DismissableLayer`가 바깥 포인터다운·Esc(`onEscapeKeyDown`)로 닫고 트리거로 포커스 복귀. Trigger=`aria-haspopup="dialog"` `aria-expanded` `aria-controls`(열렸을 때만), Content=`role="dialog"`.
+
+- `data-state="open|closed"`가 스타일 훅. 트리거 스타일은 `asChild`로 소비자 몫(우리는 Trigger를 통과만 한다).
+
+출처: `@radix-ui/react-popover/dist/index.mjs`(+ `@radix-ui/react-popper`·`react-dismissable-layer`·`react-focus-scope`) · https://www.radix-ui.com/primitives/docs/components/popover
