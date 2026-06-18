@@ -3,17 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { ScrollArea } from './ScrollArea';
 
 describe('ScrollArea', () => {
-  it('children를 스크롤 뷰포트 안에 렌더한다', () => {
-    render(<ScrollArea>긴 내용이 여기에 들어간다</ScrollArea>);
-
-    expect(screen.getByText('긴 내용이 여기에 들어간다')).toBeInTheDocument();
-  });
-
-  it('Root에 외부 className을 병합한다', () => {
+  it('Root className을 병합하고 children을 내장 Viewport 안에 렌더한다', () => {
     const { container } = render(
-      <ScrollArea className='custom-scope'>내용</ScrollArea>
+      <ScrollArea className='custom-scope'>긴 내용</ScrollArea>
     );
 
-    expect(container.querySelector('.custom-scope')).toBeInTheDocument();
+    const root = container.querySelector('.custom-scope');
+    expect(root).toBeInTheDocument();
+    expect(root).toContainElement(screen.getByText('긴 내용'));
   });
 });
