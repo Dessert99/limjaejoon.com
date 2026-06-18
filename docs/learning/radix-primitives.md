@@ -445,3 +445,16 @@ onOpenAutoFocus: (event) => { event.preventDefault(); cancelRef.current?.focus()
 - 우리 규약은 Dialog와 동일(Portal·Overlay를 Content 내장, Title/Description aria, Action/Cancel은 asChild Button). 스크림도 `vars.color.overlay`.
 
 출처: `@radix-ui/react-alert-dialog/dist/index.mjs`(Dialog 토대 재사용) · https://www.radix-ui.com/primitives/docs/components/alert-dialog
+
+## ScrollArea — Radix가 해주는 것
+
+Wave 4(특수)의 첫 프리미티브. **네이티브 스크롤은 살리되 스크롤바만 커스텀**한다.
+
+**네이티브:** 브라우저 스크롤바는 OS·브라우저마다 모양이 다르고, `::-webkit-scrollbar`는 webkit 전용 비표준, 표준 `scrollbar-width`/`scrollbar-color`는 조절 폭이 좁다(두께 정도). 디자인 일관성을 못 맞춘다.
+
+**Radix가 더하는 것 = 네이티브 스크롤 위에 얹은 크로스브라우저 커스텀 스크롤바.**
+
+1. **네이티브 스크롤 유지 + 가짜 스크롤바 오버레이:** Viewport는 실제로 네이티브 스크롤(휠·키보드·터치 그대로)하고, 그 위에 `Scrollbar`+`Thumb`를 그려 위치/크기를 동기화한다. `ResizeObserver`로 콘텐츠/뷰포트를 측정해 썸 길이를 맞춘다(jsdom에선 안 터졌지만 RO 의존).
+2. **표시 정책 `type`(auto·always·scroll·hover):** 언제 스크롤바를 보일지. 기본은 hover-friendly. **우리 규약:** 필수 plumbing(Viewport·Scrollbar·Thumb·Corner)은 standalone 의미가 없어 **단일 컴포넌트로 번들** — 소비자는 `<ScrollArea style={{height}}>children</ScrollArea>`만. 세로 스크롤바만 노출(가로는 필요 시 추가=YAGNI), 높이는 소비자가 className/style로.
+
+출처: `@radix-ui/react-scroll-area/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/scroll-area
