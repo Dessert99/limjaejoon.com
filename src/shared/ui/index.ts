@@ -17,3 +17,5 @@ export { DropdownMenu } from './DropdownMenu/DropdownMenu';
 export { Menubar } from './Menubar/Menubar';
 export { NavigationMenu } from './NavigationMenu/NavigationMenu';
 export { Select } from './Select/Select';
+export { Dialog } from './Dialog/Dialog';
+export { AlertDialog } from './AlertDialog/AlertDialog';

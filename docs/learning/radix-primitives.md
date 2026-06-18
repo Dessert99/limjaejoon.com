@@ -401,3 +401,47 @@ Element.prototype.scrollIntoView = () => {};
 - defer: Group·Label·Separator(옵션 그룹), ScrollUpButton/ScrollDownButton(긴 목록 스크롤 affordance) — 짧은 목록엔 불필요(YAGNI).
 
 출처: `@radix-ui/react-select/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/select
+
+## Dialog — Radix가 해주는 것
+
+Wave 3(모달)의 첫 프리미티브. Popover의 **modal 분기를 본격화**한 것 — 페이지를 막고(스크롤 잠금·포커스 트랩) 사용자의 응답을 기다린다. 스크림용으로 이번에 `color.overlay` 토큰을 4테마에 추가했다.
+
+**네이티브:** `<dialog>` + `showModal()`이 top-layer·`::backdrop`·Esc·포커스 이동을 준다. 하지만 ① 열림이 **명령형**(`showModal()`/`close()`)이라 React 상태와 안 맞고, ② `::backdrop`은 스타일이 제한적, ③ 포커스 트랩·스크롤 잠금 디테일이 브라우저마다 들쭉날쭉이다.
+
+**Radix가 더하는 것 = 선언형 open + 자유로운 스크림 + 견고한 트랩/스크롤락 + 제목·설명 aria 배선.**
+
+1. **포커스 트랩 + 스크롤 잠금:** Content를 `FocusScope`(`trapped`)로 감싸 Tab이 모달 밖으로 못 나가고, `RemoveScroll`로 배경 스크롤을 막는다(Popover는 `modal` prop일 때만, Dialog는 항상). 닫히면 트리거로 포커스 복귀.
+
+```jsx
+FocusScope({ trapped: trapFocus, ... role: "dialog",
+  "aria-labelledby": context.titleId, "aria-describedby": context.descriptionId })
+RemoveScroll({ ... shards: [context.contentRef] }) // 배경만 잠그고 패널 스크롤은 허용
+```
+
+2. **Title/Description = 이름·설명 의미:** `Title`(h2)이 `aria-labelledby`로 다이얼로그 이름이 되고, `Description`이 `aria-describedby`로 연결된다. Title이 없으면 Radix가 콘솔 경고(접근성 강제).
+3. **우리 규약:** Trigger는 `aria-haspopup="dialog"`. **Portal과 스크림(Overlay)을 Content 래퍼에 내장** — 소비자는 `<Dialog.Content>` 안에 Title·Description·본문만 둔다. Overlay 배경 = `vars.color.overlay`(신규 토큰, 4테마 반투명 어둠). Trigger·Close는 `asChild`로 Button 합성.
+
+출처: `@radix-ui/react-dialog/dist/index.mjs`(+ `react-focus-scope`·`react-remove-scroll`) · https://www.radix-ui.com/primitives/docs/components/dialog
+
+## AlertDialog — Radix가 해주는 것
+
+Dialog의 **변형** — 토대·트랩·스크롤락은 그대로 쓰되, "되돌릴 수 없는 작업"의 확인용이라 **반드시 응답을 받도록** 동작을 조인다(Dialog 내부 위에 얹은 한 겹).
+
+**네이티브:** `window.confirm()`이 있지만 스타일 불가·블로킹·텍스트 전용이다. 디자인된 확인 대화는 직접 만들어야 한다.
+
+**Radix가 더하는 것 = "닫기 어렵게" 만드는 3가지 + alertdialog 의미.**
+
+1. **role=`alertdialog`:** 보조기술이 더 강하게(긴급·응답 필요) 알린다. Dialog의 `dialog`와 다른 점.
+2. **바깥클릭으로 안 닫힘:** `onPointerDownOutside`·`onInteractOutside`를 preventDefault해 스크림을 눌러도 닫히지 않는다(Dialog는 닫힘). 사용자가 **Cancel/Action 중 하나를 명시적으로 골라야** 한다(Esc는 여전히 닫힘 = 취소 경로).
+
+```jsx
+onPointerDownOutside: (event) => event.preventDefault(),
+onInteractOutside: (event) => event.preventDefault(),
+onOpenAutoFocus: (event) => { event.preventDefault(); cancelRef.current?.focus(); }
+```
+
+3. **Cancel에 기본 포커스:** 열리면 안전한 `Cancel`로 포커스가 간다(실수로 Enter를 쳐도 확인이 아니라 취소). `Close` 대신 **`Action`(실행) + `Cancel`(취소)** 두 파트로 의도를 가른다.
+
+- 우리 규약은 Dialog와 동일(Portal·Overlay를 Content 내장, Title/Description aria, Action/Cancel은 asChild Button). 스크림도 `vars.color.overlay`.
+
+출처: `@radix-ui/react-alert-dialog/dist/index.mjs`(Dialog 토대 재사용) · https://www.radix-ui.com/primitives/docs/components/alert-dialog
