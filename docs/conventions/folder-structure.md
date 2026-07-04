@@ -48,6 +48,7 @@ features/{slice}/
 │   ├── problemQueries.ts     # query 팩토리 (key + options)
 │   └── useCreateProblem.ts   # 커스텀 mutation 훅
 ├── model/              # 상태, schema 등 도메인 모델
+│   └── problem.types.ts      # slice 밖에서 공유되는 앱-facing 타입
 ├── lib/                # 이 slice 전용 유틸
 └── config/             # 이 slice 전용 설정
 ```
@@ -55,6 +56,7 @@ features/{slice}/
 - TanStack Query 관련 코드 (요청 함수·query 팩토리·훅) 는 모두 `api/` 에 둔다. 관심사별로 파일을 나눈다 (fetcher ↔ query 팩토리 ↔ 훅). 한 파일에 몰지 않는다.
 - fetcher 파일은 순수 transport (`react`·`@tanstack/react-query` 비의존) 로 유지해 Server Component·prefetch·테스트에서 직접 호출한다.
 - queryKey 와 queryOptions 는 `api/` 의 query 팩토리에 모은다. 명명·작성 규칙은 api-convention.md 를 따른다.
+- DB 생성 타입은 `shared/api/*` 에 두고, slice 밖에서 공유되는 앱-facing 타입 별칭은 `model/{slice}.types.ts` 에 둔다.
 - segment 는 필요할 때만 만든다. 빈 폴더나 미래 대비 폴더 생성 금지.
 - 작은 컴포넌트는 `ui/{Name}.tsx` 단일 파일 허용.
 - 스타일, 테스트, Storybook story, 하위 컴포넌트가 생기면 `ui/{Name}/{Name}.tsx` 형태로 폴더화한다.
