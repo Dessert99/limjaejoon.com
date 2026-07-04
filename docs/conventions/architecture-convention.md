@@ -96,7 +96,7 @@ Storybook story 는 props 기반 렌더링 컴포넌트의 주요 UI 상태를 �
 
 테스트하고 싶은 규칙인데 React provider, MSW, QueryClient 가 없어도 검증 가능하면 `lib/` 후보다.
 
-### types → `features/{slice}/model/`
+### types → `{layer}/{slice}/model/`
 
 `model/` 은 도메인 모델과 페이지/플로우 전용 셰이프, schema 를 둔다.
 
