@@ -4,11 +4,19 @@ import { vars } from '@/shared/styles/theme.css';
 import { style, styleVariants } from '@vanilla-extract/css';
 
 export const stage = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '12', p: '20', r: 'md' }),
+  sprinkles({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12',
+    p: '20',
+    r: 'md',
+  }),
   { border: `1px solid ${vars.color.border}`, background: vars.color.surface },
 ]);
 
-export const controls = style([sprinkles({ display: 'flex', alignItems: 'center', gap: '12' })]);
+export const controls = style([
+  sprinkles({ display: 'flex', alignItems: 'center', gap: '12' }),
+]);
 
 export const baselineLabel = style({
   color: vars.color.muted,
@@ -18,7 +26,11 @@ export const baselineLabel = style({
 /** 트랙 — 박스가 달리는 레인, 이동 데모가 잘리지 않게 여유 폭 확보 */
 export const track = style([
   sprinkles({ display: 'flex', alignItems: 'center', p: '12', r: 'sm' }),
-  { minHeight: '4.5rem', background: vars.color.background, overflow: 'hidden' },
+  {
+    minHeight: '4.5rem',
+    background: vars.color.background,
+    overflow: 'hidden',
+  },
 ]);
 
 // 데모 박스 공통 — 연출값은 전부 var()라서 조작 즉시 다음 재생에 반영된다
@@ -46,8 +58,14 @@ export const box = styleVariants({
       selectors: { '&[data-run="true"]': { transform: 'scale(1.3)' } },
     },
   ],
-  rotate: [boxBase, { selectors: { '&[data-run="true"]': { transform: 'rotate(180deg)' } } }],
-  opacity: [boxBase, { selectors: { '&[data-run="true"]': { opacity: 0.15 } } }],
+  rotate: [
+    boxBase,
+    { selectors: { '&[data-run="true"]': { transform: 'rotate(180deg)' } } },
+  ],
+  opacity: [
+    boxBase,
+    { selectors: { '&[data-run="true"]': { opacity: 0.15 } } },
+  ],
   'background-color': [
     boxBase,
     { selectors: { '&[data-run="true"]': { background: vars.color.text } } },

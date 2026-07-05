@@ -6,7 +6,9 @@ function renderCard() {
   return render(
     <HoverCard.Root open>
       <HoverCard.Trigger href='https://example.com'>@jane</HoverCard.Trigger>
-      <HoverCard.Content className='hover-panel'>제인의 프로필</HoverCard.Content>
+      <HoverCard.Content className='hover-panel'>
+        제인의 프로필
+      </HoverCard.Content>
     </HoverCard.Root>
   );
 }

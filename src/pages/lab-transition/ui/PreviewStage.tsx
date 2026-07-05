@@ -37,7 +37,14 @@ export function PreviewStage({ config }: PreviewStageProps) {
       aria-label='프리뷰'
       className={s.stage}>
       <div className={s.controls}>
-        <Button onClick={() => setIsRun((current) => !current)}>재생</Button>
+        <Button
+          onClick={() => {
+            return setIsRun((current) => {
+              return !current;
+            });
+          }}>
+          재생
+        </Button>
         <label className={s.baselineLabel}>
           linear 기준선{' '}
           <Switch.Root

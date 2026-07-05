@@ -21,7 +21,9 @@ function MsSlider({ label, value, max, onChange }: MsSliderProps) {
   return (
     <Slider.Root
       value={[value]}
-      onValueChange={([next]) => onChange(next)}
+      onValueChange={([next]) => {
+        return onChange(next);
+      }}
       min={0}
       max={max}
       step={50}>
@@ -63,7 +65,9 @@ export function TransitionControls({
           value={config.property}
           onValueChange={(value) => {
             // Radix는 재클릭 해제 시 ''를 준다 — 항상 하나는 선택돼야 하므로 무시
-            if (value) onPropertyChange(value as PropertyId);
+            if (value) {
+              onPropertyChange(value as PropertyId);
+            }
           }}
           className={s.toggleRow}>
           {PROPERTY_OPTIONS.map((option) => {
@@ -77,8 +81,9 @@ export function TransitionControls({
           })}
         </ToggleGroup.Root>
         <p className={s.note}>
-          모든 속성이 애니메이션되는 건 아니다 — display는 보간할 중간값이 없다. 이동·크기·회전은
-          CSS에선 전부 transform 하나이고, transform·opacity는 합성 단계에서 처리돼 가장 싸다.
+          모든 속성이 애니메이션되는 건 아니다 — display는 보간할 중간값이 없다.
+          이동·크기·회전은 CSS에선 전부 transform 하나이고, transform·opacity는
+          합성 단계에서 처리돼 가장 싸다.
         </p>
       </section>
 
@@ -93,7 +98,8 @@ export function TransitionControls({
           onChange={onDurationChange}
         />
         <p className={s.note}>
-          200~500ms가 “즉시 반응했다”고 느끼는 구간. 길수록 우아해지는 게 아니라 답답해진다.
+          200~500ms가 “즉시 반응했다”고 느끼는 구간. 길수록 우아해지는 게 아니라
+          답답해진다.
         </p>
       </section>
 
@@ -108,8 +114,8 @@ export function TransitionControls({
           onChange={onDelayChange}
         />
         <p className={s.note}>
-          시작을 미루는 값. 스펙상 음수도 허용돼 곡선 중간부터 재생할 수도 있다 — 여기선 0 이상만
-          다룬다.
+          시작을 미루는 값. 스펙상 음수도 허용돼 곡선 중간부터 재생할 수도 있다
+          — 여기선 0 이상만 다룬다.
         </p>
       </section>
 
@@ -121,7 +127,9 @@ export function TransitionControls({
           type='single'
           value={presetValue}
           onValueChange={(value) => {
-            if (value) onPresetSelect(value as TimingPresetName);
+            if (value) {
+              onPresetSelect(value as TimingPresetName);
+            }
           }}
           className={s.toggleRow}>
           {(Object.keys(TIMING_PRESETS) as TimingPresetName[]).map((name) => {
@@ -135,8 +143,8 @@ export function TransitionControls({
           })}
         </ToggleGroup.Root>
         <p className={s.note}>
-          cubic-bezier는 “시간(x) 대비 진행률(y)” 곡선이다. 키워드 프리셋도 전부 이 곡선의 특정
-          좌표일 뿐 — 아래 에디터에서 직접 당겨보자.
+          cubic-bezier는 “시간(x) 대비 진행률(y)” 곡선이다. 키워드 프리셋도 전부
+          이 곡선의 특정 좌표일 뿐 — 아래 에디터에서 직접 당겨보자.
         </p>
       </section>
     </div>

@@ -42,7 +42,9 @@ describe('TransitionControls', () => {
   it('duration 슬라이더 키 조작 시 onDurationChange를 호출한다', () => {
     const handlers = renderControls();
 
-    fireEvent.keyDown(screen.getByRole('slider', { name: 'duration' }), { key: 'ArrowRight' });
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'duration' }), {
+      key: 'ArrowRight',
+    });
     expect(handlers.onDurationChange).toHaveBeenCalledWith(650);
   });
 
@@ -56,7 +58,9 @@ describe('TransitionControls', () => {
   it('각 컨트롤 그룹에 개념 노트를 보여준다', () => {
     renderControls();
 
-    expect(screen.getByText(/display는 보간할 중간값이 없다/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/display는 보간할 중간값이 없다/)
+    ).toBeInTheDocument();
     expect(screen.getByText(/200~500ms/)).toBeInTheDocument();
   });
 });

@@ -13,21 +13,38 @@ export function useTransitionConfig() {
   const [config, setConfig] = useState<TransitionConfig>(DEFAULT_CONFIG);
 
   const setProperty = (property: PropertyId) => {
-    setConfig((current) => ({ ...current, property }));
+    setConfig((current) => {
+      return { ...current, property };
+    });
   };
   const setDurationMs = (durationMs: number) => {
-    setConfig((current) => ({ ...current, durationMs }));
+    setConfig((current) => {
+      return { ...current, durationMs };
+    });
   };
   const setDelayMs = (delayMs: number) => {
-    setConfig((current) => ({ ...current, delayMs }));
+    setConfig((current) => {
+      return { ...current, delayMs };
+    });
   };
   const selectPreset = (name: TimingPresetName) => {
-    setConfig((current) => ({ ...current, timing: { kind: 'preset', name } }));
+    setConfig((current) => {
+      return { ...current, timing: { kind: 'preset', name } };
+    });
   };
   // 핸들을 만지는 순간 custom으로 전환 — 프리셋 이름과 좌표가 어긋난 상태를 없앤다
   const setCustomPoints = (points: BezierPoints) => {
-    setConfig((current) => ({ ...current, timing: { kind: 'custom', points } }));
+    setConfig((current) => {
+      return { ...current, timing: { kind: 'custom', points } };
+    });
   };
 
-  return { config, setProperty, setDurationMs, setDelayMs, selectPreset, setCustomPoints };
+  return {
+    config,
+    setProperty,
+    setDurationMs,
+    setDelayMs,
+    selectPreset,
+    setCustomPoints,
+  };
 }

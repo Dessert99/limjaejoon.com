@@ -46,3 +46,9 @@ export const description = style({
   color: vars.color.muted,
   lineHeight: 1.7,
 });
+
+/** 랩 진입 링크 — 본문과 구분되는 액센트 컬러 */
+export const labLink = style({
+  color: vars.color.accent,
+  fontWeight: 600,
+});

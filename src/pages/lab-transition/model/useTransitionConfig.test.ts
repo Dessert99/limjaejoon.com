@@ -5,16 +5,26 @@ import { useTransitionConfig } from './useTransitionConfig';
 
 describe('useTransitionConfig', () => {
   it('기본값으로 시작한다', () => {
-    const { result } = renderHook(() => useTransitionConfig());
+    const { result } = renderHook(() => {
+      return useTransitionConfig();
+    });
     expect(result.current.config).toEqual(DEFAULT_CONFIG);
   });
 
   it('각 핸들러는 해당 필드만 바꾼다', () => {
-    const { result } = renderHook(() => useTransitionConfig());
+    const { result } = renderHook(() => {
+      return useTransitionConfig();
+    });
 
-    act(() => result.current.setProperty('opacity'));
-    act(() => result.current.setDurationMs(1000));
-    act(() => result.current.setDelayMs(200));
+    act(() => {
+      return result.current.setProperty('opacity');
+    });
+    act(() => {
+      return result.current.setDurationMs(1000);
+    });
+    act(() => {
+      return result.current.setDelayMs(200);
+    });
 
     expect(result.current.config.property).toBe('opacity');
     expect(result.current.config.durationMs).toBe(1000);
@@ -23,15 +33,24 @@ describe('useTransitionConfig', () => {
   });
 
   it('커스텀 좌표를 넣으면 timing이 custom으로 전환된다', () => {
-    const { result } = renderHook(() => useTransitionConfig());
+    const { result } = renderHook(() => {
+      return useTransitionConfig();
+    });
 
-    act(() => result.current.setCustomPoints([0.1, 0.2, 0.3, 0.4]));
+    act(() => {
+      return result.current.setCustomPoints([0.1, 0.2, 0.3, 0.4]);
+    });
     expect(result.current.config.timing).toEqual({
       kind: 'custom',
       points: [0.1, 0.2, 0.3, 0.4],
     });
 
-    act(() => result.current.selectPreset('linear'));
-    expect(result.current.config.timing).toEqual({ kind: 'preset', name: 'linear' });
+    act(() => {
+      return result.current.selectPreset('linear');
+    });
+    expect(result.current.config.timing).toEqual({
+      kind: 'preset',
+      name: 'linear',
+    });
   });
 });

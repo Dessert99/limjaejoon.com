@@ -19,7 +19,11 @@ describe('PreviewStage', () => {
   });
 
   it('조작값을 CSS 변수로 데모 박스에 주입한다', () => {
-    render(<PreviewStage config={{ ...DEFAULT_CONFIG, durationMs: 1000, delayMs: 200 }} />);
+    render(
+      <PreviewStage
+        config={{ ...DEFAULT_CONFIG, durationMs: 1000, delayMs: 200 }}
+      />
+    );
 
     const style = getBoxes()[0].getAttribute('style') ?? '';
     expect(style).toContain('--lab-duration: 1000ms');
@@ -39,7 +43,9 @@ describe('PreviewStage', () => {
     render(<PreviewStage config={DEFAULT_CONFIG} />);
 
     const stage = screen.getByRole('region', { name: '프리뷰' });
-    fireEvent.click(within(stage).getByRole('switch', { name: 'linear 기준선' }));
+    fireEvent.click(
+      within(stage).getByRole('switch', { name: 'linear 기준선' })
+    );
     expect(getBoxes()).toHaveLength(1);
   });
 });

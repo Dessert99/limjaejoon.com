@@ -14,7 +14,9 @@ export const main = style([
   { width: '100%', maxWidth: '56rem', marginInline: 'auto' },
 ]);
 
-export const header = style([sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' })]);
+export const header = style([
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' }),
+]);
 
 export const eyebrow = style({
   color: vars.color.muted,
@@ -32,10 +34,18 @@ export const description = style({
   lineHeight: 1.7,
 });
 
-export const list = style([sprinkles({ display: 'flex', flexDirection: 'column', gap: '16' })]);
+export const list = style([
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: '16' }),
+]);
 
 export const item = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8', p: '20', r: 'md' }),
+  sprinkles({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8',
+    p: '20',
+    r: 'md',
+  }),
   { border: `1px solid ${vars.color.border}`, background: vars.color.surface },
 ]);
 

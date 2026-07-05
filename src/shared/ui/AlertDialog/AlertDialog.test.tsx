@@ -21,7 +21,9 @@ describe('AlertDialog', () => {
   it('Content가 Portal과 Overlay를 내장하고 외부 className을 병합한다', () => {
     renderAlertDialog();
 
-    const dialog = screen.getByRole('alertdialog', { name: '정말 삭제할까요?' });
+    const dialog = screen.getByRole('alertdialog', {
+      name: '정말 삭제할까요?',
+    });
     expect(dialog).toHaveClass('alert-panel');
     expect(dialog).toHaveAccessibleDescription('되돌릴 수 없습니다.');
     expect(screen.getByText('정말 삭제할까요?')).toHaveClass('alert-title');

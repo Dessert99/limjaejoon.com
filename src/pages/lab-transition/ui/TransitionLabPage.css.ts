@@ -14,7 +14,9 @@ export const main = style([
   { width: '100%', maxWidth: '72rem', marginInline: 'auto' },
 ]);
 
-export const header = style([sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' })]);
+export const header = style([
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' }),
+]);
 
 export const eyebrow = style({
   color: vars.color.muted,
@@ -43,4 +45,6 @@ export const grid = style([
   },
 ]);
 
-export const column = style([sprinkles({ display: 'flex', flexDirection: 'column', gap: '24' })]);
+export const column = style([
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: '24' }),
+]);

@@ -3,9 +3,13 @@ import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { vars } from '@/shared/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
-export const root = style([sprinkles({ display: 'flex', flexDirection: 'column', gap: '24' })]);
+export const root = style([
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: '24' }),
+]);
 
-export const group = style([sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' })]);
+export const group = style([
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' }),
+]);
 
 export const groupTitle = style({
   fontSize: '0.875rem',
@@ -13,7 +17,9 @@ export const groupTitle = style({
   fontFamily: 'monospace',
 });
 
-export const toggleRow = style([sprinkles({ display: 'flex', flexWrap: 'wrap', gap: '4' })]);
+export const toggleRow = style([
+  sprinkles({ display: 'flex', flexWrap: 'wrap', gap: '4' }),
+]);
 
 /** 개념 노트 — 본문보다 낮은 위계의 학습 메모 */
 export const note = style({

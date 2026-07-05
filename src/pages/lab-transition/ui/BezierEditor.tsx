@@ -9,10 +9,14 @@ const Y_RANGE = BEZIER_Y_MAX - BEZIER_Y_MIN; // y축 표시 범위 = 2 (오버�
 const KEY_STEP = 0.02; // 화살표 한 번당 이동량 — 드래그로 어려운 미세조정 용도
 
 /** 진행률 x(0~1) → SVG x 좌표 */
-const toSvgX = (x: number) => x * SIZE;
+const toSvgX = (x: number) => {
+  return x * SIZE;
+};
 
 /** 진행률 y → SVG y 좌표 — SVG는 아래로 갈수록 커져서 상하를 뒤집는다 */
-const toSvgY = (y: number) => ((BEZIER_Y_MAX - y) / Y_RANGE) * SIZE;
+const toSvgY = (y: number) => {
+  return ((BEZIER_Y_MAX - y) / Y_RANGE) * SIZE;
+};
 
 /** 제어점 인덱스 — 0이면 P1(x1,y1), 1이면 P2(x2,y2) */
 type HandleIndex = 0 | 1;
@@ -32,7 +36,8 @@ export function BezierEditor({ points, onChange }: BezierEditorProps) {
   const pointFromEvent = (event: React.PointerEvent): [number, number] => {
     const rect = svgRef.current!.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width;
-    const y = BEZIER_Y_MAX - ((event.clientY - rect.top) / rect.height) * Y_RANGE;
+    const y =
+      BEZIER_Y_MAX - ((event.clientY - rect.top) / rect.height) * Y_RANGE;
     return clampBezierPoint(x, y);
   };
 
@@ -41,52 +46,65 @@ export function BezierEditor({ points, onChange }: BezierEditorProps) {
     onChange(next);
   };
 
-  const handlePointerDown =
-    (index: HandleIndex) => (event: React.PointerEvent<SVGCircleElement>) => {
+  const handlePointerDown = (index: HandleIndex) => {
+    return (event: React.PointerEvent<SVGCircleElement>) => {
       // 핸들 밖으로 나가도 move를 계속 받도록 캡처 — 없으면 빠른 드래그가 끊긴다
       event.currentTarget.setPointerCapture(event.pointerId);
       setDragging(index);
     };
-
-  const handlePointerMove = (index: HandleIndex) => (event: React.PointerEvent) => {
-    if (dragging !== index) return;
-    const [x, y] = pointFromEvent(event);
-    updateHandle(index, x, y);
   };
 
-  const handleKeyDown = (index: HandleIndex) => (event: React.KeyboardEvent) => {
-    const [currentX, currentY] = index === 0 ? [x1, y1] : [x2, y2];
-    const deltas: Record<string, [number, number]> = {
-      ArrowLeft: [-KEY_STEP, 0],
-      ArrowRight: [KEY_STEP, 0],
-      ArrowUp: [0, KEY_STEP],
-      ArrowDown: [0, -KEY_STEP],
+  const handlePointerMove = (index: HandleIndex) => {
+    return (event: React.PointerEvent) => {
+      if (dragging !== index) {
+        return;
+      }
+      const [x, y] = pointFromEvent(event);
+      updateHandle(index, x, y);
     };
-    const delta = deltas[event.key];
-    if (!delta) return;
-    event.preventDefault(); // 화살표 키가 페이지 스크롤로 새지 않게
-    const [x, y] = clampBezierPoint(currentX + delta[0], currentY + delta[1]);
-    updateHandle(index, x, y);
   };
 
-  const handleProps = (index: HandleIndex, x: number, y: number) => ({
-    cx: toSvgX(x),
-    cy: toSvgY(y),
-    r: 10,
-    tabIndex: 0,
-    // 2차원 값이라 표준 role이 없다 — slider + valuetext로 좌표를 읽어준다
-    role: 'slider',
-    'aria-label': `제어점 ${index + 1}`,
-    'aria-valuenow': x,
-    'aria-valuemin': 0,
-    'aria-valuemax': 1,
-    'aria-valuetext': `x ${x.toFixed(2)}, y ${y.toFixed(2)}`,
-    className: s.handle,
-    onPointerDown: handlePointerDown(index),
-    onPointerMove: handlePointerMove(index),
-    onPointerUp: () => setDragging(null),
-    onKeyDown: handleKeyDown(index),
-  });
+  const handleKeyDown = (index: HandleIndex) => {
+    return (event: React.KeyboardEvent) => {
+      const [currentX, currentY] = index === 0 ? [x1, y1] : [x2, y2];
+      const deltas: Record<string, [number, number]> = {
+        ArrowLeft: [-KEY_STEP, 0],
+        ArrowRight: [KEY_STEP, 0],
+        ArrowUp: [0, KEY_STEP],
+        ArrowDown: [0, -KEY_STEP],
+      };
+      const delta = deltas[event.key];
+      if (!delta) {
+        return;
+      }
+      event.preventDefault(); // 화살표 키가 페이지 스크롤로 새지 않게
+      const [x, y] = clampBezierPoint(currentX + delta[0], currentY + delta[1]);
+      updateHandle(index, x, y);
+    };
+  };
+
+  const handleProps = (index: HandleIndex, x: number, y: number) => {
+    return {
+      cx: toSvgX(x),
+      cy: toSvgY(y),
+      r: 10,
+      tabIndex: 0,
+      // 2차원 값이라 표준 role이 없다 — slider + valuetext로 좌표를 읽어준다
+      role: 'slider',
+      'aria-label': `제어점 ${index + 1}`,
+      'aria-valuenow': x,
+      'aria-valuemin': 0,
+      'aria-valuemax': 1,
+      'aria-valuetext': `x ${x.toFixed(2)}, y ${y.toFixed(2)}`,
+      className: s.handle,
+      onPointerDown: handlePointerDown(index),
+      onPointerMove: handlePointerMove(index),
+      onPointerUp: () => {
+        return setDragging(null);
+      },
+      onKeyDown: handleKeyDown(index),
+    };
+  };
 
   return (
     <svg

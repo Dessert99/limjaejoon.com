@@ -11,9 +11,9 @@ describe('TIMING_PRESETS', () => {
 
 describe('PROPERTY_OPTIONS', () => {
   it('transform 계열 데모는 전부 cssProperty transform으로 합쳐진다', () => {
-    const transforms = PROPERTY_OPTIONS.filter((o) =>
-      ['translate-x', 'scale', 'rotate'].includes(o.id)
-    );
+    const transforms = PROPERTY_OPTIONS.filter((o) => {
+      return ['translate-x', 'scale', 'rotate'].includes(o.id);
+    });
     expect(transforms).toHaveLength(3);
     for (const option of transforms) {
       expect(option.cssProperty).toBe('transform');

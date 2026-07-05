@@ -13,7 +13,9 @@ beforeEach(() => {
     bottom: 300,
     width: 300,
     height: 300,
-    toJSON: () => ({}),
+    toJSON: () => {
+      return {};
+    },
   } as DOMRect);
 });
 
@@ -79,7 +81,9 @@ describe('BezierEditor', () => {
       />
     );
 
-    fireEvent.keyDown(screen.getByRole('slider', { name: '제어점 1' }), { key: 'ArrowRight' });
+    fireEvent.keyDown(screen.getByRole('slider', { name: '제어점 1' }), {
+      key: 'ArrowRight',
+    });
     expect(onChange).toHaveBeenLastCalledWith([0.27, 0.1, 0.25, 1]);
   });
 });

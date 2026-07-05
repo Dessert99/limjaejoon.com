@@ -4,7 +4,13 @@ import { vars } from '@/shared/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
 export const panel = style([
-  sprinkles({ display: 'flex', alignItems: 'center', gap: '12', p: '16', r: 'md' }),
+  sprinkles({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12',
+    p: '16',
+    r: 'md',
+  }),
   { border: `1px solid ${vars.color.border}`, background: vars.color.surface },
 ]);
 

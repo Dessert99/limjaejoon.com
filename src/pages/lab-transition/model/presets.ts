@@ -4,7 +4,12 @@
 export type BezierPoints = [number, number, number, number];
 
 /** CSS 키워드 프리셋 이름 */
-export type TimingPresetName = 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out';
+export type TimingPresetName =
+  | 'linear'
+  | 'ease'
+  | 'ease-in'
+  | 'ease-out'
+  | 'ease-in-out';
 
 /** 타이밍 상태 — 프리셋 선택 중이거나, 핸들을 만진 뒤의 커스텀 좌표 */
 export type Timing =
@@ -12,7 +17,12 @@ export type Timing =
   | { kind: 'custom'; points: BezierPoints };
 
 /** 데모로 조작할 수 있는 속성 — transform 계열은 시각적으로 구분해 노출한다 */
-export type PropertyId = 'translate-x' | 'scale' | 'rotate' | 'opacity' | 'background-color';
+export type PropertyId =
+  | 'translate-x'
+  | 'scale'
+  | 'rotate'
+  | 'opacity'
+  | 'background-color';
 
 /** 플레이그라운드의 단일 조작 상태 */
 export type TransitionConfig = {
@@ -32,7 +42,11 @@ export const TIMING_PRESETS: Record<TimingPresetName, BezierPoints> = {
 };
 
 /** 프로퍼티 선택지 한 건 — cssProperty가 실제 transition 대상이 된다 */
-export type PropertyOption = { id: PropertyId; label: string; cssProperty: string };
+export type PropertyOption = {
+  id: PropertyId;
+  label: string;
+  cssProperty: string;
+};
 
 /** 데모 프로퍼티 목록 — translate-x·scale·rotate는 CSS에선 transform 하나다 */
 export const PROPERTY_OPTIONS: PropertyOption[] = [

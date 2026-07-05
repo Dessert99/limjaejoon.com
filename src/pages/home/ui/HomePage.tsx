@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { GsapSmoke } from './GsapSmoke';
 import * as s from './HomePage.css';
 
@@ -12,6 +13,11 @@ export function HomePage() {
           골격입니다.
         </p>
         <GsapSmoke />
+        <Link
+          className={s.labLink}
+          href='/lab'>
+          Lab — 인터랙션 실험실 →
+        </Link>
       </section>
     </main>
   );

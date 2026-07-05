@@ -10,4 +10,12 @@ describe('HomePage', () => {
       screen.getByRole('heading', { name: 'Shell ready' })
     ).toBeInTheDocument();
   });
+
+  it('랩 진입 링크를 노출한다', () => {
+    render(<HomePage />);
+
+    expect(
+      screen.getByRole('link', { name: /인터랙션 실험실/ })
+    ).toHaveAttribute('href', '/lab');
+  });
 });

@@ -1,5 +1,9 @@
 /** TransitionConfig → 실제 CSS transition 선언 문자열 변환 */
-import { PROPERTY_OPTIONS, type Timing, type TransitionConfig } from './presets';
+import {
+  PROPERTY_OPTIONS,
+  type Timing,
+  type TransitionConfig,
+} from './presets';
 
 /** timing 상태 → CSS 값. 프리셋은 키워드, 커스텀은 cubic-bezier() 함수 표기 */
 export function timingToCss(timing: Timing): string {
