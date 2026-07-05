@@ -20,7 +20,6 @@ function renderControls() {
     onPropertyChange: vi.fn(),
     onDurationChange: vi.fn(),
     onDelayChange: vi.fn(),
-    onPresetSelect: vi.fn(),
   };
   render(
     <TransitionControls
@@ -46,13 +45,6 @@ describe('TransitionControls', () => {
       key: 'ArrowRight',
     });
     expect(handlers.onDurationChange).toHaveBeenCalledWith(650);
-  });
-
-  it('프리셋 선택 시 onPresetSelect를 호출한다', () => {
-    const handlers = renderControls();
-
-    fireEvent.click(screen.getByRole('radio', { name: 'linear' }));
-    expect(handlers.onPresetSelect).toHaveBeenCalledWith('linear');
   });
 
   it('각 컨트롤 그룹에 개념 노트를 보여준다', () => {

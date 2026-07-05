@@ -6,6 +6,7 @@ import { useTransitionConfig } from '../model/useTransitionConfig';
 import { BezierEditor } from './BezierEditor';
 import { CodePanel } from './CodePanel';
 import { PreviewStage } from './PreviewStage';
+import { TimingFunctionControl } from './TimingFunctionControl';
 import { TransitionControls } from './TransitionControls';
 import * as s from './TransitionLabPage.css';
 
@@ -35,6 +36,7 @@ export function TransitionLabPage() {
           transition은 속성값이 바뀌는 순간을 보간해 움직임으로 만든다. 네 가지
           요소를 직접 조작하면서 곡선이 체감을 어떻게 바꾸는지 관찰해보자.
         </p>
+        <CodePanel config={config} />
       </header>
       <div className={s.grid}>
         <div className={s.column}>
@@ -43,6 +45,11 @@ export function TransitionLabPage() {
             onPropertyChange={setProperty}
             onDurationChange={setDurationMs}
             onDelayChange={setDelayMs}
+          />
+        </div>
+        <div className={s.column}>
+          <TimingFunctionControl
+            timing={config.timing}
             onPresetSelect={selectPreset}
           />
           <BezierEditor
@@ -50,11 +57,8 @@ export function TransitionLabPage() {
             onChange={setCustomPoints}
           />
         </div>
-        <div className={s.column}>
-          <PreviewStage config={config} />
-          <CodePanel config={config} />
-        </div>
       </div>
+      <PreviewStage config={config} />
     </main>
   );
 }

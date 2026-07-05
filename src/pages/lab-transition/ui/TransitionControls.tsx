@@ -1,10 +1,8 @@
-/** 컨트롤 패널 — property·duration·delay·타이밍 프리셋 조작과 개념 노트 */
+/** 컨트롤 패널 — property·duration·delay 조작과 개념 노트 */
 import { Slider, ToggleGroup } from '@/shared/ui';
 import {
   PROPERTY_OPTIONS,
-  TIMING_PRESETS,
   type PropertyId,
-  type TimingPresetName,
   type TransitionConfig,
 } from '../model/presets';
 import * as s from './TransitionControls.css';
@@ -40,20 +38,15 @@ type TransitionControlsProps = {
   onPropertyChange: (property: PropertyId) => void;
   onDurationChange: (ms: number) => void;
   onDelayChange: (ms: number) => void;
-  onPresetSelect: (name: TimingPresetName) => void;
 };
 
-/** transition 4요소 조작 패널 — 상태는 부모 소유, 여기선 쓰기 핸들러만 호출 */
+/** property·duration·delay 조작 패널 — 상태는 부모 소유, 여기선 쓰기 핸들러만 호출 */
 export function TransitionControls({
   config,
   onPropertyChange,
   onDurationChange,
   onDelayChange,
-  onPresetSelect,
 }: TransitionControlsProps) {
-  // 커스텀 곡선 중엔 어떤 프리셋도 선택 상태가 아니어야 한다
-  const presetValue = config.timing.kind === 'preset' ? config.timing.name : '';
-
   return (
     <div className={s.root}>
       <section
@@ -116,35 +109,6 @@ export function TransitionControls({
         <p className={s.note}>
           시작을 미루는 값. 스펙상 음수도 허용돼 곡선 중간부터 재생할 수도 있다
           — 여기선 0 이상만 다룬다.
-        </p>
-      </section>
-
-      <section
-        aria-label='transition-timing-function'
-        className={s.group}>
-        <h2 className={s.groupTitle}>timing-function</h2>
-        <ToggleGroup.Root
-          type='single'
-          value={presetValue}
-          onValueChange={(value) => {
-            if (value) {
-              onPresetSelect(value as TimingPresetName);
-            }
-          }}
-          className={s.toggleRow}>
-          {(Object.keys(TIMING_PRESETS) as TimingPresetName[]).map((name) => {
-            return (
-              <ToggleGroup.Item
-                key={name}
-                value={name}>
-                {name}
-              </ToggleGroup.Item>
-            );
-          })}
-        </ToggleGroup.Root>
-        <p className={s.note}>
-          cubic-bezier는 “시간(x) 대비 진행률(y)” 곡선이다. 키워드 프리셋도 전부
-          이 곡선의 특정 좌표일 뿐 — 아래 에디터에서 직접 당겨보자.
         </p>
       </section>
     </div>
