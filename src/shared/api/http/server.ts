@@ -5,8 +5,7 @@ import { fetchJson, type HttpFetchOptions } from './core';
 
 const getRequestOrigin = async (): Promise<string> => {
   const headerStore = await headers();
-  const host =
-    headerStore.get('x-forwarded-host') ?? headerStore.get('host');
+  const host = headerStore.get('x-forwarded-host') ?? headerStore.get('host');
 
   if (!host) {
     return SITE_URL;

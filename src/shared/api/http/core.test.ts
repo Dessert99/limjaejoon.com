@@ -9,7 +9,9 @@ describe('fetchJson', () => {
       })
     );
 
-    await expect(fetchJson<{ ok: boolean }>('/api/ping', {}, fetcher)).resolves.toEqual({
+    await expect(
+      fetchJson<{ ok: boolean }>('/api/ping', {}, fetcher)
+    ).resolves.toEqual({
       ok: true,
     });
     expect(fetcher).toHaveBeenCalledWith('/api/ping', {});
