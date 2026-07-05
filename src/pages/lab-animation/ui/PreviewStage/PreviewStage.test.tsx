@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { DEFAULT_CONFIG } from '../model/presets';
+import { DEFAULT_CONFIG } from '../../model/presets';
 import { PreviewStage } from './PreviewStage';
 
 /** 프리뷰 영역의 데모 박스 — CSS 변수가 인라인으로 실리는 유일한 노드 */

@@ -1,14 +1,14 @@
 'use client';
 
 /** transition 플레이그라운드 — 조작 상태를 소유하고 컨트롤·에디터·프리뷰·코드 패널을 조립 */
-import { TIMING_PRESETS } from '../model/presets';
-import { useTransitionConfig } from '../model/useTransitionConfig';
-import { BezierEditor } from './BezierEditor';
-import { CodePanel } from './CodePanel';
-import { PreviewStage } from './PreviewStage';
-import { TimingFunctionControl } from './TimingFunctionControl';
-import { TransitionControls } from './TransitionControls';
-import { TransitionReference } from './TransitionReference';
+import { TIMING_PRESETS } from '../../model/presets';
+import { useTransitionConfig } from '../../model/useTransitionConfig';
+import { BezierEditor } from '../BezierEditor/BezierEditor';
+import { CodePanel } from '../CodePanel/CodePanel';
+import { PreviewStage } from '../PreviewStage/PreviewStage';
+import { TimingFunctionControl } from '../TimingFunctionControl/TimingFunctionControl';
+import { TransitionControls } from '../TransitionControls/TransitionControls';
+import { TransitionReference } from '../TransitionReference/TransitionReference';
 import * as s from './TransitionLabPage.css';
 
 /** /lab/transition 페이지 — 단일 config가 아래로만 흐른다 */

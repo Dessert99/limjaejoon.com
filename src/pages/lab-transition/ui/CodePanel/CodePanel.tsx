@@ -1,8 +1,8 @@
 /** 코드 패널 — 조작값을 실제 transition 선언으로 보여주고 클립보드로 복사한다 */
 import { Button, Toast } from '@/shared/ui';
 import { useState } from 'react';
-import type { TransitionConfig } from '../model/presets';
-import { toCssValue } from '../model/toCssValue';
+import type { TransitionConfig } from '../../model/presets';
+import { toCssValue } from '../../model/toCssValue';
 import * as s from './CodePanel.css';
 
 type CodePanelProps = {

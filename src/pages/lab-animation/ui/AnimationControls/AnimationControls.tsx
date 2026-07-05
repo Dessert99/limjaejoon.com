@@ -8,7 +8,7 @@ import {
   KEYFRAMES_PRESETS,
   TIMING_OPTIONS,
   type AnimationConfig,
-} from '../model/presets';
+} from '../../model/presets';
 import * as s from './AnimationControls.css';
 
 type ToggleRowProps = {

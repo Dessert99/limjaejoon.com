@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { DEFAULT_CONFIG } from '../model/presets';
+import { DEFAULT_CONFIG } from '../../model/presets';
 import { TransitionControls } from './TransitionControls';
 
 // Radix Slider가 ResizeObserver를 요구한다 — jsdom 미구현 셔임

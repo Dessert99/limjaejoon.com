@@ -1,8 +1,8 @@
 /** 프리뷰 스테이지 — 재생 버튼으로 내 설정 vs linear 기준선을 나란히 달리게 한다 */
 import { useState } from 'react';
 import { Button, Switch } from '@/shared/ui';
-import { PROPERTY_OPTIONS, type TransitionConfig } from '../model/presets';
-import { timingToCss } from '../model/toCssValue';
+import { PROPERTY_OPTIONS, type TransitionConfig } from '../../model/presets';
+import { timingToCss } from '../../model/toCssValue';
 import * as s from './PreviewStage.css';
 
 type PreviewStageProps = {

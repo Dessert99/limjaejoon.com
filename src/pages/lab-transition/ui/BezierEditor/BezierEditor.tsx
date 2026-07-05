@@ -1,7 +1,11 @@
 /** 베지어 곡선 에디터 — cubic-bezier 제어점 2개를 드래그·키보드로 조작하는 SVG 에디터 */
 import { useRef, useState } from 'react';
-import { BEZIER_Y_MAX, BEZIER_Y_MIN, clampBezierPoint } from '../model/bezier';
-import type { BezierPoints } from '../model/presets';
+import {
+  BEZIER_Y_MAX,
+  BEZIER_Y_MIN,
+  clampBezierPoint,
+} from '../../model/bezier';
+import type { BezierPoints } from '../../model/presets';
 import * as s from './BezierEditor.css';
 
 const SIZE = 300; // SVG 내부 좌표계 한 변 — 화면 크기는 CSS가 결정한다

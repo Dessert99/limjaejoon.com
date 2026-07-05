@@ -4,7 +4,7 @@ import {
   PROPERTY_OPTIONS,
   type PropertyId,
   type TransitionConfig,
-} from '../model/presets';
+} from '../../model/presets';
 import * as s from './TransitionControls.css';
 
 type MsSliderProps = {

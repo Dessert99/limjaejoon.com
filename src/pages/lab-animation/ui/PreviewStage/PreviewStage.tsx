@@ -1,7 +1,7 @@
 /** 프리뷰 스테이지 — 리마운트 재생과 play-state 일시정지의 차이를 보여주는 트랙 */
 import { useState } from 'react';
 import { Button, Switch } from '@/shared/ui';
-import type { AnimationConfig, PlayState } from '../model/presets';
+import type { AnimationConfig, PlayState } from '../../model/presets';
 import * as s from './PreviewStage.css';
 
 type PreviewStageProps = {

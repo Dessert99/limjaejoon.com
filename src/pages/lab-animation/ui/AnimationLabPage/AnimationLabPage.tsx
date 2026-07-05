@@ -1,11 +1,11 @@
 'use client';
 
 /** animation 플레이그라운드 — 조작 상태를 소유하고 컨트롤·프리뷰·코드 패널을 조립 */
-import { useAnimationConfig } from '../model/useAnimationConfig';
-import { AnimationControls } from './AnimationControls';
-import { AnimationReference } from './AnimationReference';
-import { CodePanel } from './CodePanel';
-import { PreviewStage } from './PreviewStage';
+import { useAnimationConfig } from '../../model/useAnimationConfig';
+import { AnimationControls } from '../AnimationControls/AnimationControls';
+import { AnimationReference } from '../AnimationReference/AnimationReference';
+import { CodePanel } from '../CodePanel/CodePanel';
+import { PreviewStage } from '../PreviewStage/PreviewStage';
 import * as s from './AnimationLabPage.css';
 
 /** /lab/animation 페이지 — 단일 config가 아래로만 흐른다 */

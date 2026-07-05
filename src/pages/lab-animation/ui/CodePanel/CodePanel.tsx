@@ -1,8 +1,8 @@
 /** 코드 패널 — 키프레임 원문과 animation 선언을 함께 보여주고 클립보드로 복사한다 */
 import { Button, Toast } from '@/shared/ui';
 import { useState } from 'react';
-import { KEYFRAMES_PRESETS, type AnimationConfig } from '../model/presets';
-import { toCssValue } from '../model/toCssValue';
+import { KEYFRAMES_PRESETS, type AnimationConfig } from '../../model/presets';
+import { toCssValue } from '../../model/toCssValue';
 import * as s from './CodePanel.css';
 
 type CodePanelProps = {

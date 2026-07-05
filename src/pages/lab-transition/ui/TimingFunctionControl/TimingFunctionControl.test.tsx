@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { DEFAULT_CONFIG } from '../model/presets';
+import { DEFAULT_CONFIG } from '../../model/presets';
 import { TimingFunctionControl } from './TimingFunctionControl';
 
 describe('TimingFunctionControl', () => {

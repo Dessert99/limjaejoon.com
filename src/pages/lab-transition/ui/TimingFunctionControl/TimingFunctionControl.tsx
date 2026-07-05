@@ -4,9 +4,9 @@ import {
   TIMING_PRESETS,
   type Timing,
   type TimingPresetName,
-} from '../model/presets';
+} from '../../model/presets';
 // 컨트롤 그룹 룩을 공유한다 — 같은 슬라이스 안에서만 쓰는 스타일 재사용
-import * as s from './TransitionControls.css';
+import * as s from '../TransitionControls/TransitionControls.css';
 
 type TimingFunctionControlProps = {
   timing: Timing;
