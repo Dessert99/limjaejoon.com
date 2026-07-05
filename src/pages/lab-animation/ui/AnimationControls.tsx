@@ -75,7 +75,10 @@ type AnimationControlsProps = {
 };
 
 /** 프리셋·속성 조작 패널 — 상태는 부모 소유, 여기선 patch만 올려보낸다 */
-export function AnimationControls({ config, onChange }: AnimationControlsProps) {
+export function AnimationControls({
+  config,
+  onChange,
+}: AnimationControlsProps) {
   return (
     <div className={s.root}>
       <section
@@ -134,8 +137,8 @@ export function AnimationControls({ config, onChange }: AnimationControlsProps) 
           }}
         />
         <p className={s.note}>
-          반복 횟수. transition은 한 번뿐이지만 animation은 셀 수도, 무한일
-          수도 있다. 스펙상 1.5처럼 소수도 허용된다 — 중간에서 끊긴다.
+          반복 횟수. transition은 한 번뿐이지만 animation은 셀 수도, 무한일 수도
+          있다. 스펙상 1.5처럼 소수도 허용된다 — 중간에서 끊긴다.
         </p>
       </section>
 
@@ -176,8 +179,8 @@ export function AnimationControls({ config, onChange }: AnimationControlsProps) 
         <p className={s.note}>
           애니메이션 바깥 시간의 모습. 데모 박스의 평소 모습은 반투명이라
           forwards(끝 유지)·backwards(delay 중 첫 장면 유지)가 눈에 보인다 —
-          backwards는 delay를 500ms 이상으로 올려 관찰하고, 반복을 1회로
-          줄이면 종료 후 차이도 보인다.
+          backwards는 delay를 500ms 이상으로 올려 관찰하고, 반복을 1회로 줄이면
+          종료 후 차이도 보인다.
         </p>
       </section>
 

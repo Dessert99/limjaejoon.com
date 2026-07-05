@@ -9,6 +9,12 @@ const LAB_ENTRIES = [
     title: 'transition',
     description: 'CSS transition 4요소를 실시간 조작하며 배우는 플레이그라운드',
   },
+  {
+    href: '/lab/animation',
+    title: 'animation',
+    description:
+      '@keyframes 프리셋과 animation 고유 속성을 조작하며 배우는 플레이그라운드',
+  },
 ];
 
 /** /lab 페이지 — 실험 목록 카드 */

@@ -15,7 +15,11 @@ export type TimingKeyword =
 export type IterationCount = 1 | 2 | 3 | 'infinite';
 
 /** 재생 방향 */
-export type Direction = 'normal' | 'reverse' | 'alternate' | 'alternate-reverse';
+export type Direction =
+  | 'normal'
+  | 'reverse'
+  | 'alternate'
+  | 'alternate-reverse';
 
 /** 애니메이션 밖 시간의 모습 */
 export type FillMode = 'none' | 'forwards' | 'backwards' | 'both';

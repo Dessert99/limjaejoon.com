@@ -11,4 +11,13 @@ describe('LabPage', () => {
       '/lab/transition'
     );
   });
+
+  it('animation 실험으로 가는 링크를 노출한다', () => {
+    render(<LabPage />);
+
+    expect(screen.getByRole('link', { name: 'animation' })).toHaveAttribute(
+      'href',
+      '/lab/animation'
+    );
+  });
 });

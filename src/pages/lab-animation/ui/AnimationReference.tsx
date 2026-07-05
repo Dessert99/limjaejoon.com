@@ -136,16 +136,19 @@ export function AnimationReference() {
         <h3 className={s.subheading}>기본 문법</h3>
         <pre className={s.codeBlock}>
           <code>
-            {'animation: slide 1.2s ease 0.5s infinite alternate both running;\n'}
-            {'/*         name duration timing delay count direction fill play-state */'}
+            {
+              'animation: slide 1.2s ease 0.5s infinite alternate both running;\n'
+            }
+            {
+              '/*         name duration timing delay count direction fill play-state */'
+            }
           </code>
         </pre>
         <p className={s.paragraph}>
           transition처럼 시간 값 두 개 중 앞이 duration, 뒤가 delay다. 그리고
           name이 <code className={s.code}>none</code>·
-          <code className={s.code}>forwards</code>처럼 다른 값의 키워드와
-          겹치면 그 키워드로 먼저 해석된다 — 키프레임 이름은 키워드를 피해서
-          짓는다.
+          <code className={s.code}>forwards</code>처럼 다른 값의 키워드와 겹치면
+          그 키워드로 먼저 해석된다 — 키프레임 이름은 키워드를 피해서 짓는다.
         </p>
       </div>
 
