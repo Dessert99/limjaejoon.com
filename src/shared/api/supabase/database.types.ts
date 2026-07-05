@@ -34,6 +34,45 @@ export type Database = {
   };
   public: {
     Tables: {
+      posts: {
+        Row: {
+          content_markdown: string;
+          created_at: string;
+          description: string;
+          id: string;
+          published_at: string | null;
+          slug: string;
+          status: Database['public']['Enums']['post_status'];
+          tags: string[];
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          content_markdown: string;
+          created_at?: string;
+          description: string;
+          id?: string;
+          published_at?: string | null;
+          slug: string;
+          status?: Database['public']['Enums']['post_status'];
+          tags?: string[];
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          content_markdown?: string;
+          created_at?: string;
+          description?: string;
+          id?: string;
+          published_at?: string | null;
+          slug?: string;
+          status?: Database['public']['Enums']['post_status'];
+          tags?: string[];
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       users: {
         Row: {
           created_at: string;
@@ -63,7 +102,7 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      post_status: 'draft' | 'published';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -196,6 +235,8 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      post_status: ['draft', 'published'],
+    },
   },
 } as const;

@@ -22,6 +22,27 @@ export const getPublishedPosts = async (
   return data ?? [];
 };
 
+/** SSG 경로 생성을 위해 published 글 slug 만 조회한다 */
+export const getPublishedPostSlugs = async (
+  client: SupabaseClient<Database>
+): Promise<string[]> => {
+  const { data, error } = await client
+    .from('posts')
+    .select('slug')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return (
+    data?.map((post) => {
+      return post.slug;
+    }) ?? []
+  );
+};
+
 /** slug 와 published 상태가 일치하는 단일 글을 조회한다 */
 export const getPublishedPostBySlug = async (
   client: SupabaseClient<Database>,

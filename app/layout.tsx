@@ -33,6 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang='ko'
+      data-scroll-behavior='smooth'
       className={afternoonThemeClass}>
       <body>{children}</body>
     </html>

@@ -2,7 +2,11 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 import type { Database } from '@/shared/api';
 import type { Post, PostListItem } from '../model/post.types';
-import { getPublishedPostBySlug, getPublishedPosts } from './posts';
+import {
+  getPublishedPostBySlug,
+  getPublishedPosts,
+  getPublishedPostSlugs,
+} from './posts';
 
 const listRows: PostListItem[] = [
   {
@@ -69,6 +73,25 @@ const makeDetailClient = (result: { data: Post | null; error: unknown }) => {
   return { client, from, select, eq: query.eq, maybeSingle };
 };
 
+const makeSlugClient = (result: {
+  data: Array<Pick<Post, 'slug'>> | null;
+  error: unknown;
+}) => {
+  const order = vi.fn().mockResolvedValue(result);
+  const eq = vi.fn(() => {
+    return { order };
+  });
+  const select = vi.fn(() => {
+    return { eq };
+  });
+  const from = vi.fn(() => {
+    return { select };
+  });
+  const client = { from } as unknown as SupabaseClient<Database>;
+
+  return { client, from, select, eq, order };
+};
+
 describe('post fetchers', () => {
   it('published 글 목록을 published_at 내림차순으로 조회한다', async () => {
     const { client, from, select, eq, order } = makeListClient({
@@ -103,6 +126,23 @@ describe('post fetchers', () => {
     const { client } = makeDetailClient({ data: null, error: null });
 
     await expect(getPublishedPostBySlug(client, 'missing')).resolves.toBeNull();
+  });
+
+  it('SSG 경로 생성을 위해 published 글 slug 목록을 조회한다', async () => {
+    const rows = [{ slug: 'newer-post' }, { slug: 'older-post' }];
+    const { client, from, select, eq, order } = makeSlugClient({
+      data: rows,
+      error: null,
+    });
+
+    await expect(getPublishedPostSlugs(client)).resolves.toEqual([
+      'newer-post',
+      'older-post',
+    ]);
+    expect(from).toHaveBeenCalledWith('posts');
+    expect(select).toHaveBeenCalledWith('slug');
+    expect(eq).toHaveBeenCalledWith('status', 'published');
+    expect(order).toHaveBeenCalledWith('published_at', { ascending: false });
   });
 
   it('Supabase 쿼리 에러는 호출 측으로 전파한다', async () => {
