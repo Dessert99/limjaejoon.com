@@ -13,7 +13,7 @@ const POINT_COUNT = 64;
 // 출렁임 진폭 = 그 시점 기본 반지름의 %
 const WOBBLE_RATIO = 0.25;
 // 다각형 현(chord)이 원 안쪽으로 파이는 만큼의 여유 — 마지막 프레임 덮임 보장
-const COVER_MARGIN = 2;
+const COVER_MARGIN = 1.05;
 
 /** origin에서 radius까지 퍼지는 일렁이는 polygon 키프레임 배열(문자열)을 만든다 */
 export const createRippleKeyframes = (
