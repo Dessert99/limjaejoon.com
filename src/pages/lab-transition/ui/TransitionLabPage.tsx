@@ -8,6 +8,7 @@ import { CodePanel } from './CodePanel';
 import { PreviewStage } from './PreviewStage';
 import { TimingFunctionControl } from './TimingFunctionControl';
 import { TransitionControls } from './TransitionControls';
+import { TransitionReference } from './TransitionReference';
 import * as s from './TransitionLabPage.css';
 
 /** /lab/transition 페이지 — 단일 config가 아래로만 흐른다 */
@@ -59,6 +60,7 @@ export function TransitionLabPage() {
         </div>
       </div>
       <PreviewStage config={config} />
+      <TransitionReference />
     </main>
   );
 }
