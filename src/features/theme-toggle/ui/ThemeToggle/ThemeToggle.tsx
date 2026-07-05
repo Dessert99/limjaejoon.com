@@ -2,6 +2,7 @@
 
 /** 라이트/다크 테마 전환 토글 버튼 — 클릭 한 번으로 반대 테마 적용·저장 */
 import { Button } from '@/shared/ui';
+import { withCircularReveal } from '../../lib/withCircularReveal';
 import { useTheme } from '../../model/useTheme';
 import { themeToggle } from './ThemeToggle.css';
 
@@ -15,8 +16,15 @@ export function ThemeToggle() {
       size='sm'
       className={themeToggle}
       aria-label={next === 'dark' ? '다크 테마로 전환' : '라이트 테마로 전환'}
-      onClick={() => {
-        return setTheme(next);
+      onClick={(event) => {
+        // 확산 원의 중심 = 버튼 중앙 — 클릭 픽셀보다 눈에 안정적
+        const rect = event.currentTarget.getBoundingClientRect();
+        withCircularReveal(
+          () => {
+            return setTheme(next);
+          },
+          { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+        );
       }}>
       {theme === 'dark' ? '🌙' : '☀️'}
     </Button>
