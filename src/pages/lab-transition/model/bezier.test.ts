@@ -12,4 +12,9 @@ describe('clampBezierPoint', () => {
     expect(clampBezierPoint(0.5, -1)).toEqual([0.5, -0.5]);
     expect(clampBezierPoint(0.5, 1.2)).toEqual([0.5, 1.2]);
   });
+
+  it('좌표를 소수점 2자리로 반올림한다', () => {
+    expect(clampBezierPoint(0.123456, 0.98765)).toEqual([0.12, 0.99]);
+    expect(clampBezierPoint(0.27000000000000002, 0.1)).toEqual([0.27, 0.1]);
+  });
 });

@@ -23,13 +23,14 @@ export const baselineLabel = style({
   fontSize: '0.875rem',
 });
 
-/** 트랙 — 박스가 달리는 레인, 이동 데모가 잘리지 않게 여유 폭 확보 */
+/** 트랙 — 박스가 달리는 레인. 컨테이너로 만들어 이동 거리를 트랙 폭 기준으로 계산한다 */
 export const track = style([
   sprinkles({ display: 'flex', alignItems: 'center', p: '12', r: 'sm' }),
   {
     minHeight: '4.5rem',
     background: vars.color.background,
     overflow: 'hidden',
+    containerType: 'inline-size',
   },
 ]);
 
@@ -49,7 +50,14 @@ const boxBase = style({
 export const box = styleVariants({
   'translate-x': [
     boxBase,
-    { selectors: { '&[data-run="true"]': { transform: 'translateX(14rem)' } } },
+    {
+      selectors: {
+        // 100cqw=트랙 폭, 100%=박스 자신 폭 — 레이아웃이 바뀌어도 항상 끝까지 달린다
+        '&[data-run="true"]': {
+          transform: 'translateX(calc(100cqw - 100%))',
+        },
+      },
+    },
   ],
   scale: [
     boxBase,
