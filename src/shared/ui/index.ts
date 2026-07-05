@@ -23,3 +23,4 @@ export { ScrollArea } from './ScrollArea/ScrollArea';
 export { Toast } from './Toast/Toast';
 export { OneTimePasswordField } from './OneTimePasswordField/OneTimePasswordField';
 export { PasswordToggleField } from './PasswordToggleField/PasswordToggleField';
+export { Slider } from './Slider/Slider';
