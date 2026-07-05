@@ -1,8 +1,12 @@
-import { createTheme, createThemeContract } from '@vanilla-extract/css';
-import { afternoon } from './themes/afternoon';
-import { sunset } from './themes/sunset';
+/** 테마 토큰 바인딩 — seed-design 방식으로 :root data-theme 속성에 CSS로 묶는다 */
+import {
+  assignVars,
+  createGlobalTheme,
+  createThemeContract,
+  globalStyle,
+} from '@vanilla-extract/css';
+import { light } from './themes/light';
 import { night } from './themes/night';
-import { dawn } from './themes/dawn';
 
 /** 토큰 컨트랙트 — 모든 테마가 채우는 색·폰트·라운드의 "모양" */
 export const vars = createThemeContract({
@@ -27,11 +31,13 @@ export const vars = createThemeContract({
   },
 });
 
-/** 오후(라이트) — 기본 적용 테마 */
-export const afternoonThemeClass = createTheme(vars, afternoon);
-/** 노을 */
-export const sunsetThemeClass = createTheme(vars, sunset);
-/** 밤 */
-export const nightThemeClass = createTheme(vars, night);
-/** 새벽 */
-export const dawnThemeClass = createTheme(vars, dawn);
+// 다크(밤) = 기본값 — data-theme 없이도 항상 유효한 토큰이 깔린다. OS 스킴은 따르지 않는다
+createGlobalTheme(':root', vars, night);
+// color-scheme으로 스크롤바·폼 컨트롤 같은 UA 렌더링도 테마를 따라가게 한다
+globalStyle(':root', { colorScheme: 'dark' });
+
+/** 사용자가 명시적으로 라이트를 선택한 경우 */
+globalStyle(':root[data-theme="light"]', {
+  vars: assignVars(vars, light),
+  colorScheme: 'light',
+});
