@@ -1,10 +1,10 @@
-/** 테마 변경을 클릭 지점 중심의 원형 확산 뷰 트랜지션으로 감싸는 연출 유틸 */
+/** 테마 변경을 클릭 지점 중심의 일렁이는 원형 확산 뷰 트랜지션으로 감싸는 연출 유틸 */
+import {
+  createRippleKeyframes,
+  type RevealOrigin,
+} from './createRippleKeyframes';
 
-/** 확산 원의 중심 좌표 — 뷰포트 기준(px) */
-export interface RevealOrigin {
-  x: number;
-  y: number;
-}
+export type { RevealOrigin };
 
 /** apply(테마 변경)를 원형 확산으로 감싼다 — 미지원·모션 축소 환경은 연출 없이 즉시 반영 */
 export const withCircularReveal = (apply: () => void, origin: RevealOrigin) => {
@@ -26,14 +26,9 @@ export const withCircularReveal = (apply: () => void, origin: RevealOrigin) => {
         Math.max(origin.y, innerHeight - origin.y)
       );
       document.documentElement.animate(
+        { clipPath: createRippleKeyframes(origin, radius) },
         {
-          clipPath: [
-            `circle(0px at ${origin.x}px ${origin.y}px)`,
-            `circle(${radius}px at ${origin.x}px ${origin.y}px)`,
-          ],
-        },
-        {
-          duration: 500,
+          duration: 2000,
           easing: 'ease-in-out',
           // 새 테마 스냅샷만 잘라 보여준다 — 옛 화면은 그 밑에 그대로
           pseudoElement: '::view-transition-new(root)',

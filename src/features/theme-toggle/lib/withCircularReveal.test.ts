@@ -1,5 +1,6 @@
 /** withCircularReveal 테스트 — 어떤 환경에서든 테마 변경 자체는 반드시 실행되는 계약을 검증 */
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { createRippleKeyframes } from './createRippleKeyframes';
 import { withCircularReveal } from './withCircularReveal';
 
 // lib.dom엔 필수 프로퍼티라 부분 목 주입·삭제가 막힌다 — 옵셔널로 좁힌 뷰로 캐스팅
@@ -34,7 +35,7 @@ describe('withCircularReveal', () => {
     expect(startViewTransition).not.toHaveBeenCalled();
   });
 
-  it('지원 환경이면 뷰 트랜지션 안에서 apply를 실행하고 새 스냅샷에 원형 clip-path를 건다', async () => {
+  it('지원 환경이면 뷰 트랜지션 안에서 apply를 실행하고 새 스냅샷에 일렁이는 확산 clip-path를 건다', async () => {
     const ready = Promise.resolve();
     const apply = vi.fn();
     doc.startViewTransition = vi.fn((callback: () => void) => {
@@ -55,7 +56,14 @@ describe('withCircularReveal', () => {
     await ready;
     expect(animate).toHaveBeenCalledOnce();
     const [keyframes, options] = animate.mock.calls[0];
-    expect(JSON.stringify(keyframes)).toContain('circle(0px at 10px 20px)');
+    // 생성기는 결정적 — 같은 origin·반지름(가장 먼 모서리)이면 같은 키프레임
+    const radius = Math.hypot(
+      Math.max(10, window.innerWidth - 10),
+      Math.max(20, window.innerHeight - 20)
+    );
+    expect(keyframes).toEqual({
+      clipPath: createRippleKeyframes({ x: 10, y: 20 }, radius),
+    });
     expect(options).toMatchObject({
       pseudoElement: '::view-transition-new(root)',
     });
