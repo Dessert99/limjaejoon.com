@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import {
   darkColor,
   lightColor,
+  palette,
   typography,
   dimension,
   spacing,
@@ -32,10 +33,10 @@ describe('design tokens', () => {
   });
 
   it('green brand와 positive semantic을 둘 다 제공한다', () => {
-    expect(lightColor.fg.brand).toMatch(/^#/);
-    expect(lightColor.fg.positive).toMatch(/^#/);
-    expect(darkColor.bg.brand).toMatch(/^#/);
-    expect(darkColor.bg.positiveWeak).toMatch(/^#/);
+    expect(lightColor.fg.brand).toBe(palette.green[700]);
+    expect(lightColor.fg.positive).toBe(palette.green[700]);
+    expect(darkColor.bg.brand).toBe(palette.green[500]);
+    expect(darkColor.bg.positiveWeak).toBe(palette.green[1000]);
   });
 
   it('typography semantic text style은 CSS text 속성을 가진다', () => {

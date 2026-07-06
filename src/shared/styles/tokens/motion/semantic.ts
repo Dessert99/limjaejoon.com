@@ -2,6 +2,12 @@
 import { duration } from './duration';
 import { easing } from './easing';
 
+/** semantic motion alias shape — duration/easing 쌍을 고정한다 */
+export interface MotionAlias {
+  duration: string;
+  easing: string;
+}
+
 /** semantic motion aliases — 전환 의도를 duration/easing 쌍으로 고정한다 */
 export const motion = {
   colorTransition: {
@@ -24,4 +30,4 @@ export const motion = {
     duration: '2000ms',
     easing: 'ease-in-out',
   },
-} as const;
+} as const satisfies Record<string, MotionAlias>;

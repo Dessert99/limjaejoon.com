@@ -14,6 +14,9 @@ export {
   text,
 } from './typography';
 
+/** semantic text style shape 재노출 */
+export type { TextStyle } from './typography';
+
 /** dimension token 재노출 */
 export { dimension, spacing } from './dimension';
 
@@ -22,3 +25,6 @@ export { radiusScale, radius } from './radius';
 
 /** motion token 재노출 */
 export { duration, easing, motion } from './motion';
+
+/** semantic motion alias shape 재노출 */
+export type { MotionAlias } from './motion';

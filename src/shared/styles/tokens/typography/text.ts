@@ -1,6 +1,14 @@
 /** semantic text styles — 반복되는 UI 텍스트 조합을 고정한다 */
 import { fontFamily, fontSize, fontWeight, lineHeight } from './scale';
 
+/** semantic text style shape — CSS 텍스트 속성 조합을 고정한다 */
+export interface TextStyle {
+  fontFamily: string;
+  fontSize: string;
+  lineHeight: string;
+  fontWeight: string;
+}
+
 /** semantic text style tokens — 컴포넌트가 조합 대신 의미를 참조한다 */
 export const text = {
   body: {
@@ -51,4 +59,4 @@ export const text = {
     lineHeight: lineHeight.normal,
     fontWeight: fontWeight.regular,
   },
-} as const;
+} as const satisfies Record<string, TextStyle>;
