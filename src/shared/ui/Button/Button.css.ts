@@ -11,14 +11,14 @@ const base = style([
     alignItems: 'center',
     justifyContent: 'center',
     gap: 'x2',
-    r: 'r2',
+    r: 'control',
   }),
   {
     cursor: 'pointer',
-    fontWeight: 600,
+    fontWeight: vars.typography.fontWeight.semibold,
     border: '1px solid transparent',
-    // hover 색 전환만 부드럽게 — 실제 색 변화는 variant별 (solid/outline/ghost 맥락이 달라 통합 hover로는 못 맞춤)
-    transition: 'background 0.15s ease, color 0.15s ease',
+    // hover 색 전환만 부드럽게 — 실제 색 변화는 variant별 맥락이 달라 통합 hover로는 못 맞춤
+    transition: `background ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`,
     ':disabled': { opacity: 0.5, cursor: 'not-allowed' },
   },
 ]);
@@ -33,33 +33,31 @@ export const button = recipe({
     // 버튼 타입: ex) variant="outline"
     variant: {
       solid: {
-        background: vars.color.accent,
-        color: vars.color.accentForeground,
-        // accent에 검정 12% 섞어 한 톤 눌러줌 — 테마별 hover 토큰 없이 4테마 공통
+        background: vars.color.bg.brand,
+        color: vars.color.fg.onBrand,
         ':hover': {
-          background: `color-mix(in srgb, ${vars.color.accent} 88%, black)`,
+          background: vars.color.bg.brandPressed,
         },
       },
       outline: {
-        borderColor: vars.color.border,
-        color: vars.color.text,
-        // 투명 위 text 8% 틴트 — 라이트/다크 어느 테마든 은은하게 채워짐
+        borderColor: vars.color.stroke.neutral,
+        color: vars.color.fg.neutral,
         ':hover': {
-          background: `color-mix(in srgb, ${vars.color.text} 8%, transparent)`,
+          background: vars.color.bg.surfaceMuted,
         },
       },
       ghost: {
-        color: vars.color.text,
+        color: vars.color.fg.neutral,
         ':hover': {
-          background: `color-mix(in srgb, ${vars.color.text} 8%, transparent)`,
+          background: vars.color.bg.surfaceMuted,
         },
       },
-      // 텍스트 링크 모양 — 배경·테두리 없이 밑줄, hover시 accent로 피드백. 이동엔 asChild+<a> 권장
+      // 텍스트 링크 모양 — 배경·테두리 없이 밑줄, hover시 brand로 피드백. 이동엔 asChild+<a> 권장
       link: {
-        color: vars.color.text,
+        color: vars.color.fg.neutral,
         textDecoration: 'underline',
         textUnderlineOffset: '4px',
-        ':hover': { color: vars.color.accent },
+        ':hover': { color: vars.color.fg.brand },
       },
     },
     // 버튼 사이즈: ex) size="lg"

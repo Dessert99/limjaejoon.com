@@ -1,4 +1,5 @@
 /** 테마 변경을 클릭 지점 중심의 일렁이는 원형 확산 뷰 트랜지션으로 감싸는 연출 유틸 */
+import { motion } from '@/shared/styles';
 import {
   createRippleKeyframes,
   type RevealOrigin,
@@ -28,8 +29,8 @@ export const withCircularReveal = (apply: () => void, origin: RevealOrigin) => {
       document.documentElement.animate(
         { clipPath: createRippleKeyframes(origin, radius) },
         {
-          duration: 2000,
-          easing: 'ease-in-out',
+          duration: Number.parseInt(motion.themeReveal.duration, 10),
+          easing: motion.themeReveal.easing,
           // 새 테마 스냅샷만 잘라 보여준다 — 옛 화면은 그 밑에 그대로
           pseudoElement: '::view-transition-new(root)',
         }

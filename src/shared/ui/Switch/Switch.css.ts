@@ -1,4 +1,4 @@
-/** Switch 트랙·썸 — off는 border, on은 accent. 썸 위치만 data-state로 이동 */
+/** Switch 트랙·썸 — off는 disabled, on은 brand. 썸 위치만 data-state로 이동 */
 import { vars } from '@/shared/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
@@ -10,12 +10,12 @@ export const root = style({
   flexShrink: 0,
   padding: 0,
   border: 'none',
-  borderRadius: '9999px',
-  background: vars.color.border,
+  borderRadius: vars.radius.pill,
+  background: vars.color.bg.disabled,
   cursor: 'pointer',
-  transition: 'background 120ms ease',
+  transition: `background ${vars.motion.controlFeedback.duration} ${vars.motion.controlFeedback.easing}`,
   selectors: {
-    '&[data-state="checked"]': { background: vars.color.accent },
+    '&[data-state="checked"]': { background: vars.color.bg.brand },
   },
   ':disabled': { opacity: 0.5, cursor: 'not-allowed' },
 });
@@ -25,10 +25,10 @@ export const thumb = style({
   display: 'block',
   width: '1.25rem',
   height: '1.25rem',
-  borderRadius: '9999px',
-  background: vars.color.background,
+  borderRadius: vars.radius.pill,
+  background: vars.color.bg.surface,
   transform: 'translateX(2px)',
-  transition: 'transform 120ms ease',
+  transition: `transform ${vars.motion.controlFeedback.duration} ${vars.motion.controlFeedback.easing}`,
   willChange: 'transform',
   selectors: {
     '&[data-state="checked"]': {
