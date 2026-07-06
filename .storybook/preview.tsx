@@ -1,11 +1,11 @@
 import '@/shared/styles/global.css';
-import { afternoonThemeClass } from '@/shared/styles/theme.css';
 import type { Preview } from '@storybook/nextjs-vite'; // TypeScript 타입 체크용
 
 const preview: Preview = {
   decorators: [
     (Story) => {
-      document.documentElement.classList.add(afternoonThemeClass);
+      // 앱 기본값과 같은 dark 테마를 Storybook iframe 에도 명시한다
+      document.documentElement.dataset.theme = 'dark';
 
       return <Story />;
     },
