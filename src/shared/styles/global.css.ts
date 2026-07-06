@@ -18,11 +18,11 @@ globalStyle('*, *::before, *::after', {
 
 globalStyle('body', {
   minHeight: '100vh',
-  background: vars.color.background,
-  color: vars.color.text,
-  fontFamily: vars.font.body,
-  fontSize: '1rem',
-  lineHeight: 1.5,
+  background: vars.color.bg.canvas,
+  color: vars.color.fg.neutral,
+  fontFamily: vars.typography.fontFamily.sans,
+  fontSize: vars.typography.fontSize[16],
+  lineHeight: vars.typography.lineHeight.normal,
 });
 
 globalStyle('button, input, textarea, select', {
@@ -40,6 +40,6 @@ globalStyle('a', {
 });
 
 globalStyle(':focus-visible', {
-  outline: `2px solid ${vars.color.accent}`,
+  outline: `2px solid ${vars.color.stroke.brand}`,
   outlineOffset: '2px',
 });
