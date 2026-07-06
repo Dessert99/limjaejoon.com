@@ -14,10 +14,7 @@ import {
   motion,
 } from '.';
 
-const flattenKeys = (
-  value: Record<string, unknown>,
-  prefix = ''
-): string[] => {
+const flattenKeys = (value: Record<string, unknown>, prefix = ''): string[] => {
   return Object.entries(value).flatMap(([key, nested]) => {
     const path = prefix ? `${prefix}.${key}` : key;
     if (nested && typeof nested === 'object' && !Array.isArray(nested)) {

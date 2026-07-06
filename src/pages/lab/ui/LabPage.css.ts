@@ -46,7 +46,10 @@ export const item = style([
     p: 'x5',
     r: 'r2',
   }),
-  { border: `1px solid ${vars.color.stroke.neutral}`, background: vars.color.bg.surface },
+  {
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    background: vars.color.bg.surface,
+  },
 ]);
 
 export const itemTitle = style({

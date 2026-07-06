@@ -11,7 +11,10 @@ export const stage = style([
     p: 'x5',
     r: 'r2',
   }),
-  { border: `1px solid ${vars.color.stroke.neutral}`, background: vars.color.bg.surface },
+  {
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    background: vars.color.bg.surface,
+  },
 ]);
 
 export const controls = style([
@@ -76,6 +79,8 @@ export const box = styleVariants({
   ],
   'background-color': [
     boxBase,
-    { selectors: { '&[data-run="true"]': { background: vars.color.bg.brand } } },
+    {
+      selectors: { '&[data-run="true"]': { background: vars.color.bg.brand } },
+    },
   ],
 });
