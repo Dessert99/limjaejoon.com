@@ -11,7 +11,7 @@ export const panel = style([
     p: 'x4',
     r: 'r2',
   }),
-  { border: `1px solid ${vars.color.border}`, background: vars.color.surface },
+  { border: `1px solid ${vars.color.stroke.neutral}`, background: vars.color.bg.surface },
 ]);
 
 /** 코드 블록 — 조작 중 값이 길어져도 줄바꿈 없이 스크롤 */

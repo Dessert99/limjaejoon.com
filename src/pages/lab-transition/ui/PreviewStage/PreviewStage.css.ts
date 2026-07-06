@@ -11,7 +11,7 @@ export const stage = style([
     p: 'x5',
     r: 'r2',
   }),
-  { border: `1px solid ${vars.color.border}`, background: vars.color.surface },
+  { border: `1px solid ${vars.color.stroke.neutral}`, background: vars.color.bg.surface },
 ]);
 
 export const controls = style([
@@ -19,7 +19,7 @@ export const controls = style([
 ]);
 
 export const baselineLabel = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '0.875rem',
 });
 
@@ -28,7 +28,7 @@ export const track = style([
   sprinkles({ display: 'flex', alignItems: 'center', p: 'x3', r: 'r1' }),
   {
     minHeight: '4.5rem',
-    background: vars.color.background,
+    background: vars.color.bg.canvas,
     overflow: 'hidden',
     containerType: 'inline-size',
   },
@@ -38,8 +38,8 @@ export const track = style([
 const boxBase = style({
   width: '2.5rem',
   height: '2.5rem',
-  borderRadius: vars.radius.sm,
-  background: vars.color.accent,
+  borderRadius: vars.radius.r1,
+  background: vars.color.bg.brand,
   transitionProperty: 'var(--lab-property)',
   transitionDuration: 'var(--lab-duration)',
   transitionTimingFunction: 'var(--lab-timing)',
@@ -76,6 +76,6 @@ export const box = styleVariants({
   ],
   'background-color': [
     boxBase,
-    { selectors: { '&[data-run="true"]': { background: vars.color.text } } },
+    { selectors: { '&[data-run="true"]': { background: vars.color.fg.neutral } } },
   ],
 });

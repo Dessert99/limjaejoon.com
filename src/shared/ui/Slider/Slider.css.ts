@@ -20,7 +20,7 @@ export const track = style({
   flexGrow: 1,
   height: '0.25rem',
   borderRadius: '9999px',
-  background: vars.color.border,
+  background: vars.color.stroke.neutral,
 });
 
 /** 레인지 — 현재 값까지 채워지는 구간, 위치는 Radix가 인라인으로 계산 */
@@ -28,7 +28,7 @@ export const range = style({
   position: 'absolute',
   height: '100%',
   borderRadius: '9999px',
-  background: vars.color.accent,
+  background: vars.color.bg.brand,
 });
 
 /** 썸 — 드래그 손잡이, 키보드 포커스 링 표시 */
@@ -37,10 +37,10 @@ export const thumb = style({
   width: '1rem',
   height: '1rem',
   borderRadius: '9999px',
-  border: `1px solid ${vars.color.accent}`,
-  background: vars.color.background,
+  border: `1px solid ${vars.color.stroke.brand}`,
+  background: vars.color.bg.canvas,
   ':focus-visible': {
-    outline: `2px solid ${vars.color.accent}`,
+    outline: `2px solid ${vars.color.stroke.brand}`,
     outlineOffset: '2px',
   },
 });

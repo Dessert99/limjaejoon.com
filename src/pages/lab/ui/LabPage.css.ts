@@ -19,7 +19,7 @@ export const header = style([
 ]);
 
 export const eyebrow = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '0.875rem',
 });
 
@@ -30,7 +30,7 @@ export const title = style({
 });
 
 export const description = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   lineHeight: 1.7,
 });
 
@@ -46,7 +46,7 @@ export const item = style([
     p: 'x5',
     r: 'r2',
   }),
-  { border: `1px solid ${vars.color.border}`, background: vars.color.surface },
+  { border: `1px solid ${vars.color.stroke.neutral}`, background: vars.color.bg.surface },
 ]);
 
 export const itemTitle = style({
@@ -56,5 +56,5 @@ export const itemTitle = style({
 });
 
 export const itemDescription = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
 });

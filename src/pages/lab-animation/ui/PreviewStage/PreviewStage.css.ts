@@ -11,7 +11,7 @@ export const stage = style([
     p: 'x5',
     r: 'r2',
   }),
-  { border: `1px solid ${vars.color.border}`, background: vars.color.surface },
+  { border: `1px solid ${vars.color.stroke.neutral}`, background: vars.color.bg.surface },
 ]);
 
 export const controls = style([
@@ -19,7 +19,7 @@ export const controls = style([
 ]);
 
 export const pauseLabel = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '0.875rem',
 });
 
@@ -28,7 +28,7 @@ export const track = style([
   sprinkles({ display: 'flex', alignItems: 'center', p: 'x3', r: 'r1' }),
   {
     minHeight: '5.5rem',
-    background: vars.color.background,
+    background: vars.color.bg.canvas,
     overflow: 'hidden',
     containerType: 'inline-size',
   },
@@ -36,7 +36,7 @@ export const track = style([
 
 /** 개념 노트 — 재생 모델(리마운트 vs play-state) 설명 */
 export const note = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '0.8125rem',
   lineHeight: 1.6,
 });
@@ -71,8 +71,8 @@ const spin = keyframes({
 const boxBase = style({
   width: '2.5rem',
   height: '2.5rem',
-  borderRadius: vars.radius.sm,
-  background: vars.color.accent,
+  borderRadius: vars.radius.r1,
+  background: vars.color.bg.brand,
   opacity: 0.35,
   animationDuration: 'var(--lab-duration)',
   animationTimingFunction: 'var(--lab-timing)',

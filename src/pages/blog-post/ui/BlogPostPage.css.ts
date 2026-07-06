@@ -22,7 +22,7 @@ export const header = style([
 ]);
 
 export const backLink = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '0.875rem',
 });
 
@@ -34,20 +34,20 @@ export const title = style({
 });
 
 export const description = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '1.125rem',
 });
 
 export const meta = style([
   sprinkles({ display: 'flex', flexWrap: 'wrap', gap: 'x2' }),
   {
-    color: vars.color.muted,
+    color: vars.color.fg.muted,
     fontSize: '0.875rem',
   },
 ]);
 
 export const content = style({
-  color: vars.color.text,
+  color: vars.color.fg.neutral,
 });
 
 globalStyle(`${content} > * + *`, {
@@ -59,12 +59,12 @@ globalStyle(`${content} h1, ${content} h2, ${content} h3`, {
 });
 
 globalStyle(`${content} code`, {
-  fontFamily: vars.font.mono,
+  fontFamily: vars.typography.fontFamily.mono,
 });
 
 globalStyle(`${content} pre`, {
   overflowX: 'auto',
   padding: '1rem',
-  borderRadius: vars.radius.md,
-  border: `1px solid ${vars.color.border}`,
+  borderRadius: vars.radius.r2,
+  border: `1px solid ${vars.color.stroke.neutral}`,
 });

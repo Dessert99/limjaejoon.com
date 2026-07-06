@@ -15,8 +15,8 @@ export const list = style([
   {
     listStyle: 'none',
     margin: 0,
-    border: `1px solid ${vars.color.border}`,
-    background: vars.color.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    background: vars.color.bg.surface,
   },
 ]);
 
@@ -29,14 +29,14 @@ export const trigger = style([
   {
     background: 'transparent',
     border: 'none',
-    color: vars.color.text,
+    color: vars.color.fg.neutral,
     font: 'inherit',
     cursor: 'pointer',
     outline: 'none',
     selectors: {
       '&[data-state="open"]': {
-        background: vars.color.accent,
-        color: vars.color.accentForeground,
+        background: vars.color.bg.brand,
+        color: vars.color.fg.onBrand,
       },
     },
   },
@@ -57,8 +57,8 @@ export const content = style([
     left: 0,
     marginTop: '0.25rem',
     minWidth: '12rem',
-    background: vars.color.surface,
-    border: `1px solid ${vars.color.border}`,
+    background: vars.color.bg.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
   },
 ]);
 
@@ -66,12 +66,12 @@ export const content = style([
 export const link = style([
   sprinkles({ px: 'x2', py: 'x1_5', r: 'r1' }),
   {
-    color: vars.color.text,
+    color: vars.color.fg.neutral,
     textDecoration: 'none',
     cursor: 'pointer',
     outline: 'none',
     selectors: {
-      '&[data-active]': { color: vars.color.accent, fontWeight: 600 },
+      '&[data-active]': { color: vars.color.fg.brand, fontWeight: 600 },
     },
   },
 ]);

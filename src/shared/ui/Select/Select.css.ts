@@ -16,14 +16,14 @@ export const trigger = style([
   }),
   {
     minWidth: '10rem',
-    background: vars.color.surface,
-    border: `1px solid ${vars.color.border}`,
-    color: vars.color.text,
+    background: vars.color.bg.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    color: vars.color.fg.neutral,
     font: 'inherit',
     cursor: 'pointer',
     outline: 'none',
     selectors: {
-      '&[data-placeholder]': { color: vars.color.muted },
+      '&[data-placeholder]': { color: vars.color.fg.muted },
     },
   },
 ]);
@@ -33,8 +33,8 @@ export const content = style([
   sprinkles({ p: 'x1', r: 'r2' }),
   {
     minWidth: '10rem',
-    background: vars.color.surface,
-    border: `1px solid ${vars.color.border}`,
+    background: vars.color.bg.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
   },
 ]);
 
@@ -50,14 +50,14 @@ export const item = style([
     r: 'r1',
   }),
   {
-    color: vars.color.text,
+    color: vars.color.fg.neutral,
     cursor: 'pointer',
     outline: 'none',
     userSelect: 'none',
     selectors: {
       '&[data-highlighted]': {
-        background: vars.color.accent,
-        color: vars.color.accentForeground,
+        background: vars.color.bg.brand,
+        color: vars.color.fg.onBrand,
       },
       '&[data-disabled]': { opacity: 0.5, cursor: 'not-allowed' },
     },

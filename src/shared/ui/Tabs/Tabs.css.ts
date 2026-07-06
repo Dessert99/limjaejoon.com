@@ -11,7 +11,7 @@ export const root = style([
 /** 탭 줄 — 하단 경계선 위에 트리거를 가로 정렬 */
 export const list = style([
   sprinkles({ display: 'flex', gap: 'x1' }),
-  { borderBottom: `1px solid ${vars.color.border}` },
+  { borderBottom: `1px solid ${vars.color.stroke.neutral}` },
 ]);
 
 /** 트리거 — 비활성은 muted, 활성은 accent 밑줄 */
@@ -22,13 +22,13 @@ export const trigger = style([
     border: 'none',
     borderBottom: '2px solid transparent',
     marginBottom: '-1px', // 리스트 1px 경계선 위에 2px 밑줄을 겹쳐 정렬
-    color: vars.color.muted,
+    color: vars.color.fg.muted,
     font: 'inherit',
     cursor: 'pointer',
     selectors: {
       '&[data-state="active"]': {
-        color: vars.color.text,
-        borderBottomColor: vars.color.accent,
+        color: vars.color.fg.neutral,
+        borderBottomColor: vars.color.stroke.brand,
       },
     },
     ':disabled': { opacity: 0.5, cursor: 'not-allowed' },
@@ -36,4 +36,4 @@ export const trigger = style([
 ]);
 
 /** 패널 — 활성 탭의 본문 */
-export const content = style({ color: vars.color.text });
+export const content = style({ color: vars.color.fg.neutral });

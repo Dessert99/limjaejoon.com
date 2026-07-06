@@ -28,14 +28,14 @@ export const root = style([
     r: 'r2',
   }),
   {
-    background: vars.color.surface,
-    border: `1px solid ${vars.color.border}`,
-    color: vars.color.text,
+    background: vars.color.bg.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    color: vars.color.fg.neutral,
   },
 ]);
 
 /** 제목 — 알림 헤드라인 */
-export const title = style({ fontWeight: 600, color: vars.color.text });
+export const title = style({ fontWeight: 600, color: vars.color.fg.neutral });
 
 /** 설명 — 보조 문구, 약하게 죽인 색 */
-export const description = style({ margin: 0, color: vars.color.muted });
+export const description = style({ margin: 0, color: vars.color.fg.muted });

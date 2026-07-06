@@ -7,7 +7,7 @@ import { style } from '@vanilla-extract/css';
 export const overlay = style({
   position: 'fixed',
   inset: 0,
-  background: vars.color.overlay,
+  background: vars.color.bg.overlay,
 });
 
 /** 패널 — 화면 정중앙에 뜨는 확인 본문, 불투명 surface */
@@ -26,9 +26,9 @@ export const content = style([
     transform: 'translate(-50%, -50%)',
     width: '90vw',
     maxWidth: '28rem',
-    background: vars.color.surface,
-    border: `1px solid ${vars.color.border}`,
-    color: vars.color.text,
+    background: vars.color.bg.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    color: vars.color.fg.neutral,
   },
 ]);
 
@@ -36,11 +36,11 @@ export const content = style([
 export const title = style({
   margin: 0,
   fontSize: '1.125rem',
-  color: vars.color.text,
+  color: vars.color.fg.neutral,
 });
 
 /** 설명 — 결과를 알리는 보조 문구(aria-describedby로 연결), 약하게 죽인 색 */
 export const description = style({
   margin: 0,
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
 });

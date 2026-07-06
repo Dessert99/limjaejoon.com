@@ -24,7 +24,7 @@ export const block = style([
 ]);
 
 export const paragraph = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   lineHeight: 1.7,
 });
 
@@ -43,22 +43,22 @@ export const table = style({
 export const th = style({
   padding: '0.5rem 0.75rem',
   textAlign: 'left',
-  borderBottom: `1px solid ${vars.color.border}`,
+  borderBottom: `1px solid ${vars.color.stroke.neutral}`,
   whiteSpace: 'nowrap',
 });
 
 export const td = style({
   padding: '0.5rem 0.75rem',
   verticalAlign: 'top',
-  borderBottom: `1px solid ${vars.color.border}`,
-  color: vars.color.muted,
+  borderBottom: `1px solid ${vars.color.stroke.neutral}`,
+  color: vars.color.fg.muted,
 });
 
 /** 표 안 코드 표기 — 속성명·키워드는 원문 그대로 보이게 */
 export const code = style({
   fontFamily: 'monospace',
   fontSize: '0.8125rem',
-  color: vars.color.text,
+  color: vars.color.fg.neutral,
   whiteSpace: 'nowrap',
 });
 
@@ -71,7 +71,7 @@ export const codeBlock = style([
     fontFamily: 'monospace',
     fontSize: '0.875rem',
     lineHeight: 1.6,
-    background: vars.color.background,
-    border: `1px solid ${vars.color.border}`,
+    background: vars.color.bg.canvas,
+    border: `1px solid ${vars.color.stroke.neutral}`,
   },
 ]);

@@ -7,12 +7,12 @@ import { style } from '@vanilla-extract/css';
 export const input = style([
   sprinkles({ px: 'x3', py: 'x2', r: 'r2' }),
   {
-    background: vars.color.surface,
-    border: `1px solid ${vars.color.border}`,
-    color: vars.color.text,
+    background: vars.color.bg.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    color: vars.color.fg.neutral,
     outline: 'none',
     selectors: {
-      '&:focus': { borderColor: vars.color.accent },
+      '&:focus': { borderColor: vars.color.stroke.brand },
     },
   },
 ]);
@@ -23,11 +23,11 @@ export const toggle = style([
   {
     background: 'transparent',
     border: 'none',
-    color: vars.color.muted,
+    color: vars.color.fg.muted,
     cursor: 'pointer',
     outline: 'none',
     selectors: {
-      '&:focus-visible': { color: vars.color.accent },
+      '&:focus-visible': { color: vars.color.fg.brand },
     },
   },
 ]);

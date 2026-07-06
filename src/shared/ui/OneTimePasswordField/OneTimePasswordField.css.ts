@@ -18,12 +18,12 @@ export const input = style([
     height: '2.75rem',
     textAlign: 'center',
     fontSize: '1.125rem',
-    background: vars.color.surface,
-    border: `1px solid ${vars.color.border}`,
-    color: vars.color.text,
+    background: vars.color.bg.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    color: vars.color.fg.neutral,
     outline: 'none',
     selectors: {
-      '&:focus': { borderColor: vars.color.accent },
+      '&:focus': { borderColor: vars.color.stroke.brand },
     },
   },
 ]);

@@ -23,7 +23,7 @@ export const toggleRow = style([
 
 /** 개념 노트 — 본문보다 낮은 위계의 학습 메모 */
 export const note = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '0.8125rem',
   lineHeight: 1.6,
 });

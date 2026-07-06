@@ -22,7 +22,7 @@ export const header = style([
 ]);
 
 export const eyebrow = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '0.875rem',
 });
 
@@ -46,8 +46,8 @@ export const item = style([
     r: 'r2',
   }),
   {
-    border: `1px solid ${vars.color.border}`,
-    background: vars.color.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    background: vars.color.bg.surface,
   },
 ]);
 
@@ -57,13 +57,13 @@ export const itemTitle = style({
 });
 
 export const description = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
 });
 
 export const meta = style([
   sprinkles({ display: 'flex', flexWrap: 'wrap', gap: 'x2' }),
   {
-    color: vars.color.muted,
+    color: vars.color.fg.muted,
     fontSize: '0.875rem',
   },
 ]);

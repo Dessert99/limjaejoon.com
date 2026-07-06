@@ -19,7 +19,7 @@ export const header = style([
 ]);
 
 export const eyebrow = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '0.875rem',
 });
 
@@ -31,7 +31,7 @@ export const title = style({
 });
 
 export const description = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   lineHeight: 1.7,
 });
 

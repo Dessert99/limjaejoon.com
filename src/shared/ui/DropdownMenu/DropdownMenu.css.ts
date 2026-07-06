@@ -8,8 +8,8 @@ export const content = style([
   sprinkles({ p: 'x1', r: 'r2' }),
   {
     minWidth: '8rem',
-    background: vars.color.surface,
-    border: `1px solid ${vars.color.border}`,
+    background: vars.color.bg.surface,
+    border: `1px solid ${vars.color.stroke.neutral}`,
   },
 ]);
 
@@ -23,14 +23,14 @@ export const item = style([
     r: 'r1',
   }),
   {
-    color: vars.color.text,
+    color: vars.color.fg.neutral,
     cursor: 'pointer',
     outline: 'none',
     userSelect: 'none',
     selectors: {
       '&[data-highlighted]': {
-        background: vars.color.accent,
-        color: vars.color.accentForeground,
+        background: vars.color.bg.brand,
+        color: vars.color.fg.onBrand,
       },
       '&[data-disabled]': { opacity: 0.5, cursor: 'not-allowed' },
     },
@@ -42,7 +42,7 @@ export const label = style([
   sprinkles({ px: 'x2', py: 'x1_5' }),
   {
     fontSize: '0.8125rem',
-    color: vars.color.muted,
+    color: vars.color.fg.muted,
   },
 ]);
 
@@ -51,6 +51,6 @@ export const separator = style([
   sprinkles({ my: 'x1' }),
   {
     height: '1px',
-    background: vars.color.border,
+    background: vars.color.stroke.neutral,
   },
 ]);

@@ -7,14 +7,14 @@ import { style } from '@vanilla-extract/css';
 export const root = style([
   sprinkles({ display: 'flex', flexDirection: 'column', r: 'r2' }),
   {
-    border: `1px solid ${vars.color.border}`,
+    border: `1px solid ${vars.color.stroke.neutral}`,
     overflow: 'hidden',
   },
 ]);
 
 /** 항목 — 항목 사이 구분선(마지막 항목은 생략) */
 export const item = style({
-  borderBottom: `1px solid ${vars.color.border}`,
+  borderBottom: `1px solid ${vars.color.stroke.neutral}`,
   selectors: {
     '&:last-child': { borderBottom: 'none' },
   },
@@ -36,7 +36,7 @@ export const trigger = style([
     width: '100%',
     background: 'transparent',
     border: 'none',
-    color: vars.color.text,
+    color: vars.color.fg.neutral,
     font: 'inherit',
     textAlign: 'left',
     cursor: 'pointer',
@@ -47,5 +47,5 @@ export const trigger = style([
 /** 패널 — 열렸을 때만 마운트되는 본문 */
 export const content = style([
   sprinkles({ px: 'x4', py: 'x3' }),
-  { color: vars.color.text },
+  { color: vars.color.fg.neutral },
 ]);

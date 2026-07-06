@@ -20,6 +20,6 @@ export const scrollbar = style({
 /** 썸 — 잡고 끄는 막대, 테두리 색으로 트랙과 구분 */
 export const thumb = style({
   flex: 1,
-  background: vars.color.border,
+  background: vars.color.stroke.neutral,
   borderRadius: '9999px',
 });

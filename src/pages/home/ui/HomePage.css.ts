@@ -26,29 +26,29 @@ export const panel = style([
   }),
   {
     width: 'min(100%, 42rem)',
-    border: `1px solid ${vars.color.border}`,
+    border: `1px solid ${vars.color.stroke.neutral}`,
   },
 ]);
 
 export const eyebrow = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   fontSize: '0.875rem',
   fontWeight: 600,
 });
 
 export const title = style({
-  color: vars.color.text,
+  color: vars.color.fg.neutral,
   fontSize: '2rem',
   lineHeight: 1.1,
 });
 
 export const description = style({
-  color: vars.color.muted,
+  color: vars.color.fg.muted,
   lineHeight: 1.7,
 });
 
 /** 랩 진입 링크 — 본문과 구분되는 액센트 컬러 */
 export const labLink = style({
-  color: vars.color.accent,
+  color: vars.color.fg.brand,
   fontWeight: 600,
 });

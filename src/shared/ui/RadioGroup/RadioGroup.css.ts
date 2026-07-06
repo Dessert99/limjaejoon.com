@@ -18,11 +18,11 @@ export const item = style({
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: '9999px',
-  border: `1px solid ${vars.color.border}`,
-  background: vars.color.background,
+  border: `1px solid ${vars.color.stroke.neutral}`,
+  background: vars.color.bg.canvas,
   cursor: 'pointer',
   selectors: {
-    '&[data-state="checked"]': { borderColor: vars.color.accent },
+    '&[data-state="checked"]': { borderColor: vars.color.stroke.brand },
   },
   ':disabled': { opacity: 0.5, cursor: 'not-allowed' },
 });
@@ -40,6 +40,6 @@ export const indicator = style({
     width: '0.625rem',
     height: '0.625rem',
     borderRadius: '9999px',
-    background: vars.color.accent,
+    background: vars.color.bg.brand,
   },
 });

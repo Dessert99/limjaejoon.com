@@ -17,12 +17,12 @@ export const toggle = style([
   {
     cursor: 'pointer',
     background: 'transparent',
-    color: vars.color.text,
-    border: `1px solid ${vars.color.border}`,
+    color: vars.color.fg.neutral,
+    border: `1px solid ${vars.color.stroke.neutral}`,
     selectors: {
       '&[data-state="on"]': {
-        background: `color-mix(in srgb, ${vars.color.accent} 16%, transparent)`,
-        borderColor: vars.color.accent,
+        background: `color-mix(in srgb, ${vars.color.bg.brand} 16%, transparent)`,
+        borderColor: vars.color.stroke.brand,
       },
     },
     ':disabled': { opacity: 0.5, cursor: 'not-allowed' },

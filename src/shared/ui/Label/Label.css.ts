@@ -6,5 +6,5 @@ import { style } from '@vanilla-extract/css';
 /** 폼 컨트롤 위 라벨 — 본문 색 + 기본 굵기 */
 export const label = style([
   sprinkles({ display: 'inline-block' }),
-  { color: vars.color.text, fontWeight: 500 },
+  { color: vars.color.fg.neutral, fontWeight: 500 },
 ]);
