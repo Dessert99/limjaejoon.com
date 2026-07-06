@@ -8,9 +8,9 @@ export const list = style([
   sprinkles({
     display: 'flex',
     alignItems: 'center',
-    gap: '4',
-    p: '4',
-    r: 'md',
+    gap: 'x1',
+    p: 'x1',
+    r: 'r2',
   }),
   {
     listStyle: 'none',
@@ -25,7 +25,7 @@ export const item = style({ position: 'relative' });
 
 /** 트리거 — 패널을 여는 메뉴 이름, 열림(data-state) 시 accent 배경 */
 export const trigger = style([
-  sprinkles({ px: '12', py: '6', r: 'sm' }),
+  sprinkles({ px: 'x3', py: 'x1_5', r: 'r1' }),
   {
     background: 'transparent',
     border: 'none',
@@ -47,9 +47,9 @@ export const content = style([
   sprinkles({
     display: 'flex',
     flexDirection: 'column',
-    gap: '2',
-    p: '8',
-    r: 'md',
+    gap: 'x0_5',
+    p: 'x2',
+    r: 'r2',
   }),
   {
     position: 'absolute',
@@ -64,7 +64,7 @@ export const content = style([
 
 /** 링크 — 내비/패널 공용, 현재 페이지(aria-current=page → data-active)는 accent 강조 */
 export const link = style([
-  sprinkles({ px: '8', py: '6', r: 'sm' }),
+  sprinkles({ px: 'x2', py: 'x1_5', r: 'r1' }),
   {
     color: vars.color.text,
     textDecoration: 'none',

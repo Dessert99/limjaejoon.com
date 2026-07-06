@@ -7,15 +7,15 @@ export const main = style([
   sprinkles({
     display: 'flex',
     flexDirection: 'column',
-    gap: '32',
-    px: { mobile: '20', tablet: '40' },
-    py: '64',
+    gap: 'x8',
+    px: { mobile: 'x5', tablet: 'x10' },
+    py: 'x16',
   }),
   { width: '100%', maxWidth: '72rem', marginInline: 'auto' },
 ]);
 
 export const header = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x2' }),
 ]);
 
 export const eyebrow = style({
@@ -37,7 +37,7 @@ export const description = style({
 
 /** 본문 그리드 — 모바일 1열, 태블릿부터 컨트롤/프리뷰 2열 */
 export const grid = style([
-  sprinkles({ display: 'grid', gap: '32' }),
+  sprinkles({ display: 'grid', gap: 'x8' }),
   {
     '@media': {
       'screen and (min-width: 768px)': { gridTemplateColumns: '1fr 1fr' },
@@ -46,5 +46,5 @@ export const grid = style([
 ]);
 
 export const column = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '24' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x6' }),
 ]);

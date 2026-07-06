@@ -4,11 +4,11 @@ import { vars } from '@/shared/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
 export const root = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '24' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x6' }),
 ]);
 
 export const group = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x2' }),
 ]);
 
 export const groupTitle = style({
@@ -18,7 +18,7 @@ export const groupTitle = style({
 });
 
 export const toggleRow = style([
-  sprinkles({ display: 'flex', flexWrap: 'wrap', gap: '4' }),
+  sprinkles({ display: 'flex', flexWrap: 'wrap', gap: 'x1' }),
 ]);
 
 /** 개념 노트 — 본문보다 낮은 위계의 학습 메모 */

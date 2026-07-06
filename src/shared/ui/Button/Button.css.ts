@@ -10,8 +10,8 @@ const base = style([
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '8',
-    r: 'md',
+    gap: 'x2',
+    r: 'r2',
   }),
   {
     cursor: 'pointer',
@@ -64,9 +64,9 @@ export const button = recipe({
     },
     // 버튼 사이즈: ex) size="lg"
     size: {
-      sm: sprinkles({ px: '12', py: '4' }),
-      md: sprinkles({ px: '24', py: '6' }),
-      lg: sprinkles({ px: '40', py: '8' }),
+      sm: sprinkles({ px: 'x3', py: 'x1' }),
+      md: sprinkles({ px: 'x6', py: 'x1_5' }),
+      lg: sprinkles({ px: 'x10', py: 'x2' }),
     },
   },
   // 기본 타입

@@ -4,7 +4,7 @@ import { vars } from '@/shared/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
 /** 가로 묶음 — 항목 간격만 */
-export const root = style([sprinkles({ display: 'inline-flex', gap: '4' })]);
+export const root = style([sprinkles({ display: 'inline-flex', gap: 'x1' })]);
 
 /** 항목 버튼 — on이면 accent 틴트 + 테두리 강조 */
 export const item = style([
@@ -12,9 +12,9 @@ export const item = style([
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    px: '12',
-    py: '8',
-    r: 'md',
+    px: 'x3',
+    py: 'x2',
+    r: 'r2',
   }),
   {
     cursor: 'pointer',

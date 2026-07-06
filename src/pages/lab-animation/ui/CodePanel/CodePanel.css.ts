@@ -7,9 +7,9 @@ export const panel = style([
   sprinkles({
     display: 'flex',
     alignItems: 'flex-start',
-    gap: '12',
-    p: '16',
-    r: 'md',
+    gap: 'x3',
+    p: 'x4',
+    r: 'r2',
   }),
   { border: `1px solid ${vars.color.border}`, background: vars.color.surface },
 ]);

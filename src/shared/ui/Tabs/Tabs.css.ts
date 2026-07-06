@@ -5,18 +5,18 @@ import { style } from '@vanilla-extract/css';
 
 /** 묶음 — 탭 줄과 패널을 세로로 */
 export const root = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '12' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x3' }),
 ]);
 
 /** 탭 줄 — 하단 경계선 위에 트리거를 가로 정렬 */
 export const list = style([
-  sprinkles({ display: 'flex', gap: '4' }),
+  sprinkles({ display: 'flex', gap: 'x1' }),
   { borderBottom: `1px solid ${vars.color.border}` },
 ]);
 
 /** 트리거 — 비활성은 muted, 활성은 accent 밑줄 */
 export const trigger = style([
-  sprinkles({ px: '12', py: '8' }),
+  sprinkles({ px: 'x3', py: 'x2' }),
   {
     background: 'transparent',
     border: 'none',

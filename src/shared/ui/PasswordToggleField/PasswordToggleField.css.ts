@@ -5,7 +5,7 @@ import { style } from '@vanilla-extract/css';
 
 /** 입력 — 일반 텍스트 필드 모양, 포커스 시 accent 테두리 */
 export const input = style([
-  sprinkles({ px: '12', py: '8', r: 'md' }),
+  sprinkles({ px: 'x3', py: 'x2', r: 'r2' }),
   {
     background: vars.color.surface,
     border: `1px solid ${vars.color.border}`,
@@ -19,7 +19,7 @@ export const input = style([
 
 /** 토글 — 보기/숨기기 버튼, 테두리 없이 약한 색 */
 export const toggle = style([
-  sprinkles({ px: '8', py: '8', r: 'sm' }),
+  sprinkles({ px: 'x2', py: 'x2', r: 'r1' }),
   {
     background: 'transparent',
     border: 'none',

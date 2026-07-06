@@ -2,30 +2,10 @@ import { defineProperties, createSprinkles } from '@vanilla-extract/sprinkles';
 import { vars } from './theme.css';
 
 // SPRINKLES — 빌드 타임 atomic·반응형 유틸 prop. 레이아웃/간격/색의 "리듬"을 담당한다.
-// style({}) 안에서도 합성된다: style([sprinkles({ display: 'flex', p: '16' }), { ...고유 연출 }]).
+// style({}) 안에서도 합성된다: style([sprinkles({ display: 'flex', p: 'x4' }), { ...고유 연출 }]).
 // 치수(width/height)·위치(position)·타이포·애니메이션은 sprinkles 영역이 아니라 style() 에 남긴다.
 
-// rem 기반 간격 스케일 — gap/padding/margin 에서 공유. 키는 px 감각의 숫자 문자열(2px 그리드).
-const space = {
-  none: '0',
-  '2': '0.125rem',
-  '4': '0.25rem',
-  '6': '0.375rem',
-  '8': '0.5rem',
-  '10': '0.625rem',
-  '12': '0.75rem',
-  '14': '0.875rem',
-  '16': '1rem',
-  '20': '1.25rem',
-  '24': '1.5rem',
-  '32': '2rem',
-  '40': '2.5rem',
-  '48': '3rem',
-  '64': '4rem',
-} as const;
-
-// 마진은 중앙 정렬용 auto 도 허용한다(예: marginInline: 'auto').
-const margins = { ...space, auto: 'auto' } as const;
+const margins = { ...vars.dimension, auto: 'auto' } as const;
 
 const responsiveProperties = defineProperties({
   conditions: {
@@ -54,14 +34,14 @@ const responsiveProperties = defineProperties({
       'space-between',
       'space-around',
     ],
-    gap: space,
-    padding: space,
-    paddingTop: space,
-    paddingBottom: space,
-    paddingLeft: space,
-    paddingRight: space,
-    paddingInline: space,
-    paddingBlock: space,
+    gap: vars.dimension,
+    padding: vars.dimension,
+    paddingTop: vars.dimension,
+    paddingBottom: vars.dimension,
+    paddingLeft: vars.dimension,
+    paddingRight: vars.dimension,
+    paddingInline: vars.dimension,
+    paddingBlock: vars.dimension,
     margin: margins,
     marginTop: margins,
     marginBottom: margins,
@@ -83,9 +63,9 @@ const responsiveProperties = defineProperties({
 
 const colorProperties = defineProperties({
   properties: {
-    background: vars.color,
-    color: vars.color,
-    borderColor: vars.color,
+    background: vars.color.bg,
+    color: vars.color.fg,
+    borderColor: vars.color.stroke,
   },
   shorthands: {
     bg: ['background'],

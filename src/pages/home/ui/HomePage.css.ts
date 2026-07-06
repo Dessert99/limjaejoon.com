@@ -7,7 +7,7 @@ export const main = style([
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: { mobile: '24', tablet: '48' },
+    padding: { mobile: 'x6', tablet: 'x12' },
   }),
   {
     minHeight: '100vh',
@@ -19,9 +19,9 @@ export const panel = style([
   sprinkles({
     display: 'flex',
     flexDirection: 'column',
-    gap: '20',
-    padding: { mobile: '24', tablet: '40' },
-    borderRadius: 'lg',
+    gap: 'x5',
+    padding: { mobile: 'x6', tablet: 'x10' },
+    borderRadius: 'r3',
     bg: 'surface',
   }),
   {

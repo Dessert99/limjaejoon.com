@@ -7,12 +7,12 @@ import { style } from '@vanilla-extract/css';
 export const root = sprinkles({
   display: 'inline-flex',
   alignItems: 'center',
-  gap: '8',
+  gap: 'x2',
 });
 
 /** 칸 — 글자 하나짜리 정사각 입력, 포커스 시 accent 테두리 */
 export const input = style([
-  sprinkles({ r: 'md' }),
+  sprinkles({ r: 'r2' }),
   {
     width: '2.5rem',
     height: '2.75rem',

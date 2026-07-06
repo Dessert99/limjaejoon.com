@@ -6,9 +6,9 @@ export const main = style([
   sprinkles({
     display: 'flex',
     flexDirection: 'column',
-    gap: '32',
-    px: { mobile: '20', tablet: '40' },
-    py: '64',
+    gap: 'x8',
+    px: { mobile: 'x5', tablet: 'x10' },
+    py: 'x16',
   }),
   {
     width: '100%',
@@ -18,7 +18,7 @@ export const main = style([
 ]);
 
 export const header = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '12' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x3' }),
 ]);
 
 export const backLink = style({
@@ -39,7 +39,7 @@ export const description = style({
 });
 
 export const meta = style([
-  sprinkles({ display: 'flex', flexWrap: 'wrap', gap: '8' }),
+  sprinkles({ display: 'flex', flexWrap: 'wrap', gap: 'x2' }),
   {
     color: vars.color.muted,
     fontSize: '0.875rem',

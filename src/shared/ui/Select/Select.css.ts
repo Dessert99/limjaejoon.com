@@ -9,10 +9,10 @@ export const trigger = style([
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: '8',
-    px: '12',
-    py: '8',
-    r: 'md',
+    gap: 'x2',
+    px: 'x3',
+    py: 'x2',
+    r: 'r2',
   }),
   {
     minWidth: '10rem',
@@ -30,7 +30,7 @@ export const trigger = style([
 
 /** 패널 — 옵션 목록을 담는 불투명 surface 카드 */
 export const content = style([
-  sprinkles({ p: '4', r: 'md' }),
+  sprinkles({ p: 'x1', r: 'r2' }),
   {
     minWidth: '10rem',
     background: vars.color.surface,
@@ -44,10 +44,10 @@ export const item = style([
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: '8',
-    px: '8',
-    py: '6',
-    r: 'sm',
+    gap: 'x2',
+    px: 'x2',
+    py: 'x1_5',
+    r: 'r1',
   }),
   {
     color: vars.color.text,

@@ -5,7 +5,7 @@ import { style } from '@vanilla-extract/css';
 
 /** 패널 — 페이지 콘텐츠 위로 뜨므로 불투명 surface 배경 필수, 테두리로 경계 */
 export const content = style([
-  sprinkles({ px: '16', py: '12', r: 'md' }),
+  sprinkles({ px: 'x4', py: 'x3', r: 'r2' }),
   {
     background: vars.color.surface,
     border: `1px solid ${vars.color.border}`,

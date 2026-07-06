@@ -6,9 +6,9 @@ export const main = style([
   sprinkles({
     display: 'flex',
     flexDirection: 'column',
-    gap: '32',
-    px: { mobile: '20', tablet: '40' },
-    py: '64',
+    gap: 'x8',
+    px: { mobile: 'x5', tablet: 'x10' },
+    py: 'x16',
   }),
   {
     width: '100%',
@@ -18,7 +18,7 @@ export const main = style([
 ]);
 
 export const header = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x2' }),
 ]);
 
 export const eyebrow = style({
@@ -34,16 +34,16 @@ export const title = style({
 });
 
 export const list = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '16' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x4' }),
 ]);
 
 export const item = style([
   sprinkles({
     display: 'flex',
     flexDirection: 'column',
-    gap: '8',
-    p: '20',
-    r: 'md',
+    gap: 'x2',
+    p: 'x5',
+    r: 'r2',
   }),
   {
     border: `1px solid ${vars.color.border}`,
@@ -61,7 +61,7 @@ export const description = style({
 });
 
 export const meta = style([
-  sprinkles({ display: 'flex', flexWrap: 'wrap', gap: '8' }),
+  sprinkles({ display: 'flex', flexWrap: 'wrap', gap: 'x2' }),
   {
     color: vars.color.muted,
     fontSize: '0.875rem',

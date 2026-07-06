@@ -15,9 +15,9 @@ export const content = style([
   sprinkles({
     display: 'flex',
     flexDirection: 'column',
-    gap: '12',
-    p: '24',
-    r: 'lg',
+    gap: 'x3',
+    p: 'x6',
+    r: 'r3',
   }),
   {
     position: 'fixed',

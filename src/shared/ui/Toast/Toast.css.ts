@@ -5,7 +5,7 @@ import { style } from '@vanilla-extract/css';
 
 /** 뷰포트 — 화면 우하단에 토스트를 쌓는 고정 목록(ol 마커 제거), 최상단 레이어 */
 export const viewport = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8', p: '16' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x2', p: 'x4' }),
   {
     position: 'fixed',
     bottom: 0,
@@ -23,9 +23,9 @@ export const root = style([
   sprinkles({
     display: 'flex',
     flexDirection: 'column',
-    gap: '4',
-    p: '16',
-    r: 'md',
+    gap: 'x1',
+    p: 'x4',
+    r: 'r2',
   }),
   {
     background: vars.color.surface,

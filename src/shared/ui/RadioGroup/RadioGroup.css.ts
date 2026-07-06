@@ -5,7 +5,7 @@ import { style } from '@vanilla-extract/css';
 
 /** 세로 묶음 — 항목 간격만 */
 export const root = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x2' }),
 ]);
 
 /** 항목 원 — 1.25rem, 선택되면 테두리 accent */

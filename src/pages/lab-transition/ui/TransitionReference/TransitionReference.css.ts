@@ -4,7 +4,7 @@ import { vars } from '@/shared/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
 export const root = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '24' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x6' }),
 ]);
 
 export const heading = style({
@@ -20,7 +20,7 @@ export const subheading = style({
 });
 
 export const block = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', gap: '8' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x2' }),
 ]);
 
 export const paragraph = style({
@@ -64,7 +64,7 @@ export const code = style({
 
 /** 문법 예시 블록 */
 export const codeBlock = style([
-  sprinkles({ p: '16', r: 'sm' }),
+  sprinkles({ p: 'x4', r: 'r1' }),
   {
     margin: 0,
     overflowX: 'auto',

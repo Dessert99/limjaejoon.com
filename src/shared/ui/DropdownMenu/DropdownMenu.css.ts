@@ -5,7 +5,7 @@ import { style } from '@vanilla-extract/css';
 
 /** 패널 — 페이지 위로 뜨므로 불투명 surface 배경, 항목을 감싸는 얇은 안쪽 여백 */
 export const content = style([
-  sprinkles({ p: '4', r: 'md' }),
+  sprinkles({ p: 'x1', r: 'r2' }),
   {
     minWidth: '8rem',
     background: vars.color.surface,
@@ -18,9 +18,9 @@ export const item = style([
   sprinkles({
     display: 'flex',
     alignItems: 'center',
-    px: '8',
-    py: '6',
-    r: 'sm',
+    px: 'x2',
+    py: 'x1_5',
+    r: 'r1',
   }),
   {
     color: vars.color.text,
@@ -39,7 +39,7 @@ export const item = style([
 
 /** 라벨 — 항목 묶음의 제목, 약하게 죽인 색·작은 글자 */
 export const label = style([
-  sprinkles({ px: '8', py: '6' }),
+  sprinkles({ px: 'x2', py: 'x1_5' }),
   {
     fontSize: '0.8125rem',
     color: vars.color.muted,
@@ -48,7 +48,7 @@ export const label = style([
 
 /** 구분선 — 항목 사이 얇은 가로선 */
 export const separator = style([
-  sprinkles({ my: '4' }),
+  sprinkles({ my: 'x1' }),
   {
     height: '1px',
     background: vars.color.border,

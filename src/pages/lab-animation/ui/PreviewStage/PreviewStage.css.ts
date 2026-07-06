@@ -7,15 +7,15 @@ export const stage = style([
   sprinkles({
     display: 'flex',
     flexDirection: 'column',
-    gap: '12',
-    p: '20',
-    r: 'md',
+    gap: 'x3',
+    p: 'x5',
+    r: 'r2',
   }),
   { border: `1px solid ${vars.color.border}`, background: vars.color.surface },
 ]);
 
 export const controls = style([
-  sprinkles({ display: 'flex', alignItems: 'center', gap: '12' }),
+  sprinkles({ display: 'flex', alignItems: 'center', gap: 'x3' }),
 ]);
 
 export const pauseLabel = style({
@@ -25,7 +25,7 @@ export const pauseLabel = style({
 
 /** 트랙 — 박스가 달리는 레인. 컨테이너로 만들어 이동 거리를 트랙 폭 기준으로 계산한다 */
 export const track = style([
-  sprinkles({ display: 'flex', alignItems: 'center', p: '12', r: 'sm' }),
+  sprinkles({ display: 'flex', alignItems: 'center', p: 'x3', r: 'r1' }),
   {
     minHeight: '5.5rem',
     background: vars.color.background,

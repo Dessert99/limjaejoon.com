@@ -5,7 +5,7 @@ import { style } from '@vanilla-extract/css';
 
 /** 묶음 — 세로 스택 + 테두리로 감싼 카드, 라운드에 항목 모서리 클립 */
 export const root = style([
-  sprinkles({ display: 'flex', flexDirection: 'column', r: 'md' }),
+  sprinkles({ display: 'flex', flexDirection: 'column', r: 'r2' }),
   {
     border: `1px solid ${vars.color.border}`,
     overflow: 'hidden',
@@ -29,8 +29,8 @@ export const trigger = style([
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    px: '16',
-    py: '12',
+    px: 'x4',
+    py: 'x3',
   }),
   {
     width: '100%',
@@ -46,6 +46,6 @@ export const trigger = style([
 
 /** 패널 — 열렸을 때만 마운트되는 본문 */
 export const content = style([
-  sprinkles({ px: '16', py: '12' }),
+  sprinkles({ px: 'x4', py: 'x3' }),
   { color: vars.color.text },
 ]);

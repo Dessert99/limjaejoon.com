@@ -8,9 +8,9 @@ export const root = style([
   sprinkles({
     display: 'flex',
     alignItems: 'center',
-    gap: '4',
-    p: '4',
-    r: 'md',
+    gap: 'x1',
+    p: 'x1',
+    r: 'r2',
   }),
   {
     border: `1px solid ${vars.color.border}`,
@@ -20,7 +20,7 @@ export const root = style([
 
 /** 트리거 — 바 위의 메뉴 이름, 포커스(roving)·열림(data-state) 시 accent 배경 */
 export const trigger = style([
-  sprinkles({ px: '12', py: '6', r: 'sm' }),
+  sprinkles({ px: 'x3', py: 'x1_5', r: 'r1' }),
   {
     background: 'transparent',
     border: 'none',
@@ -40,7 +40,7 @@ export const trigger = style([
 
 /** 패널 — 페이지 위로 뜨므로 불투명 surface 배경, 항목을 감싸는 얇은 안쪽 여백 */
 export const content = style([
-  sprinkles({ p: '4', r: 'md' }),
+  sprinkles({ p: 'x1', r: 'r2' }),
   {
     minWidth: '8rem',
     background: vars.color.surface,
@@ -53,9 +53,9 @@ export const item = style([
   sprinkles({
     display: 'flex',
     alignItems: 'center',
-    px: '8',
-    py: '6',
-    r: 'sm',
+    px: 'x2',
+    py: 'x1_5',
+    r: 'r1',
   }),
   {
     color: vars.color.text,
@@ -74,7 +74,7 @@ export const item = style([
 
 /** 라벨 — 항목 묶음의 제목, 약하게 죽인 색·작은 글자 */
 export const label = style([
-  sprinkles({ px: '8', py: '6' }),
+  sprinkles({ px: 'x2', py: 'x1_5' }),
   {
     fontSize: '0.8125rem',
     color: vars.color.muted,
@@ -83,7 +83,7 @@ export const label = style([
 
 /** 구분선 — 항목 사이 얇은 가로선 */
 export const separator = style([
-  sprinkles({ my: '4' }),
+  sprinkles({ my: 'x1' }),
   {
     height: '1px',
     background: vars.color.border,
