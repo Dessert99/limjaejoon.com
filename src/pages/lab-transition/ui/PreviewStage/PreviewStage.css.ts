@@ -76,6 +76,6 @@ export const box = styleVariants({
   ],
   'background-color': [
     boxBase,
-    { selectors: { '&[data-run="true"]': { background: vars.color.fg.neutral } } },
+    { selectors: { '&[data-run="true"]': { background: vars.color.bg.brand } } },
   ],
 });

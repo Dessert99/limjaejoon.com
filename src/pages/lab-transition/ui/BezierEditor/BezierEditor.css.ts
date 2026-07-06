@@ -27,7 +27,7 @@ export const baseline = style({
 
 /** 끝점→제어점 연결선 — 핸들이 곡선의 어디를 당기는지 보여준다 */
 export const arm = style({
-  stroke: vars.color.fg.muted,
+  stroke: vars.color.stroke.muted,
   strokeWidth: 1.5,
 });
 
