@@ -1,6 +1,5 @@
 /** RadioGroup 상태 문서 — 라벨과 함께 단일선택 */
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { Label } from '../Label/Label';
 import { RadioGroup } from './RadioGroup';
 
 const meta = { title: 'shared/ui/RadioGroup' } satisfies Meta;
@@ -21,7 +20,7 @@ export const Default: Story = {
             value='free'>
             <RadioGroup.Indicator />
           </RadioGroup.Item>
-          <Label htmlFor='r-free'>무료</Label>
+          <label htmlFor='r-free'>무료</label>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <RadioGroup.Item
@@ -29,7 +28,7 @@ export const Default: Story = {
             value='pro'>
             <RadioGroup.Indicator />
           </RadioGroup.Item>
-          <Label htmlFor='r-pro'>프로</Label>
+          <label htmlFor='r-pro'>프로</label>
         </div>
       </RadioGroup.Root>
     );

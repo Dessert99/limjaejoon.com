@@ -1,5 +1,5 @@
 /** 코드 패널 — 키프레임 원문과 animation 선언을 함께 보여주고 클립보드로 복사한다 */
-import { Button, Toast } from '@/shared/ui';
+import { Button, Snackbar } from '@/shared/ui';
 import { useState } from 'react';
 import { KEYFRAMES_PRESETS, type AnimationConfig } from '../../model/presets';
 import { toCssValue } from '../../model/toCssValue';
@@ -23,7 +23,7 @@ export function CodePanel({ config }: CodePanelProps) {
   };
 
   return (
-    <Toast.Provider duration={2000}>
+    <Snackbar.Provider duration={2000}>
       <section
         aria-label='CSS 코드'
         className={s.panel}>
@@ -32,12 +32,12 @@ export function CodePanel({ config }: CodePanelProps) {
         </pre>
         <Button onClick={handleCopy}>복사</Button>
       </section>
-      <Toast.Root
+      <Snackbar.Root
         open={copied}
-        onOpenChange={setCopied}>
-        <Toast.Title>복사됐어요</Toast.Title>
-      </Toast.Root>
-      <Toast.Viewport />
-    </Toast.Provider>
+        onOpenChange={setCopied}
+        message='복사됐어요'
+      />
+      <Snackbar.Viewport />
+    </Snackbar.Provider>
   );
 }

@@ -1,8 +1,6 @@
 /** shared/ui — 디자인 프리미티브 public API */
 export { Button } from './Button/Button';
 export type { ButtonProps } from './Button/Button';
-export { Label } from './Label/Label';
-export { Separator } from './Separator/Separator';
 export { Toggle } from './Toggle/Toggle';
 export { Switch } from './Switch/Switch';
 export { RadioGroup } from './RadioGroup/RadioGroup';
@@ -11,11 +9,8 @@ export { Progress } from './Progress/Progress';
 export { Accordion } from './Accordion/Accordion';
 export type { AccordionRootProps } from './Accordion/Accordion';
 export { DropdownMenu } from './DropdownMenu/DropdownMenu';
-export { NavigationMenu } from './NavigationMenu/NavigationMenu';
 export { Select } from './Select/Select';
-export { Dialog } from './Dialog/Dialog';
 export { AlertDialog } from './AlertDialog/AlertDialog';
-export { Toast } from './Toast/Toast';
-export { OneTimePasswordField } from './OneTimePasswordField/OneTimePasswordField';
-export { PasswordToggleField } from './PasswordToggleField/PasswordToggleField';
 export { Slider } from './Slider/Slider';
+export { Divider } from './Divider/Divider';
+export { Snackbar } from './Snackbar/Snackbar';
