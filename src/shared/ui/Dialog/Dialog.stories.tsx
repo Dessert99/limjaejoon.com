@@ -71,7 +71,7 @@ export const SingleAction: Story = {
   },
 };
 
-/** OverflowActions — 긴 액션 문구도 footer 폭 안에서 줄바꿈된다 */
+/** OverflowActions — 긴 액션 문구는 footer 폭 안에서 세로로 쌓인다 */
 export const OverflowActions: Story = {
   render: () => {
     return (
@@ -90,7 +90,7 @@ export const OverflowActions: Story = {
             일반 Dialog는 파괴적 확인보다 설정, 편집, 상세 보기처럼 닫기 경로가
             자유로운 흐름을 담습니다.
           </Dialog.Body>
-          <Dialog.Footer>
+          <Dialog.Footer layout='single'>
             <Dialog.Close asChild>
               <Button variant='ghost'>기본 설정으로 되돌리고 닫기</Button>
             </Dialog.Close>

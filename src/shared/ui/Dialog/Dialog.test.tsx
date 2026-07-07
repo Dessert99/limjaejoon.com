@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import type { ReactElement } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Dialog } from './Dialog';
+import { OverflowActions } from './Dialog.stories';
 
 function renderDialog() {
   return render(
@@ -65,5 +68,26 @@ describe('Dialog', () => {
       'single'
     );
     expect(screen.getByText('확인').parentElement).toHaveClass('single-footer');
+  });
+
+  it('OverflowActions story는 긴 액션을 세로로 쌓는다', async () => {
+    const user = userEvent.setup();
+    const renderOverflowActions = OverflowActions.render as
+      | (() => ReactElement)
+      | undefined;
+
+    if (!renderOverflowActions) {
+      throw new Error('OverflowActions story render가 필요합니다.');
+    }
+
+    render(renderOverflowActions());
+
+    await user.click(screen.getByRole('button', { name: '긴 액션 보기' }));
+
+    expect(
+      screen
+        .getByRole('button', { name: '기본 설정으로 되돌리고 닫기' })
+        .closest('[data-layout]')
+    ).toHaveAttribute('data-layout', 'single');
   });
 });
