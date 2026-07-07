@@ -295,7 +295,7 @@ RemoveScroll({ ... shards: [context.contentRef] }) // 배경만 잠그고 패널
 ```
 
 2. **Title/Description = 이름·설명 의미:** `Title`(h2)이 `aria-labelledby`로 다이얼로그 이름이 되고, `Description`이 `aria-describedby`로 연결된다. Title이 없으면 Radix가 콘솔 경고(접근성 강제).
-3. **우리 규약:** Trigger는 `aria-haspopup="dialog"`. **Portal과 스크림(Overlay)을 Content 래퍼에 내장** — 소비자는 `<Dialog.Content>` 안에 Title·Description·본문만 둔다. Overlay 배경 = `vars.color.overlay`(신규 토큰, 4테마 반투명 어둠). Trigger·Close는 `asChild`로 Button 합성.
+3. **우리 규약:** Trigger는 `aria-haspopup="dialog"`. **Portal과 스크림(Overlay)을 Content 래퍼에 내장** — 소비자는 `<Dialog.Content>` 안에 Header·Title·Description·Body·Footer를 둔다. Footer는 `layout="natural"`·`layout="single"`로 일반 모달 액션 배치를 고르고, Close는 `asChild`로 Button과 합성한다. Overlay 배경은 `vars.color.overlay`, 열림/닫힘은 `data-state`와 overlay motion token으로 처리한다.
 
 출처: `@radix-ui/react-dialog/dist/index.mjs`(+ `react-focus-scope`·`react-remove-scroll`) · https://www.radix-ui.com/primitives/docs/components/dialog
 
