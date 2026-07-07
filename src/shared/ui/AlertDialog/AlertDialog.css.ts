@@ -113,6 +113,7 @@ export const footer = recipe({
       gap: 'x2',
     }),
     {
+      width: '100%',
       minWidth: 0,
     },
   ],
@@ -139,6 +140,7 @@ export type FooterVariants = NonNullable<RecipeVariants<typeof footer>>;
 
 /** 푸터 컨트롤 — 긴 액션 문구가 패널 폭 안에서 줄바꿈되도록 제한한다 */
 export const footerControl = style({
+  flex: '1 1 max-content',
   minWidth: 0,
   maxWidth: '100%',
   whiteSpace: 'normal',
