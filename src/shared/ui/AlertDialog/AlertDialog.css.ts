@@ -146,4 +146,12 @@ export const footerControl = style({
   whiteSpace: 'normal',
   overflowWrap: 'anywhere',
   textAlign: 'center',
+  selectors: {
+    '&[data-alert-dialog-control]': {
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 'max-content',
+      whiteSpace: 'normal',
+    },
+  },
 });
