@@ -50,3 +50,5 @@ wrapper나 ref 합성 컴포넌트에는 디버깅을 위해 `displayName`을 �
 - 컴포넌트별 배럴(`Button/index.ts`)은 두지 않는다.
 - 새 프리미티브를 추가하면 `src/shared/ui/index.ts`에서 컴포넌트와 필요한 public type을 export한다.
 - Button 전용 요구사항(`asChild`, button 속성 등)을 다른 프리미티브에 기계적으로 복제하지 않는다.
+
+디자인 시스템 관점에서 새 프리미티브의 역할, 상태, 접근성, 토큰, 인터랙션을 설계할 때는 [design-system-component.md](./design-system-component.md)를 추가로 따른다.
