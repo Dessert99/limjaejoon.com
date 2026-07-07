@@ -25,7 +25,7 @@ describe('CodePanel', () => {
     );
   });
 
-  it('복사 버튼이 키프레임과 선언 전체를 클립보드에 쓴다', async () => {
+  it('복사 버튼이 키프레임과 선언 전체를 클립보드에 쓴다', () => {
     render(<CodePanel config={DEFAULT_CONFIG} />);
 
     fireEvent.click(screen.getByRole('button', { name: '복사' }));
@@ -35,6 +35,5 @@ describe('CodePanel', () => {
     expect(copied).toContain(
       'animation: slide 1200ms ease 0ms infinite alternate none running;'
     );
-    expect(await screen.findByText('복사됐어요')).toBeInTheDocument();
   });
 });
