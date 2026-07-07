@@ -5,6 +5,7 @@ import {
   content,
   description,
   footer,
+  footerControl,
   header,
   overlay,
   title,
@@ -14,6 +15,16 @@ import {
 /** Footer props — 액션 배치 방식만 AlertDialog 의미로 노출한다 */
 export interface AlertDialogFooterProps
   extends ComponentPropsWithoutRef<'div'>, FooterVariants {}
+
+/** Action props — Radix Action 속성에 footer control 스타일 훅을 합성한다 */
+type AlertDialogActionProps = ComponentPropsWithoutRef<
+  typeof AlertDialogPrimitive.Action
+>;
+
+/** Cancel props — Radix Cancel 속성에 footer control 스타일 훅을 합성한다 */
+type AlertDialogCancelProps = ComponentPropsWithoutRef<
+  typeof AlertDialogPrimitive.Cancel
+>;
 
 /** 묶음 — 열림 상태 컨텍스트만 제공(DOM 없음) */
 const Root = AlertDialogPrimitive.Root;
@@ -99,11 +110,37 @@ const Footer = forwardRef<HTMLDivElement, AlertDialogFooterProps>(
 );
 Footer.displayName = 'AlertDialog.Footer';
 
-/** 확인 — 위험한 작업을 실행하고 닫는 버튼, 스타일은 asChild로 소비자 몫 */
-const Action = AlertDialogPrimitive.Action;
+/** 확인 — 위험한 작업을 실행하고 닫는 버튼, footer 안에서는 긴 문구 폭을 제한한다 */
+const Action = forwardRef<
+  React.ComponentRef<typeof AlertDialogPrimitive.Action>,
+  AlertDialogActionProps
+>(({ className, ...props }, ref) => {
+  return (
+    <AlertDialogPrimitive.Action
+      ref={ref}
+      className={[footerControl, className].filter(Boolean).join(' ')}
+      {...props}
+      data-alert-dialog-control='action'
+    />
+  );
+});
+Action.displayName = 'AlertDialog.Action';
 
-/** 취소 — 열렸을 때 기본 포커스를 받는 안전한 버튼, 스타일은 asChild로 소비자 몫 */
-const Cancel = AlertDialogPrimitive.Cancel;
+/** 취소 — 열렸을 때 기본 포커스를 받는 안전한 버튼, footer 안에서는 긴 문구 폭을 제한한다 */
+const Cancel = forwardRef<
+  React.ComponentRef<typeof AlertDialogPrimitive.Cancel>,
+  AlertDialogCancelProps
+>(({ className, ...props }, ref) => {
+  return (
+    <AlertDialogPrimitive.Cancel
+      ref={ref}
+      className={[footerControl, className].filter(Boolean).join(' ')}
+      {...props}
+      data-alert-dialog-control='cancel'
+    />
+  );
+});
+Cancel.displayName = 'AlertDialog.Cancel';
 
 /** 네임스페이스 — Root·Trigger·Content·Header·Title·Description·Footer·Action·Cancel */
 export const AlertDialog = {

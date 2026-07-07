@@ -9,7 +9,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/** Natural layout — 취소/확인 액션이 자연 폭으로 우측 정렬된다 */
+/** Natural layout — 취소/확인 액션이 자연 폭으로 가운데 정렬된다 */
 export const LayoutNatural: Story = {
   render: () => {
     return (

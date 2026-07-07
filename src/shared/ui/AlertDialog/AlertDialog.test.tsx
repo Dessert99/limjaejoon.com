@@ -65,4 +65,41 @@ describe('AlertDialog', () => {
       'natural'
     );
   });
+
+  it('Action과 Cancel은 footer 컨트롤 속성과 외부 className을 asChild에 병합한다', () => {
+    render(
+      <AlertDialog.Root defaultOpen>
+        <AlertDialog.Content>
+          <AlertDialog.Title>주의</AlertDialog.Title>
+          <AlertDialog.Description>되돌릴 수 없습니다.</AlertDialog.Description>
+          <AlertDialog.Footer>
+            <AlertDialog.Cancel
+              asChild
+              className='cancel-control'>
+              <button type='button'>취소</button>
+            </AlertDialog.Cancel>
+            <AlertDialog.Action
+              asChild
+              className='action-control'>
+              <button type='button'>긴 확인 문구</button>
+            </AlertDialog.Action>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog.Root>
+    );
+
+    expect(screen.getByRole('button', { name: '취소' })).toHaveAttribute(
+      'data-alert-dialog-control',
+      'cancel'
+    );
+    expect(screen.getByRole('button', { name: '취소' })).toHaveClass(
+      'cancel-control'
+    );
+    expect(
+      screen.getByRole('button', { name: '긴 확인 문구' })
+    ).toHaveAttribute('data-alert-dialog-control', 'action');
+    expect(screen.getByRole('button', { name: '긴 확인 문구' })).toHaveClass(
+      'action-control'
+    );
+  });
 });

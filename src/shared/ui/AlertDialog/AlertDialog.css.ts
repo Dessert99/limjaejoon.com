@@ -120,7 +120,8 @@ export const footer = recipe({
     layout: {
       natural: {
         flexWrap: 'wrap',
-        justifyContent: 'flex-end',
+        alignItems: 'center',
+        justifyContent: 'center',
       },
       single: {
         flexDirection: 'column',
@@ -135,3 +136,12 @@ export const footer = recipe({
 
 /** Footer recipe variants */
 export type FooterVariants = NonNullable<RecipeVariants<typeof footer>>;
+
+/** 푸터 컨트롤 — 긴 액션 문구가 패널 폭 안에서 줄바꿈되도록 제한한다 */
+export const footerControl = style({
+  minWidth: 0,
+  maxWidth: '100%',
+  whiteSpace: 'normal',
+  overflowWrap: 'anywhere',
+  textAlign: 'center',
+});
