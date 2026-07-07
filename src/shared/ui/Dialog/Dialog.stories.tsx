@@ -14,7 +14,7 @@ export const Default: Story = {
     return (
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <Button variant='outline'>글 삭제</Button>
+          <Button variant='neutralOutline'>글 삭제</Button>
         </Dialog.Trigger>
         <Dialog.Content>
           <Dialog.Title>글을 삭제할까요?</Dialog.Title>
@@ -22,7 +22,7 @@ export const Default: Story = {
             삭제한 글은 복구할 수 없습니다.
           </Dialog.Description>
           <Dialog.Close asChild>
-            <Button variant='solid'>삭제</Button>
+            <Button variant='criticalSolid'>삭제</Button>
           </Dialog.Close>
         </Dialog.Content>
       </Dialog.Root>

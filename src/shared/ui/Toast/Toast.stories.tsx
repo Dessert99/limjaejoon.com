@@ -16,7 +16,7 @@ function ToastDemo() {
   return (
     <Toast.Provider>
       <Button
-        variant='outline'
+        variant='neutralOutline'
         onClick={() => {
           setOpen(true);
         }}>

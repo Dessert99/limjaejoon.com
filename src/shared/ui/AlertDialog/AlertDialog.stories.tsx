@@ -14,7 +14,7 @@ export const Default: Story = {
     return (
       <AlertDialog.Root>
         <AlertDialog.Trigger asChild>
-          <Button variant='outline'>글 삭제</Button>
+          <Button variant='neutralOutline'>글 삭제</Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>
           <AlertDialog.Title>정말 삭제할까요?</AlertDialog.Title>
@@ -25,7 +25,7 @@ export const Default: Story = {
             <Button variant='ghost'>취소</Button>
           </AlertDialog.Cancel>
           <AlertDialog.Action asChild>
-            <Button variant='solid'>삭제</Button>
+            <Button variant='criticalSolid'>삭제</Button>
           </AlertDialog.Action>
         </AlertDialog.Content>
       </AlertDialog.Root>

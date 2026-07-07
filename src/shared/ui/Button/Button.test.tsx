@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Button } from './Button';
 
 describe('Button', () => {
@@ -25,5 +25,64 @@ describe('Button', () => {
     render(<Button ref={ref}>확인</Button>);
 
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
+  });
+
+  it('기본 button type을 button으로 설정하고 명시 type은 유지한다', () => {
+    render(
+      <>
+        <Button>저장</Button>
+        <Button type='submit'>제출</Button>
+      </>
+    );
+
+    expect(screen.getByRole('button', { name: '저장' })).toHaveAttribute(
+      'type',
+      'button'
+    );
+    expect(screen.getByRole('button', { name: '제출' })).toHaveAttribute(
+      'type',
+      'submit'
+    );
+  });
+
+  it('loading 상태에서는 접근성 이름을 유지하고 busy 상태만 노출한다', () => {
+    render(<Button loading>저장하기</Button>);
+
+    const button = screen.getByRole('button', { name: '저장하기' });
+    expect(button).toHaveAttribute('aria-busy', 'true');
+    expect(button).toHaveAttribute('data-loading');
+    expect(button).not.toBeDisabled();
+  });
+
+  it('loading과 disabled는 분리한다', () => {
+    render(
+      <Button
+        loading
+        disabled>
+        저장하기
+      </Button>
+    );
+
+    const button = screen.getByRole('button', { name: '저장하기' });
+    expect(button).toHaveAttribute('data-loading');
+    expect(button).toHaveAttribute('data-disabled');
+    expect(button).toBeDisabled();
+  });
+
+  it('compound icon slot을 렌더링하고 iconOnly 접근성 이름 누락을 개발 경고로 알려준다', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    render(
+      <Button layout='iconOnly'>
+        <Button.Icon>
+          <span aria-hidden>+</span>
+        </Button.Icon>
+      </Button>
+    );
+
+    expect(screen.getByText('+')).toBeInTheDocument();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('iconOnly'));
+
+    warn.mockRestore();
   });
 });

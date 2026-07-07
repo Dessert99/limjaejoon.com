@@ -13,7 +13,8 @@ export function ThemeToggle() {
   return (
     <Button
       variant='ghost'
-      size='sm'
+      size='small'
+      layout='iconOnly'
       className={themeToggle}
       aria-label={next === 'dark' ? '다크 테마로 전환' : '라이트 테마로 전환'}
       onClick={(event) => {
