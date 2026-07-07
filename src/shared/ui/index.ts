@@ -11,6 +11,7 @@ export type { AccordionRootProps } from './Accordion/Accordion';
 export { DropdownMenu } from './DropdownMenu/DropdownMenu';
 export { Select } from './Select/Select';
 export { AlertDialog } from './AlertDialog/AlertDialog';
+export type { AlertDialogFooterProps } from './AlertDialog/AlertDialog';
 export { Slider } from './Slider/Slider';
 export { Divider } from './Divider/Divider';
 export { Snackbar } from './Snackbar/Snackbar';

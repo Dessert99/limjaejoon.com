@@ -318,7 +318,7 @@ onOpenAutoFocus: (event) => { event.preventDefault(); cancelRef.current?.focus()
 
 3. **Cancel에 기본 포커스:** 열리면 안전한 `Cancel`로 포커스가 간다(실수로 Enter를 쳐도 확인이 아니라 취소). `Close` 대신 **`Action`(실행) + `Cancel`(취소)** 두 파트로 의도를 가른다.
 
-- 우리 규약은 Dialog와 동일(Portal·Overlay를 Content 내장, Title/Description aria, Action/Cancel은 asChild Button). 스크림도 `vars.color.overlay`.
+- 우리 규약은 Dialog와 동일(Portal·Overlay를 Content 내장, Title/Description aria, Action/Cancel은 asChild Button). Header/Footer slot으로 의미 영역과 액션 영역을 분리하고, Footer는 `layout="natural"`·`layout="single"`로 확인 흐름의 버튼 배치를 고른다. 스크림은 `vars.color.overlay`, 열림/닫힘은 `data-state`와 overlay motion token으로만 처리한다.
 
 출처: `@radix-ui/react-alert-dialog/dist/index.mjs`(Dialog 토대 재사용) · https://www.radix-ui.com/primitives/docs/components/alert-dialog
 

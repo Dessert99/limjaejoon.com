@@ -1,7 +1,19 @@
 /** 공용 AlertDialog — Radix AlertDialog 위에 스크림·중앙 패널 스타일만 입힌 확인 모달 */
 import { AlertDialog as AlertDialogPrimitive } from 'radix-ui'; // 포커스 트랩·스크롤 잠금·바깥클릭 차단·Cancel 기본 포커스·alertdialog aria를 Radix가 처리
-import { forwardRef } from 'react';
-import { content, description, overlay, title } from './AlertDialog.css';
+import { forwardRef, type ComponentPropsWithoutRef } from 'react';
+import {
+  content,
+  description,
+  footer,
+  header,
+  overlay,
+  title,
+  type FooterVariants,
+} from './AlertDialog.css';
+
+/** Footer props — 액션 배치 방식만 AlertDialog 의미로 노출한다 */
+export interface AlertDialogFooterProps
+  extends ComponentPropsWithoutRef<'div'>, FooterVariants {}
 
 /** 묶음 — 열림 상태 컨텍스트만 제공(DOM 없음) */
 const Root = AlertDialogPrimitive.Root;
@@ -27,6 +39,20 @@ const Content = forwardRef<
   );
 });
 Content.displayName = 'AlertDialog.Content';
+
+/** 헤더 — Title과 Description을 확인 대화의 설명 영역으로 묶는다 */
+const Header = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
+  ({ className, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={[header, className].filter(Boolean).join(' ')}
+        {...props}
+      />
+    );
+  }
+);
+Header.displayName = 'AlertDialog.Header';
 
 /** 제목 — h2로 렌더돼 aria-labelledby로 확인 대화 이름이 된다 */
 const Title = forwardRef<
@@ -58,19 +84,36 @@ const Description = forwardRef<
 });
 Description.displayName = 'AlertDialog.Description';
 
+/** 푸터 — 취소/확인 액션을 natural 또는 single 레이아웃으로 배치한다 */
+const Footer = forwardRef<HTMLDivElement, AlertDialogFooterProps>(
+  ({ className, layout = 'natural', ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={[footer({ layout }), className].filter(Boolean).join(' ')}
+        data-layout={layout}
+        {...props}
+      />
+    );
+  }
+);
+Footer.displayName = 'AlertDialog.Footer';
+
 /** 확인 — 위험한 작업을 실행하고 닫는 버튼, 스타일은 asChild로 소비자 몫 */
 const Action = AlertDialogPrimitive.Action;
 
 /** 취소 — 열렸을 때 기본 포커스를 받는 안전한 버튼, 스타일은 asChild로 소비자 몫 */
 const Cancel = AlertDialogPrimitive.Cancel;
 
-/** 네임스페이스 — Root·Trigger·Content·Title·Description·Action·Cancel (Portal·Overlay는 Content 내장) */
+/** 네임스페이스 — Root·Trigger·Content·Header·Title·Description·Footer·Action·Cancel */
 export const AlertDialog = {
   Root,
   Trigger,
   Content,
+  Header,
   Title,
   Description,
+  Footer,
   Action,
   Cancel,
 };
