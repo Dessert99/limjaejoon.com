@@ -33,4 +33,36 @@ describe('Select', () => {
       'select-item'
     );
   });
+
+  it('Trigger가 invalid 상태를 접근성 속성과 data 속성으로 노출한다', () => {
+    render(
+      <Select.Root>
+        <Select.Trigger
+          aria-label='테마'
+          invalid>
+          <Select.Value placeholder='테마 선택' />
+        </Select.Trigger>
+      </Select.Root>
+    );
+
+    const trigger = screen.getByRole('combobox', { name: '테마' });
+    expect(trigger).toHaveAttribute('aria-invalid', 'true');
+    expect(trigger).toHaveAttribute('data-invalid');
+  });
+
+  it('Trigger에 직접 전달한 aria-invalid도 data-invalid 상태와 동기화한다', () => {
+    render(
+      <Select.Root>
+        <Select.Trigger
+          aria-label='테마'
+          aria-invalid>
+          <Select.Value placeholder='테마 선택' />
+        </Select.Trigger>
+      </Select.Root>
+    );
+
+    const trigger = screen.getByRole('combobox', { name: '테마' });
+    expect(trigger).toHaveAttribute('aria-invalid', 'true');
+    expect(trigger).toHaveAttribute('data-invalid');
+  });
 });

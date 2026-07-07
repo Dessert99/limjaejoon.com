@@ -15,6 +15,24 @@ const THEMES = [
   { value: 'dawn', label: '새벽' },
 ];
 
+/** 데모 옵션 — Value가 선택 표시로 재사용할 ItemText와 선택 표식을 함께 둔다 */
+function ThemeItems() {
+  return (
+    <>
+      {THEMES.map((theme) => {
+        return (
+          <Select.Item
+            key={theme.value}
+            value={theme.value}>
+            <Select.ItemText>{theme.label}</Select.ItemText>
+            <Select.ItemIndicator>✓</Select.ItemIndicator>
+          </Select.Item>
+        );
+      })}
+    </>
+  );
+}
+
 export const Default: Story = {
   render: () => {
     return (
@@ -24,16 +42,61 @@ export const Default: Story = {
           <Select.Icon>▾</Select.Icon>
         </Select.Trigger>
         <Select.Content>
-          {THEMES.map((theme) => {
-            return (
-              <Select.Item
-                key={theme.value}
-                value={theme.value}>
-                <Select.ItemText>{theme.label}</Select.ItemText>
-                <Select.ItemIndicator>✓</Select.ItemIndicator>
-              </Select.Item>
-            );
-          })}
+          <ThemeItems />
+        </Select.Content>
+      </Select.Root>
+    );
+  },
+};
+
+export const Selected: Story = {
+  render: () => {
+    return (
+      <Select.Root defaultValue='night'>
+        <Select.Trigger aria-label='테마'>
+          <Select.Value placeholder='테마 선택' />
+          <Select.Icon>▾</Select.Icon>
+        </Select.Trigger>
+        <Select.Content>
+          <ThemeItems />
+        </Select.Content>
+      </Select.Root>
+    );
+  },
+};
+
+export const Invalid: Story = {
+  render: () => {
+    return (
+      <div>
+        <Select.Root>
+          <Select.Trigger
+            aria-label='테마'
+            aria-describedby='theme-error'
+            invalid>
+            <Select.Value placeholder='테마 선택' />
+            <Select.Icon>▾</Select.Icon>
+          </Select.Trigger>
+          <Select.Content>
+            <ThemeItems />
+          </Select.Content>
+        </Select.Root>
+        <p id='theme-error'>테마를 선택해 주세요.</p>
+      </div>
+    );
+  },
+};
+
+export const Disabled: Story = {
+  render: () => {
+    return (
+      <Select.Root disabled>
+        <Select.Trigger aria-label='테마'>
+          <Select.Value placeholder='테마 선택' />
+          <Select.Icon>▾</Select.Icon>
+        </Select.Trigger>
+        <Select.Content>
+          <ThemeItems />
         </Select.Content>
       </Select.Root>
     );

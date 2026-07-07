@@ -12,16 +12,27 @@ const Value = SelectPrimitive.Value;
 /** 아이콘 — 트리거의 펼침 표식 자리(글리프는 소비자가 children으로) */
 const Icon = SelectPrimitive.Icon;
 
+/** Trigger props — Radix trigger 속성에 디자인 시스템 invalid 상태를 더한다 */
+interface SelectTriggerProps
+  extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
+  invalid?: boolean;
+}
+
 /** 트리거 — 현재 값을 보이고 목록을 여는 버튼(role="combobox") */
 const Trigger = forwardRef<
   React.ComponentRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, ...props }, ref) => {
+  SelectTriggerProps
+>(({ className, invalid = false, ...props }, ref) => {
+  const isInvalid =
+    invalid || props['aria-invalid'] === true || props['aria-invalid'] === 'true';
+
   return (
     <SelectPrimitive.Trigger
       ref={ref}
       className={[trigger, className].filter(Boolean).join(' ')}
       {...props}
+      aria-invalid={isInvalid ? true : props['aria-invalid']}
+      data-invalid={isInvalid ? '' : undefined}
     />
   );
 });
