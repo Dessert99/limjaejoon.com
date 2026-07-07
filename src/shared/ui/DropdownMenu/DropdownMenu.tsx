@@ -71,5 +71,5 @@ const Separator = forwardRef<
 });
 Separator.displayName = 'DropdownMenu.Separator';
 
-/** 네임스페이스 — Root·Trigger·Content·Item·Label·Separator (Portal은 Content가 내장; Checkbox/Radio/Sub는 소비자 요구 시 추가) */
+/** 네임스페이스 — Root·Trigger·Content·Item·Label·Separator (Portal은 Content가 내장; Radio/Sub는 소비자 요구 시 추가) */
 export const DropdownMenu = { Root, Trigger, Content, Item, Label, Separator };

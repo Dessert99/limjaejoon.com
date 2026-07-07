@@ -23,10 +23,10 @@ onMouseDown: (event) => {
 }
 ```
 
-- `MouseEvent.detail` = 같은 위치 연속 클릭 횟수(1=싱글, 2=더블…). 체크박스를 라벨로 빠르게 두 번 토글하면 네이티브에선 라벨 글자가 선택돼버린다 → `detail>1`일 때 `preventDefault()`로 막는다.
+- `MouseEvent.detail` = 같은 위치 연속 클릭 횟수(1=싱글, 2=더블…). 라벨을 빠르게 두 번 누르면 네이티브에선 라벨 글자가 선택돼버린다 → `detail>1`일 때 `preventDefault()`로 막는다.
 - `target.closest(...)` early-return = 라벨 안 컨트롤을 직접 눌렀을 땐 그 동작을 방해하지 않으려는 가드.
 
-**그래서 왜 래핑하나(정직하게):** 기능 이득은 더블클릭 가드 하나뿐. 채택 이유는 ① 22개 프리미티브를 Radix로 통일(일관 API), ② 토큰 스타일을 한곳에서 입히기 위함. 기능만 보면 native `<label htmlFor>`로도 충분하다(`<button>`도 labelable이라 우리 Switch/Checkbox와도 native 연결됨).
+**그래서 왜 래핑하나(정직하게):** 기능 이득은 더블클릭 가드 하나뿐. 채택 이유는 Radix 기반 폼 프리미티브와 API 흐름을 맞추고 토큰 스타일을 한곳에서 입히기 위함이다. 기능만 보면 native `<label htmlFor>`로도 충분하다.
 
 출처: 소스 `node_modules/@radix-ui/react-label/dist/index.mjs` · 공식 https://www.radix-ui.com/primitives/docs/components/label
 
@@ -73,7 +73,7 @@ const [pressed, setPressed] = useControllableState({
 />;
 ```
 
-- `useControllableState` = **핵심 훅.** `pressed`(외부 제어)가 오면 그걸 따르고, 없으면 내부 상태(`defaultPressed`)로 굴리며 `onPressedChange`로 변경을 알린다. controlled/uncontrolled를 한 컴포넌트가 동시에 지원하게 해주는 게 진짜 가치(직접 짜면 동기화가 까다로움). 이 훅은 Switch·Checkbox·RadioGroup·ToggleGroup이 전부 공유한다.
+- `useControllableState` = **핵심 훅.** `pressed`(외부 제어)가 오면 그걸 따르고, 없으면 내부 상태(`defaultPressed`)로 굴리며 `onPressedChange`로 변경을 알린다. controlled/uncontrolled를 한 컴포넌트가 동시에 지원하게 해주는 게 진짜 가치(직접 짜면 동기화가 까다로움). 이 훅은 여러 Radix 상태형 프리미티브가 공유한다.
 - `composeEventHandlers(props.onClick, …)` = 소비자 onClick을 먼저 실행하고 내부 토글을 그다음 실행(둘 다 살림).
 - `aria-pressed` + `data-state="on|off"` = 네이티브 버튼엔 없는 눌림 의미(SR)와 스타일 훅.
 
@@ -86,7 +86,7 @@ const [pressed, setPressed] = useControllableState({
 **Radix가 더하는 것 = ARIA switch + 완전 스타일 + 네이티브 폼 전송 패리티.** 3겹 구조다.
 
 1. 보이는 컨트롤 = `<button role="switch" aria-checked data-state>`. 상태는 `useControllableState`.
-2. **숨은 폼 입력(BubbleInput):** **폼 안에서 쓰일 때**(`form` prop이 있거나 `control.closest("form")`이 잡힐 때) 버튼 뒤에 시각적으로 숨긴 `<input type="checkbox" aria-hidden tabIndex={-1}>`를 함께 렌더한다. `name`/`value`/`required`/`form`을 이 input이 들고 있어 **네이티브 `<form>` 제출 시 값이 함께 전송된다.** (Switch는 Checkbox와 달리 form `reset` 리스너는 두지 않는다.) 위치는 `absolute`+`opacity:0`, 버튼 크기에 맞춰 `useSize`로 사이즈 동기화.
+2. **숨은 폼 입력(BubbleInput):** **폼 안에서 쓰일 때**(`form` prop이 있거나 `control.closest("form")`이 잡힐 때) 버튼 뒤에 시각적으로 숨긴 `<input type="checkbox" aria-hidden tabIndex={-1}>`를 함께 렌더한다. `name`/`value`/`required`/`form`을 이 input이 들고 있어 **네이티브 `<form>` 제출 시 값이 함께 전송된다.** 위치는 `absolute`+`opacity:0`, 버튼 크기에 맞춰 `useSize`로 사이즈 동기화.
 3. **그 숨은 input의 `checked`를 "진짜 이벤트"와 함께 동기화하는 트릭:**
 
 ```jsx
@@ -105,34 +105,6 @@ if (prevChecked !== checked) {
 - 내 몫: 글자 없는 컨트롤이라 접근성 이름은 소비자가 `Label`(htmlFor)나 `aria-label`로 직접 준다.
 
 출처: `@radix-ui/react-switch/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/switch
-
-## Checkbox — Radix가 해주는 것
-
-**네이티브:** `<input type="checkbox">`는 indeterminate를 **JS 프로퍼티로만** 지원한다(HTML 속성 없음). 체크 표시·박스 스타일도 막혀 있다.
-
-**Radix가 더하는 것:** button+ARIA로 완전 스타일 + 3-상태(mixed) + 폼 패리티 + indeterminate 명령형 동기화 + Enter 가드.
-
-1. `<button role="checkbox" data-state>`, `aria-checked`는 indeterminate면 `"mixed"`:
-
-```jsx
-'aria-checked': isIndeterminate(checked) ? 'mixed' : checked,
-```
-
-2. **Enter 가드:** `onKeyDown`에서 `if (event.key === 'Enter') event.preventDefault()`. 체크박스는 Space로만 토글하고 Enter로 활성/제출하면 안 되는 게 네이티브 동작인데, 버튼은 폼에서 Enter로 submit될 수 있어 Radix가 막는다.
-3. onClick 토글 규칙: `isIndeterminate(prev) ? true : !prev`(indeterminate에서 누르면 checked로).
-4. **숨은 input(폼 안에서 쓰일 때) + indeterminate 명령형 동기화:** Switch와 같은 prototype-setter 트릭에 더해, HTML엔 indeterminate "속성"이 없으므로 숨은 input에 프로퍼티를 직접 대입한다(Checkbox는 Switch와 달리 form `reset` 리스너로 초기값도 복원):
-
-```jsx
-input.indeterminate = isIndeterminate(checked); // 속성이 아니라 JS 프로퍼티라 직접 set
-setChecked.call(input, isIndeterminate(checked) ? false : checked);
-input.dispatchEvent(new Event('click', { bubbles }));
-```
-
-5. Indicator는 `Presence`로 감싸 checked·indeterminate일 때만 마운트(퇴장 애니메이션 대비). 폼의 `reset` 이벤트를 구독해 초기값 복원.
-
-- 내 몫: 접근성 이름은 소비자가 `Label`(htmlFor)나 `aria-label`로 직접 준다.
-
-출처: `@radix-ui/react-checkbox/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/checkbox
 
 ## RadioGroup — Radix가 해주는 것
 
@@ -239,85 +211,9 @@ triggerCollection[nextIndex % triggerCount].ref.current?.focus();
 
 출처: `@radix-ui/react-accordion/dist/index.mjs`(+ `@radix-ui/react-collapsible`) · https://www.radix-ui.com/primitives/docs/components/accordion
 
-## Tabs — Radix가 해주는 것
-
-**네이티브:** 탭 UI를 위한 HTML 요소가 없다. 버튼+패널을 직접 짜고 `role="tab/tablist/tabpanel"`·`aria-selected`·`aria-controls`/`aria-labelledby`·roving tabindex·화살표 이동을 전부 손으로 붙여야 한다.
-
-**Radix가 더하는 것 = WAI-ARIA 탭 패턴 통째.**
-
-1. **Roving focus(단일 Tab 정지):** `TabsList`가 `RovingFocusGroup.Root`를 `asChild`로 감싼다 → tablist 전체가 Tab 정지 하나만 갖고 안에서는 화살표로 이동(`loop=true` 순환). **Accordion과 대비되는 핵심 — Accordion은 모든 트리거가 tabbable(화살표는 보조), Tabs는 roving(화살표가 주 이동 수단).**
-2. **자동 vs 수동 활성화(`activationMode`, 기본 `automatic`):** Trigger `onFocus`에서 automatic이면 포커스가 닿는 순간 선택까지 일으킨다 — 화살표로 포커스 이동 = 즉시 패널 전환. `manual`이면 포커스만 옮기고 Space/Enter로 확정.
-
-```jsx
-onFocus: () => {
-  const isAutomaticActivation = context.activationMode !== 'manual';
-  if (!isSelected && !disabled && isAutomaticActivation) context.onValueChange(value);
-};
-```
-
-3. **ARIA id 자동 배선:** `baseId`로 `trigger-${value}`/`content-${value}` id를 만들어 Trigger `aria-controls` ↔ Content `aria-labelledby`를 짝짓는다. Trigger=`role="tab" aria-selected`, List=`role="tablist"`, Content=`role="tabpanel" tabIndex={0}`(패널 자체로도 키보드 포커스 가능).
-4. **Content는 `Presence`로 선택된 것만 마운트** — 비선택 패널은 DOM에서 빠진다(테스트에서 비활성 패널을 `queryByText`로 못 찾는 이유). 상태 보존이 필요하면 `forceMount`.
-
-- 클릭은 `onMouseDown`에서 처리(좌클릭·non-ctrl일 때만 선택). `data-state="active|inactive"`가 밑줄·색 스타일 훅.
-
-출처: `@radix-ui/react-tabs/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/tabs
-
-## Popover — Radix가 해주는 것
-
-> Wave 2(플로팅)의 첫 프리미티브. 여기서 세우는 토대 — Portal·popper 위치계산·DismissableLayer·FocusScope·modal 분기 — 를 HoverCard·DropdownMenu·Select가 공유한다.
-
-**네이티브:** HTML Popover API(`popover` 속성 + `popovertarget` 버튼)가 top-layer 렌더·바깥클릭/Esc 라이트 디스미스를 JS 없이 해준다. 하지만 **트리거 기준 위치**는 CSS Anchor Positioning(`anchor-name`/`position-anchor`)이 필요한데 2026 초 기준 Chromium 중심 지원이라(Firefox·Safari 제한적) 크로스브라우저 위치계산은 여전히 JS 몫이다.
-
-**Radix가 더하는 것 = 크로스브라우저 위치계산 + 잘림 회피 Portal + 디스미스 계층 + 포커스 관리(modal 분기).**
-
-1. **위치계산은 `react-popper`(=`@floating-ui` 래퍼):** `side="bottom"`·`align="center"` 기본, `sideOffset`·충돌 회피(`flip`·`shift`). 결과를 `data-radix-popper-side/align`과 CSS 변수로 노출한다 — 우리는 연출 deferred라 변수를 안 쓰지만 side/align은 소비자가 지정한다.
-
-```jsx
-contentStyle.setProperty('--radix-popper-available-width', `${availableWidth}px`);
-// data-radix-popper-side / --radix-popper-transform-origin 등도 노출
-```
-
-2. **Portal + `Presence`:** Content가 `Portal`로 body에 붙어 `overflow:hidden`/`transform` 조상에 잘리지 않는다. `present = forceMount || open`이라 닫히면 언마운트(테스트에서 닫힌 패널을 못 찾는 이유). **우리 규약: Portal을 Content 래퍼에 내장** — 소비자는 `<Popover.Content>` 하나만 둔다(shadcn 스타일).
-
-3. **modal 분기(기본 `modal={false}`=비모달)가 핵심:**
-
-```jsx
-// 비모달: 페이지가 살아있다 — 포커스 가둠 없음, 바깥 포인터 통과
-trapFocus: false, disableOutsidePointerEvents: false
-// 모달: RemoveScroll로 스크롤 잠금 + 포커스 트랩 + 바깥 포인터 차단
-```
-
-4. **디스미스·aria:** `DismissableLayer`가 바깥 포인터다운·Esc(`onEscapeKeyDown`)로 닫고 트리거로 포커스 복귀. Trigger=`aria-haspopup="dialog"` `aria-expanded` `aria-controls`(열렸을 때만), Content=`role="dialog"`.
-
-- `data-state="open|closed"`가 스타일 훅. 트리거 스타일은 `asChild`로 소비자 몫(우리는 Trigger를 통과만 한다).
-
-출처: `@radix-ui/react-popover/dist/index.mjs`(+ `@radix-ui/react-popper`·`react-dismissable-layer`·`react-focus-scope`) · https://www.radix-ui.com/primitives/docs/components/popover
-
-## HoverCard — Radix가 해주는 것
-
-Popover와 **토대(popper·Portal·DismissableLayer)는 공유**하되, 트리거 방식과 의미가 다르다 — hover/focus로 열리는 **비대화형 보조 정보**다.
-
-**네이티브:** `title` 속성이 hover 툴팁을 주지만 텍스트 전용·타이밍 조절 불가·리치 콘텐츠 불가다. "유저명에 올리면 뜨는 프로필 카드" 같은 건 네이티브에 없다.
-
-**Radix가 더하는 것 = 지연 hover/focus 디스클로저 + 포인터가 카드로 넘어가도 유지 + 터치 제외.**
-
-1. **트리거는 `<a>`(`Primitive.a`), 클릭 의미 없음:** `PopperPrimitive.Anchor`로 감싼 링크라 `aria-haspopup`/`aria-expanded`가 **없다**(Popover와의 결정적 차이 — Popover는 클릭으로 여는 대화형이라 그 aria를 가진다). `data-state="open|closed"`만 노출.
-
-```jsx
-onPointerEnter: excludeTouch(context.onOpen), // 터치는 hover 개념이 없어 제외
-onPointerLeave: excludeTouch(context.onClose),
-onFocus: context.onOpen, onBlur: context.onClose, // 키보드 접근성: 포커스로도 열림
-```
-
-2. **지연 타이머(`openDelay=700`·`closeDelay=300`):** `setTimeout`으로 열고닫음을 늦춰 스치는 hover에 깜빡이지 않게 한다. Content에도 `onPointerEnter/Leave`가 있어 **트리거→카드로 포인터를 옮기는 사이 닫히지 않는다**(close 타이머를 카드 진입이 취소).
-
-3. **Content는 `DismissableLayer`만, `FocusScope` 없음:** 보조 정보라 포커스를 가두지 않는다(Popover의 modal 분기·focus trap과 대비). Portal+`Presence`로 닫히면 언마운트하는 건 동일. **우리 규약 동일 — Portal을 Content에 내장.**
-
-출처: `@radix-ui/react-hover-card/dist/index.mjs`(+ `@radix-ui/react-popper`·`react-dismissable-layer`) · https://www.radix-ui.com/primitives/docs/components/hover-card
-
 ## DropdownMenu — Radix가 해주는 것
 
-Wave 2 **메뉴 패밀리의 첫 프리미티브**. 토대는 `@radix-ui/react-menu`(Menubar·ContextMenu도 같은 토대를 공유) — 플로팅(popper·Portal)에 **WAI-ARIA 메뉴 패턴**을 얹는다. 우리는 흔한 "액션 메뉴"만 노출(Root·Trigger·Content·Item·Label·Separator) — CheckboxItem·RadioItem·Sub(서브메뉴)·Group·Arrow는 소비자가 요구할 때(예: 테마 전환기→radio) 추가(YAGNI).
+Wave 2 **메뉴 패밀리의 첫 프리미티브**. 토대는 `@radix-ui/react-menu` — 플로팅(popper·Portal)에 **WAI-ARIA 메뉴 패턴**을 얹는다. 우리는 흔한 "액션 메뉴"만 노출(Root·Trigger·Content·Item·Label·Separator) — RadioItem·Sub(서브메뉴)·Group·Arrow는 소비자가 요구할 때(예: 테마 전환기→radio) 추가(YAGNI).
 
 **네이티브:** 버튼으로 여는 앱 메뉴용 HTML 요소가 없다(`<select>`는 폼 컨트롤, 우클릭 컨텍스트 메뉴는 브라우저 것). role·roving·타입어헤드를 전부 손으로 붙여야 한다.
 
@@ -336,26 +232,6 @@ role: "menuitem",
 4. **선택=`onSelect`:** Item 클릭/Enter가 `onSelect`를 부르고 **기본으로 메뉴를 닫는다**(`event.preventDefault()`로 유지 가능). Separator=`role="separator"`.
 
 출처: `@radix-ui/react-dropdown-menu`(토대 `@radix-ui/react-menu/dist/index.mjs` + `react-roving-focus`·`react-focus-scope`) · https://www.radix-ui.com/primitives/docs/components/dropdown-menu
-
-## Menubar — Radix가 해주는 것
-
-DropdownMenu와 **같은 `react-menu` 토대**를 쓰되, 데스크톱 앱의 메뉴 막대처럼 **여러 메뉴를 가로로 묶는** 한 겹을 더한다(각 메뉴의 패널·항목 동작은 DropdownMenu와 동일).
-
-**네이티브:** 없다(앱 메뉴 막대용 HTML 요소 부재).
-
-**Radix가 더하는 것 = menubar 한 겹(가로 roving + 열린 채 메뉴 전환).**
-
-1. **Root=`role="menubar"` + `RovingFocusGroup`(가로):** 최상위 Trigger들이 메뉴바 안에서 ←→로 이동(전체가 Tab 정지 하나). Trigger는 `RovingFocusGroup.Item`이자 `role="menuitem"` `aria-haspopup="menu"` `aria-expanded`.
-
-```jsx
-// 트리거는 roving 항목이면서 메뉴를 여는 버튼
-role: "menuitem", "aria-haspopup": "menu", "aria-expanded": open, "data-state": open ? "open" : "closed"
-```
-
-2. **열린 채 이웃 메뉴로 전환:** 한 메뉴가 열려 있을 때 옆 Trigger로 포커스를 옮기면 그 메뉴가 바로 열린다(데스크톱 메뉴바 특유의 동작). 각 `Menu`의 패널 안쪽은 DropdownMenu와 똑같이 react-menu(roving·타입어헤드·FocusScope·Portal).
-3. **우리 노출/스타일 동일:** Root·Menu·Trigger·Content·Item·Label·Separator. Trigger는 `data-state="open"`·`data-highlighted`에 accent 배경(바 위에서 활성 메뉴를 드러냄). 나머지는 DropdownMenu 규약 그대로.
-
-출처: `@radix-ui/react-menubar/dist/index.mjs`(토대 `react-menu` + `react-roving-focus`) · https://www.radix-ui.com/primitives/docs/components/menubar
 
 ## NavigationMenu — Radix가 해주는 것
 
@@ -389,7 +265,7 @@ Wave 2의 마지막이자 **파트가 가장 깊은** 프리미티브. 네이티
 
 1. **깊은 필수 구조 → 우리는 plumbing을 Content에 흡수:** 원래 `Trigger>Value` + `Portal>Content>Viewport>Item>(ItemText+ItemIndicator)`로 깊다. **우리 규약: Portal과 (필수인) Viewport를 Content 래퍼에 함께 내장** — 소비자는 `<Select.Content>` 안에 `Item`만 둔다. Item·ItemText·ItemIndicator는 얇은 파트로 유지(`ItemText`는 Value가 선택값 표시에 **재사용**하므로 children만으로 대체 불가 → 별도 파트로 노출).
 
-2. **ARIA:** Trigger=`role="combobox"` `aria-expanded`(+값 없으면 `data-placeholder`), Content=`role="listbox"`, Item=`role="option"` `aria-selected` + 포커스 시 `data-highlighted`(우리 스타일 훅=accent 배경). 위치는 기본 item-aligned(선택 항목이 트리거 위에 겹침) / `position="popper"`로 Popover식 전환 가능 — 둘 다 통과.
+2. **ARIA:** Trigger=`role="combobox"` `aria-expanded`(+값 없으면 `data-placeholder`), Content=`role="listbox"`, Item=`role="option"` `aria-selected` + 포커스 시 `data-highlighted`(우리 스타일 훅=accent 배경). 위치는 기본 item-aligned(선택 항목이 트리거 위에 겹침) / `position="popper"` 전환 가능 — 둘 다 통과.
 
 3. **테스트 함정(jsdom):** Radix Select가 `target.hasPointerCapture`·`scrollIntoView`를 호출하는데 jsdom엔 없어 `TypeError`가 난다. `vitest.setup.ts`에 두 메서드 셔임을 넣어 해결(폼/플로팅 인터랙티브 공통 인프라).
 
@@ -404,13 +280,13 @@ Element.prototype.scrollIntoView = () => {};
 
 ## Dialog — Radix가 해주는 것
 
-Wave 3(모달)의 첫 프리미티브. Popover의 **modal 분기를 본격화**한 것 — 페이지를 막고(스크롤 잠금·포커스 트랩) 사용자의 응답을 기다린다. 스크림용으로 이번에 `color.overlay` 토큰을 4테마에 추가했다.
+Wave 3(모달)의 첫 프리미티브. 페이지를 막고(스크롤 잠금·포커스 트랩) 사용자의 응답을 기다린다. 스크림용으로 이번에 `color.overlay` 토큰을 4테마에 추가했다.
 
 **네이티브:** `<dialog>` + `showModal()`이 top-layer·`::backdrop`·Esc·포커스 이동을 준다. 하지만 ① 열림이 **명령형**(`showModal()`/`close()`)이라 React 상태와 안 맞고, ② `::backdrop`은 스타일이 제한적, ③ 포커스 트랩·스크롤 잠금 디테일이 브라우저마다 들쭉날쭉이다.
 
 **Radix가 더하는 것 = 선언형 open + 자유로운 스크림 + 견고한 트랩/스크롤락 + 제목·설명 aria 배선.**
 
-1. **포커스 트랩 + 스크롤 잠금:** Content를 `FocusScope`(`trapped`)로 감싸 Tab이 모달 밖으로 못 나가고, `RemoveScroll`로 배경 스크롤을 막는다(Popover는 `modal` prop일 때만, Dialog는 항상). 닫히면 트리거로 포커스 복귀.
+1. **포커스 트랩 + 스크롤 잠금:** Content를 `FocusScope`(`trapped`)로 감싸 Tab이 모달 밖으로 못 나가고, `RemoveScroll`로 배경 스크롤을 막는다. 닫히면 트리거로 포커스 복귀.
 
 ```jsx
 FocusScope({ trapped: trapFocus, ... role: "dialog",
@@ -445,19 +321,6 @@ onOpenAutoFocus: (event) => { event.preventDefault(); cancelRef.current?.focus()
 - 우리 규약은 Dialog와 동일(Portal·Overlay를 Content 내장, Title/Description aria, Action/Cancel은 asChild Button). 스크림도 `vars.color.overlay`.
 
 출처: `@radix-ui/react-alert-dialog/dist/index.mjs`(Dialog 토대 재사용) · https://www.radix-ui.com/primitives/docs/components/alert-dialog
-
-## ScrollArea — Radix가 해주는 것
-
-Wave 4(특수)의 첫 프리미티브. **네이티브 스크롤은 살리되 스크롤바만 커스텀**한다.
-
-**네이티브:** 브라우저 스크롤바는 OS·브라우저마다 모양이 다르고, `::-webkit-scrollbar`는 webkit 전용 비표준, 표준 `scrollbar-width`/`scrollbar-color`는 조절 폭이 좁다(두께 정도). 디자인 일관성을 못 맞춘다.
-
-**Radix가 더하는 것 = 네이티브 스크롤 위에 얹은 크로스브라우저 커스텀 스크롤바.**
-
-1. **네이티브 스크롤 유지 + 가짜 스크롤바 오버레이:** Viewport는 실제로 네이티브 스크롤(휠·키보드·터치 그대로)하고, 그 위에 `Scrollbar`+`Thumb`를 그려 위치/크기를 동기화한다. `ResizeObserver`로 콘텐츠/뷰포트를 측정해 썸 길이를 맞춘다(jsdom에선 안 터졌지만 RO 의존).
-2. **표시 정책 `type`(auto·always·scroll·hover):** 언제 스크롤바를 보일지. 기본은 hover-friendly. **우리 규약:** 필수 plumbing(Viewport·Scrollbar·Thumb·Corner)은 standalone 의미가 없어 **단일 컴포넌트로 번들** — 소비자는 `<ScrollArea style={{height}}>children</ScrollArea>`만. 세로 스크롤바만 노출(가로는 필요 시 추가=YAGNI), 높이는 소비자가 className/style로.
-
-출처: `@radix-ui/react-scroll-area/dist/index.mjs` · https://www.radix-ui.com/primitives/docs/components/scroll-area
 
 ## Toast — Radix가 해주는 것
 
@@ -497,7 +360,7 @@ role: "group",
 ```
 
 2. **HiddenInput = 폼 전송용 합본:** 보이는 칸들의 값을 하나로 합쳐 숨은 input에 담아 폼이 단일 값으로 전송하게 한다.
-3. **우리 규약:** 칸·HiddenInput은 standalone 의미가 없는 필수 plumbing이라 **`length` prop 단일 컴포넌트로 번들** — `<OneTimePasswordField length={6} name='code' />`. (ScrollArea·Select와 같은 흡수 전략.)
+3. **우리 규약:** 칸·HiddenInput은 standalone 의미가 없는 필수 plumbing이라 **`length` prop 단일 컴포넌트로 번들** — `<OneTimePasswordField length={6} name='code' />`. Select와 같은 흡수 전략이다.
 
 출처: `@radix-ui/react-one-time-password-field/dist/index.mjs`(`radix-ui`의 `unstable_*`) · https://www.radix-ui.com/primitives/docs/components/one-time-password-field
 
