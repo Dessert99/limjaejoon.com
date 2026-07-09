@@ -4,6 +4,7 @@ type SupabaseEnvKeys = {
   url: string;
   anonKey: string;
   serviceRoleKey: string;
+  postImageBucket: string;
 };
 
 export type PublicEnv = {
@@ -13,6 +14,8 @@ export type PublicEnv = {
 
 export type ServerEnv = PublicEnv & {
   supabaseServiceRoleKey: string;
+  postImageBucket: string;
+  adminPostToken: string;
 };
 
 const requireEnv = (source: EnvSource, key: string): string => {
@@ -30,11 +33,13 @@ const targetEnvKeys = {
     url: 'NEXT_PUBLIC_LOCAL_SUPABASE_URL',
     anonKey: 'NEXT_PUBLIC_LOCAL_SUPABASE_ANON_KEY',
     serviceRoleKey: 'LOCAL_SUPABASE_SERVICE_ROLE_KEY',
+    postImageBucket: 'LOCAL_POST_IMAGE_BUCKET',
   },
   remote: {
     url: 'NEXT_PUBLIC_REMOTE_SUPABASE_URL',
     anonKey: 'NEXT_PUBLIC_REMOTE_SUPABASE_ANON_KEY',
     serviceRoleKey: 'REMOTE_SUPABASE_SERVICE_ROLE_KEY',
+    postImageBucket: 'REMOTE_POST_IMAGE_BUCKET',
   },
 } satisfies Record<SupabaseTarget, SupabaseEnvKeys>;
 
@@ -42,6 +47,7 @@ const activeEnvKeys = {
   url: 'NEXT_PUBLIC_SUPABASE_URL',
   anonKey: 'NEXT_PUBLIC_SUPABASE_ANON_KEY',
   serviceRoleKey: 'SUPABASE_SERVICE_ROLE_KEY',
+  postImageBucket: 'POST_IMAGE_BUCKET',
 } satisfies SupabaseEnvKeys;
 
 const isSupabaseTarget = (value: string): value is SupabaseTarget => {
@@ -77,5 +83,7 @@ export const readServerEnv = (source: EnvSource = process.env): ServerEnv => {
   return {
     ...readPublicEnv(source),
     supabaseServiceRoleKey: requireEnv(source, keys.serviceRoleKey),
+    postImageBucket: requireEnv(source, keys.postImageBucket),
+    adminPostToken: requireEnv(source, 'ADMIN_POST_TOKEN'),
   };
 };

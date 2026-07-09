@@ -5,6 +5,8 @@ const validEnv = {
   NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321',
   NEXT_PUBLIC_SUPABASE_ANON_KEY: 'anon-key',
   SUPABASE_SERVICE_ROLE_KEY: 'service-role-key',
+  POST_IMAGE_BUCKET: 'post-images',
+  ADMIN_POST_TOKEN: 'admin-token',
 };
 
 const profiledEnv = {
@@ -12,9 +14,12 @@ const profiledEnv = {
   NEXT_PUBLIC_LOCAL_SUPABASE_URL: 'http://127.0.0.1:54321',
   NEXT_PUBLIC_LOCAL_SUPABASE_ANON_KEY: 'local-anon-key',
   LOCAL_SUPABASE_SERVICE_ROLE_KEY: 'local-service-role-key',
+  LOCAL_POST_IMAGE_BUCKET: 'post-images-local',
   NEXT_PUBLIC_REMOTE_SUPABASE_URL: 'https://remote.supabase.co',
   NEXT_PUBLIC_REMOTE_SUPABASE_ANON_KEY: 'remote-anon-key',
   REMOTE_SUPABASE_SERVICE_ROLE_KEY: 'remote-service-role-key',
+  REMOTE_POST_IMAGE_BUCKET: 'post-images',
+  ADMIN_POST_TOKEN: 'admin-token',
 };
 
 describe('env 설정', () => {
@@ -38,6 +43,8 @@ describe('env 설정', () => {
       supabaseUrl: 'http://127.0.0.1:54321',
       supabaseAnonKey: 'anon-key',
       supabaseServiceRoleKey: 'service-role-key',
+      postImageBucket: 'post-images',
+      adminPostToken: 'admin-token',
     });
   });
 
@@ -53,6 +60,8 @@ describe('env 설정', () => {
       supabaseUrl: 'https://remote.supabase.co',
       supabaseAnonKey: 'remote-anon-key',
       supabaseServiceRoleKey: 'remote-service-role-key',
+      postImageBucket: 'post-images',
+      adminPostToken: 'admin-token',
     });
   });
 
