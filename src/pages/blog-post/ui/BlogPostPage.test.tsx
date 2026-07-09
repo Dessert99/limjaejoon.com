@@ -1,6 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getPublishedPostBySlug, getPublishedPostSlugs } from '@/entities/post';
+import {
+  getPublishedPostBySlug,
+  getPublishedPostSlugs,
+  PostMarkdown,
+} from '@/entities/post';
 import { createSupabaseStaticClient } from '@/shared/api';
 import {
   BlogPostPage,
@@ -17,6 +21,9 @@ vi.mock('@/entities/post', () => {
   return {
     getPublishedPostBySlug: vi.fn(),
     getPublishedPostSlugs: vi.fn(),
+    PostMarkdown: vi.fn(({ source }: { source: string }) => {
+      return <div data-testid='post-markdown'>{source}</div>;
+    }),
   };
 });
 
@@ -42,10 +49,11 @@ describe('BlogPostPageView', () => {
     expect(
       screen.getByRole('heading', { name: 'zshrc 는 무엇인가?' })
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'zshrc 제목' })
-    ).toBeInTheDocument();
-    expect(screen.getByText('본문입니다.')).toBeInTheDocument();
+    expect(screen.getByTestId('post-markdown')).toBeInTheDocument();
+    expect(PostMarkdown).toHaveBeenCalledWith(
+      { source: post.content_markdown },
+      undefined
+    );
   });
 });
 
@@ -54,6 +62,7 @@ describe('BlogPostPage static data', () => {
     vi.mocked(createSupabaseStaticClient).mockReset();
     vi.mocked(getPublishedPostBySlug).mockReset();
     vi.mocked(getPublishedPostSlugs).mockReset();
+    vi.mocked(PostMarkdown).mockClear();
   });
 
   it('published 글 목록으로 정적 상세 경로를 생성한다', async () => {

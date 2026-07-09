@@ -1,4 +1,4 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { vars } from '@/shared/styles/theme.css';
 
@@ -47,24 +47,5 @@ export const meta = style([
 ]);
 
 export const content = style({
-  color: vars.color.fg.neutral,
-});
-
-globalStyle(`${content} > * + *`, {
-  marginTop: '1rem',
-});
-
-globalStyle(`${content} h1, ${content} h2, ${content} h3`, {
-  lineHeight: 1.25,
-});
-
-globalStyle(`${content} code`, {
-  fontFamily: vars.typography.fontFamily.mono,
-});
-
-globalStyle(`${content} pre`, {
-  overflowX: 'auto',
-  padding: '1rem',
-  borderRadius: vars.radius.r2,
-  border: `1px solid ${vars.color.stroke.neutral}`,
+  marginTop: vars.dimension.x8,
 });

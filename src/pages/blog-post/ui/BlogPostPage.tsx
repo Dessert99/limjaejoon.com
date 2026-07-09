@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import {
   getPublishedPostBySlug,
   getPublishedPostSlugs,
+  PostMarkdown,
   type Post,
 } from '@/entities/post';
 import { createSupabaseStaticClient } from '@/shared/api';
@@ -27,9 +27,7 @@ const getStaticPublishedPost = async (slug: string): Promise<Post | null> => {
 };
 
 /** 공개 블로그 상세 UI */
-export async function BlogPostPageView({ post }: BlogPostPageViewProps) {
-  const content = await MDXRemote({ source: post.content_markdown });
-
+export function BlogPostPageView({ post }: BlogPostPageViewProps) {
   return (
     <main className={s.main}>
       <article>
@@ -52,7 +50,9 @@ export async function BlogPostPageView({ post }: BlogPostPageViewProps) {
             })}
           </div>
         </header>
-        <div className={s.content}>{content}</div>
+        <div className={s.content}>
+          <PostMarkdown source={post.content_markdown} />
+        </div>
       </article>
     </main>
   );
