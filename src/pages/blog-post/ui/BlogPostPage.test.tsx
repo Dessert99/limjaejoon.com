@@ -92,6 +92,20 @@ describe('BlogPostPage static data', () => {
     ).resolves.toMatchObject({
       title: 'zshrc 는 무엇인가?',
       description: 'zsh 설정 파일 설명',
+      alternates: { canonical: '/blog/2026-04-02-zshrc' },
+      openGraph: {
+        title: 'zshrc 는 무엇인가?',
+        description: 'zsh 설정 파일 설명',
+        type: 'article',
+        url: '/blog/2026-04-02-zshrc',
+        publishedTime: '2026-04-02T00:00:00Z',
+        tags: ['zshrc', '환경 변수'],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'zshrc 는 무엇인가?',
+        description: 'zsh 설정 파일 설명',
+      },
     });
     expect(getPublishedPostBySlug).toHaveBeenCalledWith(
       client,
