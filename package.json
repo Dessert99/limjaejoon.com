@@ -16,7 +16,8 @@
     "ci": "npm run fsd && npm run lint && npm run type-check && npm run test && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "db:types": "supabase gen types typescript --local > src/shared/api/supabase/database.types.ts"
+    "db:types": "supabase gen types typescript --local > src/shared/api/supabase/database.types.ts",
+    "blog:import": "node scripts/blog-import/importPosts.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
