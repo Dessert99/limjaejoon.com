@@ -43,19 +43,39 @@ const makeListClient = (result: {
   data: PostListItem[] | null;
   error: unknown;
 }) => {
-  const order = vi.fn().mockResolvedValue(result);
-  const eq = vi.fn(() => {
-    return { order };
-  });
+  const resultPromise = Promise.resolve(result);
+  const query = {
+    eq: vi.fn(() => {
+      return query;
+    }),
+    order: vi.fn(() => {
+      return query;
+    }),
+    contains: vi.fn(() => {
+      return query;
+    }),
+    or: vi.fn(() => {
+      return query;
+    }),
+    then: resultPromise.then.bind(resultPromise),
+  };
   const select = vi.fn(() => {
-    return { eq };
+    return query;
   });
   const from = vi.fn(() => {
     return { select };
   });
   const client = { from } as unknown as SupabaseClient<Database>;
 
-  return { client, from, select, eq, order };
+  return {
+    client,
+    from,
+    select,
+    eq: query.eq,
+    order: query.order,
+    contains: query.contains,
+    or: query.or,
+  };
 };
 
 const makeDetailClient = (result: { data: Post | null; error: unknown }) => {
@@ -110,6 +130,52 @@ describe('post fetchers', () => {
     );
     expect(eq).toHaveBeenCalledWith('status', 'published');
     expect(order).toHaveBeenCalledWith('published_at', { ascending: false });
+  });
+
+  it('category 조건으로 published 글 목록을 필터링한다', async () => {
+    const { client, eq } = makeListClient({
+      data: listRows,
+      error: null,
+    });
+
+    await getPublishedPosts(client, { category: 'frontend' });
+
+    expect(eq).toHaveBeenCalledWith('category', 'frontend');
+  });
+
+  it('series 조건으로 published 글 목록을 필터링한다', async () => {
+    const { client, eq } = makeListClient({
+      data: listRows,
+      error: null,
+    });
+
+    await getPublishedPosts(client, { series: 'Next.js App Router' });
+
+    expect(eq).toHaveBeenCalledWith('series', 'Next.js App Router');
+  });
+
+  it('tag 조건으로 published 글 목록을 필터링한다', async () => {
+    const { client, contains } = makeListClient({
+      data: listRows,
+      error: null,
+    });
+
+    await getPublishedPosts(client, { tag: 'Next.js' });
+
+    expect(contains).toHaveBeenCalledWith('tags', ['Next.js']);
+  });
+
+  it('q 조건으로 제목, 설명, 본문을 검색한다', async () => {
+    const { client, or } = makeListClient({
+      data: listRows,
+      error: null,
+    });
+
+    await getPublishedPosts(client, { q: 'cache' });
+
+    expect(or).toHaveBeenCalledWith(
+      'title.ilike.%cache%,description.ilike.%cache%,content_markdown.ilike.%cache%'
+    );
   });
 
   it('slug 와 published 상태가 일치하는 글 상세를 조회한다', async () => {

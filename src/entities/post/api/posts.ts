@@ -1,26 +1,55 @@
 /** posts 엔티티의 공개 읽기 fetcher — React 비의존 Supabase transport */
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/shared/api';
-import type { Post, PostListItem } from '../model/post.types';
+import type { Post, PostListItem, PostSearchParams } from '../model/post.types';
 
 const POST_LIST_SELECT =
   'id, slug, title, description, tags, category, series, published_at';
 
 /** published 글 목록을 최신 발행일 순서로 조회한다 */
 export const getPublishedPosts = async (
-  client: SupabaseClient<Database>
+  client: SupabaseClient<Database>,
+  params?: PostSearchParams
 ): Promise<PostListItem[]> => {
-  const { data, error } = await client
+  let query = client
     .from('posts')
     .select(POST_LIST_SELECT)
     .eq('status', 'published')
     .order('published_at', { ascending: false });
+
+  if (params?.category) {
+    query = query.eq('category', params.category);
+  }
+
+  if (params?.series) {
+    query = query.eq('series', params.series);
+  }
+
+  if (params?.tag) {
+    query = query.contains('tags', [params.tag]);
+  }
+
+  if (params?.q) {
+    const term = params.q.replaceAll('%', '\\%').replaceAll(',', ' ');
+    query = query.or(
+      `title.ilike.%${term}%,description.ilike.%${term}%,content_markdown.ilike.%${term}%`
+    );
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw error;
   }
 
   return data ?? [];
+};
+
+/** sitemap 과 필터 메타데이터에서 재사용할 published 글 목록 shape을 조회한다 */
+export const getPublishedPostNavigationData = async (
+  client: SupabaseClient<Database>
+): Promise<PostListItem[]> => {
+  return getPublishedPosts(client);
 };
 
 /** SSG 경로 생성을 위해 published 글 slug 만 조회한다 */
