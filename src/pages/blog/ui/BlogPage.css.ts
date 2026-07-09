@@ -67,3 +67,11 @@ export const meta = style([
     fontSize: '0.875rem',
   },
 ]);
+
+export const empty = style({
+  padding: '1.5rem',
+  border: `1px solid ${vars.color.stroke.neutral}`,
+  borderRadius: vars.radius.r2,
+  color: vars.color.fg.muted,
+  textAlign: 'center',
+});

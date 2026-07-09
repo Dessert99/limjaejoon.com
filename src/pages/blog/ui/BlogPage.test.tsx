@@ -37,6 +37,31 @@ describe('BlogPageView', () => {
       screen.getByRole('link', { name: /zshrc 는 무엇인가?/ })
     ).toHaveAttribute('href', '/blog/2026-04-02-zshrc');
   });
+
+  it('현재 검색 필터 값을 form 에 렌더한다', () => {
+    render(
+      <BlogPageView
+        filters={{ q: 'cache', category: 'frontend' }}
+        posts={posts}
+      />
+    );
+
+    expect(screen.getByLabelText('검색어')).toHaveValue('cache');
+    expect(screen.getByLabelText('카테고리')).toHaveValue('frontend');
+  });
+
+  it('조건에 맞는 글이 없으면 empty 상태를 렌더한다', () => {
+    render(
+      <BlogPageView
+        filters={{ q: 'missing' }}
+        posts={[]}
+      />
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      '조건에 맞는 글이 없습니다.'
+    );
+  });
 });
 
 describe('BlogPage', () => {
@@ -50,12 +75,29 @@ describe('BlogPage', () => {
     vi.mocked(createSupabaseStaticClient).mockReturnValue(client as never);
     vi.mocked(getPublishedPosts).mockResolvedValue(posts);
 
-    render(await BlogPage());
+    render(await BlogPage({}));
 
     expect(createSupabaseStaticClient).toHaveBeenCalled();
-    expect(getPublishedPosts).toHaveBeenCalledWith(client);
+    expect(getPublishedPosts).toHaveBeenCalledWith(client, {});
     expect(
       screen.getByRole('heading', { name: 'zshrc 는 무엇인가?' })
     ).toBeInTheDocument();
+  });
+
+  it('URL searchParams 를 published 글 목록 필터로 전달한다', async () => {
+    const client = { id: 'static-client' };
+    vi.mocked(createSupabaseStaticClient).mockReturnValue(client as never);
+    vi.mocked(getPublishedPosts).mockResolvedValue(posts);
+
+    render(
+      await BlogPage({
+        searchParams: Promise.resolve({ q: ' cache ', tag: ['Next.js'] }),
+      })
+    );
+
+    expect(getPublishedPosts).toHaveBeenCalledWith(client, {
+      q: 'cache',
+      tag: 'Next.js',
+    });
   });
 });
