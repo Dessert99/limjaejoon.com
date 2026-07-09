@@ -36,11 +36,13 @@ export type Database = {
     Tables: {
       posts: {
         Row: {
+          category: string;
           content_markdown: string;
           created_at: string;
           description: string;
           id: string;
           published_at: string | null;
+          series: string | null;
           slug: string;
           status: Database['public']['Enums']['post_status'];
           tags: string[];
@@ -48,11 +50,13 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          category?: string;
           content_markdown: string;
           created_at?: string;
           description: string;
           id?: string;
           published_at?: string | null;
+          series?: string | null;
           slug: string;
           status?: Database['public']['Enums']['post_status'];
           tags?: string[];
@@ -60,11 +64,13 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          category?: string;
           content_markdown?: string;
           created_at?: string;
           description?: string;
           id?: string;
           published_at?: string | null;
+          series?: string | null;
           slug?: string;
           status?: Database['public']['Enums']['post_status'];
           tags?: string[];

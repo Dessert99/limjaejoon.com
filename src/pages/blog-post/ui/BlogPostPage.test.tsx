@@ -27,6 +27,8 @@ const post = {
   description: 'zsh 설정 파일 설명',
   content_markdown: '# zshrc 제목\n\n본문입니다.',
   tags: ['zshrc', '환경 변수'],
+  category: 'frontend',
+  series: null,
   status: 'published' as const,
   published_at: '2026-04-02T00:00:00Z',
   created_at: '2026-04-02T00:00:00Z',

@@ -3,7 +3,8 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/shared/api';
 import type { Post, PostListItem } from '../model/post.types';
 
-const POST_LIST_SELECT = 'id, slug, title, description, tags, published_at';
+const POST_LIST_SELECT =
+  'id, slug, title, description, tags, category, series, published_at';
 
 /** published 글 목록을 최신 발행일 순서로 조회한다 */
 export const getPublishedPosts = async (
