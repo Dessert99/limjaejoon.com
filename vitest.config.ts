@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 
@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: { tsconfigPaths: true },
   test: {
     environment: 'jsdom',
+    exclude: [...configDefaults.exclude, 'scripts/blog-import/**'],
     setupFiles: ['./vitest.setup.ts'],
   },
 });

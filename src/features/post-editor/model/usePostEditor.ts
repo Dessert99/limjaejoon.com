@@ -1,5 +1,5 @@
 /** post editor model helper — form 문자열 상태를 admin API payload 로 좁힌다 */
-import type { UpsertPostInput } from '@/entities/post';
+import type { UpsertPostInput } from '@/entities/post/client';
 
 /** editor 저장 payload — admin API 와 같은 계약을 사용한다 */
 export type PostEditorValue = UpsertPostInput;

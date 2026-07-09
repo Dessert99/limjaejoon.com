@@ -4,7 +4,7 @@
 import { markdown } from '@codemirror/lang-markdown';
 import CodeMirror from '@uiw/react-codemirror';
 import { useState, type FormEvent } from 'react';
-import { PostMarkdown, type UpsertPostInput } from '@/entities/post';
+import { PostMarkdown, type UpsertPostInput } from '@/entities/post/client';
 import { uploadPostImage } from '../../api/uploadPostImage';
 import {
   buildPostPayload,

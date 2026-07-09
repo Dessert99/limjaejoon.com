@@ -14,7 +14,12 @@ const ensureSelectedOption = (
   options: PostFilterOption[],
   value: string | undefined
 ): PostFilterOption[] => {
-  if (!value || options.some((option) => option.value === value)) {
+  if (
+    !value ||
+    options.some((option) => {
+      return option.value === value;
+    })
+  ) {
     return options;
   }
 
