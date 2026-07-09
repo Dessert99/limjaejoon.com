@@ -1,4 +1,8 @@
 export {
+  uploadPostImage,
+  type UploadPostImageResponse,
+} from './api/uploadPostImage';
+export {
   buildPostPayload,
   normalizeTags,
   type PostEditorDraft,

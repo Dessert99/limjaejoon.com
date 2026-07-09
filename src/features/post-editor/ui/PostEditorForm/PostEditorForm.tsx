@@ -5,6 +5,7 @@ import { markdown } from '@codemirror/lang-markdown';
 import CodeMirror from '@uiw/react-codemirror';
 import { useState, type FormEvent } from 'react';
 import { PostMarkdown, type UpsertPostInput } from '@/entities/post';
+import { uploadPostImage } from '../../api/uploadPostImage';
 import {
   buildPostPayload,
   type PostEditorDraft,
@@ -61,6 +62,28 @@ export function PostEditorForm({
 
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem('adminPostToken', nextToken);
+    }
+  };
+
+  const insertImageMarkdown = (url: string) => {
+    const current = value.content_markdown.trimEnd();
+    const imageMarkdown = `![image](${url})`;
+
+    updateField(
+      'content_markdown',
+      current ? `${current}\n\n${imageMarkdown}` : imageMarkdown
+    );
+  };
+
+  const uploadImage = async (file: File) => {
+    setStatus('이미지 업로드 중');
+
+    try {
+      const result = await uploadPostImage(file, token);
+      insertImageMarkdown(result.url);
+      setStatus('이미지 추가됨');
+    } catch {
+      setStatus('이미지 업로드 실패');
     }
   };
 
@@ -191,6 +214,22 @@ export function PostEditorForm({
             }}
             type='password'
             value={token}
+          />
+        </label>
+
+        <label className={s.field}>
+          <span className={s.label}>이미지</span>
+          <input
+            accept='image/*'
+            className={s.control}
+            onChange={(event) => {
+              const file = event.currentTarget.files?.[0];
+
+              if (file) {
+                void uploadImage(file);
+              }
+            }}
+            type='file'
           />
         </label>
       </div>
