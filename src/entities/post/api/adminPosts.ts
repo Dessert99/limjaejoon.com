@@ -8,7 +8,6 @@ export type UpsertPostInput = {
   title: string;
   slug: string;
   description: string;
-  category: string;
   series: string | null;
   tags: string[];
   status: PostStatus;

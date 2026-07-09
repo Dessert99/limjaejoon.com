@@ -4,7 +4,7 @@ import type { Database } from '@/shared/api';
 import type { Post, PostListItem, PostSearchParams } from '../model/post.types';
 
 const POST_LIST_SELECT =
-  'id, slug, title, description, tags, category, series, published_at';
+  'id, slug, title, description, tags, series, published_at';
 
 /** published 글 목록을 최신 발행일 순서로 조회한다 */
 export const getPublishedPosts = async (
@@ -16,10 +16,6 @@ export const getPublishedPosts = async (
     .select(POST_LIST_SELECT)
     .eq('status', 'published')
     .order('published_at', { ascending: false });
-
-  if (params?.category) {
-    query = query.eq('category', params.category);
-  }
 
   if (params?.series) {
     query = query.eq('series', params.series);

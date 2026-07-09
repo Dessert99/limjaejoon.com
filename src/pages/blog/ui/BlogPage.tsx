@@ -37,11 +37,6 @@ const toFilterOptions = (
 
 /** 공개 블로그 목록 UI */
 export function BlogPageView({ posts, filters = {} }: BlogPageViewProps) {
-  const categoryOptions = toFilterOptions(
-    posts.map((post) => {
-      return post.category;
-    })
-  );
   const seriesOptions = toFilterOptions(
     posts.map((post) => {
       return post.series;
@@ -56,7 +51,6 @@ export function BlogPageView({ posts, filters = {} }: BlogPageViewProps) {
       </header>
 
       <PostFilterForm
-        categoryOptions={categoryOptions}
         filters={filters}
         seriesOptions={seriesOptions}
       />

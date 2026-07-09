@@ -3,7 +3,6 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 import matter from 'gray-matter';
-import { postMetadataOverrides } from './postMetadataOverrides.mjs';
 
 const rootDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -111,10 +110,20 @@ const assertTags = (value, slug) => {
     throw new Error(`Missing tags frontmatter for ${slug}`);
   }
 
-  return value;
+  const tags = value
+    .map((tag) => {
+      return tag.trim();
+    })
+    .filter(Boolean);
+
+  if (tags.length === 0) {
+    throw new Error(`Missing tags frontmatter for ${slug}`);
+  }
+
+  return tags;
 };
 
-export const buildPostRowFromSource = ({ filePath, override, source }) => {
+export const buildPostRowFromSource = ({ filePath, source }) => {
   const slug = slugFromFilePath(filePath);
   const parsed = matter(source);
   const title = assertString(parsed.data.title, 'title', slug);
@@ -126,18 +135,13 @@ export const buildPostRowFromSource = ({ filePath, override, source }) => {
   );
   const tags = assertTags(parsed.data.tags, slug);
 
-  if (!override?.category) {
-    throw new Error(`Missing category override for ${slug}`);
-  }
-
   return {
     slug,
     title,
     description,
     content_markdown: parsed.content,
     tags,
-    category: override.category,
-    series: override.series ?? null,
+    series: null,
     status: 'published',
     published_at: `${date}T00:00:00.000Z`,
   };
@@ -154,12 +158,10 @@ export const loadPostRows = async (contentDir = defaultContentDir) => {
   return Promise.all(
     mdxFiles.map(async (entry) => {
       const filePath = path.join(contentDir, entry);
-      const slug = slugFromFilePath(filePath);
       const source = await fs.readFile(filePath, 'utf8');
 
       return buildPostRowFromSource({
         filePath,
-        override: postMetadataOverrides[slug],
         source,
       });
     })

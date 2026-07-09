@@ -17,7 +17,6 @@ const emptyPost: PostEditorValue = {
   title: '',
   slug: '',
   description: '',
-  category: 'frontend',
   series: null,
   tags: [],
   status: 'draft',

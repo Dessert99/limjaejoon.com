@@ -25,7 +25,6 @@ export const parsePostSearchParams = (
 ): PostSearchParams => {
   return {
     ...(clean(input.q) ? { q: clean(input.q) } : {}),
-    ...(clean(input.category) ? { category: clean(input.category) } : {}),
     ...(clean(input.series) ? { series: clean(input.series) } : {}),
     ...(clean(input.tag) ? { tag: clean(input.tag) } : {}),
   };

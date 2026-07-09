@@ -91,7 +91,15 @@ export function PostEditorForm({
     event.preventDefault();
     setStatus('저장 중');
 
-    const payload: UpsertPostInput = buildPostPayload(value);
+    let payload: UpsertPostInput;
+
+    try {
+      payload = buildPostPayload(value);
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : '저장 실패');
+      return;
+    }
+
     const endpoint =
       mode === 'create' ? '/api/admin/posts' : `/api/admin/posts/${postId}`;
     const response = await fetch(endpoint, {
@@ -141,17 +149,6 @@ export function PostEditorForm({
               updateField('description', event.currentTarget.value);
             }}
             value={value.description}
-          />
-        </label>
-
-        <label className={s.field}>
-          <span className={s.label}>카테고리</span>
-          <input
-            className={s.control}
-            onChange={(event) => {
-              updateField('category', event.currentTarget.value);
-            }}
-            value={value.category}
           />
         </label>
 

@@ -19,7 +19,6 @@ const posts = [
     title: 'zshrc 는 무엇인가?',
     description: 'zsh 설정 파일 설명',
     tags: ['zshrc', '환경 변수'],
-    category: 'frontend',
     series: null,
     published_at: '2026-04-02T00:00:00Z',
   },
@@ -41,13 +40,13 @@ describe('BlogPageView', () => {
   it('현재 검색 필터 값을 form 에 렌더한다', () => {
     render(
       <BlogPageView
-        filters={{ q: 'cache', category: 'frontend' }}
+        filters={{ q: 'cache' }}
         posts={posts}
       />
     );
 
     expect(screen.getByLabelText('검색어')).toHaveValue('cache');
-    expect(screen.getByLabelText('카테고리')).toHaveValue('frontend');
+    expect(screen.queryByLabelText('카테고리')).not.toBeInTheDocument();
   });
 
   it('조건에 맞는 글이 없으면 empty 상태를 렌더한다', () => {

@@ -9,7 +9,6 @@ const draft: PostEditorDraft = {
   title: '새 글',
   slug: 'new-post',
   description: '새 글 설명',
-  category: 'frontend',
   series: '',
   tags: 'Next.js, RSC',
   status: 'draft',
@@ -32,5 +31,11 @@ describe('post editor model', () => {
       tags: ['Next.js', 'RSC'],
       series: null,
     });
+  });
+
+  it('tag 가 하나도 없으면 payload 생성을 거부한다', () => {
+    expect(() => {
+      buildPostPayload({ ...draft, tags: ' , ' });
+    }).toThrow('태그는 1개 이상 필요합니다.');
   });
 });

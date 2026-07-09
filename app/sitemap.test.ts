@@ -27,7 +27,6 @@ describe('sitemap', () => {
         title: 'Next fetch',
         description: 'Next fetch cache',
         tags: ['Next.js'],
-        category: 'frontend',
         series: 'Next.js App Router',
         published_at: '2026-04-06T00:00:00Z',
       },

@@ -13,9 +13,12 @@ describe('parsePostSearchParams', () => {
     expect(
       parsePostSearchParams({
         q: '   ',
-        category: '',
         series: undefined,
       })
     ).toEqual({});
+  });
+
+  it('category query 는 검색 조건으로 변환하지 않는다', () => {
+    expect(parsePostSearchParams({ category: 'frontend' })).toEqual({});
   });
 });

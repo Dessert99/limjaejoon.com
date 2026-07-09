@@ -16,7 +16,6 @@ export {
 export { PostMarkdown } from './ui/PostMarkdown/PostMarkdown';
 export type {
   Post,
-  PostCategory,
   PostListItem,
   PostSearchParams,
   PostSeries,

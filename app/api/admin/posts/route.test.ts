@@ -25,7 +25,6 @@ const input = {
   title: '새 글',
   slug: 'new-post',
   description: '새 글 설명',
-  category: 'frontend',
   series: null,
   tags: ['Next.js'],
   status: 'draft' as const,

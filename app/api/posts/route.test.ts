@@ -18,7 +18,6 @@ const posts = [
     title: 'zshrc 는 무엇인가?',
     description: 'zsh 설정 파일 설명',
     tags: ['zshrc'],
-    category: 'frontend',
     series: null,
     published_at: '2026-04-02T00:00:00Z',
   },

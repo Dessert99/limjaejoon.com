@@ -23,10 +23,15 @@ export const normalizeTags = (raw: string): string[] => {
 /** editor draft 를 admin API payload 로 변환한다 */
 export const buildPostPayload = (value: PostEditorDraft): PostEditorValue => {
   const series = value.series.trim();
+  const tags = normalizeTags(value.tags);
+
+  if (tags.length === 0) {
+    throw new Error('태그는 1개 이상 필요합니다.');
+  }
 
   return {
     ...value,
-    tags: normalizeTags(value.tags),
+    tags,
     series: series || null,
   };
 };
