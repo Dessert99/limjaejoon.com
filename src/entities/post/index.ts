@@ -8,6 +8,7 @@ export {
   getPublishedPosts,
   getPublishedPostSlugs,
 } from './api/posts';
+export { PostMarkdown } from './ui/PostMarkdown/PostMarkdown';
 export type {
   Post,
   PostCategory,
@@ -16,3 +17,4 @@ export type {
   PostSeries,
   PostStatus,
 } from './model/post.types';
+export type { PostMarkdownProps } from './ui/PostMarkdown/PostMarkdown';
