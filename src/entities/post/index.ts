@@ -1,4 +1,9 @@
 export {
+  createAdminPost,
+  updateAdminPost,
+  type UpsertPostInput,
+} from './api/adminPosts';
+export {
   fetchPublishedPostFromApi,
   fetchPublishedPostsFromApi,
 } from './api/publicPosts';
