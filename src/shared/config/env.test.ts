@@ -7,6 +7,16 @@ const validEnv = {
   SUPABASE_SERVICE_ROLE_KEY: 'service-role-key',
 };
 
+const profiledEnv = {
+  NEXT_PUBLIC_SUPABASE_TARGET: 'remote',
+  NEXT_PUBLIC_LOCAL_SUPABASE_URL: 'http://127.0.0.1:54321',
+  NEXT_PUBLIC_LOCAL_SUPABASE_ANON_KEY: 'local-anon-key',
+  LOCAL_SUPABASE_SERVICE_ROLE_KEY: 'local-service-role-key',
+  NEXT_PUBLIC_REMOTE_SUPABASE_URL: 'https://remote.supabase.co',
+  NEXT_PUBLIC_REMOTE_SUPABASE_ANON_KEY: 'remote-anon-key',
+  REMOTE_SUPABASE_SERVICE_ROLE_KEY: 'remote-service-role-key',
+};
+
 describe('env 설정', () => {
   it('public Supabase env 값을 읽는다', () => {
     expect(readPublicEnv(validEnv)).toEqual({
@@ -29,5 +39,29 @@ describe('env 설정', () => {
       supabaseAnonKey: 'anon-key',
       supabaseServiceRoleKey: 'service-role-key',
     });
+  });
+
+  it('명시된 Supabase target 에 맞는 public env 값을 읽는다', () => {
+    expect(readPublicEnv(profiledEnv)).toEqual({
+      supabaseUrl: 'https://remote.supabase.co',
+      supabaseAnonKey: 'remote-anon-key',
+    });
+  });
+
+  it('명시된 Supabase target 에 맞는 server env 값을 읽는다', () => {
+    expect(readServerEnv(profiledEnv)).toEqual({
+      supabaseUrl: 'https://remote.supabase.co',
+      supabaseAnonKey: 'remote-anon-key',
+      supabaseServiceRoleKey: 'remote-service-role-key',
+    });
+  });
+
+  it('지원하지 않는 Supabase target 이면 throw 한다', () => {
+    expect(() => {
+      readPublicEnv({
+        ...profiledEnv,
+        NEXT_PUBLIC_SUPABASE_TARGET: 'staging',
+      });
+    }).toThrow('Unsupported Supabase target: staging');
   });
 });
