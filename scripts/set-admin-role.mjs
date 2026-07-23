@@ -1,18 +1,35 @@
 // 운영자 유저에 app_metadata.role='admin' 을 1회 부여한다 (service role 필요)
 import { createClient } from '@supabase/supabase-js';
 
-const url =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ??
-  process.env.NEXT_PUBLIC_LOCAL_SUPABASE_URL;
-const key =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ??
-  process.env.LOCAL_SUPABASE_SERVICE_ROLE_KEY;
+// src/shared/config/env.ts 의 target 해석 규칙과 동일하게 url/key 를 짝으로 고른다
+const targetEnvKeys = {
+  local: {
+    url: 'NEXT_PUBLIC_LOCAL_SUPABASE_URL',
+    serviceRoleKey: 'LOCAL_SUPABASE_SERVICE_ROLE_KEY',
+  },
+  remote: {
+    url: 'NEXT_PUBLIC_REMOTE_SUPABASE_URL',
+    serviceRoleKey: 'REMOTE_SUPABASE_SERVICE_ROLE_KEY',
+  },
+};
+const activeEnvKeys = {
+  url: 'NEXT_PUBLIC_SUPABASE_URL',
+  serviceRoleKey: 'SUPABASE_SERVICE_ROLE_KEY',
+};
+
+const target = process.env.NEXT_PUBLIC_SUPABASE_TARGET;
+const keys = target ? targetEnvKeys[target] : activeEnvKeys;
+
+if (!keys) {
+  throw new Error(`Unsupported Supabase target: ${target}`);
+}
+
+const url = process.env[keys.url];
+const key = process.env[keys.serviceRoleKey];
 const email = process.env.ADMIN_EMAIL;
 
 if (!url || !key || !email) {
-  throw new Error(
-    'NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, ADMIN_EMAIL 필요'
-  );
+  throw new Error(`${keys.url}, ${keys.serviceRoleKey}, ADMIN_EMAIL 필요`);
 }
 
 const admin = createClient(url, key);
