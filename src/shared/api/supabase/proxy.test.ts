@@ -10,9 +10,11 @@ vi.mock('@supabase/ssr', () => {
 });
 
 vi.mock('@/shared/config', () => {
-  return { readPublicEnv: () => {
-return { supabaseUrl: 'http://x', supabaseAnonKey: 'k' }
-} };
+  return {
+    readPublicEnv: () => {
+      return { supabaseUrl: 'http://x', supabaseAnonKey: 'k' };
+    },
+  };
 });
 
 import { createSupabaseProxyClient } from './proxy';
@@ -22,7 +24,9 @@ describe('createSupabaseProxyClient', () => {
     const request = new NextRequest('https://limjaejoon.com/admin/posts');
     const response = NextResponse.next();
     const client = createSupabaseProxyClient(request, response) as unknown as {
-      __cookies: { setAll: (c: { name: string; value: string; options: object }[]) => void };
+      __cookies: {
+        setAll: (c: { name: string; value: string; options: object }[]) => void;
+      };
     };
 
     client.__cookies.setAll([{ name: 'sb', value: '1', options: {} }]);

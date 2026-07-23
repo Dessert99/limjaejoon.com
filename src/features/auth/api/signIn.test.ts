@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
 const signInWithPassword = vi.fn();
-vi.mock('@/shared/api', () => {
+vi.mock('@/shared/api/supabase/client', () => {
   return {
     createSupabaseBrowserClient: () => {
-return { auth: { signInWithPassword } }
-},
+      return { auth: { signInWithPassword } };
+    },
   };
 });
 
@@ -14,9 +14,11 @@ import { signIn } from './signIn';
 describe('signIn', () => {
   it('성공하면 error 가 null 이다', async () => {
     signInWithPassword.mockResolvedValueOnce({ error: null });
-    await expect(signIn({ email: 'a@x.com', password: 'pw' })).resolves.toEqual({
-      error: null,
-    });
+    await expect(signIn({ email: 'a@x.com', password: 'pw' })).resolves.toEqual(
+      {
+        error: null,
+      }
+    );
     expect(signInWithPassword).toHaveBeenCalledWith({
       email: 'a@x.com',
       password: 'pw',
@@ -24,7 +26,9 @@ describe('signIn', () => {
   });
 
   it('실패하면 error 메시지를 반환한다', async () => {
-    signInWithPassword.mockResolvedValueOnce({ error: { message: '잘못된 로그인' } });
+    signInWithPassword.mockResolvedValueOnce({
+      error: { message: '잘못된 로그인' },
+    });
     await expect(signIn({ email: 'a@x.com', password: 'x' })).resolves.toEqual({
       error: '잘못된 로그인',
     });

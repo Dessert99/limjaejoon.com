@@ -1,10 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 
 const signOut = vi.fn();
-vi.mock('@/shared/api', () => {
-  return { createSupabaseBrowserClient: () => {
-return { auth: { signOut } }
-} };
+vi.mock('@/shared/api/supabase/client', () => {
+  return {
+    createSupabaseBrowserClient: () => {
+      return { auth: { signOut } };
+    },
+  };
 });
 
 import { signOut as signOutAction } from './signOut';
