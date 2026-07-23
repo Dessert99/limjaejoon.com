@@ -9,6 +9,7 @@ import { decideRedirect } from './proxyDecision';
 /** /admin 하위만 처리한다 */
 export const config = { matcher: ['/admin/:path*'] };
 
+/** 세션을 갱신하고 인증·권한 상태에 따라 optimistic redirect 한다 */
 export async function proxy(request: NextRequest) {
   const env = readPublicEnv();
   // setAll 이 request 를 갱신할 때마다 response 를 다시 만들어야 다운스트림 Server Component 도 새 쿠키를 본다
@@ -37,7 +38,9 @@ export async function proxy(request: NextRequest) {
   );
 
   const claims = await getSessionClaims(client);
-  const target = decideRedirect(request.nextUrl.pathname, isAdmin(claims));
+  const hasSession = claims !== null;
+  const admin = isAdmin(claims);
+  const target = decideRedirect(request.nextUrl.pathname, hasSession, admin);
 
   if (target) {
     const url = request.nextUrl.clone();
