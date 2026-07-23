@@ -24,6 +24,8 @@ export const getSessionClaims = async (
   return {
     sub: claims.sub,
     email: claims.email,
-    app_metadata: claims.app_metadata,
+    app_metadata: claims.app_metadata?.role
+      ? { role: claims.app_metadata.role }
+      : undefined,
   };
 };
