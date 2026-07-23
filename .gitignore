@@ -32,8 +32,7 @@ next-env.d.ts
 
 # superpowers (brainstorm 비주얼 컴패니언 산출물)
 .superpowers/
-# superpowers 스펙·플랜 문서 — 커밋하지 않음
-docs/superpowers/
+
 
 # Playwright
 test-results/
