@@ -3,7 +3,9 @@ import { describe, expect, it, vi } from 'vitest';
 const signInWithPassword = vi.fn();
 vi.mock('@/shared/api', () => {
   return {
-    createSupabaseBrowserClient: () => ({ auth: { signInWithPassword } }),
+    createSupabaseBrowserClient: () => {
+return { auth: { signInWithPassword } }
+},
   };
 });
 

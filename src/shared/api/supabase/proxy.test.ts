@@ -10,7 +10,9 @@ vi.mock('@supabase/ssr', () => {
 });
 
 vi.mock('@/shared/config', () => {
-  return { readPublicEnv: () => ({ supabaseUrl: 'http://x', supabaseAnonKey: 'k' }) };
+  return { readPublicEnv: () => {
+return { supabaseUrl: 'http://x', supabaseAnonKey: 'k' }
+} };
 });
 
 import { createSupabaseProxyClient } from './proxy';
