@@ -16,6 +16,7 @@ export type ServerEnv = PublicEnv & {
   supabaseServiceRoleKey: string;
   postImageBucket: string;
   adminPostToken: string;
+  adminEmail: string;
 };
 
 const requireEnv = (source: EnvSource, key: string): string => {
@@ -85,5 +86,6 @@ export const readServerEnv = (source: EnvSource = process.env): ServerEnv => {
     supabaseServiceRoleKey: requireEnv(source, keys.serviceRoleKey),
     postImageBucket: requireEnv(source, keys.postImageBucket),
     adminPostToken: requireEnv(source, 'ADMIN_POST_TOKEN'),
+    adminEmail: requireEnv(source, 'ADMIN_EMAIL'),
   };
 };

@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:types": "supabase gen types typescript --local > src/shared/api/supabase/database.types.ts",
-    "blog:import": "node scripts/blog-import/importPosts.mjs"
+    "blog:import": "node scripts/blog-import/importPosts.mjs",
+    "auth:set-admin": "node scripts/set-admin-role.mjs"
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",

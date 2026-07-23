@@ -51,6 +51,7 @@ describe('PATCH /api/admin/posts/[id]', () => {
       supabaseServiceRoleKey: 'service-role-key',
       postImageBucket: 'post-images',
       adminPostToken: 'secret',
+      adminEmail: 'admin@example.com',
     });
   });
 

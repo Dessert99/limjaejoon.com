@@ -51,6 +51,7 @@ describe('POST /api/admin/posts', () => {
       supabaseServiceRoleKey: 'service-role-key',
       postImageBucket: 'post-images',
       adminPostToken: 'secret',
+      adminEmail: 'admin@example.com',
     });
   });
 
