@@ -12,4 +12,4 @@ export const main = style([
 ]);
 
 /** 제목 */
-export const title = style({ marginBottom: 24 });
+export const title = style([sprinkles({ marginBottom: 'x6' })]);
