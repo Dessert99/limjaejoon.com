@@ -1,5 +1,5 @@
 /** admin Route Handler 공용 가드 — 세션 클라이언트로 Origin·admin 을 재검증하고 에러를 상태로 매핑한다 */
-import { getSessionClaims, isAdmin } from '@/entities/session';
+import { isAdmin, type SessionClaims } from '@/entities/session';
 import { createSupabaseServerClient } from '@/shared/api';
 import { NextResponse } from 'next/server';
 
@@ -17,8 +17,11 @@ const isSameOrigin = (request: Request): boolean => {
   if (!origin) {
     return false;
   }
+  // request.url 은 프록시 뒤에서 내부 호스트라 신뢰할 수 없어 forwarded host 와 비교한다
+  const forwardedHost =
+    request.headers.get('x-forwarded-host') ?? request.headers.get('host');
   try {
-    return new URL(origin).host === new URL(request.url).host;
+    return new URL(origin).host === forwardedHost;
   } catch {
     // malformed origin (e.g. 'null' or garbage) → reject as origin mismatch
     return false;
@@ -37,14 +40,22 @@ export const requireAdmin = async (
   }
 
   const client = await createSupabaseServerClient();
-  const claims = await getSessionClaims(client);
+  // getClaims() 의 JWT 는 role 회수 후에도 만료 전까지 캐시값을 반환하므로, 변경 요청은 getUser() 로 Auth 서버의 현재 role 을 재확인한다
+  const { data, error } = await client.auth.getUser();
 
-  if (!claims) {
+  if (error || !data.user) {
     return {
       client: null,
       error: NextResponse.json({ message: 'Unauthorized' }, { status: 401 }),
     };
   }
+
+  const claims: SessionClaims = {
+    sub: data.user.id,
+    app_metadata: data.user.app_metadata?.role
+      ? { role: data.user.app_metadata.role }
+      : undefined,
+  };
 
   if (!isAdmin(claims)) {
     return {
