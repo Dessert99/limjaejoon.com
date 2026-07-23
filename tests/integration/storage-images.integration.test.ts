@@ -1,6 +1,7 @@
-// post-images 스토리지 정책 통합 테스트 — non-admin 업로드 거부, admin 업로드·public URL 조회를 검증한다
+/** post-images 스토리지 정책 통합 테스트 — non-admin 업로드 거부, admin 업로드·public URL 조회를 검증한다 */
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
+  createServiceRoleClient,
   createTestUser,
   deleteTestUser,
   signInTestUser,
@@ -26,8 +27,11 @@ describe('post-images storage 정책', () => {
 
   afterAll(async () => {
     if (uploadedPaths.length > 0) {
-      const admin = await signInTestUser(adminUser);
-      await admin.storage.from(BUCKET).remove(uploadedPaths);
+      const serviceRole = createServiceRoleClient();
+      const { error } = await serviceRole.storage
+        .from(BUCKET)
+        .remove(uploadedPaths);
+      expect(error).toBeNull();
     }
 
     await deleteTestUser(adminUser.id);

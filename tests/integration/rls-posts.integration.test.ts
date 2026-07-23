@@ -1,4 +1,4 @@
-// posts 테이블 RLS 정책 통합 테스트 — anon/non-admin/admin 세 주체의 실제 Postgres 응답을 검증한다
+/** posts 테이블 RLS 정책 통합 테스트 — anon/non-admin/admin 세 주체의 실제 Postgres 응답을 검증한다 */
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   createAnonClient,
@@ -134,9 +134,11 @@ describe('posts RLS 정책', () => {
         status: 'draft',
       });
 
-      expect(error).toBeNull();
-
-      await serviceRole.from('posts').delete().eq('slug', adminInsertSlug);
+      try {
+        expect(error).toBeNull();
+      } finally {
+        await serviceRole.from('posts').delete().eq('slug', adminInsertSlug);
+      }
     });
 
     it('draft 글도 SELECT 할 수 있다', async () => {
