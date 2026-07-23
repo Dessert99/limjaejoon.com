@@ -106,4 +106,39 @@ describe('PostEditorForm', () => {
       '# 새 글\n\n![image](https://cdn.example.com/image.png)'
     );
   });
+
+  it('유효한 태그로 글을 저장할 때 admin token header 를 포함하지 않는다', async () => {
+    const user = userEvent.setup();
+    const fetch = vi.fn().mockResolvedValue({ ok: true });
+    vi.stubGlobal('fetch', fetch);
+
+    render(
+      <PostEditorForm
+        initialValue={initialValue}
+        mode='create'
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: '저장' }));
+
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/admin/posts',
+      expect.objectContaining({
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+    );
+
+    const calls = vi.mocked(fetch).mock.calls;
+    const adminPostCall = calls.find((call) => {
+      return call[0] === '/api/admin/posts' && call[1]?.method === 'POST';
+    });
+
+    expect(adminPostCall).toBeDefined();
+    expect(adminPostCall?.[1]?.headers).toEqual({
+      'content-type': 'application/json',
+    });
+  });
 });
