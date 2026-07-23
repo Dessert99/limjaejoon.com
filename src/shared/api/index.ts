@@ -1,6 +1,7 @@
 export {
   createSupabaseAdminClient,
   createSupabaseBrowserClient,
+  createSupabaseProxyClient,
   createSupabaseServerClient,
   createSupabaseStaticClient,
 } from './supabase';
