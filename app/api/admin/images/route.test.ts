@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { readServerEnv } from '@/shared/config';
+import { readPostImageBucket } from '@/shared/config';
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '../_lib/adminGuard';
 import { POST } from './route';
 
 vi.mock('@/shared/config', () => {
-  return { readServerEnv: vi.fn() };
+  return { readPostImageBucket: vi.fn() };
 });
 
 vi.mock('../_lib/adminGuard', () => {
@@ -24,14 +24,9 @@ const makeRequest = (file: File) => {
 
 describe('POST /api/admin/images', () => {
   beforeEach(() => {
-    vi.mocked(readServerEnv).mockReset();
+    vi.mocked(readPostImageBucket).mockReset();
     vi.mocked(requireAdmin).mockReset();
-    vi.mocked(readServerEnv).mockReturnValue({
-      supabaseUrl: 'https://remote.supabase.co',
-      supabaseAnonKey: 'anon-key',
-      supabaseServiceRoleKey: 'service-role-key',
-      postImageBucket: 'post-images',
-    } as never);
+    vi.mocked(readPostImageBucket).mockReturnValue('post-images');
   });
 
   it('세션이 없으면 401 을 반환하고 storage upload 를 실행하지 않는다', async () => {

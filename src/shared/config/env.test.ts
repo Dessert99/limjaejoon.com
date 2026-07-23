@@ -1,12 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { readPublicEnv, readServerEnv } from './env';
+import { readPostImageBucket, readPublicEnv } from './env';
 
 const validEnv = {
   NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321',
   NEXT_PUBLIC_SUPABASE_ANON_KEY: 'anon-key',
   SUPABASE_SERVICE_ROLE_KEY: 'service-role-key',
   POST_IMAGE_BUCKET: 'post-images',
-  ADMIN_EMAIL: 'me@x.com',
 };
 
 const profiledEnv = {
@@ -19,7 +18,6 @@ const profiledEnv = {
   NEXT_PUBLIC_REMOTE_SUPABASE_ANON_KEY: 'remote-anon-key',
   REMOTE_SUPABASE_SERVICE_ROLE_KEY: 'remote-service-role-key',
   REMOTE_POST_IMAGE_BUCKET: 'post-images',
-  ADMIN_EMAIL: 'me@x.com',
 };
 
 describe('env 설정', () => {
@@ -38,16 +36,6 @@ describe('env 설정', () => {
     );
   });
 
-  it('server 전용 Supabase env 값을 읽는다', () => {
-    expect(readServerEnv(validEnv)).toEqual({
-      supabaseUrl: 'http://127.0.0.1:54321',
-      supabaseAnonKey: 'anon-key',
-      supabaseServiceRoleKey: 'service-role-key',
-      postImageBucket: 'post-images',
-      adminEmail: 'me@x.com',
-    });
-  });
-
   it('명시된 Supabase target 에 맞는 public env 값을 읽는다', () => {
     expect(readPublicEnv(profiledEnv)).toEqual({
       supabaseUrl: 'https://remote.supabase.co',
@@ -55,14 +43,12 @@ describe('env 설정', () => {
     });
   });
 
-  it('명시된 Supabase target 에 맞는 server env 값을 읽는다', () => {
-    expect(readServerEnv(profiledEnv)).toEqual({
-      supabaseUrl: 'https://remote.supabase.co',
-      supabaseAnonKey: 'remote-anon-key',
-      supabaseServiceRoleKey: 'remote-service-role-key',
-      postImageBucket: 'post-images',
-      adminEmail: 'me@x.com',
-    });
+  it('post 이미지 버킷명을 읽는다', () => {
+    expect(readPostImageBucket(validEnv)).toBe('post-images');
+  });
+
+  it('명시된 Supabase target 에 맞는 post 이미지 버킷명을 읽는다', () => {
+    expect(readPostImageBucket(profiledEnv)).toBe('post-images');
   });
 
   it('지원하지 않는 Supabase target 이면 throw 한다', () => {

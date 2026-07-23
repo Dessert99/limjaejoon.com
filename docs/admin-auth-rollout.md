@@ -5,7 +5,7 @@ Supabase Auth + RLS 기반 어드민 인증을 로컬/원격에 적용할 때의
 ## 로컬 (.env.local)
 
 - [ ] `LOCAL_POST_IMAGE_BUCKET=post-images` 로 맞춘다. (버킷명을 로컬/원격 `post-images` 로 통일했다. `.env.local` 은 수동 관리라 `post-images-local` 로 남아 있을 수 있다.)
-- [ ] `ADMIN_EMAIL=` 에 운영자 이메일을 넣는다.
+- [ ] `ADMIN_EMAIL=` 에 운영자 이메일을 넣는다. (`npm run auth:set-admin` 실행 시에만 필요한 1회성 스크립트 변수 — 배포된 앱 런타임은 읽지 않으므로 프로덕션에 없어도 된다.)
 - [ ] `supabase db reset` 로 posts RLS·storage 정책·`post-images` 버킷이 로컬에 적용됐는지 확인한다.
 - [ ] 통합 테스트로 보안 경계를 확인한다: `npm run test:integration` (로컬 Supabase 필요).
 

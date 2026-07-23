@@ -76,6 +76,8 @@ export const mapWriteError = (error: unknown): NextResponse => {
     return NextResponse.json({ message: 'Conflict' }, { status: 409 });
   }
   if (code === '42501') {
+    // guard 통과 후 RLS 거부 = stale JWT·정책 배포 이슈 신호이므로 내부 로그만 남기고 응답은 그대로 opaque 하게
+    console.error('admin RLS denial after guard passed', error);
     return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
   }
   return NextResponse.json({ message: 'Internal Error' }, { status: 500 });

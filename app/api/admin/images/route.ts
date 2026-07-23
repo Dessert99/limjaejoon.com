@@ -1,4 +1,4 @@
-import { readServerEnv } from '@/shared/config';
+import { readPostImageBucket } from '@/shared/config';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '../_lib/adminGuard';
 
@@ -32,7 +32,7 @@ export const POST = async (request: Request) => {
     return guard.error;
   }
 
-  const env = readServerEnv();
+  const postImageBucket = readPostImageBucket();
   const formData = await request.formData();
   const file = formData.get('file');
 
@@ -45,7 +45,7 @@ export const POST = async (request: Request) => {
     return NextResponse.json({ message: 'Unsupported file' }, { status: 422 });
   }
 
-  const bucket = guard.client.storage.from(env.postImageBucket);
+  const bucket = guard.client.storage.from(postImageBucket);
   const path = `posts/${crypto.randomUUID()}-${safeFileName(file.name)}`;
 
   try {

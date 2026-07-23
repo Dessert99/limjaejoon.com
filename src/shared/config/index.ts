@@ -1,2 +1,2 @@
-export { readPublicEnv, readServerEnv } from './env';
+export { readPostImageBucket, readPublicEnv } from './env';
 export { SITE_URL } from './site';

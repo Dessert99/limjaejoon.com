@@ -12,12 +12,6 @@ export type PublicEnv = {
   supabaseAnonKey: string;
 };
 
-export type ServerEnv = PublicEnv & {
-  supabaseServiceRoleKey: string;
-  postImageBucket: string;
-  adminEmail: string;
-};
-
 const requireEnv = (source: EnvSource, key: string): string => {
   const value = source[key];
 
@@ -77,13 +71,11 @@ export const readPublicEnv = (source: EnvSource = process.env): PublicEnv => {
   };
 };
 
-export const readServerEnv = (source: EnvSource = process.env): ServerEnv => {
+/** post 이미지 버킷명만 읽는다 — 업로드 라우트는 세션 클라이언트를 쓰므로 service role key·ADMIN_EMAIL 이 불필요하다 */
+export const readPostImageBucket = (
+  source: EnvSource = process.env
+): string => {
   const keys = resolveSupabaseEnvKeys(source);
 
-  return {
-    ...readPublicEnv(source),
-    supabaseServiceRoleKey: requireEnv(source, keys.serviceRoleKey),
-    postImageBucket: requireEnv(source, keys.postImageBucket),
-    adminEmail: requireEnv(source, 'ADMIN_EMAIL'),
-  };
+  return requireEnv(source, keys.postImageBucket);
 };
