@@ -1,4 +1,4 @@
-/** post editor image upload client — admin token 을 header 로 전달한다 */
+/** post editor image upload client — 세션 쿠키 기반 인증 */
 export type UploadPostImageResponse = {
   url: string;
   path: string;
@@ -6,15 +6,13 @@ export type UploadPostImageResponse = {
 
 /** 이미지 파일을 admin upload API 로 전송하고 public URL 을 받는다 */
 export const uploadPostImage = async (
-  file: File,
-  token: string
+  file: File
 ): Promise<UploadPostImageResponse> => {
   const body = new FormData();
   body.set('file', file);
 
   const response = await fetch('/api/admin/images', {
     method: 'POST',
-    headers: { 'x-admin-post-token': token },
     body,
   });
 

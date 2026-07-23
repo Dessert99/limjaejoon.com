@@ -15,17 +15,16 @@ describe('uploadPostImage', () => {
     );
   });
 
-  it('admin image API 로 파일과 token 을 전송한다', async () => {
+  it('admin image API 로 파일을 전송한다 (세션 쿠키 자동 전달)', async () => {
     const file = new File(['image'], 'image.png', { type: 'image/png' });
 
-    await expect(uploadPostImage(file, 'secret')).resolves.toEqual({
+    await expect(uploadPostImage(file)).resolves.toEqual({
       path: 'posts/image.png',
       url: 'https://cdn.example.com/image.png',
     });
 
     expect(fetch).toHaveBeenCalledWith('/api/admin/images', {
       method: 'POST',
-      headers: { 'x-admin-post-token': 'secret' },
       body: expect.any(FormData),
     });
   });
@@ -39,7 +38,7 @@ describe('uploadPostImage', () => {
 
     const file = new File(['image'], 'image.png', { type: 'image/png' });
 
-    await expect(uploadPostImage(file, 'wrong')).rejects.toThrow(
+    await expect(uploadPostImage(file)).rejects.toThrow(
       'Image upload failed: 401'
     );
   });

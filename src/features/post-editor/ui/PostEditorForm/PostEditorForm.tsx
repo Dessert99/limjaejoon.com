@@ -28,14 +28,6 @@ const toDraft = (value: PostEditorValue): PostEditorDraft => {
   };
 };
 
-const readStoredToken = (): string => {
-  if (typeof window === 'undefined') {
-    return '';
-  }
-
-  return window.sessionStorage.getItem('adminPostToken') ?? '';
-};
-
 /** Markdown 글을 작성·수정하고 같은 renderer 로 preview 한다 */
 export function PostEditorForm({
   initialValue,
@@ -45,7 +37,6 @@ export function PostEditorForm({
   const [value, setValue] = useState<PostEditorDraft>(() => {
     return toDraft(initialValue);
   });
-  const [token, setToken] = useState(readStoredToken);
   const [status, setStatus] = useState('');
 
   const updateField = <Key extends keyof PostEditorDraft>(
@@ -55,14 +46,6 @@ export function PostEditorForm({
     setValue((current) => {
       return { ...current, [field]: nextValue };
     });
-  };
-
-  const updateToken = (nextToken: string) => {
-    setToken(nextToken);
-
-    if (typeof window !== 'undefined') {
-      window.sessionStorage.setItem('adminPostToken', nextToken);
-    }
   };
 
   const insertImageMarkdown = (url: string) => {
@@ -79,7 +62,7 @@ export function PostEditorForm({
     setStatus('이미지 업로드 중');
 
     try {
-      const result = await uploadPostImage(file, token);
+      const result = await uploadPostImage(file);
       insertImageMarkdown(result.url);
       setStatus('이미지 추가됨');
     } catch {
@@ -106,7 +89,6 @@ export function PostEditorForm({
       method: mode === 'create' ? 'POST' : 'PATCH',
       headers: {
         'content-type': 'application/json',
-        'x-admin-post-token': token,
       },
       body: JSON.stringify(payload),
     });
@@ -199,18 +181,6 @@ export function PostEditorForm({
             }}
             type='text'
             value={value.published_at ?? ''}
-          />
-        </label>
-
-        <label className={s.field}>
-          <span className={s.label}>Admin token</span>
-          <input
-            className={s.control}
-            onChange={(event) => {
-              updateToken(event.currentTarget.value);
-            }}
-            type='password'
-            value={token}
           />
         </label>
 

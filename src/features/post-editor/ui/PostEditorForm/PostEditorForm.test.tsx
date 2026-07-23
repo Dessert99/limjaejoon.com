@@ -96,13 +96,12 @@ describe('PostEditorForm', () => {
       />
     );
 
-    await user.type(screen.getByLabelText('Admin token'), 'secret');
     await user.upload(
       screen.getByLabelText('이미지'),
       new File(['image'], 'image.png', { type: 'image/png' })
     );
 
-    expect(uploadPostImage).toHaveBeenCalledWith(expect.any(File), 'secret');
+    expect(uploadPostImage).toHaveBeenCalledWith(expect.any(File));
     expect(screen.getByLabelText('본문')).toHaveValue(
       '# 새 글\n\n![image](https://cdn.example.com/image.png)'
     );
