@@ -31,18 +31,23 @@ describe('POST /api/admin/images', () => {
       supabaseAnonKey: 'anon-key',
       supabaseServiceRoleKey: 'service-role-key',
       postImageBucket: 'post-images',
-      adminPostToken: 'secret',
-      adminEmail: 'admin@example.com',
-    });
+    } as never);
   });
 
   it('세션이 없으면 401 을 반환하고 storage upload 를 실행하지 않는다', async () => {
+    const upload = vi.fn();
     const unauthorized = NextResponse.json(
       { message: 'Unauthorized' },
       { status: 401 }
     );
     vi.mocked(requireAdmin).mockResolvedValue({
-      client: null,
+      client: {
+        storage: {
+          from: vi.fn(() => {
+            return { upload };
+          }),
+        },
+      } as never,
       error: unauthorized,
     });
 
@@ -51,15 +56,23 @@ describe('POST /api/admin/images', () => {
     );
 
     expect(response.status).toBe(401);
+    expect(upload).not.toHaveBeenCalled();
   });
 
   it('admin 이 아니면 403 을 반환하고 storage upload 를 실행하지 않는다', async () => {
+    const upload = vi.fn();
     const forbidden = NextResponse.json(
       { message: 'Forbidden' },
       { status: 403 }
     );
     vi.mocked(requireAdmin).mockResolvedValue({
-      client: null,
+      client: {
+        storage: {
+          from: vi.fn(() => {
+            return { upload };
+          }),
+        },
+      } as never,
       error: forbidden,
     });
 
@@ -68,6 +81,7 @@ describe('POST /api/admin/images', () => {
     );
 
     expect(response.status).toBe(403);
+    expect(upload).not.toHaveBeenCalled();
   });
 
   it('허용되지 않은 MIME 타입이면 422 를 반환한다', async () => {

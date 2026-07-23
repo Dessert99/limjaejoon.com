@@ -19,6 +19,16 @@ const req = (origin: string | null) => {
 };
 
 describe('requireAdmin', () => {
+  it('Origin 이 없으면 403 이다', async () => {
+    const { error } = await requireAdmin(req(null));
+    expect(error?.status).toBe(403);
+  });
+
+  it('Origin 이 파싱 불가능하면 403 이다', async () => {
+    const { error } = await requireAdmin(req('null'));
+    expect(error?.status).toBe(403);
+  });
+
   it('Origin 이 요청 호스트와 다르면 403 이다', async () => {
     const { error } = await requireAdmin(req('https://evil.com'));
     expect(error?.status).toBe(403);

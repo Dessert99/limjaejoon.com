@@ -17,7 +17,12 @@ const isSameOrigin = (request: Request): boolean => {
   if (!origin) {
     return false;
   }
-  return new URL(origin).host === new URL(request.url).host;
+  try {
+    return new URL(origin).host === new URL(request.url).host;
+  } catch {
+    // malformed origin (e.g. 'null' or garbage) → reject as origin mismatch
+    return false;
+  }
 };
 
 /** 세션 클라이언트를 만들고 Origin·admin 을 검증한다. 실패 시 error 에 응답을 담는다 */
