@@ -1,7 +1,6 @@
 import { updateAdminPost, type UpsertPostInput } from '@/entities/post';
-import { createSupabaseAdminClient, verifyAdminPostToken } from '@/shared/api';
-import { readServerEnv } from '@/shared/config';
 import { NextResponse } from 'next/server';
+import { mapWriteError, requireAdmin } from '../../_lib/adminGuard';
 
 type RouteContext = {
   params: Promise<{
@@ -9,19 +8,21 @@ type RouteContext = {
   }>;
 };
 
-/** admin token 이 유효한 요청만 기존 글을 수정한다 */
+/** 로그인한 admin 세션만 기존 글을 수정한다 (권한은 RLS 가 최종 집행) */
 export const PATCH = async (request: Request, context: RouteContext) => {
-  const env = readServerEnv();
-  const token = request.headers.get('x-admin-post-token');
-
-  if (!verifyAdminPostToken(token, env.adminPostToken)) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  const guard = await requireAdmin(request);
+  // guard.error 로 좁혀야 판별 유니언에 따라 guard.client 도 non-null 로 좁혀진다(구조분해 시 유니언 링크가 끊김)
+  if (guard.error) {
+    return guard.error;
   }
 
   const { id } = await context.params;
   const input = (await request.json()) as UpsertPostInput;
-  const client = createSupabaseAdminClient();
-  const post = await updateAdminPost(client, id, input);
 
-  return NextResponse.json({ post });
+  try {
+    const post = await updateAdminPost(guard.client, id, input);
+    return NextResponse.json({ post });
+  } catch (writeError) {
+    return mapWriteError(writeError);
+  }
 };

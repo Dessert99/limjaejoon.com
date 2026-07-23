@@ -1,20 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { updateAdminPost } from '@/entities/post';
-import { createSupabaseAdminClient, verifyAdminPostToken } from '@/shared/api';
-import { readServerEnv } from '@/shared/config';
+import { NextResponse } from 'next/server';
+import { mapWriteError, requireAdmin } from '../../_lib/adminGuard';
 import { PATCH } from './route';
 
-vi.mock('@/shared/config', () => {
-  return { readServerEnv: vi.fn() };
-});
-
-vi.mock('@/shared/api', () => {
-  return {
-    createSupabaseAdminClient: vi.fn(),
-    verifyAdminPostToken: vi.fn((received, expected) => {
-      return received === expected;
-    }),
-  };
+vi.mock('../../_lib/adminGuard', () => {
+  return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 
 vi.mock('@/entities/post', () => {
@@ -39,53 +30,82 @@ const post = {
   updated_at: '2026-07-09T00:00:00Z',
 };
 
+const request = () => {
+  return new Request('https://limjaejoon.com/api/admin/posts/1', {
+    body: JSON.stringify(input),
+    method: 'PATCH',
+  });
+};
+
+const context = { params: Promise.resolve({ id: '1' }) };
+
 describe('PATCH /api/admin/posts/[id]', () => {
   beforeEach(() => {
-    vi.mocked(readServerEnv).mockReset();
-    vi.mocked(createSupabaseAdminClient).mockReset();
-    vi.mocked(verifyAdminPostToken).mockClear();
+    vi.mocked(requireAdmin).mockReset();
+    vi.mocked(mapWriteError).mockReset();
     vi.mocked(updateAdminPost).mockReset();
-    vi.mocked(readServerEnv).mockReturnValue({
-      supabaseUrl: 'https://remote.supabase.co',
-      supabaseAnonKey: 'anon-key',
-      supabaseServiceRoleKey: 'service-role-key',
-      postImageBucket: 'post-images',
-      adminPostToken: 'secret',
-      adminEmail: 'admin@example.com',
-    });
   });
 
-  it('admin token 이 없으면 401 을 반환하고 write 를 실행하지 않는다', async () => {
-    const response = await PATCH(
-      new Request('https://limjaejoon.com/api/admin/posts/1', {
-        body: JSON.stringify(input),
-        method: 'PATCH',
-      }),
-      { params: Promise.resolve({ id: '1' }) }
+  it('세션이 없으면 401 을 반환하고 write 를 실행하지 않는다', async () => {
+    const unauthorized = NextResponse.json(
+      { message: 'Unauthorized' },
+      { status: 401 }
     );
+    vi.mocked(requireAdmin).mockResolvedValue({
+      client: null,
+      error: unauthorized,
+    });
+
+    const response = await PATCH(request(), context);
 
     expect(response.status).toBe(401);
-    await expect(response.json()).resolves.toEqual({ message: 'Unauthorized' });
-    expect(createSupabaseAdminClient).not.toHaveBeenCalled();
     expect(updateAdminPost).not.toHaveBeenCalled();
   });
 
-  it('유효한 admin token 이면 글을 수정한다', async () => {
-    const client = { id: 'admin-client' };
-    vi.mocked(createSupabaseAdminClient).mockReturnValue(client as never);
+  it('admin 이 아니면 403 을 반환하고 write 를 실행하지 않는다', async () => {
+    const forbidden = NextResponse.json(
+      { message: 'Forbidden' },
+      { status: 403 }
+    );
+    vi.mocked(requireAdmin).mockResolvedValue({
+      client: null,
+      error: forbidden,
+    });
+
+    const response = await PATCH(request(), context);
+
+    expect(response.status).toBe(403);
+    expect(updateAdminPost).not.toHaveBeenCalled();
+  });
+
+  it('admin 세션이면 글을 수정한다', async () => {
+    const client = { id: 'session-client' };
+    vi.mocked(requireAdmin).mockResolvedValue({
+      client: client as never,
+      error: null,
+    });
     vi.mocked(updateAdminPost).mockResolvedValue(post);
 
-    const response = await PATCH(
-      new Request('https://limjaejoon.com/api/admin/posts/1', {
-        body: JSON.stringify(input),
-        headers: { 'x-admin-post-token': 'secret' },
-        method: 'PATCH',
-      }),
-      { params: Promise.resolve({ id: '1' }) }
-    );
+    const response = await PATCH(request(), context);
 
     expect(updateAdminPost).toHaveBeenCalledWith(client, '1', input);
     await expect(response.json()).resolves.toEqual({ post });
     expect(response.status).toBe(200);
+  });
+
+  it('write 실패 시 mapWriteError 결과를 그대로 반환한다', async () => {
+    const client = { id: 'session-client' };
+    const mapped = NextResponse.json({ message: 'Forbidden' }, { status: 403 });
+    vi.mocked(requireAdmin).mockResolvedValue({
+      client: client as never,
+      error: null,
+    });
+    vi.mocked(updateAdminPost).mockRejectedValue({ code: '42501' });
+    vi.mocked(mapWriteError).mockReturnValue(mapped);
+
+    const response = await PATCH(request(), context);
+
+    expect(mapWriteError).toHaveBeenCalledWith({ code: '42501' });
+    expect(response.status).toBe(403);
   });
 });
