@@ -11,7 +11,9 @@ const makeClient = (result: unknown) => {
 describe('getSessionClaims', () => {
   it('claims 를 SessionClaims 로 반환한다', async () => {
     const client = makeClient({
-      data: { claims: { sub: '1', email: 'a@x.com', app_metadata: { role: 'admin' } } },
+      data: {
+        claims: { sub: '1', email: 'a@x.com', app_metadata: { role: 'admin' } },
+      },
       error: null,
     });
 
