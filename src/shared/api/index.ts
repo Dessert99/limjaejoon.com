@@ -4,7 +4,6 @@ export {
   createSupabaseServerClient,
   createSupabaseStaticClient,
 } from './supabase';
-export { verifyAdminPostToken } from './admin';
 export {
   clientFetchJson,
   fetchJson,

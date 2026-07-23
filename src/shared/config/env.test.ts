@@ -6,7 +6,6 @@ const validEnv = {
   NEXT_PUBLIC_SUPABASE_ANON_KEY: 'anon-key',
   SUPABASE_SERVICE_ROLE_KEY: 'service-role-key',
   POST_IMAGE_BUCKET: 'post-images',
-  ADMIN_POST_TOKEN: 'admin-token',
   ADMIN_EMAIL: 'me@x.com',
 };
 
@@ -20,7 +19,6 @@ const profiledEnv = {
   NEXT_PUBLIC_REMOTE_SUPABASE_ANON_KEY: 'remote-anon-key',
   REMOTE_SUPABASE_SERVICE_ROLE_KEY: 'remote-service-role-key',
   REMOTE_POST_IMAGE_BUCKET: 'post-images',
-  ADMIN_POST_TOKEN: 'admin-token',
   ADMIN_EMAIL: 'me@x.com',
 };
 
@@ -46,7 +44,6 @@ describe('env 설정', () => {
       supabaseAnonKey: 'anon-key',
       supabaseServiceRoleKey: 'service-role-key',
       postImageBucket: 'post-images',
-      adminPostToken: 'admin-token',
       adminEmail: 'me@x.com',
     });
   });
@@ -64,7 +61,6 @@ describe('env 설정', () => {
       supabaseAnonKey: 'remote-anon-key',
       supabaseServiceRoleKey: 'remote-service-role-key',
       postImageBucket: 'post-images',
-      adminPostToken: 'admin-token',
       adminEmail: 'me@x.com',
     });
   });
