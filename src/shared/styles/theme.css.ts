@@ -29,6 +29,7 @@ export const vars = createThemeContract({
       brand: null,
       brandPressed: null,
       brandWeak: null,
+      critical: null,
       criticalWeak: null,
       warningWeak: null,
       informativeWeak: null,

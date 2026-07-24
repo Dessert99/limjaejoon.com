@@ -29,11 +29,16 @@ describe('design tokens', () => {
     expect(flattenKeys(lightColor)).toEqual(flattenKeys(darkColor));
   });
 
-  it('green brand와 positive semantic을 둘 다 제공한다', () => {
-    expect(lightColor.fg.brand).toBe(palette.green[700]);
-    expect(lightColor.fg.positive).toBe(palette.green[700]);
-    expect(darkColor.bg.brand).toBe(palette.green[500]);
-    expect(darkColor.bg.positiveWeak).toBe(palette.green[1000]);
+  it('terracotta brand와 verdigris positive semantic을 제공한다', () => {
+    expect(lightColor.fg.brand).toBe(palette.clay[700]);
+    expect(darkColor.fg.positive).toBe(palette.verdigris[300]);
+    expect(darkColor.bg.canvas).toBe(palette.sand[900]);
+  });
+
+  it('bg.critical(솔리드)이 brand와 구분되는 별도 레드다', () => {
+    expect(lightColor.bg.critical).toBe(palette.critical[500]);
+    expect(darkColor.bg.critical).toBe(palette.critical[500]);
+    expect(darkColor.bg.critical).not.toBe(darkColor.bg.brand);
   });
 
   it('typography semantic text style은 CSS text 속성을 가진다', () => {
