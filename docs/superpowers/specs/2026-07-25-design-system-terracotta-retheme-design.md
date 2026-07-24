@@ -80,7 +80,7 @@ river (블타바 강물 — informative. 팔레트 유일한 쿨톤) [확정]
 
 ```
 fg.neutral #F4EADA(sand100)   fg.muted #CDB891(sand300)   fg.brand #DE9A5E(clay300)
-fg.onBrand #F7EBDD            fg.critical #E7998F(텍스트 전용)  fg.warning #EFCB87(amber300)
+fg.onBrand #FBF7EF(sand00)    fg.critical #E7998F(텍스트 전용)  fg.warning #EFCB87(amber300)
 fg.informative #A8C0CE(river300)  fg.positive #93B0A4(vd300)  fg.disabled #8E8577(sand500)
 
 bg.canvas #3D3B36(sand900)    bg.surface #46423B(sand800)  bg.surfaceMuted #565049(sand700)
@@ -88,8 +88,8 @@ bg.brand #A64C34             bg.brandPressed #8F3F26(clay700)  bg.brandWeak #4A2
 bg.critical #A9302A(솔리드)  bg.criticalWeak #3A201D      bg.warningWeak #453518       bg.informativeWeak #26333B(river900)
 bg.positiveWeak #2B3933(vd900)  bg.disabled #565049(sand700)  bg.overlay rgba(18,12,9,.55)
 
-stroke.neutral #6F675B(sand600)  stroke.muted #565049(sand700)  stroke.brand #9C4632(clay600)
-stroke.critical #7D2019      stroke.warning #B27F31(amber700)  stroke.informative #4E687A(river700)
+stroke.neutral #6F675B(sand600)  stroke.muted #565049(sand700)  stroke.brand #D3803A(clay400)
+stroke.critical #E7998F(critical200)  stroke.warning #B27F31(amber700)  stroke.informative #4E687A(river700)
 stroke.positive #496459(vd700)
 ```
 
@@ -97,7 +97,7 @@ stroke.positive #496459(vd700)
 
 ```
 fg.neutral #2A2823(sand1000)  fg.muted #6F675B(sand600)   fg.brand #8F3F26(clay700)
-fg.onBrand #FBF3E9           fg.critical #921F16         fg.warning #7A5312
+fg.onBrand #FBF7EF(sand00)   fg.critical #921F16         fg.warning #7A5312
 fg.informative #3C5568       fg.positive #3B6154         fg.disabled #A99A80(sand400)
 
 bg.canvas #F4EADA(sand100)   bg.surface #FBF7EF(sand00)   bg.surfaceMuted #E3D0AE(sand200)
@@ -111,6 +111,8 @@ stroke.positive #6D9184(vd500)
 ```
 
 라이트 값은 대비 확보를 위해 브랜드/시맨틱 fg를 어두운 스텝으로 당긴다. 정확 대비는 §5에서 검증.
+
+**구현 반영 (a11y 최종 리뷰, 플랜1 완료):** dark `stroke.brand`·`stroke.critical`은 포커스 링·invalid 보더의 비텍스트 3:1을 위해 clay400·critical200으로 **상향된 값이 정본**(위 표 반영). `onBrand`는 `sand['00']`(#FBF7EF)로 통일(대비만 상승). **추적:** dark `fg.brand`(#DE9A5E)·`fg.critical`(#E7998F)는 canvas 위 14px 본문은 AA 통과하나 **surface 위에선 ~4.2–4.5로 살짝 미달** — 현재 위반 소비처 없음(전부 canvas 배치). 플랜 2/3에서 brand-text/에러 텍스트를 surface 패널에 올릴 땐 한 스텝 밝은 값 또는 surface 전용 토큰으로 재확인. criticalSolid는 현재 hover/active/loading이 base와 같은 `bg.critical`(평평) — 눌림 연출은 플랜 2(Button 재작업).
 
 ### 1.3 `brand-solid` 노트
 
