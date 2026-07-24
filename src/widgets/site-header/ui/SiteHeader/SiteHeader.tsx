@@ -37,7 +37,8 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={s.navLink}
-              data-active={active}>
+              data-active={active}
+              aria-current={active ? 'page' : undefined}>
               {item.label}
             </Link>
           );

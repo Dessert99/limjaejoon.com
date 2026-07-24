@@ -18,8 +18,10 @@ describe('SiteHeader', () => {
     const blogLink = screen.getByRole('link', { name: '지식 모음' });
     expect(blogLink).toHaveAttribute('href', '/blog');
     expect(blogLink).toHaveAttribute('data-active', 'true');
+    expect(blogLink).toHaveAttribute('aria-current', 'page');
 
     const homeLink = screen.getByRole('link', { name: '홈' });
     expect(homeLink).toHaveAttribute('data-active', 'false');
+    expect(homeLink).not.toHaveAttribute('aria-current');
   });
 });

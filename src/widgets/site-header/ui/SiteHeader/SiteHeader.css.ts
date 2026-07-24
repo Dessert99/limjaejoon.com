@@ -7,10 +7,12 @@ import { style } from '@vanilla-extract/css';
 export const header = style([
   sprinkles({
     display: 'flex',
+    // 좁은 화면에서 그룹이 넘치지 않고 감싸지도록 — 정식 모바일 헤더는 후속 디자인 작업
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 'x4',
-    px: 'x6',
+    px: { mobile: 'x4', tablet: 'x6' },
     py: 'x3',
     bg: 'surface',
   }),
