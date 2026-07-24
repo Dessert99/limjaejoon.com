@@ -110,8 +110,8 @@ export const darkColor = {
   stroke: {
     neutral: palette.sand[600],
     muted: palette.sand[700],
-    brand: palette.clay[600],
-    critical: palette.critical[700],
+    brand: palette.clay[400],
+    critical: palette.critical[200],
     warning: palette.amber[700],
     informative: palette.river[700],
     positive: palette.verdigris[700],

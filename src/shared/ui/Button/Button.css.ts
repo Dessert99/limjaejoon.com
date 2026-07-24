@@ -171,10 +171,10 @@ export const button = recipe({
         color: vars.color.fg.onBrand,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.stroke.critical },
+            ':hover': { background: vars.color.bg.critical },
           },
           'not all and (hover: hover) and (pointer: fine)': {
-            ':active': { background: vars.color.stroke.critical },
+            ':active': { background: vars.color.bg.critical },
           },
         },
       },
@@ -363,7 +363,7 @@ export const button = recipe({
             color: vars.color.fg.disabled,
           },
           '&[data-loading]': {
-            background: vars.color.stroke.critical,
+            background: vars.color.bg.critical,
           },
         },
       },
