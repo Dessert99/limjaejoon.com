@@ -167,7 +167,7 @@ export const button = recipe({
         },
       },
       criticalSolid: {
-        background: vars.color.fg.critical,
+        background: vars.color.bg.critical,
         color: vars.color.fg.onBrand,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
