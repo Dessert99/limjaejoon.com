@@ -5,8 +5,8 @@ Supabase Auth + RLS 기반 어드민 인증을 로컬/원격에 적용할 때의
 ## 로컬 (.env.local)
 
 - [ ] `LOCAL_POST_IMAGE_BUCKET=post-images` 로 맞춘다. (버킷명을 로컬/원격 `post-images` 로 통일했다. `.env.local` 은 수동 관리라 `post-images-local` 로 남아 있을 수 있다.)
-- [ ] `ADMIN_EMAIL=` 에 운영자 이메일을 넣는다. (`npm run auth:set-admin` 실행 시에만 필요한 1회성 스크립트 변수 — 배포된 앱 런타임은 읽지 않으므로 프로덕션에 없어도 된다.)
 - [ ] `supabase db reset` 로 posts RLS·storage 정책·`post-images` 버킷이 로컬에 적용됐는지 확인한다.
+- [ ] `npm run auth:seed-admin-local` 로 로컬 어드민 계정을 만든다. (`supabase/seed-local-admin.sql` 을 로컬 도커 컨테이너에만 직접 적용 — 원격에 닿을 수 없다. 계정: `qwer1234@naver.com`, 로컬 전용 비번. `db reset` 은 이 계정을 만들지 않으므로 reset 후 재실행한다.)
 - [ ] 통합 테스트로 보안 경계를 확인한다: `npm run test:integration` (로컬 Supabase 필요).
 
 ## 운영자 계정 (순서 중요)
@@ -14,7 +14,7 @@ Supabase Auth + RLS 기반 어드민 인증을 로컬/원격에 적용할 때의
 `app_metadata.role` 은 이미 발급된 JWT 에 즉시 반영되지 않으므로 **계정 생성 → role 부여 → 최초 로그인** 순서를 지킨다.
 
 - [ ] 1. Supabase 대시보드/CLI 로 운영자 계정을 만든다. 비밀번호는 **길고 무작위**로.
-- [ ] 2. `npm run auth:set-admin` 으로 `app_metadata.role='admin'` 을 부여한다. (스크립트는 `--env-file=.env.local` 로 env 를 읽고, `NEXT_PUBLIC_SUPABASE_TARGET` 에 따라 local/remote 프로필을 쌍으로 해석한다. 원격 대상이면 target=remote + REMOTE_* 키가 필요하다.)
+- [ ] 2. `app_metadata.role='admin'` 을 부여한다. (로컬은 위 seed 스크립트가 이미 부여. 원격은 대시보드 **SQL Editor** 에서 `update auth.users set raw_app_meta_data = raw_app_meta_data || '{"role":"admin"}'::jsonb where email = '<운영자>';` 로 직접 부여한다. `npm run auth:set-admin` 은 새 `sb_secret_*` 키 + ES256 서명키 전환기에 admin write 가 `bad_jwt` 로 실패할 수 있어 SQL 우회를 기본으로 둔다.)
 - [ ] 3. `/admin/login` 에서 최초 로그인한다.
 - [ ] 이미 로그인한 상태에서 role 을 바꿨다면 재로그인(또는 refreshSession)한다. role **회수** 시엔 전역 sign-out 으로 refresh token 까지 폐기한다.
 

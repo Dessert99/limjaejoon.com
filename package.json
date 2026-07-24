@@ -19,7 +19,8 @@
     "format:check": "prettier --check .",
     "db:types": "supabase gen types typescript --local > src/shared/api/supabase/database.types.ts",
     "blog:import": "node scripts/blog-import/importPosts.mjs",
-    "auth:set-admin": "node --env-file=.env.local scripts/set-admin-role.mjs"
+    "auth:set-admin": "node --env-file=.env.local scripts/set-admin-role.mjs",
+    "auth:seed-admin-local": "docker exec -i $(docker ps -qf name=supabase_db) psql -U postgres -d postgres < supabase/seed-local-admin.sql"
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",

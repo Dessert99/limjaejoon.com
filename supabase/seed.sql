@@ -49,3 +49,7 @@ $$,
     'published',
     '2026-04-02T00:00:00Z'
   );
+
+-- 어드민 계정 부트스트랩은 seed.sql 에 두지 않는다. 이 파일은 `db push --include-seed`·`db reset --linked`
+-- 로 원격에서도 실행될 수 있어, 공개 레포의 고정 비밀번호 어드민이 프로덕션에 생길 위험이 있다.
+-- 로컬 어드민은 원격에 닿을 수 없는 별도 경로로만 만든다: `npm run auth:seed-admin-local` (supabase/seed-local-admin.sql).
