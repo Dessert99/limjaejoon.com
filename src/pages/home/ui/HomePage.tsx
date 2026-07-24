@@ -1,24 +1,30 @@
-import Link from 'next/link';
-import { GsapSmoke } from './GsapSmoke';
+/** 포트폴리오 홈 — Hero·Skills·경력/활동/학력 Timeline·Projects 조립 */
+import { activities, education, experience } from '@/entities/profile';
+import { Timeline } from '@/shared/ui';
+import { HeroSection } from './HeroSection/HeroSection';
+import { SkillsSection } from './SkillsSection/SkillsSection';
+import { ProjectsSection } from './ProjectsSection/ProjectsSection';
 import * as s from './HomePage.css';
 
+/** 홈 페이지 구성 (main 순서 유지) */
 export function HomePage() {
   return (
     <main className={s.main}>
-      <section className={s.panel}>
-        <p className={s.eyebrow}>limjaejoon.com</p>
-        <h1 className={s.title}>Shell ready</h1>
-        <p className={s.description}>
-          FSD, Supabase, vanilla-extract, GSAP, TDD를 다시 올리기 위한 빈
-          골격입니다.
-        </p>
-        <GsapSmoke />
-        <Link
-          className={s.labLink}
-          href='/lab'>
-          Lab — 인터랙션 실험실 →
-        </Link>
-      </section>
+      <HeroSection />
+      <SkillsSection />
+      <Timeline
+        title='경력'
+        items={experience}
+      />
+      <Timeline
+        title='활동'
+        items={activities}
+      />
+      <ProjectsSection />
+      <Timeline
+        title='학력'
+        items={education}
+      />
     </main>
   );
 }
