@@ -5,9 +5,6 @@ node_modules/
 .next/
 out/
 
-# NestJS
-dist/
-
 # production
 build/
 storybook-static/
@@ -32,6 +29,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# superpowers (brainstorm 비주얼 컴패니언 산출물)
+.superpowers/
+
 
 # Playwright
 test-results/

@@ -5,7 +5,7 @@
 ## 1. FSD 레이어
 
 ```
-frontend/
+/
 ├── app/                    # Next.js App Router(라우터 전용). page.tsx 는 src/pages 를 re-export 하는 껍데기
 ├── pages/                  # 빈 폴더(.gitkeep) — Next 가 src/pages 를 레거시 Pages Router 로 오인하지 않게 슬롯 점유
 └── src/                    # 모든 FSD 레이어
@@ -14,7 +14,7 @@ frontend/
     ├── features/           # 사용자 행동 단위 기능
     ├── entities/           # 핵심 도메인 모델과 그 모델 중심 UI/API
     └── shared/             # 도메인 무관 공용 코드
-        ├── ui/             # Button, Input 같은 디자인 프리미티브
+        ├── ui/             # Button, Input 같은 디자인 프리미티브 (컴포넌트 기본값은 component-convention.md)
         ├── api/            # apiClient, 공용 API 타입/헬퍼 (MSW 목 포함)
         ├── lib/            # 공용 유틸 (navigation 훅 래퍼 등)
         ├── styles/         # 전역 테마·토큰·breakpoint 등 (vanilla-extract)
@@ -31,7 +31,7 @@ frontend/
 - `entities` -> `shared`
 - `shared` -> 상위 레이어 참조 금지
 
-**Next.js 적응:** FSD 레이어는 `frontend/src/` 아래 둔다(`@/* → ./src/*`). Next 라우터는 `frontend/app/` 에 남기고 `page.tsx` 는 `@/pages/*` 를 re-export 하는 껍데기로만 쓴다. FSD `pages` 레이어는 `src/pages` 인데, Next 가 이를 레거시 Pages Router 로 오인하지 않도록 루트에 빈 `pages/` 를 둔다. 그 부작용으로 `useSearchParams`·`usePathname` 타입이 nullable 로 과대추정되므로 `shared/lib/navigation` 래퍼에서 non-null 로 가둔다. 구조는 Steiger(`npm run fsd`)로 강제한다.
+**Next.js 적응:** FSD 레이어는 `src/` 아래 둔다(`@/* → ./src/*`). Next 라우터는 `app/` 에 남기고 `page.tsx` 는 `@/pages/*` 를 re-export 하는 껍데기로만 쓴다. FSD `pages` 레이어는 `src/pages` 인데, Next 가 이를 레거시 Pages Router 로 오인하지 않도록 루트에 빈 `pages/` 를 둔다. 그 부작용으로 `useSearchParams`·`usePathname` 타입이 nullable 로 과대추정되므로 `shared/lib/navigation` 래퍼에서 non-null 로 가둔다. 구조는 Steiger(`npm run fsd`)로 강제한다.
 
 같은 레이어 안의 슬라이스끼리는 서로 import 하지 않는다 (slice 격리). `features/a` 가 `features/b` 를, `entities/x` 가 `entities/y` 를 직접 참조 금지. 공유가 필요하면 공통 부분을 아래 레이어 (`entities` / `shared`) 로 내린다.
 
@@ -42,12 +42,13 @@ frontend/
 ```
 features/{slice}/
 ├── ui/                 # 이 slice 의 화면 컴포넌트
-├── api/                # 백엔드 연동 (요청 함수·query 팩토리·훅)
+├── api/                # 외부 데이터 소스 경계 (요청 함수·query 팩토리·훅)
 │   ├── getProblems.ts        # 요청 함수(fetcher)
 │   ├── createProblem.ts      # 변경 요청 함수
 │   ├── problemQueries.ts     # query 팩토리 (key + options)
 │   └── useCreateProblem.ts   # 커스텀 mutation 훅
 ├── model/              # 상태, schema 등 도메인 모델
+│   └── problem.types.ts      # slice 밖에서 공유되는 앱-facing 타입
 ├── lib/                # 이 slice 전용 유틸
 └── config/             # 이 slice 전용 설정
 ```
@@ -55,6 +56,7 @@ features/{slice}/
 - TanStack Query 관련 코드 (요청 함수·query 팩토리·훅) 는 모두 `api/` 에 둔다. 관심사별로 파일을 나눈다 (fetcher ↔ query 팩토리 ↔ 훅). 한 파일에 몰지 않는다.
 - fetcher 파일은 순수 transport (`react`·`@tanstack/react-query` 비의존) 로 유지해 Server Component·prefetch·테스트에서 직접 호출한다.
 - queryKey 와 queryOptions 는 `api/` 의 query 팩토리에 모은다. 명명·작성 규칙은 api-convention.md 를 따른다.
+- DB 생성 타입은 `shared/api/*` 에 두고, slice 밖에서 공유되는 앱-facing 타입 별칭은 `model/{slice}.types.ts` 에 둔다.
 - segment 는 필요할 때만 만든다. 빈 폴더나 미래 대비 폴더 생성 금지.
 - 작은 컴포넌트는 `ui/{Name}.tsx` 단일 파일 허용.
 - 스타일, 테스트, Storybook story, 하위 컴포넌트가 생기면 `ui/{Name}/{Name}.tsx` 형태로 폴더화한다.
@@ -81,6 +83,6 @@ features/{slice}/
 
 - 컴포넌트: 대상 컴포넌트 옆의 `{Name}.test.tsx`
 - API, hook, lib, util: 대상 파일 옆의 `{name}.test.ts`
-- E2E: `frontend/e2e/`
+- E2E: `e2e/`
 - Storybook story: 대상 컴포넌트 옆의 `{Name}.stories.tsx`
 - `.stories.tsx` 는 UI 상태 문서화용 파일이므로 slice/segment public API 에서 export 하지 않는다.

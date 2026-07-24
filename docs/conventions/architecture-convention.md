@@ -96,13 +96,14 @@ Storybook story 는 props 기반 렌더링 컴포넌트의 주요 UI 상태를 �
 
 테스트하고 싶은 규칙인데 React provider, MSW, QueryClient 가 없어도 검증 가능하면 `lib/` 후보다.
 
-### types → `features/{slice}/model/`
+### types → `{layer}/{slice}/model/`
 
 `model/` 은 도메인 모델과 페이지/플로우 전용 셰이프, schema 를 둔다.
 
 - 여러 컴포넌트·훅·lib 가 공유하는 화면 모델.
 - endpoint 응답 내부에서 재사용되는 도메인 셰이프.
 - 특정 페이지 workflow 의 입력/출력 타입.
+- Supabase 등 외부 도구가 생성한 원천 스키마 타입은 `shared/api/*` 에 두고, 앱에서 소비하는 엔티티 별칭은 `entities/{slice}/model/{slice}.types.ts` 에 둔다.
 
 컴포넌트 파일 안 inline type 이 다른 파일로 새기 시작하면 `model/` 로 옮긴다.
 

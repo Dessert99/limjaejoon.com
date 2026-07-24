@@ -22,7 +22,7 @@ MDX 콘텐츠 파일의 frontmatter를 자동 생성하는 스킬.
 
 ### Step 2: 기존 태그 확인
 
-`frontend/features/blog/constants/tags.ts` 의 `BLOG_TAGS` 배열에서 기존 태그 목록을 읽는다. content/blog 파일을 직접 스캔하지 않는다.
+`src/entities/post/model/tags.ts` 의 `BLOG_TAGS` 배열에서 기존 태그 목록을 읽는다. content/blog 파일을 직접 스캔하지 않는다.
 
 ### Step 3: 각 필드 생성
 
@@ -138,7 +138,7 @@ After:
 
 ### Step 6: 태그 목록 갱신
 
-이번에 새로 추가한 태그가 있으면 `frontend/features/blog/constants/tags.ts` 의 `BLOG_TAGS` 배열에 추가한다. 기존에 없는 태그만 추가하고 중복을 방지하며, 추가 후 배열을 정렬 상태로 유지한다.
+이번에 새로 추가한 태그가 있으면 `src/entities/post/model/tags.ts` 의 `BLOG_TAGS` 배열에 추가한다. 기존에 없는 태그만 추가하고 중복을 방지하며, 추가 후 배열을 정렬 상태로 유지한다.
 
 ## stories 파일
 
