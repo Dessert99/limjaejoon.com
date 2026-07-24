@@ -15,11 +15,13 @@ export async function proxy(request: NextRequest) {
   // setAll 이 request 를 갱신할 때마다 response 를 다시 만들어야 다운스트림 Server Component 도 새 쿠키를 본다
   let response = NextResponse.next({ request });
 
+  // proxy 는 next/headers cookies() 를 못 써서, NextRequest 에서 직접 쿠키를 읽고 쓰는 전용 client 를 만든다 (server.ts 와 분리된 이유)
   const client = createServerClient<Database>(
     env.supabaseUrl,
     env.supabaseAnonKey,
     {
       cookies: {
+        // 요청에 실려온 쿠키를 client 에 읽혀 세션 상태를 복원한다
         getAll: () => {
           return request.cookies.getAll();
         },
@@ -37,6 +39,7 @@ export async function proxy(request: NextRequest) {
     }
   );
 
+  // claims 는 optimistic redirect 판단용일 뿐 — 진짜 인가는 (protected) layout 과 RLS 가 집행하므로 여기선 UX 를 위한 빠른 분기만 한다
   const claims = await getSessionClaims(client);
   const hasSession = claims !== null;
   const admin = isAdmin(claims);
@@ -53,5 +56,6 @@ export async function proxy(request: NextRequest) {
     return redirectResponse;
   }
 
+  // redirect 대상이 없으면(정상 접근) 갱신된 세션 쿠키를 실은 채 요청을 그대로 통과시킨다
   return response;
 }
