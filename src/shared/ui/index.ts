@@ -17,3 +17,4 @@ export type { AlertDialogFooterProps } from './AlertDialog/AlertDialog';
 export { Slider } from './Slider/Slider';
 export { Divider } from './Divider/Divider';
 export { IconTile } from './IconTile/IconTile';
+export { Timeline } from './Timeline/Timeline';
