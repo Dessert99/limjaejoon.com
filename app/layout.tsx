@@ -1,4 +1,4 @@
-import { ThemeToggle, themeBootScript } from '@/features/theme-toggle';
+import { themeBootScript } from '@/features/theme-toggle';
 import { SITE_URL } from '@/shared/config';
 import '@/shared/styles/global.css';
 import type { Metadata } from 'next';
@@ -39,7 +39,6 @@ export default function RootLayout({
       <body>
         {/* 첫 페인트 전에 저장된 테마 적용 — 다크 모드 새로고침 시 흰 화면 번쩍임 방지 */}
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
-        <ThemeToggle />
         {children}
       </body>
     </html>

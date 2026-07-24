@@ -4,9 +4,10 @@
 import { Button } from '@/shared/ui';
 import { withCircularReveal } from '../../lib/withCircularReveal';
 import { useTheme } from '../../model/useTheme';
-import { themeToggle } from './ThemeToggle.css';
+// 뷰 트랜지션 크로스페이드를 끄는 globalStyle 을 위해 부작용 import
+import './ThemeToggle.css';
 
-/** 현재 테마의 반대로 전환하는 플로팅 버튼 */
+/** 현재 테마의 반대로 전환하는 토글 버튼 */
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const next = theme === 'dark' ? 'light' : 'dark';
@@ -15,7 +16,6 @@ export function ThemeToggle() {
       variant='ghost'
       size='small'
       layout='iconOnly'
-      className={themeToggle}
       aria-label={next === 'dark' ? '다크 테마로 전환' : '라이트 테마로 전환'}
       onClick={(event) => {
         // 확산 원의 중심 = 버튼 중앙 — 클릭 픽셀보다 눈에 안정적
