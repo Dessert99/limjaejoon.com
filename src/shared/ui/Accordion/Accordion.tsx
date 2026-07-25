@@ -21,11 +21,10 @@ import {
 } from './Accordion.css';
 
 /** Root props — 열린 항목은 single/multiple 모두 string[] 계약으로 다룬다 */
-export interface AccordionRootProps
-  extends Omit<
-    ComponentPropsWithoutRef<'div'>,
-    'defaultValue' | 'dir' | 'onChange'
-  > {
+export interface AccordionRootProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'defaultValue' | 'dir' | 'onChange'
+> {
   values?: string[];
   defaultValues?: string[];
   onValuesChange?: (values: string[]) => void;
@@ -189,7 +188,7 @@ const Description = forwardRef<HTMLSpanElement, AccordionSpanSlotProps>(
 );
 Description.displayName = 'Accordion.Description';
 
-/** Indicator — open 상태를 회전으로 보여주는 장식 slot */
+/** Indicator — open 상태를 제자리 360도 회전으로 보여주는 내장 SVG 셰브론 slot */
 const Indicator = forwardRef<HTMLSpanElement, AccordionSpanSlotProps>(
   ({ className, ...props }, ref) => {
     return (
@@ -197,8 +196,22 @@ const Indicator = forwardRef<HTMLSpanElement, AccordionSpanSlotProps>(
         ref={ref}
         className={[indicator, className].filter(Boolean).join(' ')}
         aria-hidden
-        {...props}
-      />
+        {...props}>
+        <svg
+          width='16'
+          height='16'
+          viewBox='0 0 16 16'
+          fill='none'
+          aria-hidden>
+          <path
+            d='M4 6l4 4 4-4'
+            stroke='currentColor'
+            strokeWidth='1.5'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+          />
+        </svg>
+      </span>
     );
   }
 );
@@ -220,17 +233,18 @@ const Content = forwardRef<
 Content.displayName = 'Accordion.Content';
 
 /** ContentInner — height animation 과 본문 padding 책임을 분리한다 */
-const ContentInner = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
-  ({ className, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={[contentInner, className].filter(Boolean).join(' ')}
-        {...props}
-      />
-    );
-  }
-);
+const ContentInner = forwardRef<
+  HTMLDivElement,
+  ComponentPropsWithoutRef<'div'>
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={[contentInner, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
+});
 ContentInner.displayName = 'Accordion.ContentInner';
 
 /** 네임스페이스 — Root·Item·Header·Trigger·Prefix·Body·Title·Description·Indicator·Content·ContentInner */

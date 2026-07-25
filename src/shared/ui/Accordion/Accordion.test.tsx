@@ -66,16 +66,16 @@ describe('Accordion', () => {
         <Accordion.Item value='motion'>
           <Accordion.Header>
             <Accordion.Trigger>
-              <Accordion.Prefix className='prefix-slot'>아이콘</Accordion.Prefix>
+              <Accordion.Prefix className='prefix-slot'>
+                아이콘
+              </Accordion.Prefix>
               <Accordion.Body className='body-slot'>
                 <Accordion.Title className='title-slot'>모션</Accordion.Title>
                 <Accordion.Description className='description-slot'>
                   높이와 아이콘 회전
                 </Accordion.Description>
               </Accordion.Body>
-              <Accordion.Indicator className='indicator-slot'>
-                ⌄
-              </Accordion.Indicator>
+              <Accordion.Indicator className='indicator-slot' />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content>

@@ -1,7 +1,7 @@
 /** 공용 Select — Radix Select 위에 트리거·옵션 패널 스타일만 입힌 폼 셀렉트 */
 import { Select as SelectPrimitive } from 'radix-ui'; // 값 상태·위치계산·Portal·타입어헤드·listbox aria·키보드를 Radix가 처리
 import { forwardRef } from 'react';
-import { content, item, trigger } from './Select.css';
+import { content, iconWell, item, trigger } from './Select.css';
 
 /** 묶음 — 선택 값(value·onValueChange) 컨텍스트만 제공(DOM 없음) */
 const Root = SelectPrimitive.Root;
@@ -9,12 +9,27 @@ const Root = SelectPrimitive.Root;
 /** 값 표시 — 선택된 항목의 ItemText(없으면 placeholder)를 트리거 안에 렌더 */
 const Value = SelectPrimitive.Value;
 
-/** 아이콘 — 트리거의 펼침 표식 자리(글리프는 소비자가 children으로) */
-const Icon = SelectPrimitive.Icon;
+/** 아이콘 — Radix Icon을 분리된 웰(well)로 감싼 펼침 표식 자리(글리프는 소비자가 children으로) */
+const Icon = forwardRef<
+  React.ComponentRef<typeof SelectPrimitive.Icon>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Icon>
+>(({ className, ...props }, ref) => {
+  return (
+    <span className={iconWell}>
+      <SelectPrimitive.Icon
+        ref={ref}
+        className={className}
+        {...props}
+      />
+    </span>
+  );
+});
+Icon.displayName = 'Select.Icon';
 
 /** Trigger props — Radix trigger 속성에 디자인 시스템 invalid 상태를 더한다 */
-interface SelectTriggerProps
-  extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
+interface SelectTriggerProps extends React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Trigger
+> {
   invalid?: boolean;
 }
 
@@ -24,7 +39,9 @@ const Trigger = forwardRef<
   SelectTriggerProps
 >(({ className, invalid = false, ...props }, ref) => {
   const isInvalid =
-    invalid || props['aria-invalid'] === true || props['aria-invalid'] === 'true';
+    invalid ||
+    props['aria-invalid'] === true ||
+    props['aria-invalid'] === 'true';
 
   return (
     <SelectPrimitive.Trigger
