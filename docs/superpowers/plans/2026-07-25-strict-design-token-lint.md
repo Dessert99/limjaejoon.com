@@ -10,6 +10,15 @@
 
 **설계 스펙:** [docs/superpowers/specs/2026-07-25-strict-design-token-lint-design.md](../specs/2026-07-25-strict-design-token-lint-design.md)
 
+**기준선 실증 완료.** Task 3·4의 규칙 코드를 그대로 만들어 실제 코드베이스에 돌린 결과, 아래 기대값이 정확히 재현됐다. 각 태스크의 잔여 카운트는 추정이 아니라 측정값이다.
+
+```
+전체 100  ·  Task6 29  ·  Task7 21  ·  Task8 16  ·  Task9 18  ·  Task10 16
+messageId 분포: { rawDimension: 100 }   ← rawColor 0, paletteImport 0
+```
+
+색 위반이 0이라는 건 Task 4의 색·palette 검사가 **순수 래칫**(회귀 방지)이라는 뜻이다 — 마이그레이션 대상이 없다.
+
 ## Global Constraints
 
 - **브랜치:** `redesign`에 그대로 커밋한다. **push·브랜치 생성·파괴적 git 명령 금지** — 사용자가 직접 한다.
@@ -21,6 +30,7 @@
 - **외과적 변경:** 지정된 줄만 고친다. 인접 코드·포맷을 "개선"하지 않는다.
 - **선재 이슈 — 건드리지 말 것:** `post.types`·`PostFilterForm.css`·`Divider.tsx`에 prettier 드리프트가 이미 있다. 이 작업과 무관하다.
 - **`vars` import:** 마이그레이션 대상 파일은 **전부 이미 `vars`를 import 하고 있다.** import 추가가 필요한 파일은 없다.
+- **위반 카운트 명령:** ESLint 9.39는 `compact` 포매터를 **제거했다**(`--format compact`는 exit 2). 카운트는 반드시 `--format json` + node 파서로 한다. eslint가 실패하면 stdout이 비고 `JSON.parse`가 던지므로, 조용히 0으로 읽히는 사고가 없다.
 
 ### 공통 치환 매핑
 
@@ -318,6 +328,8 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 **주의:** 이 레포의 flat config 공통 룰(`curly: all`, `arrow-body-style: always`, `brace-style` 단일라인 금지)이 `eslint-rules/*.mjs`에도 적용된다. 화살표 함수는 반드시 블록 바디, 모든 `if`는 중괄호.
 
+**범위:** 이 태스크는 `Literal`(따옴표 문자열)만 다룬다. 템플릿 리터럴 처리는 Task 4가 색 검사와 함께 한 번에 넣는다 — 두 검사가 같은 `TemplateLiteral` 방문자를 공유하기 때문이다.
+
 - [ ] **Step 1: 실패하는 테스트 작성**
 
 Create `eslint-rules/no-raw-design-values.test.mjs`:
@@ -498,6 +510,12 @@ describe('raw 색과 palette import 차단', () => {
       {
         code: 'const a = { border: `1px solid ${vars.color.stroke.neutral}` };',
       },
+      // 치환 있는 템플릿의 계산값 — 조각이 복합값이라 통과해야 한다
+      {
+        code: 'const a = { maxHeight: `calc(100dvh - ${vars.dimension.x8})` };',
+      },
+      // 치환 없는 템플릿이라도 헤어라인은 면제
+      { code: 'const a = { height: `1px` };' },
       { code: "import { vars } from '@/shared/styles/theme.css';" },
       { code: "import { finish, shadow } from '@/shared/styles/tokens';" },
     ],
@@ -527,6 +545,20 @@ describe('raw 색과 palette import 차단', () => {
         code: 'const a = { border: `1px solid #fff` };',
         errors: [{ messageId: 'rawColor' }],
       },
+      // CSS 함수명은 대소문자를 안 가린다
+      {
+        code: "const a = { background: 'RGB(255, 0, 0)' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      {
+        code: "const a = { background: 'HSL(0, 100%, 50%)' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      // 치환 없는 템플릿은 따옴표 문자열과 동치 — 우회로가 되면 안 된다
+      {
+        code: 'const a = { width: `37px` };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
       {
         code: "import { palette } from '@/shared/styles/tokens/color/palette';",
         errors: [{ messageId: 'paletteImport' }],
@@ -555,8 +587,8 @@ Expected: FAIL — `rawColor`·`paletteImport` messageId가 없다.
 
 ```js
 // 8·6·4·3자리 hex 를 긴 것부터 시도한다 — 4자리(#RGBA)도 CSS 유효 문법이라 포함한다
-const RAW_COLOR =
-  /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})\b|\b(?:rgba?|hsla?)\(/;
+// i 플래그 필수: CSS 함수명은 대소문자를 안 가려서 RGB(...)·HSL(...) 도 유효한 raw 색이다
+const RAW_COLOR = /#(?:[0-9a-f]{8}|[0-9a-f]{6}|[0-9a-f]{4}|[0-9a-f]{3})\b|\b(?:rgba?|hsla?)\(/i;
 ```
 
 `meta.messages`에 두 줄 추가:
@@ -594,13 +626,28 @@ const RAW_COLOR =
           });
         }
       },
-      TemplateElement(node) {
-        // 템플릿 안 치수는 전부 '1px solid …' 같은 복합값이라 색만 본다
-        if (RAW_COLOR.test(node.value.raw)) {
+      TemplateLiteral(node) {
+        // 치환 없는 템플릿은 따옴표 문자열과 동치라 치수까지 본다 — `37px` 우회를 막는다
+        if (node.expressions.length === 0) {
+          const only = node.quasis[0].value.raw;
+          if (only !== HAIRLINE && RAW_DIMENSION.test(only)) {
+            context.report({
+              node,
+              messageId: 'rawDimension',
+              data: { value: only },
+            });
+            return;
+          }
+        }
+        // 치환이 있으면 조각이 '1px solid ' 같은 복합값이라 색만 본다
+        const colored = node.quasis.find((quasi) => {
+          return RAW_COLOR.test(quasi.value.raw);
+        });
+        if (colored) {
           context.report({
             node,
             messageId: 'rawColor',
-            data: { value: node.value.raw.trim() },
+            data: { value: colored.value.raw.trim() },
           });
         }
       },
@@ -684,7 +731,7 @@ import designTokens from './eslint-rules/index.mjs';
 
 - [ ] **Step 3: baseline 확인**
 
-Run: `npx eslint 'src/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **100**
 
 숫자가 100이 아니면 멈추고 보고한다 — 규칙 로직이나 스펙 계측 중 하나가 틀린 것이다.
@@ -754,12 +801,12 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 2: 위반 0 확인**
 
-Run: `npx eslint 'src/shared/ui/**/*.css.ts' 'src/shared/styles/global.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/shared/ui/**/*.css.ts' 'src/shared/styles/global.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **0**
 
 - [ ] **Step 3: 전체 잔여 확인**
 
-Run: `npx eslint 'src/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **71** (100 − 29)
 
 - [ ] **Step 4: 검증 + 커밋**
@@ -814,12 +861,12 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 2: 위반 0 확인**
 
-Run: `npx eslint 'src/pages/lab/**/*.css.ts' 'src/pages/lab-transition/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/pages/lab/**/*.css.ts' 'src/pages/lab-transition/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **0**
 
 - [ ] **Step 3: 전체 잔여 확인**
 
-Run: `npx eslint 'src/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **50** (71 − 21)
 
 - [ ] **Step 4: 검증 + 커밋**
@@ -868,12 +915,12 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 2: 위반 0 확인**
 
-Run: `npx eslint 'src/pages/lab-animation/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/pages/lab-animation/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **0**
 
 - [ ] **Step 3: 전체 잔여 확인**
 
-Run: `npx eslint 'src/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **34** (50 − 16)
 
 - [ ] **Step 4: 검증 + 커밋**
@@ -924,12 +971,12 @@ escape hatch 없음.
 
 - [ ] **Step 2: 위반 0 확인**
 
-Run: `npx eslint 'src/pages/blog/**/*.css.ts' 'src/pages/blog-post/**/*.css.ts' 'src/pages/admin-posts/**/*.css.ts' 'src/pages/home/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/pages/blog/**/*.css.ts' 'src/pages/blog-post/**/*.css.ts' 'src/pages/admin-posts/**/*.css.ts' 'src/pages/home/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **0**
 
 - [ ] **Step 3: 전체 잔여 확인**
 
-Run: `npx eslint 'src/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **16** (34 − 18)
 
 - [ ] **Step 4: 검증 + 커밋**
@@ -981,12 +1028,12 @@ escape hatch 없음.
 
 - [ ] **Step 2: 위반 0 확인**
 
-Run: `npx eslint 'src/features/**/*.css.ts' 'src/entities/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/features/**/*.css.ts' 'src/entities/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **0**
 
 - [ ] **Step 3: 전체 잔여 확인 — 여기서 0이 돼야 한다**
 
-Run: `npx eslint 'src/**/*.css.ts' --format compact 2>&1 | grep -c 'no-raw-design-values'`
+Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **0**
 
 - [ ] **Step 4: 검증 + 커밋**
