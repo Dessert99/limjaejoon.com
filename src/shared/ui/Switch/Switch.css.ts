@@ -6,8 +6,8 @@ import { style } from '@vanilla-extract/css';
 /** 트랙 — 치수/위치는 sprinkles 밖이라 style()에 직접 둔다 */
 export const root = style({
   position: 'relative',
-  width: '2.5rem',
-  height: '1.5rem',
+  width: vars.dimension.x10,
+  height: vars.dimension.x6,
   flexShrink: 0,
   padding: 0,
   border: `1px solid ${vars.color.stroke.neutral}`,
@@ -24,8 +24,8 @@ export const root = style({
 /** 손잡이 — on이면 오른쪽으로 슬라이드(보더 1px 포함 좌우 2px 여백), 위치 전환은 no-preference에서만 애니메이션 */
 export const thumb = style({
   display: 'block',
-  width: '1.25rem',
-  height: '1.25rem',
+  width: vars.dimension.x5,
+  height: vars.dimension.x5,
   borderRadius: vars.radius.pill,
   background: vars.color.bg.surface,
   boxShadow: finish.inset,

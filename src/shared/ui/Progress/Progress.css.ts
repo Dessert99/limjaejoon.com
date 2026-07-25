@@ -7,7 +7,7 @@ export const root = style({
   position: 'relative', // 내부 absolute 요소가 생기면 이 트랙을 배치 기준으로 삼게 한다.
   overflow: 'hidden', // Indicator가 translate로 밖에 밀린 부분을 잘라 실제 채움만 보인다.
   width: '100%', // 부모 폭을 따라 트랙을 만들고 Indicator의 100% 기준도 맞춘다.
-  height: '0.5rem', // 트랙 두께를 정하고 Indicator의 height: 100% 기준이 된다.
+  height: vars.dimension.x2, // 트랙 두께를 정하고 Indicator의 height: 100% 기준이 된다.
   borderRadius: vars.radius.pill, // 트랙을 캡슐 형태로 만들고 overflow와 함께 막대 끝을 둥글게 보인다.
   background: vars.color.bg.surfaceMuted, // 채워지지 않은 트랙 영역의 바탕색이다.
 });

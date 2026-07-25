@@ -41,5 +41,5 @@ globalStyle('a', {
 
 globalStyle(':focus-visible', {
   outline: `2px solid ${vars.color.stroke.brand}`,
-  outlineOffset: '2px',
+  outlineOffset: vars.dimension.x0_5,
 });

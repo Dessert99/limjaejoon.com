@@ -10,14 +10,14 @@ export const root = style([
 
 /** 항목 원 — 1.25rem, 선택되면 테두리 accent, 선택 순간 미세 scale(no-preference 게이트) */
 export const item = style({
-  width: '1.25rem',
-  height: '1.25rem',
+  width: vars.dimension.x5,
+  height: vars.dimension.x5,
   flexShrink: 0,
   padding: 0,
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  borderRadius: '9999px',
+  borderRadius: vars.radius.pill,
   border: `1px solid ${vars.color.stroke.neutral}`,
   background: vars.color.bg.canvas,
   cursor: 'pointer',
@@ -45,9 +45,9 @@ export const indicator = style({
   '::after': {
     content: '""',
     display: 'block',
-    width: '0.625rem',
-    height: '0.625rem',
-    borderRadius: '9999px',
+    width: vars.dimension.x2_5,
+    height: vars.dimension.x2_5,
+    borderRadius: vars.radius.pill,
     background: vars.color.bg.brand,
   },
 });

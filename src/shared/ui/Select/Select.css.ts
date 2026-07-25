@@ -16,6 +16,7 @@ export const trigger = style([
     r: 'r2',
   }),
   {
+    // eslint-disable-next-line design-tokens/no-raw-design-values -- 컴포넌트 고유 최소폭
     minWidth: '10rem',
     background: vars.color.bg.surface,
     border: `1px solid ${vars.color.stroke.neutral}`,
@@ -97,6 +98,7 @@ export const iconWell = style({
 export const content = style([
   sprinkles({ p: 'x1', r: 'r2' }),
   {
+    // eslint-disable-next-line design-tokens/no-raw-design-values -- 컴포넌트 고유 최소폭
     minWidth: '10rem',
     background: vars.color.bg.surface,
     border: `1px solid ${vars.color.stroke.muted}`,

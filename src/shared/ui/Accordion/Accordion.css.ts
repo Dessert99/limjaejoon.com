@@ -93,7 +93,7 @@ export const trigger = style([
       },
       '&:focus-visible': {
         outline: `2px solid ${vars.color.stroke.brand}`,
-        outlineOffset: '-2px',
+        outlineOffset: `calc(${vars.dimension.x0_5} * -1)`,
       },
     },
     '@media': {

@@ -9,7 +9,7 @@ export const root = style({
   display: 'flex',
   alignItems: 'center',
   width: '100%',
-  height: '1.25rem',
+  height: vars.dimension.x5,
   touchAction: 'none',
   userSelect: 'none',
   cursor: 'pointer',
@@ -19,8 +19,8 @@ export const root = style({
 export const track = style({
   position: 'relative',
   flexGrow: 1,
-  height: '0.25rem',
-  borderRadius: '9999px',
+  height: vars.dimension.x1,
+  borderRadius: vars.radius.pill,
   background: vars.color.bg.surfaceMuted,
 });
 
@@ -28,22 +28,22 @@ export const track = style({
 export const range = style({
   position: 'absolute',
   height: '100%',
-  borderRadius: '9999px',
+  borderRadius: vars.radius.pill,
   background: vars.color.bg.brand,
 });
 
 /** 썸 — 드래그 손잡이, hover 확대는 no-preference에서만 애니메이션, 포커스 링은 그대로 유지 */
 export const thumb = style({
   display: 'block',
-  width: '1rem',
-  height: '1rem',
-  borderRadius: '9999px',
+  width: vars.dimension.x4,
+  height: vars.dimension.x4,
+  borderRadius: vars.radius.pill,
   border: `1px solid ${vars.color.stroke.neutral}`,
   background: vars.color.bg.surface,
   boxShadow: finish.inset,
   ':focus-visible': {
     outline: `2px solid ${vars.color.stroke.brand}`,
-    outlineOffset: '2px',
+    outlineOffset: vars.dimension.x0_5,
   },
   '@media': {
     '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':

@@ -66,7 +66,7 @@ export const content = style([
     zIndex: 51,
     transform: 'translate(-50%, -50%)',
     width: '90vw',
-    maxWidth: '32rem',
+    maxWidth: vars.container.dialog,
     maxHeight: 'calc(100dvh - 2rem)',
     overflowY: 'auto',
     background: vars.color.bg.surface,
@@ -97,7 +97,7 @@ export const header = style([
 /** 제목 — dialog 이름으로 aria-labelledby에 연결된다 */
 export const title = style({
   margin: 0,
-  fontSize: '1.125rem',
+  fontSize: vars.typography.fontSize[20],
   color: vars.color.fg.neutral,
 });
 
