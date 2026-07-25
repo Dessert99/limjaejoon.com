@@ -96,8 +96,7 @@ const eslintConfig = defineConfig([
     ignores: ['src/shared/styles/tokens/**', 'src/shared/styles/themes/**'],
     plugins: { 'design-tokens': designTokens },
     rules: {
-      // 마이그레이션 중에는 warn — 전수 치환 후 error 로 승격한다
-      'design-tokens/no-raw-design-values': 'warn',
+      'design-tokens/no-raw-design-values': 'error',
     },
   },
 
