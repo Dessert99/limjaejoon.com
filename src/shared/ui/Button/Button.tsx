@@ -118,7 +118,11 @@ const ButtonRoot = forwardRef<HTMLButtonElement, ButtonProps>(
       );
     }
 
-    const classNames = [button({ variant, size, layout }), block ? blockClass : null, className]
+    const classNames = [
+      button({ variant, size, layout }),
+      block ? blockClass : null,
+      className,
+    ]
       .filter(Boolean)
       .join(' ');
 

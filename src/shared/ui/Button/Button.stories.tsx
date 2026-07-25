@@ -63,7 +63,13 @@ export const Sizes: Story = {
 export const Block: Story = {
   render: () => {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '20rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          maxWidth: '20rem',
+        }}>
         <Button block>primary block</Button>
         <Button
           variant='secondary'

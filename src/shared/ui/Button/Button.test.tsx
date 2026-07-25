@@ -70,9 +70,7 @@ describe('Button', () => {
   });
 
   it('secondary variant에서 block prop이 className을 변경한다', () => {
-    const { rerender } = render(
-      <Button variant='secondary'>저장</Button>
-    );
+    const { rerender } = render(<Button variant='secondary'>저장</Button>);
     const plain = screen.getByRole('button', { name: '저장' }).className;
 
     rerender(

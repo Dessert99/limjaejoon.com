@@ -54,7 +54,9 @@ const base = style([
     '@media': {
       '(prefers-reduced-motion: no-preference)': {
         selectors: {
-          '&:active:not(:disabled):not([data-disabled])': { transform: 'scale(0.97)' },
+          '&:active:not(:disabled):not([data-disabled])': {
+            transform: 'scale(0.97)',
+          },
         },
       },
       '(prefers-reduced-motion: reduce)': {
@@ -148,17 +150,24 @@ export const button = recipe({
         '@media': {
           '(hover: hover) and (pointer: fine)': {
             selectors: {
-              '&:hover:not(:disabled):not([data-disabled])': { background: vars.color.bg.brandPressed },
+              '&:hover:not(:disabled):not([data-disabled])': {
+                background: vars.color.bg.brandPressed,
+              },
             },
           },
-          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
-            selectors: {
-              '&:hover:not(:disabled):not([data-disabled])': { transform: 'translateY(-2px)' },
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
+            {
+              selectors: {
+                '&:hover:not(:disabled):not([data-disabled])': {
+                  transform: 'translateY(-2px)',
+                },
+              },
             },
-          },
         },
         selectors: {
-          '&:active:not(:disabled):not([data-disabled])': { boxShadow: shadow.press },
+          '&:active:not(:disabled):not([data-disabled])': {
+            boxShadow: shadow.press,
+          },
         },
       },
       secondary: {
@@ -167,14 +176,19 @@ export const button = recipe({
         border: `1px solid ${vars.color.stroke.positive}`,
         boxShadow: finish.inset,
         '@media': {
-          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
-            selectors: {
-              '&:hover:not(:disabled):not([data-disabled])': { transform: 'translateY(-2px)' },
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
+            {
+              selectors: {
+                '&:hover:not(:disabled):not([data-disabled])': {
+                  transform: 'translateY(-2px)',
+                },
+              },
             },
-          },
         },
         selectors: {
-          '&:active:not(:disabled):not([data-disabled])': { boxShadow: shadow.press },
+          '&:active:not(:disabled):not([data-disabled])': {
+            boxShadow: shadow.press,
+          },
         },
       },
       outline: {
@@ -184,14 +198,19 @@ export const button = recipe({
         '@media': {
           '(hover: hover) and (pointer: fine)': {
             selectors: {
-              '&:hover:not(:disabled):not([data-disabled])': { background: vars.color.bg.surfaceMuted },
+              '&:hover:not(:disabled):not([data-disabled])': {
+                background: vars.color.bg.surfaceMuted,
+              },
             },
           },
-          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
-            selectors: {
-              '&:hover:not(:disabled):not([data-disabled])': { transform: 'translateY(-2px)' },
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
+            {
+              selectors: {
+                '&:hover:not(:disabled):not([data-disabled])': {
+                  transform: 'translateY(-2px)',
+                },
+              },
             },
-          },
         },
       },
       ghost: {
@@ -200,7 +219,9 @@ export const button = recipe({
         '@media': {
           '(hover: hover) and (pointer: fine)': {
             selectors: {
-              '&:hover:not(:disabled):not([data-disabled])': { background: vars.color.bg.surfaceMuted },
+              '&:hover:not(:disabled):not([data-disabled])': {
+                background: vars.color.bg.surfaceMuted,
+              },
             },
           },
         },
@@ -210,22 +231,39 @@ export const button = recipe({
         color: vars.color.fg.onBrand,
         boxShadow: `${finish.inset}, ${shadow.raise}`,
         '@media': {
-          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
-            selectors: {
-              '&:hover:not(:disabled):not([data-disabled])': { transform: 'translateY(-2px)' },
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
+            {
+              selectors: {
+                '&:hover:not(:disabled):not([data-disabled])': {
+                  transform: 'translateY(-2px)',
+                },
+              },
             },
-          },
         },
         selectors: {
-          '&:active:not(:disabled):not([data-disabled])': { boxShadow: shadow.press },
+          '&:active:not(:disabled):not([data-disabled])': {
+            boxShadow: shadow.press,
+          },
         },
       },
     },
     size: {
-      xsmall: { height: vars.dimension.x6, fontSize: vars.typography.fontSize[12] },
-      small: { height: vars.dimension.x8, fontSize: vars.typography.fontSize[12] },
-      medium: { height: vars.dimension.x12, fontSize: vars.typography.fontSize[14] },
-      large: { height: vars.dimension.x16, fontSize: vars.typography.fontSize[16] },
+      xsmall: {
+        height: vars.dimension.x6,
+        fontSize: vars.typography.fontSize[12],
+      },
+      small: {
+        height: vars.dimension.x8,
+        fontSize: vars.typography.fontSize[12],
+      },
+      medium: {
+        height: vars.dimension.x12,
+        fontSize: vars.typography.fontSize[14],
+      },
+      large: {
+        height: vars.dimension.x16,
+        fontSize: vars.typography.fontSize[16],
+      },
     },
     layout: {
       withText: {},
