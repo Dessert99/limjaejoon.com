@@ -352,6 +352,7 @@ export const button = recipe({
           '&:is(:disabled, [data-disabled])': {
             background: vars.color.bg.disabled,
             color: vars.color.fg.disabled,
+            borderColor: vars.color.stroke.muted,
             boxShadow: 'none',
           },
           '&[data-loading]': {
