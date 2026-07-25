@@ -174,3 +174,64 @@ describe('길이 속성의 숫자 리터럴 차단', () => {
     ],
   });
 });
+
+describe('외부 리뷰가 찾은 우회 경로 차단', () => {
+  ruleTester.run('no-raw-design-values', rule, {
+    valid: [
+      // unitless 가 정상인 속성은 확장된 allowlist 에서도 여전히 면제된다
+      { code: 'const a = { strokeWidth: 2 };' },
+      { code: 'const a = { lineHeight: 1.5 };' },
+      { code: 'const a = { blockSize: 0 };' },
+      // vars 네임스페이스 접근은 palette 가 아니라 영향받지 않는다
+      { code: 'const a = { color: vars.color.fg.brand };' },
+      { code: 'const a = { fontSize: vars.typography.fontSize[14] };' },
+      // color-mix 인자가 토큰이면 raw 색이 아니다 — 함수명만으론 quasi 스캔에서 raw 확정을 못한다(Toggle.css.ts 실사용 형태)
+      {
+        code: 'const a = { boxShadow: `0 0 0 3px color-mix(in srgb, ${vars.color.bg.brand} 24%, transparent)` };',
+      },
+    ],
+    invalid: [
+      // 논리 속성 — paddingInlineStart 는 longhand 라 allowlist 에 없으면 새어나간다
+      {
+        code: 'const a = { paddingInlineStart: 12 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      // longhand border 폭 — borderWidth 만 있고 side 별 속성은 빠져 있었다
+      {
+        code: 'const a = { borderTopWidth: 3 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      // letterSpacing 은 px 로 직렬화되는 치수인데 allowlist 밖이었다
+      {
+        code: 'const a = { letterSpacing: 2 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      // 모던 색 함수 — oklch·lab·lch·hwb·color·color-mix 전부 유효 CSS 색이다
+      {
+        code: "const a = { color: 'oklch(0.7 0.15 200)' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      {
+        code: "const a = { color: 'lab(50% 40 59)' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      {
+        code: "const a = { color: 'hwb(190 0% 0%)' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      {
+        code: "const a = { color: 'color(display-p3 1 0 0)' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      {
+        code: "const a = { background: 'color-mix(in oklch, red, blue)' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      // 네임스페이스 import 로 palette 를 우회하는 경로 — tokens.palette.* 멤버 접근을 잡는다
+      {
+        code: "import * as tokens from '@/shared/styles/tokens';\nconst a = { background: tokens.palette.clay[500] };",
+        errors: [{ messageId: 'paletteImport' }],
+      },
+    ],
+  });
+});

@@ -7,9 +7,14 @@ const HAIRLINE = '1px';
 const RAW_DIMENSION = /^-?\d*\.?\d+(?:px|rem)$/;
 
 // 8·6·4·3자리 hex 를 긴 것부터 시도한다 — 4자리(#RGBA)도 CSS 유효 문법이라 포함한다
+// hex 는 어디서 발견되든 raw 색이 확정된다 — 함수 인자와 달리 토큰으로 치환될 여지가 없는 리터럴이다
+const RAW_COLOR_HEX = /#(?:[0-9a-f]{8}|[0-9a-f]{6}|[0-9a-f]{4}|[0-9a-f]{3})\b/i;
+
 // i 플래그 필수: CSS 함수명은 대소문자를 안 가려서 RGB(...)·HSL(...) 도 유효한 raw 색이다
-const RAW_COLOR =
-  /#(?:[0-9a-f]{8}|[0-9a-f]{6}|[0-9a-f]{4}|[0-9a-f]{3})\b|\b(?:rgba?|hsla?)\(/i;
+// color\( 은 \b 로 앞을 막아도 background-color( 의 color( 부분에 걸린다 — (?<![\w-]) 로 식별자 중간 시작을 배제한다
+// 함수명만으론 raw 확정이 안 된다 — color-mix(in srgb, ${token} ...) 처럼 인자가 토큰일 수 있어 quasi 조각 스캔에는 안 쓴다
+const RAW_COLOR_FN =
+  /\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color-mix)\(|(?<![\w-])color\(/i;
 
 // vanilla-extract 가 unitless 숫자를 px 로 직렬화하는 속성들 — allowlist 라 오탐이 구조적으로 불가능하다
 const LENGTH_PROPS = new Set([
@@ -19,11 +24,23 @@ const LENGTH_PROPS = new Set([
   'maxWidth',
   'minHeight',
   'maxHeight',
+  'blockSize',
+  'inlineSize',
+  'minBlockSize',
+  'maxBlockSize',
+  'minInlineSize',
+  'maxInlineSize',
   'top',
   'right',
   'bottom',
   'left',
   'inset',
+  'insetInline',
+  'insetInlineStart',
+  'insetInlineEnd',
+  'insetBlock',
+  'insetBlockStart',
+  'insetBlockEnd',
   'gap',
   'rowGap',
   'columnGap',
@@ -33,19 +50,40 @@ const LENGTH_PROPS = new Set([
   'paddingBottom',
   'paddingLeft',
   'paddingInline',
+  'paddingInlineStart',
+  'paddingInlineEnd',
   'paddingBlock',
+  'paddingBlockStart',
+  'paddingBlockEnd',
   'margin',
   'marginTop',
   'marginRight',
   'marginBottom',
   'marginLeft',
   'marginInline',
+  'marginInlineStart',
+  'marginInlineEnd',
   'marginBlock',
+  'marginBlockStart',
+  'marginBlockEnd',
   'fontSize',
+  'letterSpacing',
+  'wordSpacing',
+  'textIndent',
   'borderRadius',
+  'borderTopLeftRadius',
+  'borderTopRightRadius',
+  'borderBottomLeftRadius',
+  'borderBottomRightRadius',
   'outlineOffset',
   'outlineWidth',
   'borderWidth',
+  'borderTopWidth',
+  'borderRightWidth',
+  'borderBottomWidth',
+  'borderLeftWidth',
+  'borderInlineWidth',
+  'borderBlockWidth',
   'flexBasis',
 ]);
 
@@ -71,7 +109,8 @@ const noRawDesignValues = {
         if (typeof node.value !== 'string') {
           return;
         }
-        if (RAW_COLOR.test(node.value)) {
+        // 문자열 리터럴은 인자까지 전부 static 이라 hex·함수명 둘 다 raw 색으로 확정된다
+        if (RAW_COLOR_HEX.test(node.value) || RAW_COLOR_FN.test(node.value)) {
           context.report({
             node,
             messageId: 'rawColor',
@@ -91,7 +130,7 @@ const noRawDesignValues = {
         }
       },
       TemplateLiteral(node) {
-        // 치환 없는 템플릿은 따옴표 문자열과 동치라 치수까지 본다 — `37px` 우회를 막는다
+        // 치환 없는 템플릿은 따옴표 문자열과 동치라 치수·hex·함수명 raw 색까지 전부 본다 — `37px` 우회를 막는다
         if (node.expressions.length === 0) {
           const only = node.quasis[0].value.raw;
           if (only !== HAIRLINE && RAW_DIMENSION.test(only)) {
@@ -102,10 +141,18 @@ const noRawDesignValues = {
             });
             return;
           }
+          if (RAW_COLOR_HEX.test(only) || RAW_COLOR_FN.test(only)) {
+            context.report({
+              node,
+              messageId: 'rawColor',
+              data: { value: only },
+            });
+          }
+          return;
         }
-        // 치환이 있으면 조각이 '1px solid ' 같은 복합값이라 색만 본다
+        // 치환이 있으면 조각이 'color-mix(in srgb, ' 처럼 함수 인자가 토큰일 수 있는 복합값이라 hex 만 본다
         const colored = node.quasis.find((quasi) => {
-          return RAW_COLOR.test(quasi.value.raw);
+          return RAW_COLOR_HEX.test(quasi.value.raw);
         });
         if (colored) {
           context.report({
@@ -124,6 +171,12 @@ const noRawDesignValues = {
           );
         });
         if (importsPalette) {
+          context.report({ node, messageId: 'paletteImport' });
+        }
+      },
+      MemberExpression(node) {
+        // namespace import(`import * as tokens`)는 ImportSpecifier 를 안 남기니 접근 지점에서 잡는다
+        if (!node.computed && node.property.name === 'palette') {
           context.report({ node, messageId: 'paletteImport' });
         }
       },
