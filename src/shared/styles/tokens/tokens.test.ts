@@ -54,6 +54,16 @@ describe('design tokens', () => {
     expect(typography.text.code.fontFamily).toBe(typography.fontFamily.mono);
   });
 
+  it('페이지 h1용 headingXl과 40px 스케일을 제공한다', () => {
+    expect(typography.fontSize[40]).toBe('2.5rem');
+    expect(typography.text.headingXl).toMatchObject({
+      fontFamily: typography.fontFamily.sans,
+      fontSize: typography.fontSize[40],
+      lineHeight: typography.lineHeight.tight,
+      fontWeight: typography.fontWeight.bold,
+    });
+  });
+
   it('dimension scale과 semantic spacing을 분리한다', () => {
     expect(dimension.x0_5).toBe('0.125rem');
     expect(dimension.x4).toBe('1rem');

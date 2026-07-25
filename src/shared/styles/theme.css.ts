@@ -59,6 +59,7 @@ export const vars = createThemeContract({
       20: null,
       24: null,
       32: null,
+      40: null,
     },
     lineHeight: {
       tight: null,
@@ -109,6 +110,12 @@ export const vars = createThemeContract({
         fontWeight: null,
       },
       headingLg: {
+        fontFamily: null,
+        fontSize: null,
+        lineHeight: null,
+        fontWeight: null,
+      },
+      headingXl: {
         fontFamily: null,
         fontSize: null,
         lineHeight: null,
