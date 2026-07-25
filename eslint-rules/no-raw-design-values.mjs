@@ -11,6 +11,44 @@ const RAW_DIMENSION = /^-?\d*\.?\d+(?:px|rem)$/;
 const RAW_COLOR =
   /#(?:[0-9a-f]{8}|[0-9a-f]{6}|[0-9a-f]{4}|[0-9a-f]{3})\b|\b(?:rgba?|hsla?)\(/i;
 
+// vanilla-extract 가 unitless 숫자를 px 로 직렬화하는 속성들 — allowlist 라 오탐이 구조적으로 불가능하다
+const LENGTH_PROPS = new Set([
+  'width',
+  'height',
+  'minWidth',
+  'maxWidth',
+  'minHeight',
+  'maxHeight',
+  'top',
+  'right',
+  'bottom',
+  'left',
+  'inset',
+  'gap',
+  'rowGap',
+  'columnGap',
+  'padding',
+  'paddingTop',
+  'paddingRight',
+  'paddingBottom',
+  'paddingLeft',
+  'paddingInline',
+  'paddingBlock',
+  'margin',
+  'marginTop',
+  'marginRight',
+  'marginBottom',
+  'marginLeft',
+  'marginInline',
+  'marginBlock',
+  'fontSize',
+  'borderRadius',
+  'outlineOffset',
+  'outlineWidth',
+  'borderWidth',
+  'flexBasis',
+]);
+
 /** ESLint 규칙 — raw 치수·색 리터럴과 palette 직접 import 를 막는다 */
 const noRawDesignValues = {
   meta: {
@@ -87,6 +125,36 @@ const noRawDesignValues = {
         });
         if (importsPalette) {
           context.report({ node, messageId: 'paletteImport' });
+        }
+      },
+      Property(node) {
+        // 숫자는 길이 속성에서만 본다 — lineHeight·fontWeight·zIndex 등은 unitless 가 정상이다
+        if (node.computed) {
+          return;
+        }
+        // 음수 리터럴은 파서가 UnaryExpression(-, Literal) 로 쪼개므로 풀어서 검사한다
+        const value = node.value;
+        const literal =
+          value.type === 'UnaryExpression' && value.operator === '-'
+            ? value.argument
+            : value;
+        if (literal.type !== 'Literal') {
+          return;
+        }
+        if (typeof literal.value !== 'number' || literal.value === 0) {
+          return;
+        }
+        const name =
+          node.key.type === 'Identifier' ? node.key.name : node.key.value;
+        if (LENGTH_PROPS.has(name)) {
+          context.report({
+            node: value,
+            messageId: 'rawDimension',
+            data: {
+              value:
+                value === literal ? String(literal.value) : `-${literal.value}`,
+            },
+          });
         }
       },
     };

@@ -129,3 +129,48 @@ describe('raw 색과 palette import 차단', () => {
     ],
   });
 });
+
+describe('길이 속성의 숫자 리터럴 차단', () => {
+  ruleTester.run('no-raw-design-values', rule, {
+    valid: [
+      // 길이가 아닌 속성의 숫자는 전부 정당하다
+      { code: 'const a = { lineHeight: 1.5 };' },
+      { code: 'const a = { fontWeight: 700 };' },
+      { code: 'const a = { zIndex: 50 };' },
+      { code: 'const a = { opacity: 1 };' },
+      { code: 'const a = { flexGrow: 1 };' },
+      { code: 'const a = { flexShrink: 0 };' },
+      { code: 'const a = { flex: 1 };' },
+      { code: 'const a = { strokeWidth: 2 };' },
+      { code: 'const a = { order: 2 };' },
+      // 단위 없는 0 은 CSS 관용이고 스케일 선택 문제가 아니다
+      { code: 'const a = { padding: 0 };' },
+      { code: 'const a = { inset: 0 };' },
+      { code: 'const a = { minWidth: 0 };' },
+      // 토큰 참조는 Literal 이 아니다
+      { code: 'const a = { maxWidth: vars.container.form };' },
+    ],
+    invalid: [
+      {
+        code: 'const a = { maxWidth: 360 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: 'const a = { padding: 4 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: 'const a = { height: 1 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: 'const a = { fontSize: 14 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: 'const a = { top: -8 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+    ],
+  });
+});
