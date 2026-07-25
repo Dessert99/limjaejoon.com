@@ -10,7 +10,7 @@
 
 - `*.css.ts`에서 raw 디자인 값(하드코딩 치수·색)을 ESLint로 차단한다.
 - 차단하려면 대안이 있어야 하므로, 비어 있는 토큰 레이어를 먼저 채운다.
-- 기존 위반 102건을 전수 마이그레이션하고 CI에서 `error`로 고정한다.
+- 기존 위반 100건을 전수 마이그레이션하고 CI에서 `error`로 고정한다.
 
 ## 비목표
 
@@ -50,7 +50,7 @@ sprinkles({ p: 'x4' }); // 통과
 sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아님
 ```
 
-실측이 이를 뒷받침한다. **raw 리터럴 102건 중 대부분이 sprinkles가 닿지 않는 속성**(`fontSize`·`width`·`height`·`min/maxWidth`·`minHeight`)에 몰려 있다. sprinkles가 커버하는 `gap`·`padding`·`margin`·`borderRadius`·색 계열은 이미 깨끗하다.
+실측이 이를 뒷받침한다. **raw 리터럴 100건 중 대부분이 sprinkles가 닿지 않는 속성**(`fontSize`·`width`·`height`·`min/maxWidth`·`minHeight`)에 몰려 있다. sprinkles가 커버하는 `gap`·`padding`·`margin`·`borderRadius`·색 계열은 이미 깨끗하다.
 
 **따라서 ESLint의 역할은 sprinkles가 닿지 않는 영역의 임의값 차단으로 한정한다.**
 
@@ -60,7 +60,8 @@ sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아�
 
 | 항목                                       | 수치        | 판정                |
 | ------------------------------------------ | ----------- | ------------------- |
-| 단독 px/rem 문자열 리터럴                  | **102**     | 차단 → 마이그레이션 |
+| 단독 px/rem 문자열 리터럴 (`'1px'` 2건 제외) | **100**   | 차단 → 마이그레이션 |
+| 단독 `'1px'` 헤어라인                      | 2           | 면제 (§2.5)         |
 | hex / rgb() / hsl()                        | 0           | 차단 (순수 래칫)    |
 | `palette` import                           | 0           | 차단 (순수 래칫)    |
 | unitless 치수값 (`padding: 4`)             | 0           | 검사 안 함 (§3.2)   |
@@ -89,7 +90,17 @@ sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아�
 
 어드민 에디터는 좁히는 대신 넓히는 쪽으로 흡수한다 — 편집 화면은 넓을수록 유리하다.
 
-`createThemeContract`의 `vars`에 `container` 그룹을 추가하고, `night.ts`·`light.ts`가 동일 객체를 주입한다(테마 불변). `tokens/dimension/container.ts`에 정의하고 `tokens/dimension/index.ts`가 재노출한다.
+**배선은 5개 파일을 함께 고쳐야 한다** (코덱스 리뷰 반영 — 3개만 고치면 타입이 깨진다):
+
+| 파일                              | 작업                                            |
+| --------------------------------- | ----------------------------------------------- |
+| `tokens/dimension/container.ts`   | 신설 — 값 정의                                  |
+| `tokens/dimension/index.ts`       | `container` 재노출                              |
+| `tokens/index.ts`                 | `export { dimension, spacing }` → `container` 추가 |
+| `theme.types.ts`                  | `ThemeValues`에 `container: typeof container` 추가 |
+| `theme.css.ts`                    | `createThemeContract`의 `vars`에 `container` 그룹 추가 |
+
+`tokens/index.ts`와 `theme.types.ts`는 **최상위 그룹을 명시적으로 열거**하는 구조라, 빠뜨리면 `night.ts`·`light.ts`가 excess property 에러를 내거나 import가 안 풀린다. `night.ts`·`light.ts`는 동일 `container` 객체를 주입한다(테마 불변).
 
 ### 2.2 타이포 정리
 
@@ -101,7 +112,7 @@ sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아�
 
 `headingXl`은 페이지 h1 전용이다. 조합은 기존 `headingLg`와 동일하되 `fontSize[40]`을 쓴다 — `fontFamily.sans` · `lineHeight.tight` · `fontWeight.bold`.
 
-`fontSize` 스케일은 12·14·16·20·24·32·**40** 7종이 된다. contract·night·light·`tokens.test.ts`를 함께 갱신한다.
+`fontSize` 스케일은 12·14·16·20·24·32·**40** 7종이 된다. 배선은 `tokens/typography/{scale,text}.ts`와 `theme.css.ts` contract(`fontSize`·`text` 키를 명시 열거함) 두 곳 + `tokens.test.ts`다. `night`·`light`·`theme.types.ts`는 `typography` 객체를 통째로 넘기므로 자동 반영된다 — §2.1의 `container`와 달리 최상위 그룹이 늘지 않기 때문이다.
 
 ### 2.3 `dimension`은 그대로 둔다
 
@@ -120,9 +131,20 @@ sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아�
 
 `1px solid`(40회)·`2px solid`(11회)는 **밀도 무관 상수**다. 1px 헤어라인은 어떤 화면에서도 1px이고, "15개 중 무엇을 고를까"라는 스케일 선택 문제가 아니다. Tailwind·Radix Themes도 리터럴로 둔다.
 
-규칙이 복합 문자열을 검사하지 않으므로 51건은 **구조적으로** 범위 밖이 된다. 별도 예외 목록이 필요 없다.
+규칙이 복합 문자열을 검사하지 않으므로 51건은 **구조적으로** 범위 밖이 된다.
 
-**단 `outlineOffset` 3건은 예외적으로 통일한다** — offset은 border 두께가 아니라 간격 축이고, 이미 6곳이 `vars.dimension.x0_5`를 쓰는데 3곳만 `'2px'`인 불일치다. 같은 값(2px = 0.125rem)이라 시각 변화가 없다.
+**단독 `'1px'`도 규칙이 면제한다** (코덱스 리뷰 반영). `Divider.css.ts`의 `[dividerThickness]: '1px'`와 `DropdownMenu.css.ts`의 `height: '1px'`가 여기 해당한다. 둘 다 위 51건과 **똑같은 헤어라인 개념**인데 값이 단독으로 놓였을 뿐이다. 문법적 위치라는 우연으로 규율이 갈리면 안 되므로, 규칙이 `'1px'` 리터럴 하나를 명시적으로 통과시킨다. `dimension` 스케일 최솟값이 `x0_5`(2px)라 대체 토큰도 없다.
+
+`'2px'`는 계속 차단한다 — 대응 토큰(`x0_5`)이 있고, 실제 용례가 border 두께가 아니라 `outlineOffset`(간격 축)이기 때문이다.
+
+**`outlineOffset` 4건은 토큰으로 통일한다** — 이미 6곳이 `vars.dimension.x0_5`를 쓰는데 4곳만 raw인 불일치다.
+
+| 위치                          | 현재      | 처리                                    |
+| ----------------------------- | --------- | --------------------------------------- |
+| 3곳                           | `'2px'`   | `vars.dimension.x0_5` (동일 값)         |
+| `Accordion.css.ts:96`         | `'-2px'`  | `` calc(${vars.dimension.x0_5} * -1) `` |
+
+음수 offset(안쪽 포커스 링)은 음수 토큰을 새로 만들지 않고 `calc()`로 뒤집는다 — `calc()`는 규칙 통과 대상이고 토큰 연결도 유지된다. 셋 다 값이 같아 시각 변화가 없다.
 
 ### 2.6 escape hatch로 남기는 5건
 
@@ -143,18 +165,24 @@ sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아�
 
 ### 3.1 차단 대상
 
-| 방문 노드              | 검사                                              | messageId       |
-| ---------------------- | ------------------------------------------------- | --------------- |
-| `Literal` (string)     | `^-?\d*\.?\d+(px\|rem)$`                          | `rawDimension`  |
-| `Literal` (string)     | hex(`#rgb`/`#rrggbb`/`#rrggbbaa`) 또는 `rgb(`/`rgba(`/`hsl(`/`hsla(` 포함 | `rawColor` |
-| `TemplateLiteral` quasis | 위 색 패턴 포함                                 | `rawColor`      |
-| `ImportDeclaration`    | source가 `tokens/color/palette`로 끝남            | `paletteImport` |
+| 방문 노드                | 검사                                                              | messageId       |
+| ------------------------ | ----------------------------------------------------------------- | --------------- |
+| `Literal` (string)       | `^-?\d*\.?\d+(px\|rem)$` — **단 `'1px'`은 면제**(§2.5)            | `rawDimension`  |
+| `Literal` (string)       | 아래 색 패턴 포함                                                 | `rawColor`      |
+| `TemplateLiteral` quasis | 아래 색 패턴 포함                                                 | `rawColor`      |
+| `ImportDeclaration`      | **`palette` 라는 이름을 import** (source 무관)                    | `paletteImport` |
+
+**색 패턴:** `#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b` 또는 `rgb(`/`rgba(`/`hsl(`/`hsla(`
+
+4자리 `#RGBA` 형식을 포함한다(코덱스 리뷰 반영) — CSS 유효 문법인데 3·6·8자리만 보면 `'#fff8'` 같은 값이 통과한다.
+
+**palette 검사는 경로가 아니라 import 되는 이름으로 한다**(코덱스 리뷰 반영). `palette`는 `tokens/color/index.ts` → `tokens/index.ts` → `shared/styles/index.ts`(`export *`)로 3단 재노출돼 있어, 경로 접미사만 보면 `@/shared/styles`·`@/shared/styles/tokens`·`@/shared/styles/tokens/color` 세 경로가 전부 우회로가 된다. 바인딩 이름을 보면 한 번에 막히고 향후 배럴이 늘어나도 안전하다.
 
 템플릿 리터럴에서 **px/rem은 검사하지 않는다** — 거기 있는 값은 전부 `1px solid ${...}` 같은 복합값이고 §2.5 결정에 따라 허용한다. 색만 검사하는 것은 `` `1px solid #fff` `` 형태의 회귀를 막는 순수 래칫이다(현재 0건).
 
 ### 3.2 통과시키는 것 — 인터랙티브 작업 보호
 
-`em` · `%` · `vw`/`vh`/`dvh`/`svh` · `cqw`/`cqh` · `fr` · `auto`/`fit-content`/`inherit` · `'0'` · `calc()`/`min()`/`max()`/`clamp()`/`var()` · 복합 문자열 · `vars.*` 전 계층 · `createVar()` 결과
+`em` · `%` · `vw`/`vh`/`dvh`/`svh` · `cqw`/`cqh` · `fr` · `auto`/`fit-content`/`inherit` · `'0'` · `'1px'`(§2.5) · `calc()`/`min()`/`max()`/`clamp()`/`var()` · 복합 문자열 · `vars.*` 전 계층 · `createVar()` 결과
 
 `transform`·`animation`·`transition`·`boxShadow`·`filter`는 값이 전부 복합 문자열이라 **구조적으로 규칙에 걸리지 않는다**. 속성별 예외 목록을 두지 않는 이유다.
 
@@ -209,8 +237,10 @@ vitest 기본 include(`**/*.test.?(c|m)[jt]s`)가 `.test.mjs`를 잡는다. Rule
 
 테스트 케이스:
 
-- **valid** — `vars.*` 참조 · `'100%'` · `'90vw'` · `'1em'` · `'auto'` · `'0'` · `calc()`/`var()` · `` `1px solid ${vars.color.stroke.neutral}` `` · `'translateY(-2px)'` · `createVar()`
-- **invalid** — `'1rem'` · `'0.875rem'` · `'2px'` · `'9999px'` · `'#FF0000'` · `'rgba(0,0,0,.5)'` · `` `1px solid #fff` `` · palette import
+- **valid** — `vars.*` 참조 · `'100%'` · `'90vw'` · `'1em'` · `'auto'` · `'0'` · **`'1px'`(§2.5 면제)** · `calc()`/`var()` · `` `1px solid ${vars.color.stroke.neutral}` `` · `'translateY(-2px)'` · `createVar()`
+- **invalid** — `'1rem'` · `'0.875rem'` · `'2px'` · `'-2px'` · `'0px'` · `'9999px'` · `'#FF0000'` · **`'#fff8'`(4자리)** · `'rgba(0,0,0,.5)'` · `` `1px solid #fff` `` · palette import **3경로 전부**(`…/tokens/color/palette` · `@/shared/styles/tokens` · `@/shared/styles`)
+
+마지막 두 묶음이 코덱스 리뷰로 추가된 케이스다 — 4자리 hex와 배럴 경유 palette import는 원래 명세로는 통과해버린다.
 
 ---
 
@@ -250,25 +280,27 @@ gsap.to(el, { [parallaxY]: '-120px', ease: 'none', scrollTrigger: {} });
 
 ---
 
-## 6. 마이그레이션 분해 — 102건 / 32파일
+## 6. 마이그레이션 분해 — 100건 / 31파일
 
-| 그룹                    | 건수 | 파일 | 주요 작업                                      |
-| ----------------------- | ---- | ---- | ---------------------------------------------- |
-| shared/ui 프리미티브    | 30   | 10   | `container.dialog` · `radius.pill` · `dimension` 치환 |
-| pages/lab-\*            | 37   | 12   | fontSize 대부분. 두 랩이 거의 미러 구조        |
-| pages (blog·admin·home) | 18   | 5    | `container.*` · `text.headingXl`               |
-| features·entities       | 16   | 4    | 폼 컨트롤 높이 `2.5rem` → `x10`                |
-| shared/styles/global    | 1    | 1    | `outlineOffset '2px'` → `x0_5`                 |
+| 그룹                    | 건수 | 파일 | 주요 작업                                             |
+| ----------------------- | ---- | ---- | ----------------------------------------------------- |
+| shared/ui 프리미티브    | 28   | 9    | `container.dialog` · `radius.pill` · `dimension` 치환 · Accordion `-2px`→`calc()` |
+| pages/lab-\*            | 37   | 12   | fontSize 대부분. 두 랩이 거의 미러 구조               |
+| pages (blog·admin·home) | 18   | 5    | `container.*` · `text.headingXl`                      |
+| features·entities       | 16   | 4    | 폼 컨트롤 높이 `2.5rem` → `x10`                       |
+| shared/styles/global    | 1    | 1    | `outlineOffset '2px'` → `x0_5`                        |
+
+shared/ui가 30→28, 파일이 10→9인 것은 `'1px'` 면제(§2.5)로 Divider가 통째로 빠지고 DropdownMenu가 1건 줄기 때문이다.
 
 파일별 상위: Slider 8 · PostEditorForm 7 · RadioGroup 6 · BlogPage 6 · (5건 5파일) · …
 
 ### 페이즈
 
 ```
-P0  토큰 보강      container 5역할 · fontSize[40] · text.headingXl
-                   contract·night·light·tokens.test 동기화
+P0  토큰 보강      container 5역할(5파일 배선, §2.1) · fontSize[40] · text.headingXl
+                   theme.css contract · tokens/index · theme.types · tokens.test 동기화
 P1  규칙 작성      RuleTester 테스트(RED) → 규칙 구현(GREEN) → flat config에 warn 배선
-P2  shared/ui + global (31건)
+P2  shared/ui + global (29건)
 P3  lab 2세트 (37건)
 P4  pages (18건)
 P5  features·entities (16건)
@@ -283,7 +315,7 @@ P0가 P2~P5보다 반드시 먼저다 — 치환할 토큰이 있어야 한다. 
 
 **warn-first 래칫**으로 도입한다.
 
-1. P1에서 `warn`으로 켜서 baseline 102를 확인한다. 빌드를 빨갛게 만들지 않고 시작한다.
+1. P1에서 `warn`으로 켜서 baseline 100을 확인한다. 빌드를 빨갛게 만들지 않고 시작한다.
 2. P2~P5 각 페이즈 후 warning 수 감소를 확인한다 — 진행률이 측정 가능해진다.
 3. 0 도달 시 P6에서 `error`로 승격한다. `npm run ci`에 이미 `lint`가 있어 추가 배선은 불필요하다.
 
@@ -300,7 +332,7 @@ npx prettier --write <바뀐 파일>
 
 ## 8. 회귀 영향
 
-**값이 바뀌는 곳은 13건뿐이고, 나머지 89건은 표현만 바뀐다.**
+**값이 바뀌는 곳은 13건뿐이고, 나머지 87건은 표현만 바뀐다.**
 
 | 대상                    | 변화     | 확인 화면              |
 | ----------------------- | -------- | ---------------------- |
@@ -310,15 +342,33 @@ npx prettier --write <바뀐 파일>
 | fontSize 13px → 14px    | 7곳      | 랩 컨트롤·레퍼런스 표 · DropdownMenu · PostFilterForm |
 | fontSize 18px → 20px    | 3곳      | BlogPostPage · Dialog 제목 · AlertDialog 제목 |
 
+`Accordion`의 `outlineOffset: '-2px'` → `calc(…* -1)`은 계산 결과가 같아 시각 변화가 없다(§2.5).
+
 토큰 contract에 키를 추가하므로 `tokens.test.ts`의 컨트랙트 충족 검증이 함께 갱신돼야 한다. `night`·`light` 양쪽에 `container`·`fontSize[40]`·`text.headingXl`을 빠짐없이 채우지 않으면 `type-check`가 잡는다.
 
 ---
 
 ## 9. 성공 기준
 
-- `eslint-rules/no-raw-design-values.test.mjs`가 valid/invalid 케이스를 전부 통과한다.
+- `eslint-rules/no-raw-design-values.test.mjs`가 valid/invalid 케이스를 전부 통과한다 — §4.3의 배럴 경유 palette import 3경로와 4자리 hex 포함.
 - `npm run lint`가 `design-tokens/no-raw-design-values` **error 0건**으로 통과한다.
 - escape hatch는 §2.6의 5건 + §5에서 불가피한 경우로 한정되고, 각각 이유 주석을 단다.
 - `npm run fsd && npm run lint && npm run type-check && npm run test` 전부 통과.
 - §8의 13개 시각 변화 지점을 육안 확인한다.
 - 새 컴포넌트를 만들 때 raw 값을 쓰면 **에디터에서 즉시 빨간 줄이 뜬다** — 이 규칙의 실질 목표다.
+
+---
+
+## 10. 리뷰 반영 결정
+
+초안(커밋 `e95f32c7`)에 대한 코덱스 리뷰 5건을 모두 검증하고 반영했다. 다섯 건 모두 **"규칙을 켜면 zero-error에 도달할 수 없다"** 는 실행 가능성 결함이었다.
+
+| # | 지적                                          | 결정                                                       |
+| - | --------------------------------------------- | ---------------------------------------------------------- |
+| 1 | 단독 `'1px'` 2건에 토큰도 예외도 없음         | 규칙이 `'1px'` 리터럴을 면제 (§2.5). baseline 102→100       |
+| 2 | `Accordion`의 `'-2px'`에 계획 없음            | `` calc(${vars.dimension.x0_5} * -1) `` (§2.5)              |
+| 3 | palette가 배럴 3경로로 우회 가능              | 경로 대신 **import 바인딩 이름**으로 검사 (§3.1)            |
+| 4 | 4자리 `#RGBA` hex가 매처를 통과                | 색 패턴에 `{3,4}` 포함 (§3.1)                               |
+| 5 | `container` 배선이 `tokens/index`·`theme.types` 누락 | P0 배선을 5파일로 명시 (§2.1)                        |
+
+1번은 §2.5의 "1px 헤어라인은 밀도 무관 상수" 논리를 규칙이 실제로 구현하게 만든 것이다. 초안은 복합 문자열(`1px solid`)이 우연히 통과하는 데 기댔는데, 같은 개념이 단독으로 놓이면 걸리는 비일관을 리뷰가 짚었다.
