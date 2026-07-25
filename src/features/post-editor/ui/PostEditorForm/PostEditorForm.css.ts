@@ -29,15 +29,15 @@ export const field = style([
 /** field label — editor control 의 의미를 짧게 고정한다 */
 export const label = style({
   color: vars.color.fg.muted,
-  fontSize: '0.875rem',
+  fontSize: vars.typography.fontSize[14],
   fontWeight: 600,
 });
 
 /** text input — admin form 의 기본 입력 모양 */
 export const control = style({
   width: '100%',
-  minHeight: '2.5rem',
-  paddingInline: '0.75rem',
+  minHeight: vars.dimension.x10,
+  paddingInline: vars.dimension.x3,
   border: `1px solid ${vars.color.stroke.neutral}`,
   borderRadius: vars.radius.r2,
   background: vars.color.bg.canvas,
@@ -56,7 +56,7 @@ export const editor = style({
 export const preview = style([
   sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x3' }),
   {
-    padding: '1rem',
+    padding: vars.dimension.x4,
     border: `1px solid ${vars.color.stroke.neutral}`,
     borderRadius: vars.radius.r2,
     background: vars.color.bg.surface,
@@ -70,8 +70,8 @@ export const actions = style([
 
 /** save button — editor 의 primary command */
 export const submit = style({
-  minHeight: '2.5rem',
-  paddingInline: '1rem',
+  minHeight: vars.dimension.x10,
+  paddingInline: vars.dimension.x4,
   border: 0,
   borderRadius: vars.radius.r2,
   background: vars.color.bg.brand,
@@ -83,5 +83,5 @@ export const submit = style({
 /** submit status — 저장 요청 결과를 form 안에서만 알린다 */
 export const status = style({
   color: vars.color.fg.muted,
-  fontSize: '0.875rem',
+  fontSize: vars.typography.fontSize[14],
 });

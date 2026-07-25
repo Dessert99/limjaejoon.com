@@ -17,7 +17,8 @@ export const root = style([
     background: vars.color.bg.surface,
     '@media': {
       'screen and (min-width: 768px)': {
-        gridTemplateColumns: 'minmax(12rem, 1.5fr) repeat(3, minmax(8rem, 1fr)) auto',
+        gridTemplateColumns:
+          'minmax(12rem, 1.5fr) repeat(3, minmax(8rem, 1fr)) auto',
         alignItems: 'end',
       },
     },
@@ -32,15 +33,15 @@ export const field = style([
 /** 필드 label — 작은 보조 텍스트로 컨트롤 의미만 고정한다 */
 export const label = style({
   color: vars.color.fg.muted,
-  fontSize: '0.8125rem',
+  fontSize: vars.typography.fontSize[14],
   fontWeight: 600,
 });
 
 /** text/select control — URL form 전송용 native control 을 일관되게 보이게 한다 */
 export const control = style({
   width: '100%',
-  minHeight: '2.5rem',
-  paddingInline: '0.75rem',
+  minHeight: vars.dimension.x10,
+  paddingInline: vars.dimension.x3,
   border: `1px solid ${vars.color.stroke.neutral}`,
   borderRadius: vars.radius.r2,
   background: vars.color.bg.canvas,
@@ -50,8 +51,8 @@ export const control = style({
 
 /** submit button — filter form 의 유일한 명령 버튼 */
 export const submit = style({
-  minHeight: '2.5rem',
-  paddingInline: '1rem',
+  minHeight: vars.dimension.x10,
+  paddingInline: vars.dimension.x4,
   border: 0,
   borderRadius: vars.radius.r2,
   background: vars.color.bg.brand,
