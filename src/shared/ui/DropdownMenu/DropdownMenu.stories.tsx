@@ -14,7 +14,7 @@ export const Default: Story = {
     return (
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <Button variant='neutralOutline'>글 관리</Button>
+          <Button variant='outline'>글 관리</Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
           <DropdownMenu.Label>이 글</DropdownMenu.Label>
