@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `*.css.ts`에서 raw 디자인 값(하드코딩 치수·색)을 ESLint로 차단하고, 기존 위반 100건을 전수 마이그레이션한다.
+**Goal:** `*.css.ts`에서 raw 디자인 값(하드코딩 치수·색)을 ESLint로 차단하고, 기존 위반 101건을 전수 마이그레이션한다.
 
 **Architecture:** 먼저 빈 토큰 레이어를 채운다(`container` 5역할, `fontSize[40]`, `text.headingXl`). 그다음 로컬 ESLint 플러그인(`eslint-rules/*.mjs`)을 TDD로 만들어 `warn`으로 켠 뒤, 그룹별로 위반을 치환하고 마지막에 `error`로 승격한다.
 
@@ -18,6 +18,8 @@ messageId 분포: { rawDimension: 100 }   ← rawColor 0, paletteImport 0
 ```
 
 색 위반이 0이라는 건 Task 4의 색·palette 검사가 **순수 래칫**(회귀 방지)이라는 뜻이다 — 마이그레이션 대상이 없다.
+
+**정정 (코덱스 체크포인트 #1):** 위 100은 **문자열** 리터럴만 센 값이다. vanilla-extract는 unitless 숫자도 `px`로 직렬화하므로 `maxWidth: 360`(`AdminLoginPage.css.ts:9`)도 같은 raw 치수인데 초안 규칙이 놓쳤다. **Task 5b**가 길이 속성 숫자 검사를 추가하고, 그 뒤 baseline은 **101**, Task 9 그룹은 **19**가 된다.
 
 ## Global Constraints
 
@@ -751,6 +753,168 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 ---
 
+### Task 5b: 규칙 보강 — 길이 속성의 숫자 리터럴
+
+코덱스 체크포인트 #1이 찾은 구멍을 막는다. vanilla-extract는 unitless 숫자를 `px`로 직렬화하므로 `maxWidth: 360`은 `max-width: 360px`이 된다 — 문자열 `'360px'`과 동일한 raw 치수인데 따옴표만 없다.
+
+blanket 숫자 검사는 여전히 하지 않는다. unitless 숫자 ~80곳 중 `lineHeight`·`fontWeight`·`zIndex`·`opacity`·`flexGrow`·`flexShrink`·`flex`·`strokeWidth`는 전부 정당하다. **길이 속성 allowlist**로 좁히면 오탐이 구조적으로 불가능하다.
+
+**Files:**
+
+- Modify: `eslint-rules/no-raw-design-values.mjs`
+- Test: `eslint-rules/no-raw-design-values.test.mjs`
+
+- [ ] **Step 1: 실패하는 테스트 작성**
+
+`eslint-rules/no-raw-design-values.test.mjs` 끝에 세 번째 `describe` 블록을 추가한다.
+
+```js
+describe('길이 속성의 숫자 리터럴 차단', () => {
+  ruleTester.run('no-raw-design-values', rule, {
+    valid: [
+      // 길이가 아닌 속성의 숫자는 전부 정당하다
+      { code: 'const a = { lineHeight: 1.5 };' },
+      { code: 'const a = { fontWeight: 700 };' },
+      { code: 'const a = { zIndex: 50 };' },
+      { code: 'const a = { opacity: 1 };' },
+      { code: 'const a = { flexGrow: 1 };' },
+      { code: 'const a = { flexShrink: 0 };' },
+      { code: 'const a = { flex: 1 };' },
+      { code: 'const a = { strokeWidth: 2 };' },
+      { code: 'const a = { order: 2 };' },
+      // 단위 없는 0 은 CSS 관용이고 스케일 선택 문제가 아니다
+      { code: 'const a = { padding: 0 };' },
+      { code: 'const a = { inset: 0 };' },
+      { code: 'const a = { minWidth: 0 };' },
+      // 토큰 참조는 Literal 이 아니다
+      { code: 'const a = { maxWidth: vars.container.form };' },
+    ],
+    invalid: [
+      {
+        code: 'const a = { maxWidth: 360 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: 'const a = { padding: 4 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: 'const a = { height: 1 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: 'const a = { fontSize: 14 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: 'const a = { top: -8 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+    ],
+  });
+});
+```
+
+- [ ] **Step 2: 테스트 실패 확인**
+
+Run: `npx vitest run eslint-rules/no-raw-design-values.test.mjs`
+Expected: FAIL — 5개 invalid 케이스가 전부 통과해버린다(현재 규칙은 문자열만 본다).
+
+- [ ] **Step 3: 길이 속성 allowlist 추가**
+
+`RAW_COLOR` 상수 아래에 추가한다.
+
+```js
+// vanilla-extract 가 unitless 숫자를 px 로 직렬화하는 속성들 — allowlist 라 오탐이 구조적으로 불가능하다
+const LENGTH_PROPS = new Set([
+  'width',
+  'height',
+  'minWidth',
+  'maxWidth',
+  'minHeight',
+  'maxHeight',
+  'top',
+  'right',
+  'bottom',
+  'left',
+  'inset',
+  'gap',
+  'rowGap',
+  'columnGap',
+  'padding',
+  'paddingTop',
+  'paddingRight',
+  'paddingBottom',
+  'paddingLeft',
+  'paddingInline',
+  'paddingBlock',
+  'margin',
+  'marginTop',
+  'marginRight',
+  'marginBottom',
+  'marginLeft',
+  'marginInline',
+  'marginBlock',
+  'fontSize',
+  'borderRadius',
+  'outlineOffset',
+  'outlineWidth',
+  'borderWidth',
+  'flexBasis',
+]);
+```
+
+`create(context)`의 `return` 객체에 방문자를 하나 더 추가한다(기존 방문자는 그대로 둔다).
+
+```js
+      Property(node) {
+        // 숫자는 길이 속성에서만 본다 — lineHeight·fontWeight·zIndex 등은 unitless 가 정상이다
+        if (node.computed || node.value.type !== 'Literal') {
+          return;
+        }
+        if (typeof node.value.value !== 'number' || node.value.value === 0) {
+          return;
+        }
+        const name = node.key.type === 'Identifier' ? node.key.name : node.key.value;
+        if (LENGTH_PROPS.has(name)) {
+          context.report({
+            node: node.value,
+            messageId: 'rawDimension',
+            data: { value: String(node.value.value) },
+          });
+        }
+      },
+```
+
+- [ ] **Step 4: 테스트 통과 확인**
+
+Run: `npx vitest run eslint-rules/no-raw-design-values.test.mjs`
+Expected: PASS — 세 describe 블록 전부, 54개 케이스.
+
+- [ ] **Step 5: 새 baseline 확인**
+
+Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
+Expected: **101** (기존 100 + `AdminLoginPage.css.ts:9`)
+
+101이 아니면 멈추고 실제 숫자를 보고한다.
+
+- [ ] **Step 6: 검증 + 커밋**
+
+```bash
+npx prettier --write eslint-rules/no-raw-design-values.mjs eslint-rules/no-raw-design-values.test.mjs
+npm run fsd && npm run lint && npm run type-check && npm run test
+git add eslint-rules
+git commit -m "feat(lint): block numeric literals on length properties
+
+vanilla-extract 가 unitless 숫자를 px 로 직렬화하므로 maxWidth: 360 은
+'360px' 과 같은 raw 치수다. 길이 속성 allowlist 로 좁혀 오탐을 구조적으로 막는다.
+baseline 100 -> 101.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
 ### Task 6: 마이그레이션 — shared/ui + global (29건)
 
 **Files:** 아래 9개 `.css.ts` + `src/shared/styles/global.css.ts`
@@ -807,7 +971,7 @@ Expected: **0**
 - [ ] **Step 3: 전체 잔여 확인**
 
 Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
-Expected: **71** (100 − 29)
+Expected: **72** (101 − 29)
 
 - [ ] **Step 4: 검증 + 커밋**
 
@@ -867,7 +1031,7 @@ Expected: **0**
 - [ ] **Step 3: 전체 잔여 확인**
 
 Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
-Expected: **50** (71 − 21)
+Expected: **51** (72 − 21)
 
 - [ ] **Step 4: 검증 + 커밋**
 
@@ -921,7 +1085,7 @@ Expected: **0**
 - [ ] **Step 3: 전체 잔여 확인**
 
 Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
-Expected: **34** (50 − 16)
+Expected: **35** (51 − 16)
 
 - [ ] **Step 4: 검증 + 커밋**
 
@@ -938,9 +1102,9 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 ---
 
-### Task 9: 마이그레이션 — pages (18건)
+### Task 9: 마이그레이션 — pages (19건)
 
-**Files:** `blog` · `blog-post` · `admin-posts` · `home` 5개
+**Files:** `blog` · `blog-post` · `admin-posts` · `admin-login` · `home` 6개
 
 | 파일:줄                           | 현재                     | 치환 후                                  |
 | --------------------------------- | ------------------------ | ---------------------------------------- |
@@ -962,29 +1126,32 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 | `AdminPostEditorPage.css.ts:17`   | `maxWidth: '64rem'`      | `maxWidth: vars.container.wide`          |
 | `AdminPostEditorPage.css.ts:24`   | `fontSize: '2rem'`       | `fontSize: vars.typography.fontSize[32]` |
 | `HeroSection.css.ts:39`           | `maxWidth: '42rem'`      | `maxWidth: vars.container.prose`         |
+| `AdminLoginPage.css.ts:9`         | `maxWidth: 360`          | `maxWidth: vars.container.form`          |
+
+마지막 줄이 Task 5b가 새로 잡아낸 숫자 리터럴이다. 이 파일은 `vars`를 import 하지 않으므로 **`import { vars } from '@/shared/styles/theme.css';` 를 추가해야 한다** — 이 그룹에서 유일하게 import가 필요한 파일이다. 360px→320px로 좁아지는 시각 변화가 있고, 이는 §8 회귀 목록에 추가된다.
 
 escape hatch 없음.
 
 - [ ] **Step 1: 치환 적용**
 
-위 표대로 18줄 치환.
+위 표대로 19줄 치환 + `AdminLoginPage.css.ts`에 `vars` import 추가.
 
 - [ ] **Step 2: 위반 0 확인**
 
-Run: `npx eslint 'src/pages/blog/**/*.css.ts' 'src/pages/blog-post/**/*.css.ts' 'src/pages/admin-posts/**/*.css.ts' 'src/pages/home/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
+Run: `npx eslint 'src/pages/blog/**/*.css.ts' 'src/pages/blog-post/**/*.css.ts' 'src/pages/admin-posts/**/*.css.ts' 'src/pages/admin-login/**/*.css.ts' 'src/pages/home/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
 Expected: **0**
 
 - [ ] **Step 3: 전체 잔여 확인**
 
 Run: `npx eslint 'src/**/*.css.ts' --format json | node -e "const d=require('fs').readFileSync(0,'utf8');console.log(JSON.parse(d).flatMap(f=>f.messages).filter(m=>m.ruleId==='design-tokens/no-raw-design-values').length)"`
-Expected: **16** (34 − 18)
+Expected: **16** (35 − 19)
 
 - [ ] **Step 4: 검증 + 커밋**
 
 ```bash
-npx prettier --write src/pages/blog/ui/BlogPage.css.ts src/pages/blog-post/ui/BlogPostPage.css.ts src/pages/admin-posts/ui/AdminPostsPage/AdminPostsPage.css.ts src/pages/admin-posts/ui/AdminPostEditorPage/AdminPostEditorPage.css.ts src/pages/home/ui/HeroSection/HeroSection.css.ts
+npx prettier --write src/pages/blog/ui/BlogPage.css.ts src/pages/blog-post/ui/BlogPostPage.css.ts src/pages/admin-posts/ui/AdminPostsPage/AdminPostsPage.css.ts src/pages/admin-posts/ui/AdminPostEditorPage/AdminPostEditorPage.css.ts src/pages/home/ui/HeroSection/HeroSection.css.ts src/pages/admin-login/ui/AdminLoginPage/AdminLoginPage.css.ts
 npm run fsd && npm run lint && npm run type-check && npm run test
-git add src/pages/blog src/pages/blog-post src/pages/admin-posts src/pages/home
+git add src/pages/blog src/pages/blog-post src/pages/admin-posts src/pages/admin-login src/pages/home
 git commit -m "refactor(pages): replace raw values with container and type tokens
 
 페이지 폭 5종을 container 역할 토큰으로, h1 40px 을 fontSize[40] 으로.
@@ -1104,13 +1271,14 @@ Expected: 4개 전부 exit 0. **출력을 자르지 말고 exit code로 판정�
 
 - [ ] **Step 5: 시각 회귀 확인 목록 보고**
 
-아래 13곳은 값이 실제로 바뀌었다. 사용자에게 육안 확인을 요청한다.
+아래 14곳은 값이 실제로 바뀌었다. 사용자에게 육안 확인을 요청한다.
 
 | 대상                       | 변화     |
 | -------------------------- | -------- |
 | AlertDialog `maxWidth`     | 28→32rem |
 | HeroSection `maxWidth`     | 42→48rem |
 | AdminPostEditorPage        | 64→72rem |
+| AdminLoginPage `maxWidth`  | 360px→20rem (=320px) |
 | fontSize 13px → 14px       | 7곳      |
 | fontSize 18px → 20px       | 3곳      |
 

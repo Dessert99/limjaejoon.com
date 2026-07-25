@@ -10,7 +10,7 @@
 
 - `*.css.ts`에서 raw 디자인 값(하드코딩 치수·색)을 ESLint로 차단한다.
 - 차단하려면 대안이 있어야 하므로, 비어 있는 토큰 레이어를 먼저 채운다.
-- 기존 위반 100건을 전수 마이그레이션하고 CI에서 `error`로 고정한다.
+- 기존 위반 101건(문자열 100 + 숫자 길이 1)을 전수 마이그레이션하고 CI에서 `error`로 고정한다.
 
 ## 비목표
 
@@ -64,7 +64,7 @@ sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아�
 | 단독 `'1px'` 헤어라인                      | 2           | 면제 (§2.5)         |
 | hex / rgb() / hsl()                        | 0           | 차단 (순수 래칫)    |
 | `palette` import                           | 0           | 차단 (순수 래칫)    |
-| unitless 치수값 (`padding: 4`)             | 0           | 검사 안 함 (§3.2)   |
+| unitless 숫자 길이값 (`maxWidth: 360`)      | **1**       | 차단 → 마이그레이션 |
 | `Npx solid` 복합 문자열                    | 51          | 허용 (§2.5)         |
 | 단독 `em` 리터럴                           | 3           | 허용                |
 | `vars.dimension.*` 접근                    | 60          | 허용                |
@@ -186,7 +186,24 @@ sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아�
 
 `transform`·`animation`·`transition`·`boxShadow`·`filter`는 값이 전부 복합 문자열이라 **구조적으로 규칙에 걸리지 않는다**. 속성별 예외 목록을 두지 않는 이유다.
 
-**숫자 리터럴은 검사하지 않는다.** vanilla-extract가 `padding: 4`를 `4px`로 바꾸므로 이론상 magic number 경로지만, 실측상 0건인 반면 `opacity`·`zIndex`·`flexShrink`·`lineHeight`·`flexGrow`·`order`가 숫자를 **정당하게 쓰는 곳이 87군데**다. 둘을 가르려면 CSS 속성 테이블이 필요한데, 이 설계는 그 테이블을 의도적으로 두지 않는다(§3.2 첫 문단). 문자열 단위값만 검사하는 편이 오탐 0으로 단순하다.
+**숫자 리터럴은 길이 속성에서만 검사한다** (코덱스 체크포인트 #1 반영). vanilla-extract는 unitless 숫자를 `px`로 직렬화하므로 `maxWidth: 360`은 `max-width: 360px`이 된다 — 문자열 `'360px'`과 똑같은 raw 치수인데 따옴표만 없는 셈이다.
+
+초안은 이 검사를 뺐고 근거로 "실측 0건"을 들었으나 **그 측정이 틀렸다.** 측정 정규식이 `(width|height|padding|…)[A-Za-z]*` 형태라 접두어가 붙은 `maxWidth`·`minHeight` 등을 통째로 놓쳤다. 재측정 결과 실제 위반은 `AdminLoginPage.css.ts:9`의 `maxWidth: 360` **1건**이다.
+
+blanket 숫자 검사를 피한다는 판단 자체는 유효하다 — unitless 숫자 ~80곳 중 `lineHeight`·`fontWeight`·`zIndex`·`opacity`·`flexGrow`·`flexShrink`·`flex`·`strokeWidth`는 전부 정당하다. 그래서 **길이 속성 allowlist**로 좁혀서 검사한다(denylist가 아니라 allowlist라 오탐이 구조적으로 불가능하다).
+
+```
+width · height · minWidth · maxWidth · minHeight · maxHeight
+top · right · bottom · left · inset
+gap · rowGap · columnGap
+padding{,Top,Right,Bottom,Left,Inline,Block}
+margin{,Top,Right,Bottom,Left,Inline,Block}
+fontSize · borderRadius · outlineOffset · outlineWidth · borderWidth · flexBasis
+```
+
+`0`은 면제한다 — 단위 없는 0은 CSS 관용이고 스케일 선택 문제가 아니다.
+
+`lineHeight`·`fontWeight`는 길이가 아니므로 이 검사 밖이다. `fontWeight: 700`(13곳)·`lineHeight: 1.1`(다수)에 대응 토큰이 일부 있긴 하지만, 사용자가 승인한 차단 범위는 "치수"이고 `lineHeight` 1.1·1.2·1.3·1.6은 스케일에 없는 값이라 새 토큰 결정이 필요하다. **후속 과제로 남긴다.**
 
 ### 3.3 escape hatch
 
@@ -280,7 +297,7 @@ gsap.to(el, { [parallaxY]: '-120px', ease: 'none', scrollTrigger: {} });
 
 ---
 
-## 6. 마이그레이션 분해 — 100건 / 31파일
+## 6. 마이그레이션 분해 — 101건 / 32파일
 
 | 그룹                    | 건수 | 파일 | 주요 작업                                             |
 | ----------------------- | ---- | ---- | ----------------------------------------------------- |
@@ -315,7 +332,7 @@ P0가 P2~P5보다 반드시 먼저다 — 치환할 토큰이 있어야 한다. 
 
 **warn-first 래칫**으로 도입한다.
 
-1. P1에서 `warn`으로 켜서 baseline 100을 확인한다. 빌드를 빨갛게 만들지 않고 시작한다.
+1. P1에서 `warn`으로 켜서 baseline 을 확인한다(문자열 100, 숫자 길이 검사 추가 후 101). 빌드를 빨갛게 만들지 않고 시작한다.
 2. P2~P5 각 페이즈 후 warning 수 감소를 확인한다 — 진행률이 측정 가능해진다.
 3. 0 도달 시 P6에서 `error`로 승격한다. `npm run ci`에 이미 `lint`가 있어 추가 배선은 불필요하다.
 
@@ -332,13 +349,14 @@ npx prettier --write <바뀐 파일>
 
 ## 8. 회귀 영향
 
-**값이 바뀌는 곳은 13건뿐이고, 나머지 87건은 표현만 바뀐다.**
+**값이 바뀌는 곳은 14건뿐이고, 나머지 87건은 표현만 바뀐다.**
 
 | 대상                    | 변화     | 확인 화면              |
 | ----------------------- | -------- | ---------------------- |
 | AlertDialog `maxWidth`  | 28→32rem | 파괴 확인 다이얼로그   |
 | HeroSection `maxWidth`  | 42→48rem | 홈 히어로              |
 | AdminPostEditorPage     | 64→72rem | 어드민 글 편집         |
+| AdminLoginPage `maxWidth`  | 360px→20rem | 어드민 로그인 |
 | fontSize 13px → 14px    | 7곳      | 랩 컨트롤·레퍼런스 표 · DropdownMenu · PostFilterForm |
 | fontSize 18px → 20px    | 3곳      | BlogPostPage · Dialog 제목 · AlertDialog 제목 |
 
@@ -354,7 +372,7 @@ npx prettier --write <바뀐 파일>
 - `npm run lint`가 `design-tokens/no-raw-design-values` **error 0건**으로 통과한다.
 - escape hatch는 §2.6의 5건 + §5에서 불가피한 경우로 한정되고, 각각 이유 주석을 단다.
 - `npm run fsd && npm run lint && npm run type-check && npm run test` 전부 통과.
-- §8의 13개 시각 변화 지점을 육안 확인한다.
+- §8의 14개 시각 변화 지점을 육안 확인한다.
 - 새 컴포넌트를 만들 때 raw 값을 쓰면 **에디터에서 즉시 빨간 줄이 뜬다** — 이 규칙의 실질 목표다.
 
 ---
