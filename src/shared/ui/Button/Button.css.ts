@@ -50,14 +50,12 @@ const base = style([
         outline: `2px solid ${vars.color.stroke.brand}`,
         outlineOffset: vars.dimension.x0_5,
       },
-      '&:active:not(:disabled):not([data-disabled])': {
-        transform: 'scale(0.97)',
-      },
     },
     '@media': {
-      '(prefers-reduced-motion: reduce)': {
-        transition: `background ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`,
-        transform: 'none',
+      '(prefers-reduced-motion: no-preference)': {
+        selectors: {
+          '&:active:not(:disabled):not([data-disabled])': { transform: 'scale(0.97)' },
+        },
       },
     },
   },
@@ -146,10 +144,10 @@ export const button = recipe({
         boxShadow: `${finish.inset}, ${shadow.raise}`,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
-            ':hover': {
-              background: vars.color.bg.brandPressed,
-              transform: 'translateY(-2px)',
-            },
+            ':hover': { background: vars.color.bg.brandPressed },
+          },
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
+            ':hover': { transform: 'translateY(-2px)' },
           },
         },
         selectors: {
@@ -162,7 +160,7 @@ export const button = recipe({
         border: `1px solid ${vars.color.stroke.positive}`,
         boxShadow: finish.inset,
         '@media': {
-          '(hover: hover) and (pointer: fine)': {
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
             ':hover': { transform: 'translateY(-2px)' },
           },
         },
@@ -176,10 +174,10 @@ export const button = recipe({
         color: vars.color.fg.neutral,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
-            ':hover': {
-              background: vars.color.bg.surfaceMuted,
-              transform: 'translateY(-2px)',
-            },
+            ':hover': { background: vars.color.bg.surfaceMuted },
+          },
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
+            ':hover': { transform: 'translateY(-2px)' },
           },
         },
       },
@@ -197,7 +195,7 @@ export const button = recipe({
         color: vars.color.fg.onBrand,
         boxShadow: `${finish.inset}, ${shadow.raise}`,
         '@media': {
-          '(hover: hover) and (pointer: fine)': {
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
             ':hover': { transform: 'translateY(-2px)' },
           },
         },
@@ -273,7 +271,7 @@ export const button = recipe({
     {
       variants: { size: 'xsmall', layout: 'iconOnly' },
       style: {
-        width: vars.dimension.x8,
+        width: vars.dimension.x6,
         padding: vars.dimension.x1_5,
         borderRadius: vars.radius.pill,
         vars: {
@@ -285,7 +283,7 @@ export const button = recipe({
     {
       variants: { size: 'small', layout: 'iconOnly' },
       style: {
-        width: vars.dimension.x10,
+        width: vars.dimension.x8,
         padding: vars.dimension.x2,
         vars: {
           [contentGap]: vars.dimension.none,
