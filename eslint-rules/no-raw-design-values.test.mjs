@@ -2,6 +2,8 @@
 import { RuleTester } from 'eslint';
 import { describe, it } from 'vitest';
 import rule from './no-raw-design-values.mjs';
+// TS as/satisfies 캐스트 케이스는 espree 가 못 읽으므로 해당 케이스에만 이 파서를 지정한다
+import * as tsParser from '@typescript-eslint/parser';
 
 // RuleTester 가 this.constructor.describe/it 을 호출한다 — 주입해야 케이스가 개별 테스트로 뜬다
 RuleTester.describe = describe;
@@ -231,6 +233,130 @@ describe('외부 리뷰가 찾은 우회 경로 차단', () => {
       {
         code: "import * as tokens from '@/shared/styles/tokens';\nconst a = { background: tokens.palette.clay[500] };",
         errors: [{ messageId: 'paletteImport' }],
+      },
+    ],
+  });
+});
+
+describe('색 속성의 named CSS 색 차단', () => {
+  ruleTester.run('no-raw-design-values', rule, {
+    valid: [
+      // 색 속성이 아니면 텍스트 값이 named color 와 같아도 통과한다 — Property 방문자로 범위를 좁힌 이유
+      { code: "const a = { content: 'red' };" },
+      { code: "const a = { background: 'transparent' };" },
+      { code: "const a = { borderColor: 'currentColor' };" },
+      { code: "const a = { background: 'inherit' };" },
+      { code: "const a = { background: 'initial' };" },
+      { code: "const a = { background: 'unset' };" },
+      { code: "const a = { fill: 'none' };" },
+      { code: "const a = { background: 'auto' };" },
+    ],
+    invalid: [
+      {
+        code: "const a = { color: 'white' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      {
+        code: "const a = { background: 'red' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      // 대소문자 무시 — 전체 trim 값 기준 매칭
+      {
+        code: "const a = { color: 'WHITE' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+      {
+        code: "const a = { borderColor: 'rebeccapurple' };",
+        errors: [{ messageId: 'rawColor' }],
+      },
+    ],
+  });
+});
+
+describe('치환 템플릿 안 raw 색 함수 차단', () => {
+  ruleTester.run('no-raw-design-values', rule, {
+    valid: [
+      // color-mix 인자가 토큰이면 raw 색이 아니다 — mixing 계열만 quasi 스캔에서 면제한다(Toggle.css.ts 실사용 형태)
+      {
+        code: 'const a = { background: `color-mix(in srgb, ${vars.color.bg.brand} 24%, transparent)` };',
+      },
+      {
+        code: 'const a = { border: `1px solid ${vars.color.stroke.neutral}` };',
+      },
+    ],
+    invalid: [
+      {
+        code: 'const a = { background: `rgba(0, 0, 0, ${overlayAlpha})` };',
+        errors: [{ messageId: 'rawColor' }],
+      },
+      {
+        code: 'const a = { background: `hsl(0, 0%, ${l}%)` };',
+        errors: [{ messageId: 'rawColor' }],
+      },
+    ],
+  });
+});
+
+describe('절대 단위 치수 차단', () => {
+  ruleTester.run('no-raw-design-values', rule, {
+    valid: [
+      // 상대 단위는 절대 단위 추가 후에도 계속 통과해야 한다
+      { code: "const a = { height: '50svh' };" },
+      { code: "const a = { width: '10cqw' };" },
+      { code: "const a = { width: '1ch' };" },
+      { code: "const a = { flexBasis: '1fr' };" },
+      // 'in' 알파벳이 포함된 키워드가 오매치되면 안 된다
+      { code: "const a = { width: 'inherit' };" },
+    ],
+    invalid: [
+      {
+        code: "const a = { fontSize: '12pt' };",
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: "const a = { width: '0.75in' };",
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: "const a = { width: '1in' };",
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: "const a = { width: '5mm' };",
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: "const a = { width: '1cm' };",
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      {
+        code: "const a = { width: '3pc' };",
+        errors: [{ messageId: 'rawDimension' }],
+      },
+    ],
+  });
+});
+
+describe('길이 속성 숫자 리터럴의 부호·캐스트 우회 차단', () => {
+  ruleTester.run('no-raw-design-values', rule, {
+    valid: [],
+    invalid: [
+      // 단항 + 는 기존에 UnaryExpression(-) 만 풀던 로직을 우회했다
+      {
+        code: 'const a = { paddingTop: +8 };',
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      // TSAsExpression 이 Literal 을 감싸면 기존 가드(literal.type !== 'Literal')를 통과해버렸다
+      {
+        code: 'const a = { marginTop: 4 as number };',
+        languageOptions: { parser: tsParser },
+        errors: [{ messageId: 'rawDimension' }],
+      },
+      // TSSatisfiesExpression 도 같은 방식으로 벗겨야 한다
+      {
+        code: 'const a = { marginTop: 4 satisfies number };',
+        languageOptions: { parser: tsParser },
+        errors: [{ messageId: 'rawDimension' }],
       },
     ],
   });

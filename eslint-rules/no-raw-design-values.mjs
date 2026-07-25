@@ -4,17 +4,61 @@
 const HAIRLINE = '1px';
 
 // 단독 치수만 잡는다 — '1px solid …' 같은 복합 문자열은 매칭되지 않아 border 관용구가 살아남는다
-const RAW_DIMENSION = /^-?\d*\.?\d+(?:px|rem)$/;
+const RAW_DIMENSION = /^-?\d*\.?\d+(?:px|rem|pt|cm|mm|in|pc|Q)$/;
 
-// 8·6·4·3자리 hex 를 긴 것부터 시도한다 — 4자리(#RGBA)도 CSS 유효 문법이라 포함한다
-// hex 는 어디서 발견되든 raw 색이 확정된다 — 함수 인자와 달리 토큰으로 치환될 여지가 없는 리터럴이다
+// hex 는 8·6·4·3자리(4자리 #RGBA 포함)를 다 잡고 인자가 없어 어디서 발견되든 raw 색이 확정된다 — 토큰으로 치환될 여지가 없다
 const RAW_COLOR_HEX = /#(?:[0-9a-f]{8}|[0-9a-f]{6}|[0-9a-f]{4}|[0-9a-f]{3})\b/i;
 
-// i 플래그 필수: CSS 함수명은 대소문자를 안 가려서 RGB(...)·HSL(...) 도 유효한 raw 색이다
-// color\( 은 \b 로 앞을 막아도 background-color( 의 color( 부분에 걸린다 — (?<![\w-]) 로 식별자 중간 시작을 배제한다
-// 함수명만으론 raw 확정이 안 된다 — color-mix(in srgb, ${token} ...) 처럼 인자가 토큰일 수 있어 quasi 조각 스캔에는 안 쓴다
+// i 플래그로 RGB(...)·HSL(...) 대소문자를 무시하고, color( 는 (?<![\w-]) 로 background-color( 오매치를 배제한다 — 함수명만으론 raw 확정이 안 돼 quasi 스캔엔 안 쓴다
 const RAW_COLOR_FN =
   /\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color-mix)\(|(?<![\w-])color\(/i;
+
+// 치환 템플릿 조각 스캔 전용 — color-mix·color() 는 인자가 토큰일 수 있어(Toggle.css.ts) 제외하고 나머지 색 함수만 raw 로 본다
+const RAW_COLOR_FN_QUASI = /\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb)\(/i;
+
+// 색 속성 화이트리스트 — 이 안의 속성만 문자열 값을 named color 로 판정한다(content 같은 텍스트 속성 오탐 방지)
+const COLOR_PROPS = new Set([
+  'color',
+  'background',
+  'backgroundColor',
+  'borderColor',
+  'borderTopColor',
+  'borderRightColor',
+  'borderBottomColor',
+  'borderLeftColor',
+  'borderInlineColor',
+  'borderBlockColor',
+  'outlineColor',
+  'fill',
+  'stroke',
+  'caretColor',
+  'textDecorationColor',
+  'columnRuleColor',
+  'accentColor',
+]);
+
+// CSS Color Module Level 4 named colors — transparent·currentColor 등 키워드는 색 이름이 아니라 의도적으로 뺐다
+const NAMED_COLORS = new Set(
+  (
+    'aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue ' +
+    'blueviolet brown burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk ' +
+    'crimson cyan darkblue darkcyan darkgoldenrod darkgray darkgreen darkgrey darkkhaki ' +
+    'darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen ' +
+    'darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue ' +
+    'dimgray dimgrey dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite ' +
+    'gold goldenrod gray green greenyellow grey honeydew hotpink indianred indigo ivory khaki ' +
+    'lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan ' +
+    'lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen ' +
+    'lightskyblue lightslategray lightslategrey lightsteelblue lightyellow lime limegreen linen ' +
+    'magenta maroon mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen ' +
+    'mediumslateblue mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream ' +
+    'mistyrose moccasin navajowhite navy oldlace olive olivedrab orange orangered orchid ' +
+    'palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum ' +
+    'powderblue purple rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown ' +
+    'seagreen seashell sienna silver skyblue slateblue slategray slategrey snow springgreen ' +
+    'steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen'
+  ).split(' ')
+);
 
 // vanilla-extract 가 unitless 숫자를 px 로 직렬화하는 속성들 — allowlist 라 오탐이 구조적으로 불가능하다
 const LENGTH_PROPS = new Set([
@@ -150,9 +194,12 @@ const noRawDesignValues = {
           }
           return;
         }
-        // 치환이 있으면 조각이 'color-mix(in srgb, ' 처럼 함수 인자가 토큰일 수 있는 복합값이라 hex 만 본다
+        // 치환이 있으면 조각이 'color-mix(in srgb, ' 처럼 함수 인자가 토큰일 수 있는 복합값이라 mixing 계열은 빼고 본다
         const colored = node.quasis.find((quasi) => {
-          return RAW_COLOR_HEX.test(quasi.value.raw);
+          return (
+            RAW_COLOR_HEX.test(quasi.value.raw) ||
+            RAW_COLOR_FN_QUASI.test(quasi.value.raw)
+          );
         });
         if (colored) {
           context.report({
@@ -181,32 +228,51 @@ const noRawDesignValues = {
         }
       },
       Property(node) {
-        // 숫자는 길이 속성에서만 본다 — lineHeight·fontWeight·zIndex 등은 unitless 가 정상이다
         if (node.computed) {
           return;
         }
-        // 음수 리터럴은 파서가 UnaryExpression(-, Literal) 로 쪼개므로 풀어서 검사한다
         const value = node.value;
-        const literal =
-          value.type === 'UnaryExpression' && value.operator === '-'
-            ? value.argument
-            : value;
-        if (literal.type !== 'Literal') {
-          return;
+        // 부호 있는 숫자는 UnaryExpression(+/-, Literal)로, TS as/satisfies 캐스트는 Literal을 감싸므로 둘 다 풀어야 밑의 리터럴이 드러난다
+        let literal = value;
+        while (
+          (literal.type === 'UnaryExpression' &&
+            (literal.operator === '-' || literal.operator === '+')) ||
+          literal.type === 'TSAsExpression' ||
+          literal.type === 'TSSatisfiesExpression'
+        ) {
+          literal =
+            literal.type === 'UnaryExpression'
+              ? literal.argument
+              : literal.expression;
         }
-        if (typeof literal.value !== 'number' || literal.value === 0) {
+        if (literal.type !== 'Literal') {
           return;
         }
         const name =
           node.key.type === 'Identifier' ? node.key.name : node.key.value;
+        // 색 속성의 문자열 값은 named-color 화이트리스트로만 판정한다 — content 같은 텍스트 속성은 COLOR_PROPS 밖이라 안전하다
+        if (typeof literal.value === 'string') {
+          if (
+            COLOR_PROPS.has(name) &&
+            NAMED_COLORS.has(literal.value.trim().toLowerCase())
+          ) {
+            context.report({
+              node: value,
+              messageId: 'rawColor',
+              data: { value: literal.value },
+            });
+          }
+          return;
+        }
+        // 숫자는 길이 속성에서만 본다 — lineHeight·fontWeight·zIndex 등은 unitless 가 정상이다
+        if (typeof literal.value !== 'number' || literal.value === 0) {
+          return;
+        }
         if (LENGTH_PROPS.has(name)) {
           context.report({
             node: value,
             messageId: 'rawDimension',
-            data: {
-              value:
-                value === literal ? String(literal.value) : `-${literal.value}`,
-            },
+            data: { value: context.sourceCode.getText(value) },
           });
         }
       },
