@@ -1,12 +1,42 @@
-/** ToggleGroup 분절 버튼 — 선택 항목은 accent 틴트 */
+/** ToggleGroup 분절 버튼 — 리세스 트랙 위를 미끄러지는 인디케이터로 선택을 표시 */
 import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { vars } from '@/shared/styles/theme.css';
+import { finish } from '@/shared/styles/tokens';
 import { style } from '@vanilla-extract/css';
 
-/** 가로 묶음 — 항목 간격만 */
-export const root = style([sprinkles({ display: 'inline-flex', gap: 'x1' })]);
+/** 리세스 트랙 — 등폭 grid, item 개수를 몰라도 gridAutoColumns로 균등 분할 */
+export const root = style([
+  sprinkles({ p: 'x1', r: 'pill', bg: 'surfaceMuted' }),
+  {
+    position: 'relative',
+    display: 'inline-grid',
+    gridAutoFlow: 'column',
+    gridAutoColumns: '1fr',
+    boxShadow: finish.inset,
+  },
+]);
 
-/** 항목 버튼 — on이면 accent 틴트 + 테두리 강조 */
+/** 슬라이드 인디케이터 — Root가 --gt-index·--gt-count로 위치·너비를 주입(decorative span) */
+export const indicator = style({
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  left: 0,
+  width: 'calc(100% / var(--gt-count, 1))',
+  borderRadius: vars.radius.pill,
+  background: vars.color.bg.brand,
+  boxShadow: finish.inset,
+  pointerEvents: 'none',
+  zIndex: 0,
+  transform: 'translateX(calc(var(--gt-index, 0) * 100%))',
+  '@media': {
+    '(prefers-reduced-motion: no-preference)': {
+      transition: `transform ${vars.motion.controlSlide.duration} ${vars.motion.controlSlide.easing}`,
+    },
+  },
+});
+
+/** 항목 버튼 — 투명 텍스트 버튼, on이면 텍스트만 onBrand(배경은 인디케이터가 담당) */
 export const item = style([
   sprinkles({
     display: 'inline-flex',
@@ -14,19 +44,43 @@ export const item = style([
     justifyContent: 'center',
     px: 'x3',
     py: 'x2',
-    r: 'r2',
+    r: 'pill',
   }),
   {
+    position: 'relative',
+    zIndex: 1,
     cursor: 'pointer',
     background: 'transparent',
-    color: vars.color.fg.neutral,
-    border: `1px solid ${vars.color.stroke.neutral}`,
+    color: vars.color.fg.muted,
+    fontFamily: 'inherit',
+    border: 'none',
+    transition: `color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, background ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`,
     selectors: {
       '&[data-state="on"]': {
-        background: `color-mix(in srgb, ${vars.color.bg.brand} 16%, transparent)`,
-        borderColor: vars.color.stroke.brand,
+        color: vars.color.fg.onBrand,
+      },
+      // multiple 타입은 단일 위치 인디케이터가 성립하지 않는다 — 항목마다 자체 배경으로 대체
+      [`${root}[data-toggle-type="multiple"] &[data-state="on"]`]: {
+        background: vars.color.bg.brand,
+        boxShadow: finish.inset,
+      },
+      '&:is(:disabled, [data-disabled])': {
+        opacity: 0.5,
+        cursor: 'not-allowed',
+      },
+      '&:focus-visible': {
+        outline: `2px solid ${vars.color.stroke.brand}`,
+        outlineOffset: vars.dimension.x0_5,
       },
     },
-    ':disabled': { opacity: 0.5, cursor: 'not-allowed' },
+    '@media': {
+      '(hover: hover) and (pointer: fine)': {
+        selectors: {
+          '&:hover:not(:disabled):not([data-disabled])': {
+            color: vars.color.fg.neutral,
+          },
+        },
+      },
+    },
   },
 ]);
