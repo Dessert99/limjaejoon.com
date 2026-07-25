@@ -8,13 +8,13 @@ export const root = style([
 ]);
 
 export const heading = style({
-  fontSize: '1.5rem',
+  fontSize: vars.typography.fontSize[24],
   fontWeight: 700,
   lineHeight: 1.2,
 });
 
 export const subheading = style({
-  fontSize: '1rem',
+  fontSize: vars.typography.fontSize[16],
   fontWeight: 600,
   fontFamily: 'monospace',
 });
@@ -36,7 +36,7 @@ export const tableWrap = style({
 export const table = style({
   width: '100%',
   borderCollapse: 'collapse',
-  fontSize: '0.875rem',
+  fontSize: vars.typography.fontSize[14],
   lineHeight: 1.6,
 });
 
@@ -57,7 +57,7 @@ export const td = style({
 /** 표 안 코드 표기 — 속성명·키워드는 원문 그대로 보이게 */
 export const code = style({
   fontFamily: 'monospace',
-  fontSize: '0.8125rem',
+  fontSize: vars.typography.fontSize[14],
   color: vars.color.fg.neutral,
   whiteSpace: 'nowrap',
 });
@@ -69,7 +69,7 @@ export const codeBlock = style([
     margin: 0,
     overflowX: 'auto',
     fontFamily: 'monospace',
-    fontSize: '0.875rem',
+    fontSize: vars.typography.fontSize[14],
     lineHeight: 1.6,
     background: vars.color.bg.canvas,
     border: `1px solid ${vars.color.stroke.neutral}`,
