@@ -14,14 +14,14 @@ export const main = style([
   }),
   {
     width: '100%',
-    maxWidth: '56rem',
+    maxWidth: vars.container.page,
     marginInline: 'auto',
   },
 ]);
 
 /** title — admin posts 의 현재 작업 영역을 표시한다 */
 export const title = style({
-  fontSize: '2rem',
+  fontSize: vars.typography.fontSize[32],
   fontWeight: 700,
   letterSpacing: 0,
   lineHeight: 1.2,
@@ -30,8 +30,8 @@ export const title = style({
 /** action link — 새 글 작성 진입 명령 */
 export const action = style({
   width: 'fit-content',
-  paddingBlock: '0.625rem',
-  paddingInline: '1rem',
+  paddingBlock: vars.dimension.x2_5,
+  paddingInline: vars.dimension.x4,
   borderRadius: vars.radius.r2,
   background: vars.color.bg.brand,
   color: vars.color.fg.onBrand,

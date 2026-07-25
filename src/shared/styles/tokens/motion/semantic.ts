@@ -30,4 +30,16 @@ export const motion = {
     duration: '2000ms',
     easing: 'ease-in-out',
   },
+  tactilePress: {
+    duration: duration.d1,
+    easing: easing.enter,
+  },
+  tactileLift: {
+    duration: duration.d6,
+    easing: easing.spring,
+  },
+  controlSlide: {
+    duration: duration.d6,
+    easing: easing.springStrong,
+  },
 } as const satisfies Record<string, MotionAlias>;

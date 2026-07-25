@@ -12,7 +12,7 @@ export const main = style([
   }),
   {
     width: '100%',
-    maxWidth: '56rem',
+    maxWidth: vars.container.page,
     marginInline: 'auto',
   },
 ]);
@@ -23,11 +23,11 @@ export const header = style([
 
 export const eyebrow = style({
   color: vars.color.fg.muted,
-  fontSize: '0.875rem',
+  fontSize: vars.typography.fontSize[14],
 });
 
 export const title = style({
-  fontSize: '2.5rem',
+  fontSize: vars.typography.fontSize[40],
   fontWeight: 700,
   letterSpacing: 0,
   lineHeight: 1.1,
@@ -52,7 +52,7 @@ export const item = style([
 ]);
 
 export const itemTitle = style({
-  fontSize: '1.25rem',
+  fontSize: vars.typography.fontSize[20],
   lineHeight: 1.3,
 });
 
@@ -64,12 +64,12 @@ export const meta = style([
   sprinkles({ display: 'flex', flexWrap: 'wrap', gap: 'x2' }),
   {
     color: vars.color.fg.muted,
-    fontSize: '0.875rem',
+    fontSize: vars.typography.fontSize[14],
   },
 ]);
 
 export const empty = style({
-  padding: '1.5rem',
+  padding: vars.dimension.x6,
   border: `1px solid ${vars.color.stroke.neutral}`,
   borderRadius: vars.radius.r2,
   color: vars.color.fg.muted,

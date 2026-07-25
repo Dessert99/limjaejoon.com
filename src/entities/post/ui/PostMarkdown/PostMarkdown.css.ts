@@ -10,7 +10,7 @@ export const root = style({
 });
 
 globalStyle(`${root} > * + *`, {
-  marginTop: '1rem',
+  marginTop: vars.dimension.x4,
 });
 
 globalStyle(`${root} h1, ${root} h2, ${root} h3`, {
@@ -27,7 +27,7 @@ globalStyle(`${root} code`, {
 
 globalStyle(`${root} pre`, {
   overflowX: 'auto',
-  padding: '1rem',
+  padding: vars.dimension.x4,
   borderRadius: vars.radius.r2,
   border: `1px solid ${vars.color.stroke.neutral}`,
 });
@@ -45,6 +45,6 @@ globalStyle(`${root} table`, {
 });
 
 globalStyle(`${root} th, ${root} td`, {
-  padding: '0.5rem',
+  padding: vars.dimension.x2,
   border: `1px solid ${vars.color.stroke.neutral}`,
 });

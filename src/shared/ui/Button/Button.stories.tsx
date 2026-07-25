@@ -37,13 +37,11 @@ export const Variants: Story = {
           alignItems: 'center',
           flexWrap: 'wrap',
         }}>
-        <Button variant='brandSolid'>brandSolid</Button>
-        <Button variant='neutralSolid'>neutralSolid</Button>
-        <Button variant='neutralWeak'>neutralWeak</Button>
-        <Button variant='criticalSolid'>criticalSolid</Button>
-        <Button variant='brandOutline'>brandOutline</Button>
-        <Button variant='neutralOutline'>neutralOutline</Button>
+        <Button variant='primary'>primary</Button>
+        <Button variant='secondary'>secondary</Button>
+        <Button variant='outline'>outline</Button>
         <Button variant='ghost'>ghost</Button>
+        <Button variant='critical'>critical</Button>
       </div>
     );
   },
@@ -62,6 +60,27 @@ export const Sizes: Story = {
   },
 };
 
+export const Block: Story = {
+  render: () => {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          maxWidth: '20rem',
+        }}>
+        <Button block>primary block</Button>
+        <Button
+          variant='secondary'
+          block>
+          secondary block
+        </Button>
+      </div>
+    );
+  },
+};
+
 export const WithIconSlots: Story = {
   render: () => {
     return (
@@ -72,7 +91,7 @@ export const WithIconSlots: Story = {
           </Button.PrefixIcon>
           왼쪽 아이콘
         </Button>
-        <Button variant='neutralOutline'>
+        <Button variant='outline'>
           오른쪽 아이콘
           <Button.SuffixIcon>
             <PlusIcon />
@@ -98,7 +117,7 @@ export const IconOnly: Story = {
         <Button
           layout='iconOnly'
           size='medium'
-          variant='neutralOutline'
+          variant='outline'
           aria-label='추가'>
           <Button.Icon>
             <PlusIcon />
@@ -126,7 +145,7 @@ export const Loading: Story = {
         <Button
           loading
           disabled
-          variant='neutralOutline'>
+          variant='outline'>
           비활성 로딩
         </Button>
       </div>

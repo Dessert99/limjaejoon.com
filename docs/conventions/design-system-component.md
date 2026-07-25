@@ -78,6 +78,9 @@ Button처럼 단일 action을 수행하는 컴포넌트와 Accordion처럼 여�
 - 한 화면에서만 필요한 예외 스타일은 호출처의 `className` escape hatch로 처리할 수 있다.
 - 같은 예외가 반복되면 shared variant나 semantic token으로 승격할지 다시 판단한다.
 - 시각 스타일은 SEED의 결과물을 복제하지 않고 프로젝트 제품 톤에 맞게 새로 정의한다.
+- raw 치수·색은 `design-tokens/no-raw-design-values` ESLint 규칙이 `*.css.ts`에서 차단한다. 스케일 토큰(`vars.dimension`·`vars.typography.fontSize`)은 최종 소비 계층으로 허용하고, 임의 리터럴만 막는다. 예외는 `// eslint-disable-next-line design-tokens/no-raw-design-values -- <이유>`로 이유를 남긴다.
+- 단독 `'1px'`는 규칙이 명시적으로 면제한다 — 어떤 화면 밀도에서도 1px인 상수라 `dimension` 스케일(최솟값 2px)에 대응 토큰이 없다. `palette` import·`.palette` 멤버 접근은 예외 없이 금지되며, semantic 토큰(`vars.color.*`)으로만 색을 연결한다.
+- GSAP·react-spring 같은 런타임 모션은 `.tsx` 인라인 스타일이라 이 규칙 밖이다. 값은 `createVar()`로 `.css.ts`에 계약을 선언하고 JS가 그 변수만 움직이는 브리지 패턴을 쓴다. 설계 근거와 예시는 [토큰 규율 스펙](../superpowers/specs/2026-07-25-strict-design-token-lint-design.md) §5 참고.
 
 ## 7. 인터랙션과 motion 계층
 

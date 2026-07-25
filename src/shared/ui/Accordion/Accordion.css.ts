@@ -93,7 +93,7 @@ export const trigger = style([
       },
       '&:focus-visible': {
         outline: `2px solid ${vars.color.stroke.brand}`,
-        outlineOffset: '-2px',
+        outlineOffset: `calc(${vars.dimension.x0_5} * -1)`,
       },
     },
     '@media': {
@@ -107,23 +107,30 @@ export const trigger = style([
   },
 ]);
 
-/** indicator — open 상태를 회전으로 알려주는 장식 slot */
+/** indicator — 고정 크기 박스 안에서 제자리 360도 회전으로 open 상태를 알려주는 장식 slot */
 export const indicator = style({
   display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   flexShrink: 0,
+  width: vars.dimension.x6,
+  height: vars.dimension.x6,
   color: vars.color.fg.muted,
-  transition: `transform ${vars.motion.controlFeedback.duration} ${vars.motion.controlFeedback.easing}`,
+  transformOrigin: 'center',
+  // 상태(open/closed)를 전달하는 값이라 회전 자체는 항상 유지하고, transition만 no-preference에서 게이트한다
+  transition: `color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`,
   selectors: {
     [`${trigger}[data-state="open"] &`]: {
-      transform: 'rotate(180deg)',
+      transform: 'rotate(360deg)',
+      color: vars.color.fg.brand,
     },
     [`${trigger}:is(:disabled, [data-disabled]) &`]: {
       color: vars.color.fg.disabled,
     },
   },
   '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transition: 'none',
+    '(prefers-reduced-motion: no-preference)': {
+      transition: `color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, transform ${vars.motion.tactileLift.duration} ${vars.motion.tactileLift.easing}`,
     },
   },
 });

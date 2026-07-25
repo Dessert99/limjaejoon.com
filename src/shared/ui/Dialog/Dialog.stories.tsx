@@ -15,7 +15,7 @@ export const Default: Story = {
     return (
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <Button variant='neutralOutline'>프로필 수정</Button>
+          <Button variant='outline'>프로필 수정</Button>
         </Dialog.Trigger>
         <Dialog.Content>
           <Dialog.Header>
@@ -32,7 +32,7 @@ export const Default: Story = {
               <Button variant='ghost'>닫기</Button>
             </Dialog.Close>
             <Dialog.Close asChild>
-              <Button variant='brandSolid'>저장</Button>
+              <Button variant='primary'>저장</Button>
             </Dialog.Close>
           </Dialog.Footer>
         </Dialog.Content>
@@ -47,7 +47,7 @@ export const SingleAction: Story = {
     return (
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <Button variant='neutralOutline'>안내 보기</Button>
+          <Button variant='outline'>안내 보기</Button>
         </Dialog.Trigger>
         <Dialog.Content>
           <Dialog.Header>
@@ -62,7 +62,7 @@ export const SingleAction: Story = {
           </Dialog.Body>
           <Dialog.Footer layout='single'>
             <Dialog.Close asChild>
-              <Button variant='neutralSolid'>확인</Button>
+              <Button variant='primary'>확인</Button>
             </Dialog.Close>
           </Dialog.Footer>
         </Dialog.Content>
@@ -77,7 +77,7 @@ export const OverflowActions: Story = {
     return (
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <Button variant='neutralOutline'>긴 액션 보기</Button>
+          <Button variant='outline'>긴 액션 보기</Button>
         </Dialog.Trigger>
         <Dialog.Content>
           <Dialog.Header>
@@ -95,7 +95,7 @@ export const OverflowActions: Story = {
               <Button variant='ghost'>기본 설정으로 되돌리고 닫기</Button>
             </Dialog.Close>
             <Dialog.Close asChild>
-              <Button variant='brandSolid'>
+              <Button variant='primary'>
                 현재 표시 옵션을 저장하고 계속하기
               </Button>
             </Dialog.Close>

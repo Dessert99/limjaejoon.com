@@ -23,6 +23,6 @@ export const code = style({
   margin: 0,
   overflowX: 'auto',
   fontFamily: 'monospace',
-  fontSize: '0.875rem',
+  fontSize: vars.typography.fontSize[14],
   whiteSpace: 'nowrap',
 });

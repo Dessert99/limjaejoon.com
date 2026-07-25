@@ -8,11 +8,7 @@ export default defineConfig({
   resolve: { tsconfigPaths: true },
   test: {
     environment: 'jsdom',
-    exclude: [
-      ...configDefaults.exclude,
-      'scripts/blog-import/**',
-      'tests/integration/**',
-    ],
+    exclude: [...configDefaults.exclude, 'tests/integration/**'],
     setupFiles: ['./vitest.setup.ts'],
   },
 });

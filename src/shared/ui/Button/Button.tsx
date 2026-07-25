@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from 'react'; // 부모가 넘긴 ref를 실제 DOM요소까지 전달해준다.
 import {
+  block as blockClass,
   button,
   content,
   icon,
@@ -24,6 +25,7 @@ export interface ButtonProps
     ButtonVariants {
   asChild?: boolean;
   loading?: boolean;
+  block?: boolean;
 }
 
 /** icon slot 공통 props */
@@ -97,6 +99,7 @@ const ButtonRoot = forwardRef<HTMLButtonElement, ButtonProps>(
       loading = false,
       disabled = false,
       asChild = false,
+      block = false,
       type,
       className,
       children,
@@ -115,7 +118,11 @@ const ButtonRoot = forwardRef<HTMLButtonElement, ButtonProps>(
       );
     }
 
-    const classNames = [button({ variant, size, layout }), className]
+    const classNames = [
+      button({ variant, size, layout }),
+      block ? blockClass : null,
+      className,
+    ]
       .filter(Boolean)
       .join(' ');
 

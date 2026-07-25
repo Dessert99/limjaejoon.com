@@ -29,6 +29,7 @@ export const vars = createThemeContract({
       brand: null,
       brandPressed: null,
       brandWeak: null,
+      critical: null,
       criticalWeak: null,
       warningWeak: null,
       informativeWeak: null,
@@ -58,6 +59,7 @@ export const vars = createThemeContract({
       20: null,
       24: null,
       32: null,
+      40: null,
     },
     lineHeight: {
       tight: null,
@@ -113,6 +115,12 @@ export const vars = createThemeContract({
         lineHeight: null,
         fontWeight: null,
       },
+      headingXl: {
+        fontFamily: null,
+        fontSize: null,
+        lineHeight: null,
+        fontWeight: null,
+      },
       code: {
         fontFamily: null,
         fontSize: null,
@@ -146,6 +154,13 @@ export const vars = createThemeContract({
     cardPadding: null,
     controlGap: null,
   },
+  container: {
+    form: null,
+    dialog: null,
+    prose: null,
+    page: null,
+    wide: null,
+  },
   radius: {
     r1: null,
     r2: null,
@@ -172,6 +187,8 @@ export const vars = createThemeContract({
     enter: null,
     exit: null,
     expressive: null,
+    spring: null,
+    springStrong: null,
   },
   motion: {
     colorTransition: {
@@ -191,6 +208,18 @@ export const vars = createThemeContract({
       easing: null,
     },
     themeReveal: {
+      duration: null,
+      easing: null,
+    },
+    tactilePress: {
+      duration: null,
+      easing: null,
+    },
+    tactileLift: {
+      duration: null,
+      easing: null,
+    },
+    controlSlide: {
       duration: null,
       easing: null,
     },

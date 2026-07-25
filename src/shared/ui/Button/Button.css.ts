@@ -1,6 +1,7 @@
 /** Button 시각 변형 — SEED ActionButton 구조를 웹앱 토큰으로 재해석한다 */
 import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { vars } from '@/shared/styles/theme.css';
+import { finish, shadow } from '@/shared/styles/tokens';
 import { createVar, keyframes, style } from '@vanilla-extract/css';
 import { recipe, type RecipeVariants } from '@vanilla-extract/recipes';
 
@@ -37,7 +38,7 @@ const base = style([
     textDecoration: 'none',
     whiteSpace: 'nowrap',
     verticalAlign: 'middle',
-    transition: `background ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, border-color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, outline-color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`,
+    transition: `background ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, border-color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, transform ${vars.motion.tactileLift.duration} ${vars.motion.tactileLift.easing}, box-shadow ${vars.motion.tactilePress.duration} ${vars.motion.tactilePress.easing}`,
     selectors: {
       '&:is(:disabled, [data-disabled])': {
         cursor: 'not-allowed',
@@ -48,6 +49,18 @@ const base = style([
       '&:focus-visible': {
         outline: `2px solid ${vars.color.stroke.brand}`,
         outlineOffset: vars.dimension.x0_5,
+      },
+    },
+    '@media': {
+      '(prefers-reduced-motion: no-preference)': {
+        selectors: {
+          '&:active:not(:disabled):not([data-disabled])': {
+            transform: 'scale(0.97)',
+          },
+        },
+      },
+      '(prefers-reduced-motion: reduce)': {
+        transition: `background ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, border-color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`,
       },
     },
   },
@@ -130,78 +143,74 @@ export const button = recipe({
   base,
   variants: {
     variant: {
-      brandSolid: {
+      primary: {
         background: vars.color.bg.brand,
         color: vars.color.fg.onBrand,
+        boxShadow: `${finish.inset}, ${shadow.raise}`,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.bg.brandPressed },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': {
+                background: vars.color.bg.brandPressed,
+              },
+            },
           },
-          'not all and (hover: hover) and (pointer: fine)': {
-            ':active': { background: vars.color.bg.brandPressed },
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
+            {
+              selectors: {
+                '&:hover:not(:disabled):not([data-disabled])': {
+                  transform: 'translateY(-2px)',
+                },
+              },
+            },
+        },
+        selectors: {
+          '&:active:not(:disabled):not([data-disabled])': {
+            boxShadow: shadow.press,
           },
         },
       },
-      neutralSolid: {
-        background: vars.color.fg.neutral,
-        color: vars.color.bg.canvas,
+      secondary: {
+        background: vars.color.bg.positiveWeak,
+        color: vars.color.fg.positive,
+        border: `1px solid ${vars.color.stroke.positive}`,
+        boxShadow: finish.inset,
         '@media': {
-          '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.fg.muted },
-          },
-          'not all and (hover: hover) and (pointer: fine)': {
-            ':active': { background: vars.color.fg.muted },
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
+            {
+              selectors: {
+                '&:hover:not(:disabled):not([data-disabled])': {
+                  transform: 'translateY(-2px)',
+                },
+              },
+            },
+        },
+        selectors: {
+          '&:active:not(:disabled):not([data-disabled])': {
+            boxShadow: shadow.press,
           },
         },
       },
-      neutralWeak: {
-        background: vars.color.bg.surfaceMuted,
-        color: vars.color.fg.neutral,
-        '@media': {
-          '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.bg.disabled },
-          },
-          'not all and (hover: hover) and (pointer: fine)': {
-            ':active': { background: vars.color.bg.disabled },
-          },
-        },
-      },
-      criticalSolid: {
-        background: vars.color.fg.critical,
-        color: vars.color.fg.onBrand,
-        '@media': {
-          '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.stroke.critical },
-          },
-          'not all and (hover: hover) and (pointer: fine)': {
-            ':active': { background: vars.color.stroke.critical },
-          },
-        },
-      },
-      brandOutline: {
-        background: 'transparent',
-        borderColor: vars.color.stroke.neutral,
-        color: vars.color.fg.brand,
-        '@media': {
-          '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.bg.brandWeak },
-          },
-          'not all and (hover: hover) and (pointer: fine)': {
-            ':active': { background: vars.color.bg.brandWeak },
-          },
-        },
-      },
-      neutralOutline: {
+      outline: {
         background: 'transparent',
         borderColor: vars.color.stroke.neutral,
         color: vars.color.fg.neutral,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.bg.surfaceMuted },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': {
+                background: vars.color.bg.surfaceMuted,
+              },
+            },
           },
-          'not all and (hover: hover) and (pointer: fine)': {
-            ':active': { background: vars.color.bg.surfaceMuted },
-          },
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
+            {
+              selectors: {
+                '&:hover:not(:disabled):not([data-disabled])': {
+                  transform: 'translateY(-2px)',
+                },
+              },
+            },
         },
       },
       ghost: {
@@ -209,19 +218,52 @@ export const button = recipe({
         color: vars.color.fg.neutral,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.bg.surfaceMuted },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': {
+                background: vars.color.bg.surfaceMuted,
+              },
+            },
           },
-          'not all and (hover: hover) and (pointer: fine)': {
-            ':active': { background: vars.color.bg.surfaceMuted },
+        },
+      },
+      critical: {
+        background: vars.color.bg.critical,
+        color: vars.color.fg.onBrand,
+        boxShadow: `${finish.inset}, ${shadow.raise}`,
+        '@media': {
+          '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
+            {
+              selectors: {
+                '&:hover:not(:disabled):not([data-disabled])': {
+                  transform: 'translateY(-2px)',
+                },
+              },
+            },
+        },
+        selectors: {
+          '&:active:not(:disabled):not([data-disabled])': {
+            boxShadow: shadow.press,
           },
         },
       },
     },
     size: {
-      xsmall: { height: vars.dimension.x8, fontSize: vars.typography.fontSize[12] },
-      small: { height: vars.dimension.x10, fontSize: vars.typography.fontSize[14] },
-      medium: { height: vars.dimension.x12, fontSize: vars.typography.fontSize[14] },
-      large: { height: vars.dimension.x16, fontSize: vars.typography.fontSize[16] },
+      xsmall: {
+        height: vars.dimension.x6,
+        fontSize: vars.typography.fontSize[12],
+      },
+      small: {
+        height: vars.dimension.x8,
+        fontSize: vars.typography.fontSize[12],
+      },
+      medium: {
+        height: vars.dimension.x12,
+        fontSize: vars.typography.fontSize[14],
+      },
+      large: {
+        height: vars.dimension.x16,
+        fontSize: vars.typography.fontSize[16],
+      },
     },
     layout: {
       withText: {},
@@ -234,7 +276,7 @@ export const button = recipe({
       style: {
         gap: vars.dimension.x1,
         paddingInline: vars.dimension.x3,
-        paddingBlock: vars.dimension.x1_5,
+        paddingBlock: vars.dimension.x1,
         lineHeight: vars.typography.lineHeight.normal,
         vars: {
           [contentGap]: vars.dimension.x1,
@@ -247,7 +289,7 @@ export const button = recipe({
       style: {
         gap: vars.dimension.x1,
         paddingInline: vars.dimension.x3_5,
-        paddingBlock: vars.dimension.x2,
+        paddingBlock: vars.dimension.x1_5,
         lineHeight: vars.typography.lineHeight.normal,
         vars: {
           [contentGap]: vars.dimension.x1,
@@ -284,7 +326,7 @@ export const button = recipe({
     {
       variants: { size: 'xsmall', layout: 'iconOnly' },
       style: {
-        width: vars.dimension.x8,
+        width: vars.dimension.x6,
         padding: vars.dimension.x1_5,
         borderRadius: vars.radius.pill,
         vars: {
@@ -296,7 +338,7 @@ export const button = recipe({
     {
       variants: { size: 'small', layout: 'iconOnly' },
       style: {
-        width: vars.dimension.x10,
+        width: vars.dimension.x8,
         padding: vars.dimension.x2,
         vars: {
           [contentGap]: vars.dimension.none,
@@ -327,12 +369,13 @@ export const button = recipe({
       },
     },
     {
-      variants: { variant: 'brandSolid' },
+      variants: { variant: 'primary' },
       style: {
         selectors: {
           '&:is(:disabled, [data-disabled])': {
             background: vars.color.bg.disabled,
             color: vars.color.fg.disabled,
+            boxShadow: 'none',
           },
           '&[data-loading]': {
             background: vars.color.bg.brandPressed,
@@ -341,68 +384,41 @@ export const button = recipe({
       },
     },
     {
-      variants: { variant: 'neutralSolid' },
+      variants: { variant: 'secondary' },
       style: {
         selectors: {
           '&:is(:disabled, [data-disabled])': {
             background: vars.color.bg.disabled,
             color: vars.color.fg.disabled,
-          },
-          '&[data-loading]': {
-            background: vars.color.fg.muted,
-          },
-        },
-      },
-    },
-    {
-      variants: { variant: 'criticalSolid' },
-      style: {
-        selectors: {
-          '&:is(:disabled, [data-disabled])': {
-            background: vars.color.bg.disabled,
-            color: vars.color.fg.disabled,
-          },
-          '&[data-loading]': {
-            background: vars.color.stroke.critical,
-          },
-        },
-      },
-    },
-    {
-      variants: { variant: 'neutralWeak' },
-      style: {
-        selectors: {
-          '&:is(:disabled, [data-disabled])': {
-            background: vars.color.bg.disabled,
-            color: vars.color.fg.disabled,
-          },
-          '&[data-loading]': {
-            background: vars.color.bg.disabled,
-          },
-        },
-      },
-    },
-    {
-      variants: { variant: 'brandOutline' },
-      style: {
-        selectors: {
-          '&:is(:disabled, [data-disabled])': {
-            background: 'transparent',
             borderColor: vars.color.stroke.muted,
-            color: vars.color.fg.disabled,
+            boxShadow: 'none',
           },
           '&[data-loading]': {
-            background: vars.color.bg.brandWeak,
+            background: vars.color.bg.positiveWeak,
           },
         },
       },
     },
     {
-      variants: { variant: 'neutralOutline' },
+      variants: { variant: 'critical' },
       style: {
         selectors: {
           '&:is(:disabled, [data-disabled])': {
-            background: 'transparent',
+            background: vars.color.bg.disabled,
+            color: vars.color.fg.disabled,
+            boxShadow: 'none',
+          },
+          '&[data-loading]': {
+            background: vars.color.bg.critical,
+          },
+        },
+      },
+    },
+    {
+      variants: { variant: 'outline' },
+      style: {
+        selectors: {
+          '&:is(:disabled, [data-disabled])': {
             borderColor: vars.color.stroke.muted,
             color: vars.color.fg.disabled,
           },
@@ -417,7 +433,6 @@ export const button = recipe({
       style: {
         selectors: {
           '&:is(:disabled, [data-disabled])': {
-            background: 'transparent',
             color: vars.color.fg.disabled,
           },
           '&[data-loading]': {
@@ -428,7 +443,7 @@ export const button = recipe({
     },
   ],
   defaultVariants: {
-    variant: 'brandSolid',
+    variant: 'primary',
     size: 'medium',
     layout: 'withText',
   },
@@ -436,3 +451,6 @@ export const button = recipe({
 
 /** recipe variant prop 타입 — Button props의 단일 출처 */
 export type ButtonVariants = NonNullable<RecipeVariants<typeof button>>;
+
+/** block — 풀폭 버튼(로그인 등) */
+export const block = style({ width: '100%' });

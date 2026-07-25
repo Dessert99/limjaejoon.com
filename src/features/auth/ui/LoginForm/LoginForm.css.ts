@@ -6,7 +6,7 @@ import { vars } from '@/shared/styles/theme.css';
 /** 폼 루트 — 세로 스택, 좁은 로그인 폼 너비로 제한한다 */
 export const root = style([
   sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x4' }),
-  { maxWidth: '20rem' },
+  { maxWidth: vars.container.form },
 ]);
 
 /** 라벨+인풋 필드 */

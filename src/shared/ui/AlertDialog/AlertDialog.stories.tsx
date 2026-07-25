@@ -15,7 +15,7 @@ export const LayoutNatural: Story = {
     return (
       <AlertDialog.Root>
         <AlertDialog.Trigger asChild>
-          <Button variant='neutralOutline'>글 삭제</Button>
+          <Button variant='outline'>글 삭제</Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>
           <AlertDialog.Header>
@@ -29,7 +29,7 @@ export const LayoutNatural: Story = {
               <Button variant='ghost'>취소</Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
-              <Button variant='criticalSolid'>삭제</Button>
+              <Button variant='critical'>삭제</Button>
             </AlertDialog.Action>
           </AlertDialog.Footer>
         </AlertDialog.Content>
@@ -44,7 +44,7 @@ export const LayoutSingle: Story = {
     return (
       <AlertDialog.Root>
         <AlertDialog.Trigger asChild>
-          <Button variant='neutralOutline'>공지 보기</Button>
+          <Button variant='outline'>공지 보기</Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>
           <AlertDialog.Header>
@@ -55,7 +55,7 @@ export const LayoutSingle: Story = {
           </AlertDialog.Header>
           <AlertDialog.Footer layout='single'>
             <AlertDialog.Action asChild>
-              <Button variant='neutralSolid'>확인</Button>
+              <Button variant='primary'>확인</Button>
             </AlertDialog.Action>
           </AlertDialog.Footer>
         </AlertDialog.Content>
@@ -70,7 +70,7 @@ export const NaturalOverflow: Story = {
     return (
       <AlertDialog.Root>
         <AlertDialog.Trigger asChild>
-          <Button variant='neutralOutline'>긴 액션 확인</Button>
+          <Button variant='outline'>긴 액션 확인</Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>
           <AlertDialog.Header>
@@ -85,7 +85,7 @@ export const NaturalOverflow: Story = {
               <Button variant='ghost'>나중에 다시 검토하기</Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
-              <Button variant='criticalSolid'>
+              <Button variant='critical'>
                 모든 연결된 데이터를 삭제하고 계속하기
               </Button>
             </AlertDialog.Action>

@@ -31,7 +31,7 @@ function ControlledAccordionStory() {
                 호출처가 빈 배열 변경을 거부한다
               </Accordion.Description>
             </Accordion.Body>
-            <Accordion.Indicator>⌄</Accordion.Indicator>
+            <Accordion.Indicator />
           </Accordion.Trigger>
         </Accordion.Header>
         <Accordion.Content>
@@ -60,7 +60,7 @@ export const Single: Story = {
                   주문 이후 평균 배송 기간
                 </Accordion.Description>
               </Accordion.Body>
-              <Accordion.Indicator>⌄</Accordion.Indicator>
+              <Accordion.Indicator />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content>
@@ -79,7 +79,7 @@ export const Single: Story = {
                   수령 이후 반품 가능 기간
                 </Accordion.Description>
               </Accordion.Body>
-              <Accordion.Indicator>⌄</Accordion.Indicator>
+              <Accordion.Indicator />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content>
@@ -104,9 +104,11 @@ export const Multiple: Story = {
             <Accordion.Trigger>
               <Accordion.Body>
                 <Accordion.Title>섹션 A</Accordion.Title>
-                <Accordion.Description>첫 번째 내용을 유지</Accordion.Description>
+                <Accordion.Description>
+                  첫 번째 내용을 유지
+                </Accordion.Description>
               </Accordion.Body>
-              <Accordion.Indicator>⌄</Accordion.Indicator>
+              <Accordion.Indicator />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content>
@@ -120,9 +122,11 @@ export const Multiple: Story = {
             <Accordion.Trigger>
               <Accordion.Body>
                 <Accordion.Title>섹션 B</Accordion.Title>
-                <Accordion.Description>A를 닫지 않고 열기</Accordion.Description>
+                <Accordion.Description>
+                  A를 닫지 않고 열기
+                </Accordion.Description>
               </Accordion.Body>
-              <Accordion.Indicator>⌄</Accordion.Indicator>
+              <Accordion.Indicator />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content>
@@ -153,11 +157,13 @@ export const Disabled: Story = {
                 <Accordion.Title>활성 항목</Accordion.Title>
                 <Accordion.Description>열고 닫을 수 있음</Accordion.Description>
               </Accordion.Body>
-              <Accordion.Indicator>⌄</Accordion.Indicator>
+              <Accordion.Indicator />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content>
-            <Accordion.ContentInner>사용 가능한 항목입니다.</Accordion.ContentInner>
+            <Accordion.ContentInner>
+              사용 가능한 항목입니다.
+            </Accordion.ContentInner>
           </Accordion.Content>
         </Accordion.Item>
         <Accordion.Item
@@ -167,13 +173,17 @@ export const Disabled: Story = {
             <Accordion.Trigger>
               <Accordion.Body>
                 <Accordion.Title>비활성 항목</Accordion.Title>
-                <Accordion.Description>상호작용할 수 없음</Accordion.Description>
+                <Accordion.Description>
+                  상호작용할 수 없음
+                </Accordion.Description>
               </Accordion.Body>
-              <Accordion.Indicator>⌄</Accordion.Indicator>
+              <Accordion.Indicator />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content>
-            <Accordion.ContentInner>비활성 항목의 본문입니다.</Accordion.ContentInner>
+            <Accordion.ContentInner>
+              비활성 항목의 본문입니다.
+            </Accordion.ContentInner>
           </Accordion.Content>
         </Accordion.Item>
       </Accordion.Root>

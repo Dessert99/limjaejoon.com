@@ -1,5 +1,6 @@
 /** dark theme values — semantic token contract 에 dark 값을 주입 */
 import {
+  container,
   darkColor,
   dimension,
   duration,
@@ -17,6 +18,7 @@ export const night: ThemeValues = {
   typography,
   dimension,
   spacing,
+  container,
   radius,
   duration,
   easing,

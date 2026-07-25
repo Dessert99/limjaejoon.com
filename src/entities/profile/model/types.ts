@@ -18,15 +18,6 @@ export interface Profile {
   contacts: ContactLink[];
 }
 
-/** 타임라인 항목 — 경력·활동·학력이 공유하는 시점 기록 */
-export interface TimelineItem {
-  title: string;
-  subtitle?: string;
-  period: string;
-  description?: string;
-  stack?: string[];
-}
-
 /** 프로젝트 외부 링크 한 건 */
 export interface ProjectLink {
   label: string;

@@ -11,7 +11,6 @@ describe('HomePage', () => {
     expect(
       screen.getByRole('heading', { name: '보유 기술' })
     ).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: '경력' })).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: '프로젝트' })
     ).toBeInTheDocument();

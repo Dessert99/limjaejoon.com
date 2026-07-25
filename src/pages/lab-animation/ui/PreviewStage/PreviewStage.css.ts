@@ -23,13 +23,14 @@ export const controls = style([
 
 export const pauseLabel = style({
   color: vars.color.fg.muted,
-  fontSize: '0.875rem',
+  fontSize: vars.typography.fontSize[14],
 });
 
 /** 트랙 — 박스가 달리는 레인. 컨테이너로 만들어 이동 거리를 트랙 폭 기준으로 계산한다 */
 export const track = style([
   sprinkles({ display: 'flex', alignItems: 'center', p: 'x3', r: 'r1' }),
   {
+    // eslint-disable-next-line design-tokens/no-raw-design-values -- 랩 데모 트랙 치수
     minHeight: '5.5rem',
     background: vars.color.bg.canvas,
     overflow: 'hidden',
@@ -40,7 +41,7 @@ export const track = style([
 /** 개념 노트 — 재생 모델(리마운트 vs play-state) 설명 */
 export const note = style({
   color: vars.color.fg.muted,
-  fontSize: '0.8125rem',
+  fontSize: vars.typography.fontSize[14],
   lineHeight: 1.6,
 });
 
@@ -72,8 +73,8 @@ const spin = keyframes({
 
 // 데모 박스 공통 — rest는 반투명, 재생값은 전부 var()라서 조작 즉시 반영된다
 const boxBase = style({
-  width: '2.5rem',
-  height: '2.5rem',
+  width: vars.dimension.x10,
+  height: vars.dimension.x10,
   borderRadius: vars.radius.r1,
   background: vars.color.bg.brand,
   opacity: 0.35,

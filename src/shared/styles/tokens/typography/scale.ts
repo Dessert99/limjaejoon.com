@@ -12,6 +12,7 @@ export const fontSize = {
   20: '1.25rem',
   24: '1.5rem',
   32: '2rem',
+  40: '2.5rem',
 } as const;
 
 /** line-height scale tokens — UI 텍스트 리듬 */

@@ -5,7 +5,7 @@ import { style } from '@vanilla-extract/css';
 /** SVG 캔버스 — 정사각형 유지, 테마 표면 위에 얹는다 */
 export const svg = style({
   width: '100%',
-  maxWidth: '20rem',
+  maxWidth: vars.container.form,
   aspectRatio: '1',
   borderRadius: vars.radius.r2,
   border: `1px solid ${vars.color.stroke.neutral}`,
@@ -44,6 +44,6 @@ export const handle = style({
   cursor: 'grab',
   ':focus-visible': {
     outline: `2px solid ${vars.color.stroke.brand}`,
-    outlineOffset: '2px',
+    outlineOffset: vars.dimension.x0_5,
   },
 });

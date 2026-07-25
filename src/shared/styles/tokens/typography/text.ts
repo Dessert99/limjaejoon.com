@@ -53,6 +53,12 @@ export const text = {
     lineHeight: lineHeight.tight,
     fontWeight: fontWeight.bold,
   },
+  headingXl: {
+    fontFamily: fontFamily.sans,
+    fontSize: fontSize[40],
+    lineHeight: lineHeight.tight,
+    fontWeight: fontWeight.bold,
+  },
   code: {
     fontFamily: fontFamily.mono,
     fontSize: fontSize[14],
