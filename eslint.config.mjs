@@ -4,6 +4,8 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 // Next.js TypeScript 권장 룰셋을 가져옵니다.
 import nextTs from 'eslint-config-next/typescript';
+// 프로젝트 전용 디자인 토큰 규율 플러그인을 가져옵니다.
+import designTokens from './eslint-rules/index.mjs';
 
 // 프로젝트 최종 ESLint 설정 배열을 정의합니다.
 const eslintConfig = defineConfig([
@@ -85,6 +87,17 @@ const eslintConfig = defineConfig([
           message: '훅 내부 함수는 화살표 함수로 작성하세요 (#4).',
         },
       ],
+    },
+  },
+
+  // 디자인 토큰 규율 — 스타일 코드에서 raw 값을 막는다. 토큰·테마 정의부는 raw 값이 살아야 하는 유일한 곳이라 제외
+  {
+    files: ['**/*.css.ts'],
+    ignores: ['src/shared/styles/tokens/**', 'src/shared/styles/themes/**'],
+    plugins: { 'design-tokens': designTokens },
+    rules: {
+      // 마이그레이션 중에는 warn — 전수 치환 후 error 로 승격한다
+      'design-tokens/no-raw-design-values': 'warn',
     },
   },
 
