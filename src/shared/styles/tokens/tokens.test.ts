@@ -12,6 +12,8 @@ import {
   duration,
   easing,
   motion,
+  finish,
+  shadow,
 } from '.';
 
 const flattenKeys = (value: Record<string, unknown>, prefix = ''): string[] => {
@@ -67,5 +69,11 @@ describe('design tokens', () => {
     expect(easing.spring).toBe('cubic-bezier(0.34, 1.4, 0.64, 1)');
     expect(motion.tactileLift.easing).toBe(easing.spring);
     expect(motion.controlSlide.easing).toBe(easing.springStrong);
+  });
+
+  it('aged-bronze 재질 효과 상수를 제공한다', () => {
+    expect(finish.inset).toContain('inset');
+    expect(shadow.raise).toContain('rgba');
+    expect(shadow.press).toContain('inset');
   });
 });

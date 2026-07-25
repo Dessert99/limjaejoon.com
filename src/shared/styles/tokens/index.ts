@@ -28,3 +28,6 @@ export { duration, easing, motion } from './motion';
 
 /** semantic motion alias shape 재노출 */
 export type { MotionAlias } from './motion';
+
+/** effect token 재노출 */
+export { finish, shadow } from './effect';
