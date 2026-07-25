@@ -7,7 +7,7 @@ const HAIRLINE = '1px';
 const RAW_DIMENSION = /^-?\d*\.?\d+(?:px|rem)$/;
 
 /** ESLint 규칙 — raw 치수·색 리터럴과 palette 직접 import 를 막는다 */
-export default {
+const noRawDesignValues = {
   meta: {
     type: 'problem',
     docs: {
@@ -39,3 +39,5 @@ export default {
     };
   },
 };
+
+export default noRawDesignValues;

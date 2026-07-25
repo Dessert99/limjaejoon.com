@@ -2,6 +2,8 @@
 import noRawDesignValues from './no-raw-design-values.mjs';
 
 /** eslint.config.mjs 의 plugins 에 배선하는 플러그인 객체 */
-export default {
+const designTokens = {
   rules: { 'no-raw-design-values': noRawDesignValues },
 };
+
+export default designTokens;
