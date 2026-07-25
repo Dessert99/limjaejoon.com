@@ -77,9 +77,11 @@ export const item = style([
     '@media': {
       '(hover: hover) and (pointer: fine)': {
         selectors: {
-          '&:hover:not(:disabled):not([data-disabled])': {
-            color: vars.color.fg.neutral,
-          },
+          // 선택된 항목은 onBrand 유지 — hover 색은 off 항목에만(선택 항목 hover 시 대비 붕괴 방지)
+          '&:hover:not(:disabled):not([data-disabled]):not([data-state="on"])':
+            {
+              color: vars.color.fg.neutral,
+            },
         },
       },
     },
