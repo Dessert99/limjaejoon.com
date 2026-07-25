@@ -69,6 +69,18 @@ describe('Button', () => {
     expect(button).toBeDisabled();
   });
 
+  it('secondary variant와 block prop을 렌더한다', () => {
+    render(
+      <Button
+        variant='secondary'
+        block>
+        저장
+      </Button>
+    );
+    const btn = screen.getByRole('button', { name: '저장' });
+    expect(btn.className).not.toBe('');
+  });
+
   it('compound icon slot을 렌더링하고 iconOnly 접근성 이름 누락을 개발 경고로 알려준다', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
