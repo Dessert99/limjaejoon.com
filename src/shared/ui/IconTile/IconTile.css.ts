@@ -16,16 +16,26 @@ export const tile = style([
     height: vars.dimension.x10,
     fontSize: vars.typography.fontSize[20],
     color: vars.color.fg.muted,
-    transition: `background ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`,
+    border: `1px solid ${vars.color.stroke.neutral}`,
+    transition: `background ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, border-color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, transform ${vars.motion.tactileLift.duration} ${vars.motion.tactileLift.easing}`,
     '@media': {
       '(hover: hover) and (pointer: fine)': {
         selectors: {
-          '&:hover': {
+          '&:hover:not(:disabled)': {
             background: vars.color.bg.surfaceMuted,
-            color: vars.color.fg.neutral,
+            color: vars.color.fg.brand,
+            borderColor: vars.color.stroke.brand,
           },
         },
       },
+      '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
+        {
+          selectors: {
+            '&:hover:not(:disabled)': {
+              transform: 'translateY(-3px)',
+            },
+          },
+        },
     },
     selectors: {
       '&:focus-visible': {

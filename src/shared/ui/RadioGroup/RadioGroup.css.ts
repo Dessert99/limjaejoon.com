@@ -8,7 +8,7 @@ export const root = style([
   sprinkles({ display: 'flex', flexDirection: 'column', gap: 'x2' }),
 ]);
 
-/** 항목 원 — 1.25rem, 선택되면 테두리 accent */
+/** 항목 원 — 1.25rem, 선택되면 테두리 accent, 선택 순간 미세 scale(no-preference 게이트) */
 export const item = style({
   width: '1.25rem',
   height: '1.25rem',
@@ -25,6 +25,14 @@ export const item = style({
     '&[data-state="checked"]': { borderColor: vars.color.stroke.brand },
   },
   ':disabled': { opacity: 0.5, cursor: 'not-allowed' },
+  '@media': {
+    '(prefers-reduced-motion: no-preference)': {
+      transition: `transform ${vars.motion.tactileLift.duration} ${vars.motion.tactileLift.easing}`,
+      selectors: {
+        '&[data-state="checked"]': { transform: 'scale(1.08)' },
+      },
+    },
+  },
 });
 
 /** 선택 점 — Indicator가 마운트될 때만 보임 */
