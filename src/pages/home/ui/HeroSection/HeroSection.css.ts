@@ -36,7 +36,7 @@ export const taglineList = style([
 
 /** 소개 문장 한 줄 */
 export const taglineItem = style({
-  maxWidth: '42rem',
+  maxWidth: vars.container.prose,
   fontSize: vars.typography.fontSize[16],
   lineHeight: vars.typography.lineHeight.relaxed,
   color: vars.color.fg.muted,

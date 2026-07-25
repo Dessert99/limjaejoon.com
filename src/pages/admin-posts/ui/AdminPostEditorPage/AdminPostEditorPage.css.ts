@@ -14,14 +14,14 @@ export const main = style([
   }),
   {
     width: '100%',
-    maxWidth: '64rem',
+    maxWidth: vars.container.wide,
     marginInline: 'auto',
   },
 ]);
 
 /** page title — admin 작업 화면의 현재 mode 를 표시한다 */
 export const title = style({
-  fontSize: '2rem',
+  fontSize: vars.typography.fontSize[32],
   fontWeight: 700,
   letterSpacing: 0,
   lineHeight: 1.2,
