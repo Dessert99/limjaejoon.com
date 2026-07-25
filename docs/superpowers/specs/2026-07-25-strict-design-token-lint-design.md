@@ -167,18 +167,22 @@ sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아�
 
 | 방문 노드                | 검사                                                              | messageId       |
 | ------------------------ | ----------------------------------------------------------------- | --------------- |
-| `Literal` (string)       | `^-?\d*\.?\d+(px\|rem)$` — **단 `'1px'`은 면제**(§2.5)            | `rawDimension`  |
+| `Literal` (string)       | `^-?\d*\.?\d+(px\|rem\|pt\|cm\|mm\|in\|pc\|Q)$` — **단 `'1px'`은 면제**(§2.5) | `rawDimension`  |
 | `Literal` (string)       | 아래 색 패턴 포함                                                 | `rawColor`      |
-| `TemplateLiteral` quasis | 아래 색 패턴 포함                                                 | `rawColor`      |
+| `TemplateLiteral`        | 치환 없으면 문자열과 동치로 치수·색 패턴 전부, 치환 있으면 quasi 조각에서 색 패턴만 | `rawDimension` / `rawColor` |
+| `Property`               | 숫자 리터럴은 §3.2 길이 속성 allowlist에서만, 문자열은 `COLOR_PROPS`(§3.1)에 속한 속성의 named CSS 색만 | `rawDimension` / `rawColor` |
 | `ImportDeclaration`      | **`palette` 라는 이름을 import** (source 무관)                    | `paletteImport` |
+| `MemberExpression`       | `.palette` 멤버 접근(computed 아님) — namespace import 우회를 접근 지점에서 막는다 | `paletteImport` |
 
-**색 패턴:** `#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b` 또는 `rgb(`/`rgba(`/`hsl(`/`hsla(`
+**색 패턴:** hex `#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b`(문자열·치환 없는 템플릿 전 영역, 4자리 `#RGBA` 포함) 또는 색 함수 `rgb(`/`rgba(`/`hsl(`/`hsla(`/`oklch(`/`oklab(`/`lab(`/`lch(`/`hwb(`/`color(`/`color-mix(`(문자열·치환 없는 템플릿). **치환 있는 템플릿**의 quasi 조각은 이 중 `color-mix(`·`color(`만 제외하고 나머지 함수는 그대로 잡는다 — 인자가 토큰일 수 있는 건 mixing 계열뿐이기 때문이다(§3.1 하단 참고).
 
-4자리 `#RGBA` 형식을 포함한다(코덱스 리뷰 반영) — CSS 유효 문법인데 3·6·8자리만 보면 `'#fff8'` 같은 값이 통과한다.
+**색 속성의 named CSS 색**(`white`·`red`·`rebeccapurple` 등 CSS Color Module Level 4 148종)은 `COLOR_PROPS` 화이트리스트 — `color`·`background`·`backgroundColor`·`border(Top/Right/Bottom/Left/Inline/Block)Color`·`outlineColor`·`fill`·`stroke`·`caretColor`·`textDecorationColor`·`columnRuleColor`·`accentColor` 17종 — 에 속한 속성의 문자열 값에서만 검사한다. `Literal` 방문자의 bare 매칭이 아니라 `Property` 방문자에서 속성 이름과 함께 보는 이유는, bare 매칭이면 `content: 'red'`처럼 값이 텍스트인 케이스를 오탐하기 때문이다. `transparent`·`currentColor`·`inherit`·`initial`·`unset`·`none`·`auto`는 named color 셋에 없어 계속 통과한다.
 
-**palette 검사는 경로가 아니라 import 되는 이름으로 한다**(코덱스 리뷰 반영). `palette`는 `tokens/color/index.ts` → `tokens/index.ts` → `shared/styles/index.ts`(`export *`)로 3단 재노출돼 있어, 경로 접미사만 보면 `@/shared/styles`·`@/shared/styles/tokens`·`@/shared/styles/tokens/color` 세 경로가 전부 우회로가 된다. 바인딩 이름을 보면 한 번에 막히고 향후 배럴이 늘어나도 안전하다.
+**palette 검사는 경로가 아니라 import 되는 이름으로 한다**(코덱스 리뷰 반영). `palette`는 `tokens/color/index.ts` → `tokens/index.ts` → `shared/styles/index.ts`(`export *`)로 3단 재노출돼 있어, 경로 접미사만 보면 `@/shared/styles`·`@/shared/styles/tokens`·`@/shared/styles/tokens/color` 세 경로가 전부 우회로가 된다. 바인딩 이름을 보면 한 번에 막히고 향후 배럴이 늘어나도 안전하다. `import * as tokens from '...'` 같은 namespace import는 `ImportSpecifier`를 남기지 않아 이 검사를 우회하므로, `MemberExpression` 방문자가 `tokens.palette.*` 접근 지점에서 별도로 잡는다.
 
-템플릿 리터럴에서 **px/rem은 검사하지 않는다** — 거기 있는 값은 전부 `1px solid ${...}` 같은 복합값이고 §2.5 결정에 따라 허용한다. 색만 검사하는 것은 `` `1px solid #fff` `` 형태의 회귀를 막는 순수 래칫이다(현재 0건).
+**템플릿 리터럴에서 px/rem을 검사하지 않는다는 서술은 더 이상 사실이 아니다.** 치환 없는 템플릿(`` `37px` ``)은 따옴표 문자열과 동치로 취급해 치수·hex·색 함수를 전부 검사한다 — 그래야 따옴표만 백틱으로 바꾸는 우회가 막힌다. **치환이 있는 템플릿**(`` `1px solid ${vars.color.stroke.neutral}` ``, `` `rgba(0, 0, 0, ${overlayAlpha})` ``)만 다르게 다룬다 — 조각이 복합값이라 치수는 보지 않고, 색도 인자가 토큰일 수 있는 `color-mix`/`color()`만 제외한다.
+
+절대 단위 `pt`·`cm`·`mm`·`in`·`pc`·`Q`도 `px`·`rem`과 함께 raw 치수로 차단한다.
 
 ### 3.2 통과시키는 것 — 인터랙티브 작업 보호
 
@@ -192,16 +196,26 @@ sprinkles({ p: '4px' }); // 컴파일 에러 — 토큰 레코드의 key가 아�
 
 blanket 숫자 검사를 피한다는 판단 자체는 유효하다 — unitless 숫자 ~80곳 중 `lineHeight`·`fontWeight`·`zIndex`·`opacity`·`flexGrow`·`flexShrink`·`flex`·`strokeWidth`는 전부 정당하다. 그래서 **길이 속성 allowlist**로 좁혀서 검사한다(denylist가 아니라 allowlist라 오탐이 구조적으로 불가능하다).
 
+`LENGTH_PROPS`는 이후 리뷰(Task 12·최종 수정 웨이브)로 기존 34개에서 논리 속성·per-side longhand까지 포함하도록 늘어 지금은 아래 67개다(실측 대비 2배 가까이):
+
 ```
 width · height · minWidth · maxWidth · minHeight · maxHeight
+blockSize · inlineSize · minBlockSize · maxBlockSize · minInlineSize · maxInlineSize
 top · right · bottom · left · inset
+insetInline{,Start,End} · insetBlock{,Start,End}
 gap · rowGap · columnGap
-padding{,Top,Right,Bottom,Left,Inline,Block}
-margin{,Top,Right,Bottom,Left,Inline,Block}
-fontSize · borderRadius · outlineOffset · outlineWidth · borderWidth · flexBasis
+padding{,Top,Right,Bottom,Left,Inline,InlineStart,InlineEnd,Block,BlockStart,BlockEnd}
+margin{,Top,Right,Bottom,Left,Inline,InlineStart,InlineEnd,Block,BlockStart,BlockEnd}
+fontSize · letterSpacing · wordSpacing · textIndent
+borderRadius · borderTopLeftRadius · borderTopRightRadius · borderBottomLeftRadius · borderBottomRightRadius
+outlineOffset · outlineWidth
+borderWidth · borderTopWidth · borderRightWidth · borderBottomWidth · borderLeftWidth · borderInlineWidth · borderBlockWidth
+flexBasis
 ```
 
 `0`은 면제한다 — 단위 없는 0은 CSS 관용이고 스케일 선택 문제가 아니다.
+
+숫자 리터럴 앞에 오는 캐스트·부호도 벗겨서 본다 — 파서가 음수·양수를 `UnaryExpression(-/+, Literal)`로 쪼개고, `4 as number`·`4 satisfies number`는 `TSAsExpression`/`TSSatisfiesExpression`이 `Literal`을 감싸므로, `Property` 방문자가 `Literal` 가드에 닿기 전에 이 네 가지를 반복해서 벗긴다. `paddingTop: +8`과 `marginTop: 4 as number`가 각각의 우회로였다.
 
 `lineHeight`·`fontWeight`는 길이가 아니므로 이 검사 밖이다. `fontWeight: 700`(13곳)·`lineHeight: 1.1`(다수)에 대응 토큰이 일부 있긴 하지만, 사용자가 승인한 차단 범위는 "치수"이고 `lineHeight` 1.1·1.2·1.3·1.6은 스케일에 없는 값이라 새 토큰 결정이 필요하다. **후속 과제로 남긴다.**
 
@@ -390,3 +404,14 @@ npx prettier --write <바뀐 파일>
 | 5 | `container` 배선이 `tokens/index`·`theme.types` 누락 | P0 배선을 5파일로 명시 (§2.1)                        |
 
 1번은 §2.5의 "1px 헤어라인은 밀도 무관 상수" 논리를 규칙이 실제로 구현하게 만든 것이다. 초안은 복합 문자열(`1px solid`)이 우연히 통과하는 데 기댔는데, 같은 개념이 단독으로 놓이면 걸리는 비일관을 리뷰가 짚었다.
+
+| # | 지적                                                              | 결정                                                                 |
+| - | ------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| 6 | `color: 'white'`·`background: 'red'` 같은 named CSS 색이 무검사    | `COLOR_PROPS` 화이트리스트 + named-color 셋을 `Property` 방문자에 추가 (§3.1). `Literal` bare 매칭은 `content:'red'` 오탐 우려로 채택하지 않음 |
+| 7 | `` `rgba(0, 0, 0, ${a})` `` 처럼 치환 템플릿 안 색 함수가 무검사   | quasi 스캔에 `color-mix`/`color()`만 제외한 색 함수 매처 추가 (§3.1). `Toggle.css.ts`의 `color-mix` 템플릿은 그대로 통과 |
+| 8 | `paddingTop: +8`(단항 +)·`marginTop: 4 as number`(TS 캐스트) 무검사 | `Property` 방문자의 unwrap 루프를 단항 `+`·`TSAsExpression`·`TSSatisfiesExpression`까지 확장 (§3.2) |
+| 9 | `fontSize: '12pt'` 등 절대 단위 무검사                             | `RAW_DIMENSION`에 `pt`·`cm`·`mm`·`in`·`pc`·`Q` 추가 (§3.1)             |
+
+`vars.typography.text.headingXl`은 §2.2에서 신설된 뒤 실제로 소비하는 곳이 없지만, `vars.typography.text.*` 레이어 전체가 이 레포에서 원래 유휴(dormant) 상태이므로 `headingXl` 하나만 지운다고 규율이 나아지지 않는다. 삭제하지 않고 유지한다.
+
+6~9는 이 스펙이 서술하던 것보다 실제로 shipped된 규칙이 더 엄격했던 격차(§3.1·§3.2 갱신으로 반영)를 코덱스 최종 리뷰가 짚어 닫은 최종 수정 웨이브다(커밋 `03ac279`).

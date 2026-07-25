@@ -1295,3 +1295,32 @@ git commit -m "chore(lint): promote no-raw-design-values to error
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ```
+
+---
+
+### Task 12: 규칙 강화 (커밋 `bd09159`)
+
+외부(코덱스) 리뷰가 실사용 0건이지만 구조적으로 열려 있던 우회 경로 3종을 찾았다 — 규칙의 존재 이유가 회귀 방지이므로 즉시 닫았다.
+
+- **길이 속성 allowlist 확장**: 논리 속성(`paddingInlineStart` 등)·`inset*` 논리 속성·`blockSize`/`inlineSize`(+min/max)·per-side border width·per-corner radius·`letterSpacing`·`wordSpacing`·`textIndent`를 `LENGTH_PROPS`에 추가. longhand 라 원래 allowlist에 없었다.
+- **modern CSS 색 함수 인식**: `RAW_COLOR`를 hex 전용(`RAW_COLOR_HEX`)과 함수 전용(`RAW_COLOR_FN`)으로 분리하고, `RAW_COLOR_FN`에 `oklch`·`oklab`·`lab`·`lch`·`hwb`·`color-mix`·`color(`를 추가.
+- **namespace import 경유 palette 접근 차단**: `MemberExpression` 방문자를 신설해 `import * as tokens` 뒤 `tokens.palette.*` 접근을 잡는다 — namespace import는 `ImportSpecifier`를 안 남겨 기존 `ImportDeclaration` 검사가 못 본다.
+
+검증: `npm run fsd && npm run lint && npm run type-check && npm run test` 전부 통과, 규칙 테스트 69건 유지.
+
+---
+
+### 최종 리뷰 수정 웨이브 (커밋 `03ac279`)
+
+Task 12 이후 진행된 최종 리뷰가 남은 우회 경로 4종을 추가로 찾았다. 하나의 웨이브로 한 번에 닫았다 — RED(실패하는 테스트) → GREEN(구현) → 전체 검증 순서로 TDD를 지켰다.
+
+| 항목 | 지적 | 구현 |
+| --- | --- | --- |
+| named CSS 색 | `color: 'white'`·`background: 'red'` 가 무검사 통과 | `COLOR_PROPS`(17개 색 속성) 화이트리스트 + CSS Color Module Level 4 named-color 셋(148종)을 `Property` 방문자에서 매칭. `Literal` bare 매칭 대신 `Property`를 쓴 이유는 `content: 'red'` 같은 텍스트 속성 오탐을 막기 위해서다 |
+| 치환 템플릿 색 함수 | `` `rgba(0, 0, 0, ${overlayAlpha})` `` 같은 치환 템플릿 안 색 함수가 quasi 스캔에서 무검사 | `RAW_COLOR_FN_QUASI`(mixing 계열 제외)를 quasi 스캔에 추가. `color-mix`·`color()`는 인자가 토큰일 수 있어(`Toggle.css.ts` 실사용) 계속 제외 |
+| 절대 단위 | `fontSize: '12pt'`·`'0.75in'`·`'5mm'`·`'1cm'`·`'3pc'` 가 `RAW_DIMENSION` 밖 | `pt`·`cm`·`mm`·`in`·`pc`·`Q`를 알터네이션에 추가 |
+| 숫자 리터럴 우회 | `paddingTop: +8`(단항 `+`)·`marginTop: 4 as number`(`TSAsExpression`) 가 기존 unwrap을 통과 | `Property` 방문자의 unwrap 루프를 단항 `+`·`TSAsExpression`·`TSSatisfiesExpression`까지 확장 |
+
+부수 작업: 스택형(2·3줄) `//` 주석 2건을 프로젝트 컨벤션대로 한 줄 WHY로 압축.
+
+테스트는 69 → 99건으로 늘었고(모두 GREEN), `npm run lint`는 여전히 0 problems다. `text.headingXl`은 미소비 상태를 그대로 유지하기로 했다(스펙 §10 참고) — `vars.typography.text.*` 레이어 전체가 원래 유휴 상태라 이 토큰만 지운다고 규율이 나아지지 않기 때문이다. 문서 동기화는 별도 커밋(`docs(design-system): sync spec and plan with shipped rule behaviour`)으로 남긴다 — 스펙 §3.1·§3.2·§10, 이 플랜의 Task 12·이 섹션, `design-system-component.md` §6.
