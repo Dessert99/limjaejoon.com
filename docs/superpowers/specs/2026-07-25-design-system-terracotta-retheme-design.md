@@ -79,7 +79,7 @@ river (블타바 강물 — informative. 팔레트 유일한 쿨톤) [확정]
 **dark (`night`, 기본 — 대낮 팔레트를 명도만 낮춤):**
 
 ```
-fg.neutral #F4EADA(sand100)   fg.muted #CDB891(sand300)   fg.brand #DE9A5E(clay300)
+fg.neutral #F4EADA(sand100)   fg.muted #CDB891(sand300)   fg.brand #E8B888(clay200)
 fg.onBrand #FBF7EF(sand00)    fg.critical #E7998F(텍스트 전용)  fg.warning #EFCB87(amber300)
 fg.informative #A8C0CE(river300)  fg.positive #93B0A4(vd300)  fg.disabled #8E8577(sand500)
 
@@ -112,7 +112,7 @@ stroke.positive #6D9184(vd500)
 
 라이트 값은 대비 확보를 위해 브랜드/시맨틱 fg를 어두운 스텝으로 당긴다. 정확 대비는 §5에서 검증.
 
-**구현 반영 (a11y 최종 리뷰, 플랜1 완료):** dark `stroke.brand`·`stroke.critical`은 포커스 링·invalid 보더의 비텍스트 3:1을 위해 clay400·critical200으로 **상향된 값이 정본**(위 표 반영). `onBrand`는 `sand['00']`(#FBF7EF)로 통일(대비만 상승). **추적:** dark `fg.brand`(#DE9A5E)·`fg.critical`(#E7998F)는 canvas 위 14px 본문은 AA 통과하나 **surface 위에선 ~4.2–4.5로 살짝 미달** — 현재 위반 소비처 없음(전부 canvas 배치). 플랜 2/3에서 brand-text/에러 텍스트를 surface 패널에 올릴 땐 한 스텝 밝은 값 또는 surface 전용 토큰으로 재확인. criticalSolid는 현재 hover/active/loading이 base와 같은 `bg.critical`(평평) — 눌림 연출은 플랜 2(Button 재작업).
+**구현 반영 (a11y 최종 리뷰, 플랜1 완료):** dark `stroke.brand`·`stroke.critical`은 포커스 링·invalid 보더의 비텍스트 3:1을 위해 clay400·critical200으로 **상향된 값이 정본**(위 표 반영). `onBrand`는 `sand['00']`(#FBF7EF)로 통일(대비만 상승). **해결(플랜3):** dark `fg.brand`가 surface 위 미달(4.23:1)이던 걸, Select가 첫 surface-brand-text 소비처가 되며 **clay300→clay200(#E8B888)로 상향**(surface≥4.69:1·canvas≥6:1, 여전히 테라코타)해 전역 해결. `fg.critical`(#E7998F)은 아직 surface 텍스트 소비처 없음 — 생기면 동일 방식으로 재확인. criticalSolid는 현재 hover/active/loading이 base와 같은 `bg.critical`(평평) — 눌림 연출은 플랜 2(Button 재작업).
 
 ### 1.3 `brand-solid` 노트
 
