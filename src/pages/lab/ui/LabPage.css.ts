@@ -11,7 +11,7 @@ export const main = style([
     px: { mobile: 'x5', tablet: 'x10' },
     py: 'x16',
   }),
-  { width: '100%', maxWidth: '56rem', marginInline: 'auto' },
+  { width: '100%', maxWidth: vars.container.page, marginInline: 'auto' },
 ]);
 
 export const header = style([
@@ -20,11 +20,11 @@ export const header = style([
 
 export const eyebrow = style({
   color: vars.color.fg.muted,
-  fontSize: '0.875rem',
+  fontSize: vars.typography.fontSize[14],
 });
 
 export const title = style({
-  fontSize: '2.5rem',
+  fontSize: vars.typography.fontSize[40],
   fontWeight: 700,
   lineHeight: 1.1,
 });
@@ -53,7 +53,7 @@ export const item = style([
 ]);
 
 export const itemTitle = style({
-  fontSize: '1.25rem',
+  fontSize: vars.typography.fontSize[20],
   fontFamily: 'monospace',
   lineHeight: 1.3,
 });
