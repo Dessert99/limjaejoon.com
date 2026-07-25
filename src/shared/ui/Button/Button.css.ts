@@ -57,6 +57,9 @@ const base = style([
           '&:active:not(:disabled):not([data-disabled])': { transform: 'scale(0.97)' },
         },
       },
+      '(prefers-reduced-motion: reduce)': {
+        transition: `background ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, border-color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}, color ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`,
+      },
     },
   },
 ]);
@@ -144,10 +147,14 @@ export const button = recipe({
         boxShadow: `${finish.inset}, ${shadow.raise}`,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.bg.brandPressed },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': { background: vars.color.bg.brandPressed },
+            },
           },
           '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
-            ':hover': { transform: 'translateY(-2px)' },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': { transform: 'translateY(-2px)' },
+            },
           },
         },
         selectors: {
@@ -161,7 +168,9 @@ export const button = recipe({
         boxShadow: finish.inset,
         '@media': {
           '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
-            ':hover': { transform: 'translateY(-2px)' },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': { transform: 'translateY(-2px)' },
+            },
           },
         },
         selectors: {
@@ -174,10 +183,14 @@ export const button = recipe({
         color: vars.color.fg.neutral,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.bg.surfaceMuted },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': { background: vars.color.bg.surfaceMuted },
+            },
           },
           '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
-            ':hover': { transform: 'translateY(-2px)' },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': { transform: 'translateY(-2px)' },
+            },
           },
         },
       },
@@ -186,7 +199,9 @@ export const button = recipe({
         color: vars.color.fg.neutral,
         '@media': {
           '(hover: hover) and (pointer: fine)': {
-            ':hover': { background: vars.color.bg.surfaceMuted },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': { background: vars.color.bg.surfaceMuted },
+            },
           },
         },
       },
@@ -196,7 +211,9 @@ export const button = recipe({
         boxShadow: `${finish.inset}, ${shadow.raise}`,
         '@media': {
           '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)': {
-            ':hover': { transform: 'translateY(-2px)' },
+            selectors: {
+              '&:hover:not(:disabled):not([data-disabled])': { transform: 'translateY(-2px)' },
+            },
           },
         },
         selectors: {
