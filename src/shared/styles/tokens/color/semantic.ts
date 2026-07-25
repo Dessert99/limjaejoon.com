@@ -84,7 +84,7 @@ export const darkColor = {
   fg: {
     neutral: palette.sand[100],
     muted: palette.sand[300],
-    brand: palette.clay[300],
+    brand: palette.clay[200],
     onBrand: palette.sand['00'],
     critical: palette.critical[200],
     warning: palette.amber[300],

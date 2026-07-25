@@ -17,5 +17,9 @@ export const indicator = style({
   width: '100%', // 막대 전체 폭을 트랙과 같게 해 translateX 퍼센트 기준을 맞춘다.
   height: '100%', // Root 높이를 그대로 채워 막대 두께를 트랙과 같게 한다.
   background: vars.color.bg.brand, // 화면에 노출된 Indicator 영역을 진행 색으로 표시한다.
-  transition: `transform ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`, // 진행 막대는 통통 튀면 안 되므로 spring이 없는 colorTransition 커브로 이동을 부드럽게 한다.
+  '@media': {
+    '(prefers-reduced-motion: no-preference)': {
+      transition: `transform ${vars.motion.colorTransition.duration} ${vars.motion.colorTransition.easing}`, // 진행 막대는 통통 튀면 안 되므로 spring이 없는 colorTransition 커브로 이동을 부드럽게 한다.
+    },
+  },
 });

@@ -11,7 +11,7 @@ export const root = style([
     position: 'relative',
     display: 'inline-grid',
     gridAutoFlow: 'column',
-    gridAutoColumns: '1fr',
+    gridAutoColumns: 'minmax(0, 1fr)',
     boxShadow: finish.inset,
   },
 ]);

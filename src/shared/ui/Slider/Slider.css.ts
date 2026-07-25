@@ -49,8 +49,10 @@ export const thumb = style({
     '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)':
       {
         transition: `transform ${vars.motion.tactileLift.duration} ${vars.motion.tactileLift.easing}`,
-        ':hover': {
-          transform: 'scale(1.15)',
+        selectors: {
+          '&:hover:not([data-disabled])': {
+            transform: 'scale(1.15)',
+          },
         },
       },
   },

@@ -15,6 +15,7 @@ export const palette = {
   },
   clay: {
     100: '#F1CDAD',
+    200: '#E8B888',
     300: '#DE9A5E',
     400: '#D3803A',
     500: '#B4553A',
