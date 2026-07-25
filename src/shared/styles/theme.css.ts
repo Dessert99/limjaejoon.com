@@ -173,6 +173,8 @@ export const vars = createThemeContract({
     enter: null,
     exit: null,
     expressive: null,
+    spring: null,
+    springStrong: null,
   },
   motion: {
     colorTransition: {
@@ -192,6 +194,18 @@ export const vars = createThemeContract({
       easing: null,
     },
     themeReveal: {
+      duration: null,
+      easing: null,
+    },
+    tactilePress: {
+      duration: null,
+      easing: null,
+    },
+    tactileLift: {
+      duration: null,
+      easing: null,
+    },
+    controlSlide: {
       duration: null,
       easing: null,
     },

@@ -5,4 +5,6 @@ export const easing = {
   enter: 'cubic-bezier(0, 0, 0.15, 1)',
   exit: 'cubic-bezier(0.35, 0, 1, 1)',
   expressive: 'cubic-bezier(0.03, 0.4, 0.1, 1)',
+  spring: 'cubic-bezier(0.34, 1.4, 0.64, 1)',
+  springStrong: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
 } as const;

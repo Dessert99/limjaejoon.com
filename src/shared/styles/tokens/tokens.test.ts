@@ -64,5 +64,8 @@ describe('design tokens', () => {
     expect(motion.colorTransition.duration).toBe(duration.d3);
     expect(motion.controlFeedback.easing).toBe(easing.enter);
     expect(motion.themeReveal.duration).toBe('2000ms');
+    expect(easing.spring).toBe('cubic-bezier(0.34, 1.4, 0.64, 1)');
+    expect(motion.tactileLift.easing).toBe(easing.spring);
+    expect(motion.controlSlide.easing).toBe(easing.springStrong);
   });
 });
