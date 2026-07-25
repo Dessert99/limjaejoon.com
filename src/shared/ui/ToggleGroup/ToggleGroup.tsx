@@ -1,3 +1,5 @@
+'use client';
+
 /** 공용 ToggleGroup — Radix ToggleGroup 위에 분절 버튼 + 슬라이드 인디케이터를 입힌 토글 묶음 */
 import { ToggleGroup as ToggleGroupPrimitive } from 'radix-ui'; // single/multiple 선택·roving focus·그룹 aria를 Radix가 처리
 import { Children, forwardRef, isValidElement, useState } from 'react';
