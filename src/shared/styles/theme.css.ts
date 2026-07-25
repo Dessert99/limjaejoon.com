@@ -147,6 +147,13 @@ export const vars = createThemeContract({
     cardPadding: null,
     controlGap: null,
   },
+  container: {
+    form: null,
+    dialog: null,
+    prose: null,
+    page: null,
+    wide: null,
+  },
   radius: {
     r1: null,
     r2: null,

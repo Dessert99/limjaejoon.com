@@ -8,6 +8,7 @@ import {
   typography,
   dimension,
   spacing,
+  container,
   radius,
   duration,
   easing,
@@ -58,6 +59,14 @@ describe('design tokens', () => {
     expect(dimension.x4).toBe('1rem');
     expect(spacing.globalGutter).toBe(dimension.x4);
     expect(spacing.cardPadding).toBe(dimension.x6);
+  });
+
+  it('container semantic 폭을 역할별로 제공한다', () => {
+    expect(container.form).toBe('20rem');
+    expect(container.dialog).toBe('32rem');
+    expect(container.prose).toBe('48rem');
+    expect(container.page).toBe('56rem');
+    expect(container.wide).toBe('72rem');
   });
 
   it('radius와 motion semantic alias를 제공한다', () => {

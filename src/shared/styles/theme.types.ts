@@ -3,6 +3,7 @@ import type { SemanticColor } from './tokens';
 import type {
   dimension,
   spacing,
+  container,
   typography,
   radius,
   duration,
@@ -16,6 +17,7 @@ export interface ThemeValues {
   typography: typeof typography;
   dimension: typeof dimension;
   spacing: typeof spacing;
+  container: typeof container;
   radius: typeof radius;
   duration: typeof duration;
   easing: typeof easing;

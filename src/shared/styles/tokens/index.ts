@@ -18,7 +18,7 @@ export {
 export type { TextStyle } from './typography';
 
 /** dimension token 재노출 */
-export { dimension, spacing } from './dimension';
+export { dimension, spacing, container } from './dimension';
 
 /** radius token 재노출 */
 export { radiusScale, radius } from './radius';

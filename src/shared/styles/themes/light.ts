@@ -1,5 +1,6 @@
 /** light theme values — semantic token contract 에 light 값을 주입 */
 import {
+  container,
   dimension,
   duration,
   easing,
@@ -17,6 +18,7 @@ export const light: ThemeValues = {
   typography,
   dimension,
   spacing,
+  container,
   radius,
   duration,
   easing,
