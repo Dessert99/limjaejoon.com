@@ -19,10 +19,11 @@ export const root = style([
 /** 슬라이드 인디케이터 — Root가 --gt-index·--gt-count로 위치·너비를 주입(decorative span) */
 export const indicator = style({
   position: 'absolute',
-  top: 0,
-  bottom: 0,
-  left: 0,
-  width: 'calc(100% / var(--gt-count, 1))',
+  // Root의 padding(x1)만큼 인셋해 grid item이 사는 content box에 맞춘다 — 안 그러면 padding box 기준으로 밀려서 어긋난다
+  top: vars.dimension.x1,
+  bottom: vars.dimension.x1,
+  left: vars.dimension.x1,
+  width: `calc((100% - (2 * ${vars.dimension.x1})) / var(--gt-count, 1))`,
   borderRadius: vars.radius.pill,
   background: vars.color.bg.brand,
   boxShadow: finish.inset,

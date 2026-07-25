@@ -16,9 +16,9 @@ const Root = forwardRef<
   const rootClassName = [root, className].filter(Boolean).join(' ');
 
   // Radix는 controlled/uncontrolled 모두 onValueChange를 호출한다 — 인디케이터 위치 계산 전용 그림자 상태
-  const [shadowValue, setShadowValue] = useState(
-    rest.type === 'single' ? rest.defaultValue : undefined
-  );
+  const [shadowValue, setShadowValue] = useState(() => {
+    return rest.type === 'single' ? rest.defaultValue : undefined;
+  });
 
   if (rest.type !== 'single') {
     // multiple은 동시에 여러 항목이 켜질 수 있어 단일 위치 인디케이터가 성립하지 않는다
