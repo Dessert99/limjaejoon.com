@@ -1,6 +1,7 @@
 /** Dialog — 일반 모달 스크림 + 화면 중앙 패널 */
 import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { vars } from '@/shared/styles/theme.css';
+import { shadow } from '@/shared/styles/tokens';
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import { recipe, type RecipeVariants } from '@vanilla-extract/recipes';
 
@@ -49,7 +50,7 @@ export const overlay = style({
   },
 });
 
-/** 패널 — 일반 모달 본문을 담는 중앙 surface */
+/** 패널 — 일반 모달 본문을 담는 중앙 surface, 뜬 느낌을 주는 raise 그림자 */
 export const content = style([
   sprinkles({
     display: 'flex',
@@ -70,6 +71,7 @@ export const content = style([
     overflowY: 'auto',
     background: vars.color.bg.surface,
     border: `1px solid ${vars.color.stroke.neutral}`,
+    boxShadow: shadow.raise,
     color: vars.color.fg.neutral,
     selectors: {
       '&[data-state="open"]': {

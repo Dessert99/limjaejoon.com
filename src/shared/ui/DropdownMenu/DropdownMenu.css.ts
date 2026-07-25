@@ -1,19 +1,21 @@
-/** DropdownMenu — 트리거로 여는 액션 메뉴 패널 + 항목·라벨·구분선 (정적; 그림자·모션 연출은 deferred) */
+/** DropdownMenu — 트리거로 여는 액션 메뉴 패널 + 항목·라벨·구분선 (모션 연출은 deferred) */
 import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { vars } from '@/shared/styles/theme.css';
+import { shadow } from '@/shared/styles/tokens';
 import { style } from '@vanilla-extract/css';
 
-/** 패널 — 페이지 위로 뜨므로 불투명 surface 배경, 항목을 감싸는 얇은 안쪽 여백 */
+/** 패널 — 페이지 위로 뜨므로 불투명 surface 배경, 뜬 느낌을 주는 raise 그림자 */
 export const content = style([
   sprinkles({ p: 'x1', r: 'r2' }),
   {
     minWidth: '8rem',
     background: vars.color.bg.surface,
-    border: `1px solid ${vars.color.stroke.neutral}`,
+    border: `1px solid ${vars.color.stroke.muted}`,
+    boxShadow: shadow.raise,
   },
 ]);
 
-/** 항목 — 한 줄 액션, 포커스(data-highlighted) 시 accent 배경으로 키보드 위치를 드러낸다 */
+/** 항목 — 한 줄 액션, 포커스(data-highlighted) 시 옅은 surfaceMuted 배경으로 키보드 위치를 드러낸다 */
 export const item = style([
   sprinkles({
     display: 'flex',
@@ -29,8 +31,7 @@ export const item = style([
     userSelect: 'none',
     selectors: {
       '&[data-highlighted]': {
-        background: vars.color.bg.brand,
-        color: vars.color.fg.onBrand,
+        background: vars.color.bg.surfaceMuted,
       },
       '&[data-disabled]': { opacity: 0.5, cursor: 'not-allowed' },
     },
