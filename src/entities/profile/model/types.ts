@@ -13,6 +13,7 @@ export interface ContactLink {
 /** 프로필 헤드라인 — 이름·역할·소개 문장·연락처 */
 export interface Profile {
   name: string;
+  headline: string;
   role: string;
   taglines: string[];
   contacts: ContactLink[];
