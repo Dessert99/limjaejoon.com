@@ -14,6 +14,23 @@ if (!Element.prototype.hasPointerCapture) {
 if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};
 }
+// GSAP ScrollTrigger 는 등록 시점에 matchMedia 를 호출한다 — 없으면 import 만으로 TypeError.
+if (!window.matchMedia) {
+  window.matchMedia = (query: string) => {
+    return {
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => {
+        return false;
+      },
+    } as MediaQueryList;
+  };
+}
 
 // MSW 목 서버: 테스트 전체에서 켜고, 핸들링 안 된 요청은 에러로 드러낸다.
 beforeAll(() => {
