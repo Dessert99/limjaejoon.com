@@ -1,40 +1,8 @@
-/** IntroSection 스타일 — 전체 화면 소개 섹션, 좌측 문구 · 우측 이미지 비대칭 배치 */
+/** IntroSection 스타일 — 좌측 문구 · 우측 이미지 비대칭 배치. 섹션 셸은 SceneSection 이 맡는다 */
 import { bp } from '@/shared/styles/breakpoints';
 import { sprinkles } from '@/shared/styles/sprinkles.css';
 import { vars } from '@/shared/styles/theme.css';
 import { style } from '@vanilla-extract/css';
-
-/** 섹션 루트 — svh 는 브라우저 크롬이 접혀도 값이 변하지 않아 핀 중 리사이즈되지 않는다 */
-export const section = style([
-  sprinkles({
-    display: 'flex',
-    alignItems: 'center',
-    px: { mobile: 'x6', tablet: 'x12' },
-    bg: 'canvas',
-  }),
-  {
-    position: 'relative',
-    minHeight: '100svh',
-    overflow: 'hidden',
-  },
-]);
-
-/** 콘텐츠 열 — 배경 위에 얹히므로 z-index 로 띄운다 */
-export const content = style([
-  sprinkles({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 'x8',
-  }),
-  {
-    position: 'relative',
-    zIndex: 1,
-    width: '100%',
-    maxWidth: vars.container.wide,
-    marginInline: 'auto',
-  },
-]);
 
 /** 좌측 문구 묶음 */
 export const copy = style([

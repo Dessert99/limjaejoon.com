@@ -1,57 +1,33 @@
-/** IntroSection — 홈 첫 섹션. 프라하 실루엣 배경 위의 소개 화면 */
-'use client';
-
-import { useRef } from 'react';
+/** IntroSection — 홈 첫 섹션. 프라하 도시 실루엣 배경 위의 소개 화면 */
 import { profile } from '@/entities/profile';
-import {
-  SceneBackdrop,
-  cityScene,
-  useHorizontalParallax,
-} from '@/widgets/scene-backdrop';
+import { cityScene } from '@/widgets/scene-backdrop';
+import { SceneSection } from '../SceneSection/SceneSection';
 import * as s from './IntroSection.css';
 
-/** 소개 섹션 — 핀 대상 ref 의 소유자가 훅도 호출한다 */
+/** 소개 섹션 — 좌측 문구, 우측 이미지 자리 */
 export function IntroSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const backdropRef = useRef<HTMLDivElement>(null);
-
-  // 훅을 배경 쪽에서 부르면 자식 layout effect 가 먼저 돌아 sectionRef 가 아직 비어 있다
-  useHorizontalParallax({
-    scene: cityScene,
-    sectionRef,
-    scopeRef: backdropRef,
-  });
-
   return (
-    <section
-      ref={sectionRef}
-      className={s.section}>
-      <SceneBackdrop
-        scene={cityScene}
-        rootRef={backdropRef}
-      />
-      <div className={s.content}>
-        <div className={s.copy}>
-          <p className={s.label}>FRONTEND</p>
-          <h1 className={s.name}>{profile.name}</h1>
-          <p className={s.headline}>{profile.headline}</p>
-          <ul className={s.taglines}>
-            {profile.taglines.map((line) => {
-              return (
-                <li
-                  key={line}
-                  className={s.tagline}>
-                  {line}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <div
-          className={s.imageSlot}
-          aria-hidden='true'
-        />
+    <SceneSection scene={cityScene}>
+      <div className={s.copy}>
+        <p className={s.label}>FRONTEND</p>
+        <h1 className={s.name}>{profile.name}</h1>
+        <p className={s.headline}>{profile.headline}</p>
+        <ul className={s.taglines}>
+          {profile.taglines.map((line) => {
+            return (
+              <li
+                key={line}
+                className={s.tagline}>
+                {line}
+              </li>
+            );
+          })}
+        </ul>
       </div>
-    </section>
+      <div
+        className={s.imageSlot}
+        aria-hidden='true'
+      />
+    </SceneSection>
   );
 }

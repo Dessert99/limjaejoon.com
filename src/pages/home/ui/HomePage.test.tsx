@@ -13,6 +13,13 @@ describe('HomePage', () => {
     );
   });
 
+  it('도시와 강가 두 장면을 각각의 섹션으로 쌓는다', () => {
+    const { container } = render(<HomePage />);
+
+    expect(container.querySelectorAll('section')).toHaveLength(2);
+    expect(container.querySelectorAll('svg')).toHaveLength(2);
+  });
+
   it('폐기한 보유 기술·프로젝트 섹션을 더 이상 렌더하지 않는다', () => {
     render(<HomePage />);
 
