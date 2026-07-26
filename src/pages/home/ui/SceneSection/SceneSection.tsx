@@ -9,13 +9,15 @@ import {
 } from '@/widgets/scene-backdrop';
 import * as s from './SceneSection.css';
 
-/** 섹션 셸 — 핀 대상 ref 를 소유하고 훅에 넘긴다 */
+/** 섹션 셸 — 핀 대상 ref 를 소유하고 훅에 넘긴다. footer 는 하단 중앙 고정 슬롯 */
 export function SceneSection({
   scene,
   children,
+  footer,
 }: {
   scene: Scene;
   children?: ReactNode;
+  footer?: ReactNode;
 }) {
   const sectionRef = useRef<HTMLElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -32,6 +34,7 @@ export function SceneSection({
         rootRef={backdropRef}
       />
       <div className={s.content}>{children}</div>
+      {footer ? <div className={s.footer}>{footer}</div> : null}
     </section>
   );
 }

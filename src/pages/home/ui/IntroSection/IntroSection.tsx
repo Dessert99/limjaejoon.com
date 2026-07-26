@@ -7,7 +7,24 @@ import * as s from './IntroSection.css';
 /** 소개 섹션 — 좌측 문구, 우측 이미지 자리 */
 export function IntroSection() {
   return (
-    <SceneSection scene={cityScene}>
+    <SceneSection
+      scene={cityScene}
+      footer={
+        <p className={s.scrollHint}>
+          SCROLL
+          <svg
+            className={s.scrollChevron}
+            viewBox='0 0 12 8'
+            aria-hidden='true'>
+            <path
+              d='M1 1 L6 6 L11 1'
+              strokeWidth='1.6'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+          </svg>
+        </p>
+      }>
       <div className={s.copy}>
         <p className={s.label}>FRONTEND</p>
         <h1 className={s.name}>{profile.name}</h1>

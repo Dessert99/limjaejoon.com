@@ -18,6 +18,23 @@ export const section = style([
   },
 ]);
 
+/** 하단 중앙 고정 슬롯 — 스크롤 힌트 자리 */
+export const footer = style([
+  sprinkles({
+    display: 'flex',
+    justifyContent: 'center',
+    paddingBottom: 'x6',
+  }),
+  {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+    pointerEvents: 'none',
+  },
+]);
+
 /** 콘텐츠 열 — 배경 위에 얹히므로 z-index 로 띄운다 */
 export const content = style([
   sprinkles({

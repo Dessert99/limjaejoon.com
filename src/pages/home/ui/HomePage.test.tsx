@@ -2,6 +2,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { profile } from '@/entities/profile';
+import { cityScene, riverScene } from '@/widgets/scene-backdrop';
 import { HomePage } from './HomePage';
 
 describe('HomePage', () => {
@@ -17,7 +18,9 @@ describe('HomePage', () => {
     const { container } = render(<HomePage />);
 
     expect(container.querySelectorAll('section')).toHaveLength(2);
-    expect(container.querySelectorAll('svg')).toHaveLength(2);
+    expect(container.querySelectorAll('[data-layer-id]')).toHaveLength(
+      cityScene.layers.length + riverScene.layers.length
+    );
   });
 
   it('폐기한 보유 기술·프로젝트 섹션을 더 이상 렌더하지 않는다', () => {

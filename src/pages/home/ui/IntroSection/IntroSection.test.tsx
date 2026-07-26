@@ -27,6 +27,12 @@ describe('IntroSection', () => {
     }
   });
 
+  it('다음 섹션이 있다는 신호로 스크롤 힌트를 노출한다', () => {
+    render(<IntroSection />);
+
+    expect(screen.getByText('SCROLL')).toBeInTheDocument();
+  });
+
   it('배경 실루엣을 함께 깐다', () => {
     const { container } = render(<IntroSection />);
 
