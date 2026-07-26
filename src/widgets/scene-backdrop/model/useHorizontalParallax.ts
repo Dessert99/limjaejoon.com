@@ -29,9 +29,14 @@ export function useHorizontalParallax({
 
       const mm = gsap.matchMedia();
 
-      // 브레이크포인트와 reduced-motion 을 같은 문법으로 다루고, 조건이 바뀌면 GSAP 이 되돌린다
+      // 브레이크포인트와 reduced-motion 을 같은 문법으로 다루고, 조건이 바뀌면 GSAP 이 되돌린다.
+      // isMobile 은 쓰지 않지만 빠뜨리면 안 된다 — 매치되는 조건이 하나도 없으면 콜백이 아예 안 돈다.
       mm.add(
-        { isDesktop: bp.md, reduceMotion: '(prefers-reduced-motion: reduce)' },
+        {
+          isDesktop: bp.md,
+          isMobile: bp.belowMd,
+          reduceMotion: '(prefers-reduced-motion: reduce)',
+        },
         (context) => {
           const { isDesktop, reduceMotion } = context.conditions as {
             isDesktop: boolean;

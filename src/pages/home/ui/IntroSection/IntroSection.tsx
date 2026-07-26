@@ -3,12 +3,24 @@
 
 import { useRef } from 'react';
 import { profile } from '@/entities/profile';
-import { SceneBackdrop, cityScene } from '@/widgets/scene-backdrop';
+import {
+  SceneBackdrop,
+  cityScene,
+  useHorizontalParallax,
+} from '@/widgets/scene-backdrop';
 import * as s from './IntroSection.css';
 
-/** 소개 섹션 — 핀 대상 ref 를 소유해 배경 위젯에 넘긴다 */
+/** 소개 섹션 — 핀 대상 ref 의 소유자가 훅도 호출한다 */
 export function IntroSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+
+  // 훅을 배경 쪽에서 부르면 자식 layout effect 가 먼저 돌아 sectionRef 가 아직 비어 있다
+  useHorizontalParallax({
+    scene: cityScene,
+    sectionRef,
+    scopeRef: backdropRef,
+  });
 
   return (
     <section
@@ -16,7 +28,7 @@ export function IntroSection() {
       className={s.section}>
       <SceneBackdrop
         scene={cityScene}
-        sectionRef={sectionRef}
+        rootRef={backdropRef}
       />
       <div className={s.content}>
         <div className={s.copy}>
