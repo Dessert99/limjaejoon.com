@@ -46,6 +46,11 @@ export const vars = createThemeContract({
       informative: null,
       positive: null,
     },
+    scenery: {
+      far: null,
+      mid: null,
+      near: null,
+    },
   },
   typography: {
     fontFamily: {

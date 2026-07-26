@@ -44,6 +44,24 @@ describe('design tokens', () => {
     expect(darkColor.bg.critical).not.toBe(darkColor.bg.brand);
   });
 
+  it('배경 실루엣용 scenery 톤 3종을 제공한다', () => {
+    expect(lightColor.scenery.far).toBe(palette.sand[300]);
+    expect(lightColor.scenery.near).toBe(palette.clay[500]);
+    expect(darkColor.scenery.far).toBe(palette.sand[800]);
+    expect(darkColor.scenery.near).toBe(palette.clay[700]);
+  });
+
+  it('공기원근이 성립하도록 scenery 세 톤이 서로 다르다', () => {
+    for (const theme of [lightColor, darkColor]) {
+      const tones = new Set([
+        theme.scenery.far,
+        theme.scenery.mid,
+        theme.scenery.near,
+      ]);
+      expect(tones.size).toBe(3);
+    }
+  });
+
   it('typography semantic text style은 CSS text 속성을 가진다', () => {
     expect(typography.text.body).toMatchObject({
       fontFamily: typography.fontFamily.sans,

@@ -38,6 +38,11 @@ export interface SemanticColor {
     informative: string;
     positive: string;
   };
+  scenery: {
+    far: string;
+    mid: string;
+    near: string;
+  };
 }
 
 /** light theme(대낮 프라하) semantic color 값 */
@@ -77,6 +82,12 @@ export const lightColor = {
     informative: palette.river[500],
     positive: palette.verdigris[500],
   },
+  // 대낮에는 먼 것일수록 옅고 밝다 — 공기원근
+  scenery: {
+    far: palette.sand[300],
+    mid: palette.clay[300],
+    near: palette.clay[500],
+  },
 } satisfies SemanticColor;
 
 /** dark theme(밤) semantic color 값 — 대낮 팔레트의 명도만 낮춘다 */
@@ -115,5 +126,11 @@ export const darkColor = {
     warning: palette.amber[700],
     informative: palette.river[700],
     positive: palette.verdigris[700],
+  },
+  // 밤에는 반대로 먼 것일수록 어둡고 탁하다
+  scenery: {
+    far: palette.sand[800],
+    mid: palette.clay[900],
+    near: palette.clay[700],
   },
 } satisfies SemanticColor;
