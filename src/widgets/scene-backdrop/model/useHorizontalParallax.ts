@@ -48,16 +48,21 @@ export function useHorizontalParallax({
             return;
           }
 
-          const travel = window.innerWidth * config.travelRatio;
+          // 상수로 굳히면 같은 브레이크포인트 안에서 리사이즈했을 때 옛 폭이 남는다.
+          // 함수로 두면 invalidateOnRefresh 가 refresh 시점에 다시 부른다.
+          const travel = () => {
+            return window.innerWidth * config.travelRatio;
+          };
 
           const timeline = gsap.timeline({
             scrollTrigger: {
               trigger: section,
               start: 'top top',
-              end: `+=${travel}`,
+              end: () => {
+                return `+=${travel()}`;
+              },
               pin: config.pin,
               scrub: true,
-              // 화면 회전·리사이즈 후 travel 을 다시 계산하지 않으면 이동 폭이 어긋난다
               invalidateOnRefresh: true,
             },
           });
@@ -65,7 +70,12 @@ export function useHorizontalParallax({
           for (const layer of scene.layers) {
             timeline.to(
               `[data-layer-id="${layer.id}"]`,
-              { x: layerShift(layer.depth, 1, travel), ease: 'none' },
+              {
+                x: () => {
+                  return layerShift(layer.depth, 1, travel());
+                },
+                ease: 'none',
+              },
               0
             );
           }

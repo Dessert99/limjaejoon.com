@@ -12,6 +12,9 @@ export function SceneBackdrop({
   scene: Scene;
   rootRef?: RefObject<HTMLDivElement | null>;
 }) {
+  // 겹 반복 간격 = 장면 폭. viewBox 는 "minX minY width height" 라 세 번째 값이다
+  const repeatOffset = Number(scene.viewBox.split(' ')[2]);
+
   return (
     <div
       ref={rootRef}
@@ -26,6 +29,7 @@ export function SceneBackdrop({
             <SceneLayer
               key={layer.id}
               layer={layer}
+              repeatOffset={repeatOffset}
             />
           );
         })}
