@@ -30,9 +30,7 @@ export const Divider = forwardRef<HTMLElement, DividerProps>(
   ) => {
     const inlineVars = {
       ...(color ? { [dividerColor]: color } : {}),
-      ...(thickness
-        ? { [dividerThickness]: formatThickness(thickness) }
-        : {}),
+      ...(thickness ? { [dividerThickness]: formatThickness(thickness) } : {}),
     } as React.CSSProperties;
 
     return (
@@ -41,9 +39,7 @@ export const Divider = forwardRef<HTMLElement, DividerProps>(
         className={[divider, className].filter(Boolean).join(' ')}
         data-inset={inset ? '' : undefined}
         data-orientation={orientation}
-        aria-orientation={
-          orientation === 'vertical' ? 'vertical' : undefined
-        }
+        aria-orientation={orientation === 'vertical' ? 'vertical' : undefined}
         style={{ ...inlineVars, ...style }}
         {...props}
       />

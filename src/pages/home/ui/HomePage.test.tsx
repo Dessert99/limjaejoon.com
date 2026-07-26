@@ -1,18 +1,22 @@
+/** HomePage 테스트 — 섹션 조립 계약만 검증한다 */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { profile } from '@/entities/profile';
 import { HomePage } from './HomePage';
 
 describe('HomePage', () => {
-  it('포트폴리오 섹션들을 렌더한다', () => {
+  it('소개 섹션의 이름을 최상위 제목으로 노출한다', () => {
     render(<HomePage />);
+
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      '안녕하세요'
+      profile.name
     );
-    expect(
-      screen.getByRole('heading', { name: '보유 기술' })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: '프로젝트' })
-    ).toBeInTheDocument();
+  });
+
+  it('폐기한 보유 기술·프로젝트 섹션을 더 이상 렌더하지 않는다', () => {
+    render(<HomePage />);
+
+    expect(screen.queryByRole('heading', { name: '보유 기술' })).toBeNull();
+    expect(screen.queryByRole('heading', { name: '프로젝트' })).toBeNull();
   });
 });

@@ -1,16 +1,11 @@
-/** 포트폴리오 홈 — Hero·Skills·Projects 조립 */
-import { HeroSection } from './HeroSection/HeroSection';
-import { SkillsSection } from './SkillsSection/SkillsSection';
-import { ProjectsSection } from './ProjectsSection/ProjectsSection';
-import * as s from './HomePage.css';
+/** 포트폴리오 홈 — 섹션 단위 풀페이지 스크롤. 현재 소개 섹션 하나 */
+import { IntroSection } from './IntroSection/IntroSection';
 
 /** 홈 페이지 구성 */
 export function HomePage() {
   return (
-    <main className={s.main}>
-      <HeroSection />
-      <SkillsSection />
-      <ProjectsSection />
+    <main>
+      <IntroSection />
     </main>
   );
 }
