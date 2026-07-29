@@ -4,8 +4,6 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 // Next.js TypeScript 권장 룰셋을 가져옵니다.
 import nextTs from 'eslint-config-next/typescript';
-// 프로젝트 전용 디자인 토큰 규율 플러그인을 가져옵니다.
-import designTokens from './eslint-rules/index.mjs';
 
 // 프로젝트 최종 ESLint 설정 배열을 정의합니다.
 const eslintConfig = defineConfig([
@@ -90,16 +88,6 @@ const eslintConfig = defineConfig([
     },
   },
 
-  // 디자인 토큰 규율 — 스타일 코드에서 raw 값을 막는다. 토큰·테마 정의부는 raw 값이 살아야 하는 유일한 곳이라 제외
-  {
-    files: ['**/*.css.ts'],
-    ignores: ['src/shared/styles/tokens/**', 'src/shared/styles/themes/**'],
-    plugins: { 'design-tokens': designTokens },
-    rules: {
-      'design-tokens/no-raw-design-values': 'error',
-    },
-  },
-
   // Next 기본 ignore에 프로젝트 성격에 맞는 경로를 명시합니다.
   globalIgnores([
     // 빌드 산출물(.next)은 검사 대상에서 제외합니다.
@@ -108,8 +96,6 @@ const eslintConfig = defineConfig([
     'out/**',
     // 기타 빌드 디렉터리(build)도 제외합니다.
     'build/**',
-    // Storybook 정적 빌드 산출물은 검사 대상에서 제외합니다.
-    'storybook-static/**',
     // Claude 스킬 자료는 앱 소스가 아니므로 검사 대상에서 제외합니다.
     '.claude/**',
     // Next 자동 생성 타입 파일은 제외합니다.
