@@ -1,45 +1,22 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getPublishedPostNavigationData } from '@/entities/post';
-import { createSupabaseStaticClient } from '@/shared/api';
+/** sitemap 테스트 — 존재하는 route 만 노출하는지 검증한다 */
+import { describe, expect, it } from 'vitest';
 import sitemap from './sitemap';
 
-vi.mock('@/shared/api', () => {
-  return { createSupabaseStaticClient: vi.fn() };
-});
-
-vi.mock('@/entities/post', () => {
-  return { getPublishedPostNavigationData: vi.fn() };
-});
-
 describe('sitemap', () => {
-  beforeEach(() => {
-    vi.mocked(createSupabaseStaticClient).mockReset();
-    vi.mocked(getPublishedPostNavigationData).mockReset();
+  it('루트 URL 하나만 노출한다', () => {
+    expect(sitemap()).toEqual([
+      expect.objectContaining({ url: 'https://limjaejoon.com' }),
+    ]);
   });
 
-  it('blog route 와 published post route 를 포함한다', async () => {
-    const client = { id: 'static-client' };
-    vi.mocked(createSupabaseStaticClient).mockReturnValue(client as never);
-    vi.mocked(getPublishedPostNavigationData).mockResolvedValue([
-      {
-        id: '1',
-        slug: '2026-04-06-next-fetch',
-        title: 'Next fetch',
-        description: 'Next fetch cache',
-        tags: ['Next.js'],
-        series: 'Next.js App Router',
-        published_at: '2026-04-06T00:00:00Z',
-      },
-    ]);
+  it('철거한 blog route 를 노출하지 않는다', () => {
+    const urls = sitemap().map((entry) => {
+      return entry.url;
+    });
+    const hasBlogUrl = urls.some((url) => {
+      return url.includes('/blog');
+    });
 
-    await expect(await sitemap()).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ url: 'https://limjaejoon.com/blog' }),
-        expect.objectContaining({
-          url: 'https://limjaejoon.com/blog/2026-04-06-next-fetch',
-        }),
-      ])
-    );
-    expect(getPublishedPostNavigationData).toHaveBeenCalledWith(client);
+    expect(hasBlogUrl).toBe(false);
   });
 });
