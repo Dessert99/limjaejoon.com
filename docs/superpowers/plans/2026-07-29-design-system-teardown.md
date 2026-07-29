@@ -591,18 +591,10 @@ git rm docs/conventions/design-system-component.md docs/conventions/component-co
 
 - [ ] **Step 2: 디자인 시스템 계열 spec 삭제**
 
+`cd` 는 이후 명령의 작업 디렉터리를 바꿔버리므로 저장소 루트에서 전체 경로로 지운다:
+
 ```bash
-cd docs/superpowers/specs && git rm \
-  2026-06-15-button-component-design.md \
-  2026-06-15-color-token-themes-design.md \
-  2026-06-16-radix-primitives-design.md \
-  2026-07-06-lab-animation-design.md \
-  2026-07-06-lab-transition-design.md \
-  2026-07-07-design-token-foundation-design.md \
-  2026-07-24-home-portfolio-remake-design.md \
-  2026-07-25-design-system-terracotta-retheme-design.md \
-  2026-07-25-strict-design-token-lint-design.md \
-  2026-07-26-home-intro-section-design.md
+git rm docs/superpowers/specs/2026-06-15-button-component-design.md docs/superpowers/specs/2026-06-15-color-token-themes-design.md docs/superpowers/specs/2026-06-16-radix-primitives-design.md docs/superpowers/specs/2026-07-06-lab-animation-design.md docs/superpowers/specs/2026-07-06-lab-transition-design.md docs/superpowers/specs/2026-07-07-design-token-foundation-design.md docs/superpowers/specs/2026-07-24-home-portfolio-remake-design.md docs/superpowers/specs/2026-07-25-design-system-terracotta-retheme-design.md docs/superpowers/specs/2026-07-25-strict-design-token-lint-design.md docs/superpowers/specs/2026-07-26-home-intro-section-design.md
 ```
 
 남기는 spec: `2026-06-10-fsd-canonical-rearchitecture-design.md`, `2026-06-13-comment-convention-design.md`, `2026-07-09-blog-platform-phase-1-design.md`, `2026-07-23-admin-auth-design.md`, `2026-07-29-design-system-teardown-design.md`
@@ -610,21 +602,7 @@ cd docs/superpowers/specs && git rm \
 - [ ] **Step 3: 디자인 시스템 계열 plan 삭제**
 
 ```bash
-cd docs/superpowers/plans && git rm \
-  2026-06-15-button-component.md \
-  2026-06-15-color-token-themes.md \
-  2026-06-16-radix-primitives-wave-0.md \
-  2026-06-16-radix-primitives-wave-1.md \
-  2026-07-06-lab-animation.md \
-  2026-07-06-lab-transition.md \
-  2026-07-07-design-token-foundation.md \
-  2026-07-08-button-action-component.md \
-  2026-07-24-home-portfolio-remake.md \
-  2026-07-25-motion-material-button.md \
-  2026-07-25-primitives-restyle.md \
-  2026-07-25-strict-design-token-lint.md \
-  2026-07-25-terracotta-color-tokens.md \
-  2026-07-26-home-intro-section.md
+git rm docs/superpowers/plans/2026-06-15-button-component.md docs/superpowers/plans/2026-06-15-color-token-themes.md docs/superpowers/plans/2026-06-16-radix-primitives-wave-0.md docs/superpowers/plans/2026-06-16-radix-primitives-wave-1.md docs/superpowers/plans/2026-07-06-lab-animation.md docs/superpowers/plans/2026-07-06-lab-transition.md docs/superpowers/plans/2026-07-07-design-token-foundation.md docs/superpowers/plans/2026-07-08-button-action-component.md docs/superpowers/plans/2026-07-24-home-portfolio-remake.md docs/superpowers/plans/2026-07-25-motion-material-button.md docs/superpowers/plans/2026-07-25-primitives-restyle.md docs/superpowers/plans/2026-07-25-strict-design-token-lint.md docs/superpowers/plans/2026-07-25-terracotta-color-tokens.md docs/superpowers/plans/2026-07-26-home-intro-section.md
 ```
 
 남기는 plan: `2026-06-13-comment-convention.md`, `2026-07-09-blog-platform-phase-1.md`, `2026-07-24-admin-auth.md`, `2026-07-29-design-system-teardown.md`
