@@ -14,7 +14,7 @@
     ├── features/           # 사용자 행동 단위 기능
     ├── entities/           # 핵심 도메인 모델과 그 모델 중심 UI/API
     └── shared/             # 도메인 무관 공용 코드
-        ├── ui/             # Button, Input 같은 디자인 프리미티브 (컴포넌트 기본값은 component-convention.md)
+        ├── ui/             # Button, Input 같은 디자인 프리미티브
         ├── api/            # apiClient, 공용 API 타입/헬퍼 (MSW 목 포함)
         ├── lib/            # 공용 유틸 (navigation 훅 래퍼 등)
         ├── styles/         # 전역 테마·토큰·breakpoint 등 (vanilla-extract)
@@ -59,13 +59,12 @@ features/{slice}/
 - DB 생성 타입은 `shared/api/*` 에 두고, slice 밖에서 공유되는 앱-facing 타입 별칭은 `model/{slice}.types.ts` 에 둔다.
 - segment 는 필요할 때만 만든다. 빈 폴더나 미래 대비 폴더 생성 금지.
 - 작은 컴포넌트는 `ui/{Name}.tsx` 단일 파일 허용.
-- 스타일, 테스트, Storybook story, 하위 컴포넌트가 생기면 `ui/{Name}/{Name}.tsx` 형태로 폴더화한다.
+- 스타일, 테스트, 하위 컴포넌트가 생기면 `ui/{Name}/{Name}.tsx` 형태로 폴더화한다.
 
 ## 3. Public API
 
 - 모든 slice(및 shared 의 각 segment)는 `index.ts` public API 를 둔다. slice 밖에서는 public API 만 import 하고(`@/` alias), slice 내부 파일끼리는 상대경로로 import 한다. Steiger 가 강제한다.
-- **예외 1 — styles:** `shared/styles` 는 vanilla-extract `.css.ts` 라 barrel 부작용(전 테마 CSS 끌림)을 피하려고 deep import 를 허용한다(index 없음).
-- **예외 2 — 서버 전용 entrypoint:** fs 데이터 접근 등 서버 전용 코드는 클라이언트 번들 오염을 막기 위해 별도 entrypoint 로 분리한다. 예) `entities/post/server.ts` 는 fs 로더·MDX 옵션을 담아 RSC/서버에서만 import 하고, `index.ts` 는 클라이언트 안전 표면만 노출한다.
+- **예외 — 클라이언트 전용 entrypoint:** 서버 전용 코드가 섞인 barrel 은 클라이언트 번들을 오염시키므로 우회를 허용한다. 예) `features/auth` 는 `@/shared/api` 대신 `@/shared/api/supabase/client` 를 직접 import 한다 — barrel 이 `next/headers` 를 쓰는 server client 까지 끌어오기 때문이다. Steiger 의 `fsd/no-public-api-sidestep` 을 끈 이유다.
 - 내부 파일끼리 순환 참조를 만들기 쉬운 무분별한 barrel 은 피한다.
 
 ## 4. 파일명 케이스
@@ -75,14 +74,11 @@ features/{slice}/
 | React 컴포넌트                  | PascalCase                  |
 | API, hook, util, schema, config | camelCase                   |
 | 테스트 파일                     | 대상 파일명 + `.test.ts(x)` |
-| Storybook story 파일            | 대상 파일명 + `.stories.tsx` |
 
-## 5. 테스트·스토리 위치
+## 5. 테스트 위치
 
-테스트와 Storybook story 는 검증·문서화 대상 소스 가까이에 둔다.
+테스트는 검증 대상 소스 가까이에 둔다.
 
 - 컴포넌트: 대상 컴포넌트 옆의 `{Name}.test.tsx`
 - API, hook, lib, util: 대상 파일 옆의 `{name}.test.ts`
 - E2E: `e2e/`
-- Storybook story: 대상 컴포넌트 옆의 `{Name}.stories.tsx`
-- `.stories.tsx` 는 UI 상태 문서화용 파일이므로 slice/segment public API 에서 export 하지 않는다.
