@@ -16,7 +16,7 @@
 | 단계 | 상태 | 커밋 |
 | --- | --- | --- |
 | 1. 조사와 계획 | 완료 | — |
-| 2. Foundation + Storybook | 미착수 | |
+| 2. Foundation + Storybook | 완료 (사람 확인 대기) | `2846a95` 외 4건 |
 | 3. 공통 UI 와 Effect | 미착수 (잠정) | |
 | 4. 실제 콘텐츠 입력 | 미착수 (잠정) | |
 | 5. 홈 페이지 조립 | 미착수 (잠정) | |
@@ -99,9 +99,59 @@ CVA 는 설치하지 않는다. 3단계에서 실제 variant 복잡도를 본 �
 - `shared/styles` 에 대한 Steiger 반응: CSS 만 든 세그먼트에 public-api 룰이 걸리는지
 - `@storybook/nextjs-vite` 의 `next/font` 처리: 데코레이터 CSS 변수 주입이 필요한지
 
+### 실측 결과
+
+**`.bg-surface` — 통과.** webpack 빌드와 Turbopack dev 양쪽에서 같다.
+
+```css
+.bg-surface{background-color:var(--color-surface)}
+[data-surface=light]{--color-surface:var(--ds-neutral-50); …}
+```
+
+semantic 이름을 참조하고, 반전 블록은 `@layer` 밖이라 `@layer theme` 의 `:root` 를 이긴다. `inline` 은 섞이지 않았다.
+
+**추가로 드러난 것 — `@theme` 은 기본이 "쓰인 변수만" 방출이다.** 소비자가 없는 2단계에서는 semantic 이 `:root` 에서 통째로 사라져 반전이 반쪽이 된다. Tailwind 기본 팔레트의 `--font-sans` 가 실제로 그렇게 잘려나간 것으로 확인했다. `@theme static` 으로 고정했다.
+
+**duration — 둘 다 된다. `@utility` 로 확정.**
+
+```css
+.duration-\(--ds-duration-800\){--tw-duration:var(--ds-duration-800)}
+.duration-\(--ds-duration-800\),.duration-slow{transition-duration:var(--ds-duration-800)}
+```
+
+임의값 문법은 JSX 에 `--ds-*` 를 노출해 설계 4.5(primitive 직접 사용 금지)와 충돌한다. z 계층만 예외로 둔 설계 의도에 맞춰 명명 유틸리티를 택했다. 다만 내장 `duration-*` 은 `transition-duration` 과 `--tw-duration` 을 **함께** 채우므로 `@utility` 도 똑같이 둘 다 채워야 한다 — `transition` 유틸리티가 후자를 읽어서, 안 채우면 `hover:transition` 류 변형에 되밀린다. Tailwind IntelliSense 도 `duration-(--ds-duration-800)` 을 `duration-slow` 로 고치라고 제안했다.
+
+**Steiger — CSS 만 든 세그먼트는 걸린다.** `src/shared/probeseg/only.css` 하나만 둔 세그먼트를 만들어 확인했다.
+
+```
+┌ src/shared/probeseg
+✘ This segment is missing a public API.
+└ fsd/public-api
+```
+
+`shared/styles` 는 `fonts.ts`·`index.ts` 가 있어 통과한다. CSS 파일이 `index.ts` 에서 re-export 되지 않는 것은 문제 삼지 않는다.
+
+**`next/font` — 프레임워크가 처리한다. 단, `<html>` 배선은 우리 몫.** `@storybook/nextjs-vite` 가 `@font-face` 와 `.__variable_…` 클래스를 런타임에 `document.head` 로 주입하고 woff2 를 에셋으로 뽑는다(`storybook-static/assets/PretendardStdVariable-*.woff2`). 즉 `@font-face` 를 손으로 쓸 필요는 없다. 하지만 variable 클래스를 루트에 거는 일은 아무도 안 해주므로 `preview.ts` 가 `document.documentElement.classList.add(pretendard.variable)` 를 직접 한다. `--font-body` 는 `:root` 에서 선언되어 그 자리에서 해석되므로 하위 엘리먼트에 걸면 소용없다.
+
+**dev/build 이중 파이프라인 — 양쪽 동일.** Turbopack dev(`/_next/static/chunks/src_shared_styles_*.css`)와 `next build --webpack` 산출물에서 `bg-surface`·`px-gutter`·`max-w-content`·`text-hero`·`ease-reveal`·`duration-slow`·`rounded-md` 가 모두 같은 선언으로 나왔다. Storybook(Vite) 도 루트 `postcss.config.mjs` 를 그대로 집어 같은 결과가 나온다.
+
+**clamp 산식** — 320px~1920px 선형. 양 끝에서 min/max 와 정확히 일치하도록 잡았다(예: hero `1.8rem + 8.5vw` 는 320px 에서 56px=3.5rem, 1920px 에서 192px=12rem). 실제 화면에서의 인상은 아래 "사람이 볼 것" 에서 판단한다.
+
+### 계획과 달랐던 것
+
+- **폰트 파일이 `PretendardStdVariable.woff2` 다.** 전체 웨이트는 2,057,688 바이트인데 `next/font/local` 이 루트 레이아웃에서 preload 해 404 페이지까지 2MB 를 렌더 크리티컬 경로로 끌고 온다. Std(KS X 1001 2350자)는 291,680 바이트에 같은 45~920 wght 축이다. **KS X 1001 밖 희귀 음절은 시스템 폰트로 떨어진다** — 콘텐츠 입력(4단계) 때 이상한 글자가 보이면 이게 원인이다.
+- **`@theme static` 과 `--color-*: initial`.** 앞은 위 실측 때문이고, 뒤는 `bg-red-500` 같은 비토큰 색이 애초에 생성되지 않게 하는 유일한 강제 수단이다(설계 4.5 는 린트 룰을 만들지 말라고 했으므로 테마 쪽에서 막았다). `--font-*`·`--radius-*`·`--container-*` 는 초기화하지 않았다 — preflight 가 `--font-sans`·`--font-mono` 를 경유해 기본 서체를 잡아서, 지우면 되살리는 코드가 더 늘어난다.
+- **`--breakpoint-*` 를 명시했다.** 값은 Tailwind 기본과 같다. Storybook 뷰포트 목록이 참조할 단일 출처가 필요했다.
+- **`@source` 를 명시 목록으로 고정했다.** 자동 스캔은 CWD 전체를 훑어 `docs/`·`.claude/` 의 산문까지 클래스 후보로 삼는다.
+- **`cn` 에 tailwind-merge 레지스트리가 붙었다.** 기본 스케일이 t-shirt size·숫자뿐이라 우리 토큰 이름을 전부 색으로 오분류한다 — `cn('text-hero', 'text-muted')` 가 `text-hero` 를 조용히 버렸다. 토큰 이름을 늘리면 `cn.ts` 도 같이 늘려야 한다.
+- **`eslint.config.mjs` 에 `storybook-static/**` ignore, `tsconfig.json` 에 `.storybook/**/*.ts` include 를 추가했다.** 앞은 빌드 산출물에서 ESLint 포매터가 터져서, 뒤는 TypeScript 가 점(.)으로 시작하는 디렉터리를 와일드카드 include 에서 빼기 때문에 `.storybook` 이 타입 검사에서 통째로 빠져 있어서다.
+- **`motion.css` 에 keyframes 는 넣지 않았다.** marquee 등 소비자가 3단계에 들어온다. 지금 넣으면 쓰이지 않는 추측성 코드가 된다.
+- **controlled bleed `@utility` 도 3단계로 미뤘다.** 설계 4.3 이 방식만 정했고, Container 없이 검증할 방법이 없다.
+- **semantic 역할은 14종이다.** 설계 4.2 는 "15종" 이라 적었지만 표에 실린 역할은 14개다. 표를 출처로 삼았다.
+
 ### 이 단계 종료 후 사람이 볼 것
 
-Storybook 을 직접 열어 확인한다. **여기서 마음에 들지 않으면 3단계로 넘어가기 전에 토큰을 고친다.**
+`npm run storybook` → `Foundation/Tokens` 의 Colors · Typography · Layout · Motion · Layers. 툴바에 `data-surface`(dark/light)와 Motion(full/reduced) 토글이 있다. **여기서 마음에 들지 않으면 3단계로 넘어가기 전에 토큰을 고친다.**
 
 - 배경색·전경색의 분위기
 - accent 가 과하거나 흔하지 않은지
