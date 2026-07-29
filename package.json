@@ -12,6 +12,8 @@
     "test:watch": "vitest",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "fsd": "CHOKIDAR_USEPOLLING=1 steiger ./src",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "ci": "npm run fsd && npm run lint && npm run type-check && npm run test && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

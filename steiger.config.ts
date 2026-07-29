@@ -2,8 +2,9 @@ import { defineConfig } from 'steiger';
 import fsd from '@feature-sliced/steiger-plugin';
 
 export default defineConfig([
-  // 테스트·MSW 목은 구조(FSD) 규칙 대상이 아니다.
-  { ignores: ['**/*.test.*', '**/mocks/**'] },
+  // 테스트·스토리·MSW 목은 구조(FSD) 규칙 대상이 아니다.
+  // 스토리는 픽스처를 슬라이스 내부에서 직접 import 해 public-api 룰에 걸린다 — 구조가 아니라 검사 범위를 조정한다.
+  { ignores: ['**/*.test.*', '**/*.stories.*', '**/mocks/**'] },
 
   ...fsd.configs.recommended,
 

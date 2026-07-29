@@ -118,6 +118,13 @@
   --container-content: 72rem;
   --container-wide: 90rem;
 
+  /* Tailwind 기본값과 같은 수치를 명시한다 — Storybook 뷰포트 목록이 참조할 단일 출처가 필요하다 */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+
   /* 여백도 clamp — 섹션 리듬이 모바일에서 과하지 않고 데스크톱에서 충분히 벌어져야 한다 */
   --spacing-gutter: clamp(1.25rem, 4vw, 3rem);
   --spacing-section: clamp(6rem, 12vw, 12rem);

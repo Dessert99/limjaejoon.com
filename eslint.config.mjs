@@ -41,8 +41,14 @@ const eslintConfig = defineConfig([
   // #2·#3 컴포넌트 파일(.tsx): 컴포넌트는 선언문, 그 내부 함수(핸들러·콜백)는 전부 화살표
   {
     files: ['**/*.tsx'],
-    // 테스트는 인라인 컴포넌트가 많아 강제에서 제외
-    ignores: ['tests/**', 'e2e/**', '**/*.spec.*', '**/*.test.*'],
+    // 테스트·스토리는 인라인 컴포넌트와 CSF export 가 많아 강제에서 제외
+    ignores: [
+      'tests/**',
+      'e2e/**',
+      '**/*.spec.*',
+      '**/*.test.*',
+      '**/*.stories.*',
+    ],
     rules: {
       // #2 named 컴포넌트는 함수 선언문 강제(익명은 화살표) — JSX 반환 함수를 휴리스틱으로 컴포넌트로 식별
       'react/function-component-definition': [
@@ -96,6 +102,8 @@ const eslintConfig = defineConfig([
     'out/**',
     // 기타 빌드 디렉터리(build)도 제외합니다.
     'build/**',
+    // Storybook 정적 빌드 산출물 — 검사하면 번들 파일에서 포매터가 터진다.
+    'storybook-static/**',
     // Claude 스킬 자료는 앱 소스가 아니므로 검사 대상에서 제외합니다.
     '.claude/**',
     // Next 자동 생성 타입 파일은 제외합니다.
