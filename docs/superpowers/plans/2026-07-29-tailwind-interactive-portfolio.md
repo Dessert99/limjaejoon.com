@@ -148,6 +148,7 @@ semantic 이름을 참조하고, 반전 블록은 `@layer` 밖이라 `@layer the
 - **`motion.css` 에 keyframes 는 넣지 않았다.** marquee 등 소비자가 3단계에 들어온다. 지금 넣으면 쓰이지 않는 추측성 코드가 된다.
 - **controlled bleed `@utility` 도 3단계로 미뤘다.** 설계 4.3 이 방식만 정했고, Container 없이 검증할 방법이 없다.
 - **semantic 역할은 14종이다.** 설계 4.2 는 "15종" 이라 적었지만 표에 실린 역할은 14개다. 표를 출처로 삼았다.
+- **`[data-surface='dark']` 규칙은 만들지 않았다.** 루트가 이미 다크라 값이 중복된다. 대신 Colors 스토리를 `globals: { theme: 'dark' }` 로 고정했다 — 툴바가 light 면 "dark 칸" 도 `<html>` 의 light 를 상속해 두 칸이 같아지기 때문이다. 3단계에서 결정할 항목으로 넘긴다.
 
 ### 이 단계 종료 후 사람이 볼 것
 
@@ -205,6 +206,8 @@ MaskReveal 의 once 옵션이 CSS 로 불가능한 것이 이 분할의 근거�
 ### 스토리 축
 
 컴포넌트마다 필요한 범위에서: Default · Variants · Long content · Narrow container · Dark background · Mobile · Tablet · Desktop · Reduced motion · Keyboard · Disabled/static.
+
+**"Dark background" 축이 `[data-surface='dark']` 규칙을 요구한다.** 툴바를 light 로 둔 채 어두운 블록을 보여줄 방법이 지금은 없다(2단계에서는 Colors 스토리를 dark 로 고정해 우회했다). 선택지는 두 개다 — semantic 14줄을 `[data-surface='dark']` 에 한 번 더 적거나, 스토리마다 `globals` 로 루트를 고정하거나. 값 중복을 감수할지 여기서 정한다.
 
 픽스처는 스토리 안 인라인. 운영 데이터와 섞지 않는다.
 
