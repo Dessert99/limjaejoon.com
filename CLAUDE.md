@@ -10,6 +10,8 @@
 
 스타일은 Tailwind CSS v4 토큰 계층을 쓴다. primitive/semantic 경계, 섹션 반전, 모션 규칙은 [style-foundation.md](docs/conventions/style-foundation.md) 참고. 토큰 값 자체는 `src/shared/styles/*.css` 가 유일한 출처다.
 
+`src/shared/ui/` 컴포넌트를 새로 만들거나 공개 API를 바꿀 때는 `composition-patterns` 스킬을 먼저 호출한다. boolean prop 누적 대신 합성(compound) 구조를 쓴다.
+
 모든 파일·로직에는 [comment-convention.md](docs/conventions/comment-convention.md)에 따라 주석을 남긴다. 파일 헤더와 모든 export는 단일 라인 JSDoc(`/** ... */`), 본문 안 비자명 로직은 한 줄 `//` 주석으로 WHY(의도·함정)를 적는다. 멀티라인 블록·`@param` 태그·코드 받아쓰기는 금지.
 
 ## 개발 명령어
