@@ -5,3 +5,4 @@ export {
   STAGGER_MAX_STEPS,
   staggerIndex,
 } from './motionPreset';
+export { useInView, type InViewState } from './useInView';

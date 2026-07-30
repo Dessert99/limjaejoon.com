@@ -5,10 +5,12 @@ Tailwind CSS v4 토큰 계층을 쓰는 규칙. 설계 근거는 [tailwind-inter
 ## 1. 어디에 무엇이 사는가
 
 ```
-src/shared/styles/tokens.css    primitive(:root) + semantic·타이포·레이아웃(@theme static)
-src/shared/styles/motion.css    semantic easing(@theme) + duration(@utility) + 감쇠 가드
+src/shared/styles/tokens.css    primitive(:root) + semantic·타이포·레이아웃(@theme static) + bleed
+src/shared/styles/motion.css    easing(@theme) + duration·모션(@utility) + effect 상태 규칙 + 감쇠 가드
 src/shared/styles/global.css    @import·@source, 섹션 반전, @layer base
 ```
+
+Effect 컴포넌트의 움직임은 CSS 가 소유한다. JSX 는 상태를 `data-*` 로 내보낼 뿐이다(11절).
 
 ## 2. primitive 는 `@theme` 에 올리지 않는다
 
@@ -70,13 +72,50 @@ Tailwind 에 duration 네임스페이스가 없다. `duration-(--ds-duration-800
 - 감쇠는 `@media (prefers-reduced-motion: reduce)` 와 `[data-motion='reduced']` 둘 다에 건다. 뒤는 Storybook 토글용이고 무한 애니메이션 정지도 겸한다.
 - `will-change` 는 계측 후에만 붙인다.
 
-## 12. Storybook
+## 12. Effect 상태는 `data-*`, 규칙은 `@layer` 밖
+
+`[data-reveal]`·`[data-parallax]`·`[data-marquee-*]` 는 **레이어 밖**에 선언한다. 소비자가 얹은 `translate-*`·`animation` 유틸리티(`@layer utilities`)를 확실히 이겨야 "이 엘리먼트의 변환 소유자는 이 규칙" 이 성립한다. 섹션 반전(5절)과 같은 이유다.
+
+**`@utility` 는 이 목적에 못 쓴다.** `@utility` 로 만든 클래스도 `@layer utilities` 안이라, 소비자가 `animate-spin` 하나만 붙여도 같은 레이어 뒤쪽에 생성된 축약형이 `animation-timeline` 까지 `auto` 로 되돌린다 — parallax 가 에러 없이 사라진다. 소비자가 `className` 을 얹을 수 있는 루트의 애니메이션은 반드시 레이어 밖 셀렉터가 소유한다.
+
+`marquee-track` 만 `@utility` 로 남아 있다. 그 트랙은 내부 엘리먼트라 소비자 `className` 이 닿지 않는다.
+
+JSX 는 상태 이름만 내보낸다. 값·시간·이징을 JSX 에 적으면 토큰이 두 곳에 살게 된다.
+
+- `data-reveal='idle'` 에 대응하는 규칙은 **없다.** 서버 렌더와 IntersectionObserver 미지원 환경이 이 상태에 머물러 콘텐츠가 그대로 보인다.
+- 은닉은 `translate` 뿐이고 `opacity: 0` 을 쓰지 않는다. 스크립트가 죽어도 글자가 사라지지 않는다.
+
+## 13. 감쇠에서는 애니메이션을 끈다 (늦추지 않는다)
+
+`animation-duration: 1ms` 로 줄이면 `animation-fill-mode: both` 인 애니메이션이 **끝 상태를 굳힌다.** parallax 가 밀린 자리에서 멈춰 레이아웃이 어긋난 것처럼 보인다. 그래서 감쇠 가드는 `animation-name: none !important` 로 아예 끈다.
+
+transition 은 반대로 `1ms` 로 남긴다. reveal 이 transition 기반이라 끄면 상태 전환 자체가 사라지고, 1ms 면 최종 상태로 즉시 도착한다.
+
+## 14. controlled bleed 는 gutter 상쇄다
+
+`bleed-gutter` 는 Container 의 좌우 padding 만 되짚는다. `100vw`·`100svw` 계열은 스크롤바 폭까지 세어 가로 오버플로를 만든다 — 설계 성공 기준이 금지한 바로 그 증상이다. 뷰포트 끝까지 가야 하는 미디어는 Container 밖에 둔다.
+
+## 15. 마스크는 오버행을 함께 옮긴다
+
+`mask-track` 은 `overflow: hidden` 이 디센더(g·y)를 자르지 않게 `--mask-overhang` 만큼 아래 여백을 주고 같은 값을 음수 마진으로 되당긴다. 은닉 상태는 `100%` 가 아니라 `calc(100% + var(--mask-overhang))` 만큼 내려야 한다 — `100%` 만 내리면 그 여백 사이로 글자 윗동이 비친다.
+
+오버행이 `em` 기준이라 **글자 크기 클래스는 자식이 아니라 마스크 컴포넌트에 건다.**
+
+## 16. Effect 컴포넌트는 `ref` 를 열지 않는다
+
+`MaskReveal`·`RevealText` 의 루트 ref 는 IntersectionObserver 몫이다. props 로 `ref` 를 받으면 `{...rest}` 가 관찰자 ref 를 덮어 등장이 **조용히** 죽는다(에러 없이 영원히 `idle`). 두 컴포넌트만 `ComponentPropsWithoutRef` 를 쓴다.
+
+같은 이유로 `<button>` 의 `type` 은 `{...rest}` **뒤에** 둔다. `type={undefined}` 가 흘러들면 속성이 지워져 form 안에서 브라우저 기본값 `submit` 이 되살아난다.
+
+## 17. Storybook
 
 - preview 는 앱과 **같은** `global.css` 를 import 한다. SB 전용 CSS 를 만들지 않는다.
 - `@storybook/nextjs-vite` 가 `next/font` 를 처리해 `@font-face` 를 런타임 주입하지만, **variable 클래스를 `<html>` 에 거는 건 우리 몫**이다. `--font-body` 가 `:root` 에서 해석되므로 하위 엘리먼트에 걸면 소용없다.
 - Foundation story 는 값을 적지 않고 `document.styleSheets` 에서 토큰 이름을 훑는다. 토큰을 늘려도 스토리는 그대로 따라온다.
+- **판별 union props 는 스토리 args 로 그대로 쓸 수 없다.** Storybook 의 Args 추론이 union 을 교집합으로 접어 `never` 가 된다(`href?: never` × `href: string`). 판별자를 뺀 평평한 타입으로 `satisfies Meta<...>` 를 쓰고, 그 역할은 `render` 로 직접 그린다.
+- **`a11y: { test: 'error' }` 는 지금 아무것도 강제하지 않는다.** `@storybook/addon-vitest` 가 있어야 작동하는데 도입하지 않았다(플랜 3단계 결정). 대비비는 사람이 a11y 패널로 본다.
 
-## 13. Steiger
+## 18. Steiger
 
 CSS 만 든 세그먼트도 `fsd/public-api` 에 걸린다. `shared/styles` 는 `fonts.ts`·`index.ts` 가 있어 통과한다. CSS 만 두는 세그먼트를 새로 만들 계획이면 `index.ts` 를 같이 만든다.
 

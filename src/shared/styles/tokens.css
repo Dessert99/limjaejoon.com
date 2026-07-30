@@ -131,3 +131,8 @@
   --spacing-section-sm: clamp(3rem, 6vw, 6rem);
   --spacing-grid-gap: clamp(1.5rem, 3vw, 3rem);
 }
+
+/* controlled bleed — Container 의 gutter 만 되돌린다. 100vw 계열은 스크롤바 폭까지 세어 가로 오버플로를 만든다 */
+@utility bleed-gutter {
+  margin-inline: calc(-1 * var(--spacing-gutter));
+}

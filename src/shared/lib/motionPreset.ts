@@ -1,9 +1,10 @@
 /** 모션 프리셋 — CSS 가 소유할 수 없는 값만 담는다(duration·easing 은 토큰이 단독 소유) */
 
-/** IntersectionObserver 기본값 — 아래에서 15% 일찍 걸어 등장이 뒤늦게 느껴지지 않게 한다 */
+/** IntersectionObserver 기본값 — 등장 시점은 rootMargin 한 곳으로만 늦춘다(아래 15%) */
+/* threshold 는 0 이다 — 뷰포트보다 큰 요소는 비율이 임계치에 영원히 못 닿아 등장 자체가 사라진다 */
 export const IN_VIEW_DEFAULTS = {
   rootMargin: '0px 0px -15% 0px',
-  threshold: 0.15,
+  threshold: 0,
   once: true,
 } as const;
 

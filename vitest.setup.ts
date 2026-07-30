@@ -18,3 +18,20 @@ afterAll(() => {
 afterEach(() => {
   cleanup();
 });
+
+// jsdom 에는 IntersectionObserver 가 없다 — 무동작 스텁으로 마운트만 통과시키고,
+// 교차를 실제로 제어해야 하는 테스트는 vi.stubGlobal 로 각자 덮어쓴다.
+class NoopIntersectionObserver {
+  readonly root = null;
+  readonly rootMargin = '';
+  readonly thresholds: readonly number[] = [];
+  observe(): void {}
+  unobserve(): void {}
+  disconnect(): void {}
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+}
+
+globalThis.IntersectionObserver =
+  NoopIntersectionObserver as unknown as typeof IntersectionObserver;
