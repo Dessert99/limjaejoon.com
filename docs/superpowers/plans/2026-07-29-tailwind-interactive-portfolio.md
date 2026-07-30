@@ -9,7 +9,7 @@
 
 각 단계를 마치면 커밋하고 **이 문서의 해당 섹션을 갱신한다** — 계획과 달랐던 것, 바뀐 결정, 다음 단계에 넘길 주의사항.
 
-**3단계 이후는 잠정이다.** 앞 단계 실측(Steiger 가 `shared/styles` 를 어떻게 보는지, `next/font` 가 Storybook 에서 실제로 도는지 등)에 따라 바뀔 수 있다. 확정처럼 읽고 잘못된 방향을 밀어붙이지 않는다.
+**4단계 이후는 잠정이다.** 앞 단계 실측에 따라 바뀔 수 있다. 확정처럼 읽고 잘못된 방향을 밀어붙이지 않는다. 3단계는 2단계 종료 검토에서 결정을 확정했다(해당 섹션의 결정표 참고).
 
 ## 진행 상태
 
@@ -17,8 +17,8 @@
 | --- | --- | --- |
 | 1. 조사와 계획 | 완료 | — |
 | 2. Foundation + Storybook | 완료 (사람 확인 대기) | `2846a95`…`e8bf14c` (6커밋) |
-| 3. 공통 UI 와 Effect | 미착수 (잠정) | |
-| 4. 실제 콘텐츠 입력 | 미착수 (잠정) | |
+| 3. 공통 UI 와 Effect | 미착수 (결정 확정, UI 4 + Effect 4) | |
+| 4. 실제 콘텐츠 입력 | 미착수 (잠정) + Media·MediaReveal | |
 | 5. 홈 페이지 조립 | 미착수 (잠정) | |
 | 6. 시각·성능 조정 | 미착수 (잠정) | |
 
@@ -163,18 +163,32 @@ semantic 이름을 참조하고, 반전 블록은 `@layer` 밖이라 `@layer the
 
 ---
 
-## 3단계 — 공통 UI 와 Effect (잠정)
+## 3단계 — 공통 UI 와 Effect
+
+### 착수 전 확정된 결정 (2026-07-30)
+
+2단계 종료 검토에서 정했다. 이 단계에서 다시 논의하지 않는다.
+
+| 항목 | 결정 | 근거 |
+| --- | --- | --- |
+| Media · MediaReveal | **이 단계에서 뺀다.** 4단계 에셋 확보 후로 옮김 | 실제 이미지 없이는 마스크 타이밍·스케일 배율을 맞출 대상이 없어 4단계에 전부 다시 잡게 된다 |
+| CVA | **설치하지 않고 시작.** Button·ShowcaseButton 을 만든 뒤 variant 표가 3×3 을 넘으면 그때 도입 | 지금 그림은 `2×2` 수준이라 의존성과 "클래스 문자열이 사는 두 번째 장소"만 늘어난다 |
+| `--font-display` | **`var(--font-body)` 별칭 유지.** 6단계 시각 조정에서 재검토 | 토큰 검토 통과. 한글 display 서체는 무겁고, 방금 폰트 preload 를 2MB→285KB 로 줄인 방향과 반대다. 라틴만 교체하는 절충안이 남아 있다 |
+| `[data-surface='dark']` | **CSS 규칙을 만들지 않는다.** "Dark background" 스토리는 story-level `globals: { theme: 'dark' }` 로 고정 | Contact 는 `bg-surface-inverse` 로 풀 예정이라 밝은 섹션 안에 어두운 블록이 중첩될 일이 없다. 5단계에서 실제로 필요해지면 그때 14줄을 추가한다(뒤늦게 넣어도 비용이 같다) |
+| `@storybook/addon-vitest` | **이 단계 말미에 판단.** 8개 컴포넌트가 다 선 뒤 | 설계 성공 기준 "a11y violation 0" 은 지금 자동 강제가 없다 — `preview.ts` 의 `a11y: { test: 'error' }` 는 이 addon 이 있을 때만 작동한다. 아래 "a11y 자동 강제" 참고 |
 
 ### 범위
 
-UI 5종 + Effect 5종을 Storybook 안에서 완성한다. **홈 페이지를 조립하지 않는다.**
+UI 4종 + Effect 4종을 Storybook 안에서 완성한다. **홈 페이지를 조립하지 않는다.**
 
 ```
-UI      Container  Button  ShowcaseButton  Media  SectionHeading
-Effect  MaskReveal  RevealText  Parallax  Marquee  MediaReveal
+UI      Container  Button  ShowcaseButton  SectionHeading
+Effect  MaskReveal  RevealText  Parallax  Marquee
 ```
 
 전부 `src/shared/ui/{Name}/` 아래 `{Name}.tsx` + `{Name}.test.tsx` + `{Name}.stories.tsx`. per-component `index.ts` 는 두지 않고 `shared/ui/index.ts` 하나가 직접 re-export 한다.
+
+이 8개는 텍스트·도형만으로 완결되어 미디어 에셋에 의존하지 않는다. Media·MediaReveal 은 4단계 뒤로 옮겼다(위 결정표).
 
 `useInView` 훅은 `src/shared/lib/useInView.ts` (화살표 함수 — `lib/**` 가 `func-style: expression`).
 
@@ -182,10 +196,12 @@ Effect  MaskReveal  RevealText  Parallax  Marquee  MediaReveal
 
 ```
 CSS scroll-driven      Parallax  Marquee
-IntersectionObserver   MaskReveal(once)  RevealText  MediaReveal(enter/exit)
+IntersectionObserver   MaskReveal(once)  RevealText
 ```
 
 MaskReveal 의 once 옵션이 CSS 로 불가능한 것이 이 분할의 근거다. view timeline 은 스크롤을 되감으면 같이 되감긴다.
+
+MediaReveal(enter/exit) 도 IntersectionObserver 쪽이지만 이 단계 범위 밖이다.
 
 ### 컴포넌트별 주의
 
@@ -199,17 +215,19 @@ MaskReveal 의 once 옵션이 CSS 로 불가능한 것이 이 분할의 근거�
 
 **Marquee** — 끊김 없는 반복, 복제 콘텐츠 `aria-hidden`, direction / speed / pause. Storybook 에서 정지 가능해야 한다.
 
-**MediaReveal** — scale + mask 등장, viewport reveal 과 hover reveal, enter/exit 분리, image·video. **transform ownership 을 컴포넌트 헤더에 명시한다.**
-
-**Media** — image / video / poster / aspect ratio / object-fit / eager·lazy / responsive sizes / muted autoplay loop / 모바일 fallback.
-
 ### 스토리 축
 
 컴포넌트마다 필요한 범위에서: Default · Variants · Long content · Narrow container · Dark background · Mobile · Tablet · Desktop · Reduced motion · Keyboard · Disabled/static.
 
-**"Dark background" 축이 `[data-surface='dark']` 규칙을 요구한다.** 툴바를 light 로 둔 채 어두운 블록을 보여줄 방법이 지금은 없다(2단계에서는 Colors 스토리를 dark 로 고정해 우회했다). 선택지는 두 개다 — semantic 14줄을 `[data-surface='dark']` 에 한 번 더 적거나, 스토리마다 `globals` 로 루트를 고정하거나. 값 중복을 감수할지 여기서 정한다.
+"Dark background" 축은 story-level `globals: { theme: 'dark' }` 로 루트를 고정한다. 스코프 없는 블록은 `<html>` 의 `data-surface` 를 상속하므로, 툴바가 light 인 채로는 어두운 배경을 보여줄 수 없다.
 
 픽스처는 스토리 안 인라인. 운영 데이터와 섞지 않는다.
+
+### a11y 자동 강제
+
+지금은 사람이 Storybook 을 열어 a11y 패널을 봐야만 위반이 드러난다. 단위 테스트(RTL)로는 `aria-hidden`·라벨·키보드 배선까지 잡히지만 **대비비는 렌더가 필요해 jsdom 에서 불가능하다.** 설계 9절이 "거대 타이포는 대비가 낮아도 읽히는 것처럼 보여 실수하기 쉽다" 고 경고한 지점이 자동 검사에서 비어 있다.
+
+이 단계 말미에 `@storybook/addon-vitest` 도입을 판단한다. 얻는 것은 `npm run ci` 안에서 도는 axe 검사와 play function 이고, 내는 비용은 Playwright 브라우저 바이너리(수백 MB)다. 도입하지 않기로 하면 **대비비를 손으로 검증하는 절차를 6단계 점검 축에 못 박아둔다** — 자동 검사가 없다는 사실을 조용히 넘기지 않는다.
 
 ### 검증
 
@@ -217,7 +235,7 @@ type-check · lint · Storybook build · component test · a11y addon 결과.
 
 ### 이 단계 종료 후 사람이 볼 것
 
-Storybook 에서 모션 수치를 조정한다. Button 과 ShowcaseButton 의 조화, reveal 속도, 글자 등장의 자연스러움, parallax 가 어지럽지 않은지, marquee 속도, MediaReveal 의 이미지별 안정성, 모바일 스토리의 실사용성.
+Storybook 에서 모션 수치를 조정한다. Button 과 ShowcaseButton 의 조화, reveal 속도, 글자 등장의 자연스러움, parallax 가 어지럽지 않은지, marquee 속도, 모바일 스토리의 실사용성.
 
 ---
 
@@ -254,6 +272,18 @@ src/entities/profile/              해체 — 삭제
 ### 실측할 것
 
 - 원격 이미지 소스를 쓰는가 → `next.config.ts` 의 `images` 설정 필요 여부
+
+### 이 단계 종료 후 — Media 와 MediaReveal
+
+3단계에서 옮겨온 두 컴포넌트를 여기서 만든다. 실제 에셋이 들어온 직후이자 5단계 Hero·Work Index·Gallery 가 이들을 소비하기 직전이다. 배치와 형식은 3단계와 같다(`src/shared/ui/{Name}/`, `shared/ui/index.ts` 가 직접 re-export).
+
+**Media** — image / video / poster / aspect ratio / object-fit / eager·lazy / responsive sizes / muted autoplay loop / 모바일 fallback. Hero 는 `priority`(LCP), 나머지는 lazy.
+
+**MediaReveal** — scale + mask 등장, viewport reveal 과 hover reveal, enter/exit 분리, image·video. **transform ownership 을 컴포넌트 헤더에 명시한다.**
+
+두 컴포넌트를 나눠 두는 이유가 설계 7.3 이다 — Media 가 `object-fit`·`aspect-ratio` 를, MediaReveal 이 래퍼에서 `transform`·`clip-path` 를 소유한다. 한 엘리먼트가 둘 다 잡으면 나중에 parallax 가 얹힐 때 앞의 것을 통째로 덮는다.
+
+스토리에는 **실제 에셋으로** 비율별 crop·모바일 fallback·긴 로딩을 확인한다. 여기서 마스크 타이밍과 스케일 배율을 확정한다.
 
 ---
 
