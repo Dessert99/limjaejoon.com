@@ -1,5 +1,6 @@
 /** Gallery — 세로 스크롤 진행률을 가로 이동으로 바꾸는 rail 두 줄. 스크롤을 가로채지 않는다 */
-import { Container, Media, SectionHeading } from '@/shared/ui';
+import { Container, SectionHeading } from '@/shared/ui';
+import { Rail } from './Rail';
 import { GALLERY, GALLERY_ROWS } from '../../config/gallery';
 
 const TITLE_ID = 'gallery-title';
@@ -10,44 +11,26 @@ export function GallerySection() {
       aria-labelledby={TITLE_ID}
       className='bg-background py-section text-foreground'>
       <Container>
-        <SectionHeading
-          label={GALLERY.label}
-          title={GALLERY.title}
-          className='mb-section-sm'
-          titleId={TITLE_ID}
-        />
+        <SectionHeading.Root className='mb-section-sm'>
+          <SectionHeading.Label>{GALLERY.label}</SectionHeading.Label>
+          <SectionHeading.Title id={TITLE_ID}>
+            {GALLERY.title}
+          </SectionHeading.Title>
+        </SectionHeading.Root>
       </Container>
 
       {/* Container 밖이다 — 화면보다 넓어야 흐르는 게 보인다 */}
       <div className='flex flex-col gap-grid-gap'>
         {GALLERY_ROWS.map((row, rowIndex) => {
-          const isReverse = rowIndex % 2 === 1;
+          const direction = rowIndex % 2 === 1 ? 'reverse' : 'forward';
 
           return (
-            <div
-              key={isReverse ? 'reverse' : 'forward'}
-              // overflow-x-auto + tabindex — 애니메이션이 꺼져도 좌우로 직접 훑을 수 있어야 정보가 안 빠진다
-              role='group'
-              aria-label={`작업 기록 ${rowIndex + 1}번째 줄`}
-              tabIndex={0}
-              className='overflow-x-auto'>
-              <div
-                data-rail={isReverse ? 'reverse' : ''}
-                className='flex w-max gap-grid-gap px-gutter'>
-                {row.map((item) => {
-                  return (
-                    <Media
-                      key={item.id}
-                      src={item.src}
-                      alt={item.alt}
-                      ratio={item.ratio}
-                      sizes='(min-width: 48rem) 40vw, 80vw'
-                      className='w-rail-item shrink-0 rounded-md'
-                    />
-                  );
-                })}
-              </div>
-            </div>
+            <Rail
+              key={direction}
+              direction={direction}
+              label={`작업 기록 ${rowIndex + 1}번째 줄`}
+              items={row}
+            />
           );
         })}
       </div>

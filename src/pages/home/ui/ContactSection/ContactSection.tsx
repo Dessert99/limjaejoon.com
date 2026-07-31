@@ -1,6 +1,11 @@
 /** Contact — surface inverse 로 뒤집어 페이지를 닫는다. magnetic·커서 추적은 쓰지 않는다 */
 import { EMAIL } from '@/shared/config';
-import { Container, MaskReveal, ShowcaseButton } from '@/shared/ui';
+import {
+  Container,
+  MaskReveal,
+  SectionHeading,
+  ShowcaseButton,
+} from '@/shared/ui';
 import { CONTACT } from '../../config/contact';
 
 const TITLE_ID = 'contact-title';
@@ -15,10 +20,13 @@ export function ContactSection() {
       data-surface='light'
       className='bg-surface py-section text-foreground'>
       <Container>
-        <p className='text-label text-subtle uppercase'>{CONTACT.label}</p>
+        <SectionHeading.Label>{CONTACT.label}</SectionHeading.Label>
 
+        {/* 제목만 마스크로 감싼다 — 부품이라 래퍼를 끼워도 id 가 heading 에 그대로 남는다 */}
         <MaskReveal className='mt-6 text-section break-keep text-foreground'>
-          <h2 id={TITLE_ID}>{CONTACT.headline}</h2>
+          <SectionHeading.Title id={TITLE_ID}>
+            {CONTACT.headline}
+          </SectionHeading.Title>
         </MaskReveal>
 
         <p className='mt-6 text-body-lg break-keep text-muted'>
