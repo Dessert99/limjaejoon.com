@@ -16,8 +16,8 @@
 | --- | --- | --- |
 | 1. 조사와 계획 | 완료 | — |
 | 2. Foundation + Storybook | 완료 (사람 확인 대기) | `2846a95`…`e8bf14c` (6커밋) |
-| 3. 공통 UI 와 Effect | 완료 (사람 확인 대기) |  |
-| 4. 실제 콘텐츠 입력 | 미착수 (잠정) + Media·MediaReveal |  |
+| 3. 공통 UI 와 Effect | 완료 (사람 확인 대기) | `5536c66` |
+| 4. 콘텐츠 구조 + Media | 완료 (**콘텐츠는 전부 더미**) |  |
 | 5. 홈 페이지 조립 | 미착수 (잠정) |  |
 | 6. 시각·성능 조정 | 미착수 (잠정) |  |
 
@@ -313,53 +313,85 @@ type-check · lint · Storybook build · component test · a11y addon 결과.
 
 ---
 
-## 4단계 — 실제 콘텐츠 입력 (잠정)
+## 4단계 — 콘텐츠 구조와 Media
 
-### 선행 조건
+### 선행 조건 — 실제로 받은 것
 
-사람이 콘텐츠를 준비해야 한다. 최소한 **프로젝트 제목·개수·대표 이미지 비율**이라도 먼저 필요하다.
+사람이 준 것은 **이메일 하나뿐**이다(`lsjh1234@naver.com`). 프로젝트·문구·이미지는 "지금은 UI 확정이 목적이니 더미로 채우라" 는 지시를 받고 진행했다.
 
-이미지가 아직 없으면 비율만 먼저 확정한다: Hero media 16:10 · Project thumbnail 4:3 · Gallery media 3:2 또는 16:9.
+**설계 10절의 "임시 placeholder 콘텐츠 금지" 를 의식적으로 유예한 상태다.** 5·6단계를 지나 배포 전에 반드시 실물로 교체한다.
 
 ### 범위
 
-데이터 구조 · 타입 · public API · 픽스처만. **섹션을 조립하지 않는다.**
+데이터 구조 · 타입 · public API · 픽스처, 그리고 Media·MediaReveal. **섹션을 조립하지 않았다.**
 
 ### 산출물
 
 ```
-src/shared/config/site.ts          사이트명·영문명·직무·한 줄 소개·소셜 링크 확장
+src/shared/config/site.ts          SITE·EMAIL·SOCIAL_LINKS 추가, SITE_URL 유지
 src/entities/project/              신규 — index.ts, model/project.types.ts, model/projects.ts
-src/pages/home/config/             Hero 문구, Introduction 콘텐츠, CTA
+src/pages/home/config/             신규 — hero.ts, introduction.ts, contact.ts
 src/widgets/site-navigation/       신규 — index.ts, config/navItems.ts
-src/entities/profile/              해체 — 삭제
+src/entities/profile/              삭제 (소비자 0 을 확인하고 해체)
+src/shared/ui/Media/               신규
+src/shared/ui/MediaReveal/         신규
+src/shared/styles/tokens.css       --aspect-* 3종
+src/shared/styles/motion.css       [data-media-reveal] · [data-media-scale]
+app/layout.tsx                     metadata 가 SITE 를 참조하도록 배선
 ```
 
-**슬라이스를 만들면 같은 단계에서 `index.ts` 도 만든다.** `fsd/public-api` 는 켜져 있어서, 세그먼트만 있고 슬라이스 public API 가 없으면 이 단계 종료 검증의 `npm run fsd` 가 5단계로 넘어가기 전에 실패한다. `entities/project` 와 `widgets/site-navigation` 둘 다 해당한다.
+### 실측 결과
 
-`entities/profile` 해체는 설계 6절 참고. 데이터를 잃는 게 아니라 4단계 소유권 규칙에 맞게 재배치하는 것이다.
+**`next/image` 의 `priority` 는 img 속성을 만들지 않는다.** Next 16 기준으로 렌더 결과를 직접 찍어 확인했다.
 
-### 타입 규칙
+```
+priority : <img alt="p" decoding="async" data-nimg="fill" …>          ← loading 속성 자체가 없다
+기본     : <img alt="l" loading="lazy" decoding="async" …>
+```
 
-실제로 들어온 필드만 정의한다. "나중에 쓸지도 모르는" 필드를 만들지 않는다. 미디어는 alt · aspect ratio · responsive sizes · Hero 외 lazy · video poster · 모바일 fallback 을 타입에 반영한다.
+`fetchpriority="high"` 도 img 에 붙지 않는다 — 우선순위는 head 의 preload 로 전달된다. 그래서 DOM 에서 검증할 수 있는 계약은 **"`loading` 속성이 없다"** 뿐이고, 테스트도 그렇게 잡았다. `loading="eager"` 를 기대하면 실패한다.
 
-### 실측할 것
+**`--aspect-*` 는 Tailwind 네임스페이스가 있다.** `@theme static` 에 올리면 유틸리티가 그대로 생성되고, `tailwind-merge` 도 `aspect` 를 테마 키로 알고 있어 `cn` 레지스트리에 이름만 더하면 병합이 맞는다.
 
-- 원격 이미지 소스를 쓰는가 → `next.config.ts` 의 `images` 설정 필요 여부
+```css
+.aspect-hero{aspect-ratio:var(--aspect-hero)}
+```
 
-### 이 단계 종료 후 — Media 와 MediaReveal
+**원격 이미지 소스는 쓰지 않는다.** 전부 `public/` 아래 로컬 경로이므로 `next.config.ts` 의 `images` 설정은 필요 없다. 원격 CDN 을 쓰게 되면 그때 `remotePatterns` 를 연다.
 
-3단계에서 옮겨온 두 컴포넌트를 여기서 만든다. 실제 에셋이 들어온 직후이자 5단계 Hero·Work Index·Gallery 가 이들을 소비하기 직전이다. 배치와 형식은 3단계와 같다(`src/shared/ui/{Name}/`, `shared/ui/index.ts` 가 직접 re-export).
+### 계획과 달랐던 것
 
-**Media** — image / video / poster / aspect ratio / object-fit / eager·lazy / responsive sizes / muted autoplay loop / 모바일 fallback. Hero 는 `priority`(LCP), 나머지는 lazy.
+- **`MediaRatio` 타입은 `shared` 가 소유한다.** 처음엔 `entities/project` 에 뒀는데, `shared/ui/Media` 가 그 타입을 쓰려면 shared → entities 라는 **역방향 import** 가 된다. FSD 가 막는다. `shared/ui/Media` 가 타입을 export 하고 `entities/project` 가 참조하는 방향으로 뒤집었다.
+- **비율은 전부 가로로 고정했다.** 참고 저장소(`AliBagheri2079/dennis-snellenberg-portfolio`)에는 에셋이 없어서(`public/screenshot.png` 하나뿐) 그 사이트 비율을 확인할 방법이 없었다. 대신 **이 포트폴리오의 프로젝트가 앱 스크린샷 위주**라는 점으로 정했다 — 세로 스크린샷은 기기 목업 안에 얹어 가로 프레임으로 통일한다. 세로가 섞이면 Work Index 그리드와 Gallery rail 높이가 통째로 흔들린다.
+- **`Media` 는 `src: null` 분기를 갖는다.** 에셋이 없는 상태가 당분간 이어지므로 자리표시가 임시가 아니라 정식 상태다. 빈 문자열로 `<img>` 를 그리면 깨진 아이콘이 뜨고 스크린리더에도 잡히므로 **아예 만들지 않는다.**
+- **`MediaReveal` 에서 hover reveal 과 enter/exit 분리를 뺐다.** 튜닝할 실물이 없고, 설계 9절이 Work Index 의 hover 의존을 이미 금지하고 있어 근거도 약하다. viewport reveal(clip-path 마스크 + scale)만 만들었다. 실물 에셋이 들어오고 5단계에서 실제로 필요해지면 그때 추가한다.
+- **video·poster·모바일 fallback 도 만들지 않았다.** 영상 에셋이 0개라 어떤 동작도 검증할 수 없다. 검증 안 된 코드를 두는 것보다 없는 편이 낫다.
+- **`app/layout.tsx` metadata 를 `SITE` 에 배선했다.** `'임재준'` 이 세 곳에 하드코딩돼 있어서 `SITE` 가 생기는 순간 출처가 둘이 됐다(설계 3절 위반). 조립은 아니지만 데이터 소유권 정리의 일부라 같이 처리했다.
+- **블로그를 내비게이션과 소셜 링크에서 뺐다.** 라우트가 `/` 하나뿐이라 지금 걸면 404 다. 사람이 "블로그는 살릴 거다" 라고 했으므로 `navItems.ts` 와 `site.ts` 양쪽에 **한 줄만 더하면 되는 자리**와 이유를 주석으로 남겼다.
+- **`MediaReveal` 의 `style` 병합.** `style={stagger}` 를 `{...rest}` 앞에 두면 소비자가 `style` 을 넘길 때 마스크 층만 `--stagger` 를 잃고 안쪽 scale 층과 어긋난다. Codex 가 잡았고, `{...rest}` 뒤에서 병합하도록 고쳤다. `ref`·`type` 에 이어 **같은 함정을 세 번째로 밟은 것**이라 style-foundation 16절에 규칙으로 승격했다.
 
-**MediaReveal** — scale + mask 등장, viewport reveal 과 hover reveal, enter/exit 분리, image·video. **transform ownership 을 컴포넌트 헤더에 명시한다.**
+### 더미 콘텐츠의 분량 기준
 
-두 컴포넌트를 나눠 두는 이유가 설계 7.3 이다 — Media 가 `object-fit`·`aspect-ratio` 를, MediaReveal 이 래퍼에서 `transform`·`clip-path` 를 소유한다. 한 엘리먼트가 둘 다 잡으면 나중에 parallax 가 얹힐 때 앞의 것을 통째로 덮는다.
+실물로 갈아끼울 때 레이아웃이 흔들리지 않도록 **길이**를 기준으로 썼다. 내용은 아무 말이나 채웠다.
 
-스토리에는 **실제 에셋으로** 비율별 crop·모바일 fallback·긴 로딩을 확인한다. 여기서 마스크 타이밍과 스케일 배율을 확정한다.
+- 프로젝트 4건. 제목을 **2·4·8·17자로 일부러 흩었다** — 거대 타이포에서 긴 제목이 Work Index 레이아웃을 깨는지가 5단계 표현 방식 4안 중 택1의 판단 기준이다
+- 한 줄 설명 20~35자 / 기여 60~90자
+- Hero headline 12~20자(`text-hero` 는 최대 12rem 이라 더 길면 모바일에서 세 줄이 된다) / 보조 40~60자
+- Introduction statement 40~70자 / 본문 150~250자 2문단
+- Contact headline 15~25자
 
----
+### 이 단계 종료 후 사람이 볼 것
+
+`UI/Media` 의 `Ratios`·`ThumbnailGrid` 에서 **비율이 콘텐츠에 맞는지**를 먼저 본다. 여기서 비율을 바꾸면 5단계 조립 전이라 비용이 거의 없다. 조립 뒤에 바꾸면 Work Index·Gallery 레이아웃을 다시 잡아야 한다.
+
+`Effect/MediaReveal` 은 `WithImage` 로 본다 — 자리표시 블록은 단색이라 안쪽 `scale` 이 눈에 안 보인다. 무늬가 있어야 조여드는 게 드러난다.
+
+### 5단계로 넘기는 주의사항
+
+- **더미 교체가 배포 전 필수 관문이다.** 설계 10절이 금지한 상태를 의도적으로 유지 중이다.
+- **마스크 타이밍과 scale 배율(1.15)은 미확정이다.** 실물 이미지 없이 정한 값이라 6단계에서 다시 잡는다.
+- **Hero 의 로드 시점 등장은 `useInView` 로 안 된다.** 이미 보이는 요소는 애니메이션하지 않는다(3단계 기록 참고).
+- 블로그 라우트가 서면 `navItems.ts` 와 `site.ts` 에 한 줄씩 더한다.
 
 ## 5단계 — 홈 페이지 조립 (잠정)
 

@@ -20,6 +20,7 @@ const twMerge = extendTailwindMerge({
       spacing: ['gutter', 'section', 'section-sm', 'grid-gap'],
       container: ['content', 'wide'],
       ease: ['standard', 'enter', 'exit', 'reveal', 'cinematic'],
+      aspect: ['hero', 'thumbnail', 'gallery'],
     },
     classGroups: {
       // @utility 로 만든 duration 은 Tailwind 기본 스케일 밖이라 그룹에 직접 등록한다

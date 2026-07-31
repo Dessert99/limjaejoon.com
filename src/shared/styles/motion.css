@@ -62,6 +62,36 @@
   translate: 0 0;
 }
 
+/* MediaReveal — 바깥이 clip-path, 안쪽이 scale 을 소유한다 */
+/* 둘을 한 엘리먼트에 몰지 않는 이유는 나중에 얹힐 층 때문이다 — 서로 다른 프로퍼티라야 translate 가 와도 안 덮인다 */
+[data-media-reveal] {
+  transition: clip-path var(--ds-duration-1200) var(--ds-ease-cinematic);
+  /* transition 축약형이 delay 를 0 으로 되돌리므로 반드시 뒤에 온다 */
+  transition-delay: calc(var(--stagger, 0) * var(--ds-duration-100));
+}
+
+[data-media-reveal='out'] {
+  clip-path: inset(0 0 100% 0);
+}
+
+[data-media-reveal='in'] {
+  clip-path: inset(0 0 0 0);
+}
+
+[data-media-scale] {
+  transition: scale var(--ds-duration-1200) var(--ds-ease-cinematic);
+  transition-delay: calc(var(--stagger, 0) * var(--ds-duration-100));
+}
+
+/* 살짝 크게 시작해 제자리로 — 마스크가 열리는 동안 안쪽이 반대로 조여들어야 깊이가 생긴다 */
+[data-media-scale='out'] {
+  scale: 1.15;
+}
+
+[data-media-scale='in'] {
+  scale: 1;
+}
+
 /* Parallax — translate 만 소유한다. 부모가 overflow-hidden 이고 자식이 오버스캔돼야 빈 영역이 드러나지 않는다 */
 @keyframes parallax-shift {
   from {

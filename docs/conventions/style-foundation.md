@@ -50,7 +50,7 @@ Tailwind 에 duration 네임스페이스가 없다. `duration-(--ds-duration-800
 
 `tailwind-merge` 는 기본 스케일(t-shirt size·숫자)만 알아 우리 이름을 전부 색으로 오분류한다. 그대로 두면 `cn('text-hero', 'text-muted')` 가 `text-hero` 를 조용히 버린다.
 
-`src/shared/lib/cn.ts` 의 레지스트리(`text`·`spacing`·`container`·`ease`·`duration`)에 이름을 같이 넣고, `cn.test.ts` 에 충돌 케이스를 추가한다.
+`src/shared/lib/cn.ts` 의 레지스트리(`text`·`spacing`·`container`·`ease`·`duration`·`aspect`)에 이름을 같이 넣고, `cn.test.ts` 에 충돌 케이스를 추가한다.
 
 ## 9. `@source` 는 명시 목록이다
 
@@ -101,13 +101,25 @@ transition 은 반대로 `1ms` 로 남긴다. reveal 이 transition 기반이라
 
 오버행이 `em` 기준이라 **글자 크기 클래스는 자식이 아니라 마스크 컴포넌트에 건다.**
 
-## 16. Effect 컴포넌트는 `ref` 를 열지 않는다
+## 16. 컴포넌트가 소유한 props 는 `{...rest}` 에 밀리지 않게 둔다
 
-`MaskReveal`·`RevealText` 의 루트 ref 는 IntersectionObserver 몫이다. props 로 `ref` 를 받으면 `{...rest}` 가 관찰자 ref 를 덮어 등장이 **조용히** 죽는다(에러 없이 영원히 `idle`). 두 컴포넌트만 `ComponentPropsWithoutRef` 를 쓴다.
+`{...rest}` 는 앞에 쓴 것을 조용히 덮는다. 에러가 안 나서 발견이 늦다. 지금까지 세 번 밟았다.
 
-같은 이유로 `<button>` 의 `type` 은 `{...rest}` **뒤에** 둔다. `type={undefined}` 가 흘러들면 속성이 지워져 form 안에서 브라우저 기본값 `submit` 이 되살아난다.
+- **`ref`** — `MaskReveal`·`RevealText`·`MediaReveal` 의 루트 ref 는 IntersectionObserver 몫이다. 소비자 ref 가 덮으면 등장이 영원히 `idle` 로 죽는다. 세 컴포넌트만 `ComponentPropsWithoutRef` 로 ref 를 아예 안 연다.
+- **`type`** — `<button>` 의 `type` 은 `{...rest}` **뒤에** 두고 `?? 'button'` 으로 받는다. `type={undefined}` 가 흘러들면 속성이 지워져 form 안에서 브라우저 기본값 `submit` 이 되살아난다.
+- **`style`** — 같은 엘리먼트가 `style` 로 CSS 변수를 넘긴다면 `{...rest}` 뒤에서 병합한다(`{ ...style, ...소유값 }`). `MediaReveal` 은 마스크 층만 `--stagger` 를 잃어 안쪽 scale 층과 어긋났었다.
 
-## 17. Storybook
+기준: **한 엘리먼트에 컴포넌트 소유 prop 과 `{...rest}` 가 같이 있으면 순서를 의심한다.**
+
+## 17. 미디어 비율은 전부 가로다
+
+`--aspect-hero`(16/10) · `--aspect-thumbnail`(4/3) · `--aspect-gallery`(3/2). 세로가 하나라도 섞이면 Work Index 그리드와 Gallery rail 의 높이가 통째로 흔들린다. 세로 앱 스크린샷은 기기 목업 안에 얹어 가로 프레임으로 맞춘다.
+
+`Media` 는 `aspect-ratio`·`object-fit` 만, `MediaReveal` 은 `clip-path`(바깥)와 `scale`(안쪽)만 소유한다. 한 엘리먼트가 둘을 같이 잡으면 나중에 `Parallax` 가 `translate` 를 얹을 때 앞의 것을 덮는다.
+
+`src` 가 `null` 이면 `<img>` 를 **아예 만들지 않고** 자리표시 블록을 그린다. 빈 `src` 는 깨진 아이콘을 띄우고 스크린리더에도 잡힌다.
+
+## 18. Storybook
 
 - preview 는 앱과 **같은** `global.css` 를 import 한다. SB 전용 CSS 를 만들지 않는다.
 - `@storybook/nextjs-vite` 가 `next/font` 를 처리해 `@font-face` 를 런타임 주입하지만, **variable 클래스를 `<html>` 에 거는 건 우리 몫**이다. `--font-body` 가 `:root` 에서 해석되므로 하위 엘리먼트에 걸면 소용없다.
@@ -115,7 +127,7 @@ transition 은 반대로 `1ms` 로 남긴다. reveal 이 transition 기반이라
 - **판별 union props 는 스토리 args 로 그대로 쓸 수 없다.** Storybook 의 Args 추론이 union 을 교집합으로 접어 `never` 가 된다(`href?: never` × `href: string`). 판별자를 뺀 평평한 타입으로 `satisfies Meta<...>` 를 쓰고, 그 역할은 `render` 로 직접 그린다.
 - **`a11y: { test: 'error' }` 는 지금 아무것도 강제하지 않는다.** `@storybook/addon-vitest` 가 있어야 작동하는데 도입하지 않았다(플랜 3단계 결정). 대비비는 사람이 a11y 패널로 본다.
 
-## 18. Steiger
+## 19. Steiger
 
 CSS 만 든 세그먼트도 `fsd/public-api` 에 걸린다. `shared/styles` 는 `fonts.ts`·`index.ts` 가 있어 통과한다. CSS 만 두는 세그먼트를 새로 만들 계획이면 `index.ts` 를 같이 만든다.
 

@@ -31,6 +31,10 @@ describe('cn', () => {
     expect(cn('duration-slow', 'duration-quick')).toBe('duration-quick');
   });
 
+  it('이름 붙은 aspect 유틸리티끼리는 뒤에 온 것만 남긴다', () => {
+    expect(cn('aspect-thumbnail', 'aspect-hero')).toBe('aspect-hero');
+  });
+
   it('소비자가 덧붙인 클래스가 컴포넌트 기본값을 이긴다', () => {
     expect(cn('bg-surface px-gutter', 'bg-surface-raised')).toBe(
       'px-gutter bg-surface-raised'

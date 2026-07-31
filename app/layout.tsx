@@ -1,27 +1,30 @@
 import '@/shared/styles/global.css';
-import { SITE_URL } from '@/shared/config';
+import { SITE, SITE_URL } from '@/shared/config';
 import { pretendard } from '@/shared/styles';
 import type { Metadata } from 'next';
+
+// title·og·twitter 세 곳이 같은 문장을 쓴다 — 갈리면 검색 결과와 공유 카드가 서로 다른 말을 한다
+const pageTitle = `${SITE.name} — ${SITE.role}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'limjaejoon.com',
-    template: '%s | 임재준',
+    default: pageTitle,
+    template: `%s | ${SITE.name}`,
   },
-  description: 'limjaejoon.com shell',
+  description: SITE.tagline,
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
     url: SITE_URL,
-    siteName: '임재준',
-    title: 'limjaejoon.com',
-    description: 'limjaejoon.com shell',
+    siteName: SITE.name,
+    title: pageTitle,
+    description: SITE.tagline,
   },
   twitter: {
     card: 'summary',
-    title: 'limjaejoon.com',
-    description: 'limjaejoon.com shell',
+    title: pageTitle,
+    description: SITE.tagline,
   },
 };
 
