@@ -111,7 +111,23 @@ transition 은 반대로 `1ms` 로 남긴다. reveal 이 transition 기반이라
 
 기준: **한 엘리먼트에 컴포넌트 소유 prop 과 `{...rest}` 가 같이 있으면 순서를 의심한다.**
 
-## 17. 미디어 비율은 전부 가로다
+## 17. 의미 엘리먼트는 등장 래퍼 **안**에 둔다
+
+`MaskReveal`·`MediaReveal` 의 루트는 `div` 다. 밖에 두면 두 가지가 깨진다.
+
+- `<h1><MaskReveal>` → `h1` 안에 `div` 가 들어가 heading 의 콘텐츠 모델(phrasing content)을 위반한다.
+- 문단을 래퍼로만 감싸면 `div` 중첩이 되어 **접근성 트리에서 문단 경계가 사라진다.**
+
+```
+<MaskReveal className='text-hero'><h1>…</h1></MaskReveal>   ✅
+<h1><MaskReveal className='text-hero'>…</MaskReveal></h1>   ❌
+```
+
+크기 클래스는 래퍼에 건다(15절의 오버행 때문). `RevealText` 는 `span` 을 내므로 heading 안에 들어가도 된다.
+
+**섹션은 `aria-labelledby` 로 heading 과 잇는다.** 이름 없는 `<section>` 은 region 랜드마크로 노출되지 않아 랜드마크 목록 탐색에서 통째로 사라진다. `id` 만으로는 이름이 되지 않는다.
+
+## 18. 미디어 비율은 전부 가로다
 
 `--aspect-hero`(16/10) · `--aspect-thumbnail`(4/3) · `--aspect-gallery`(3/2). 세로가 하나라도 섞이면 Work Index 그리드와 Gallery rail 의 높이가 통째로 흔들린다. 세로 앱 스크린샷은 기기 목업 안에 얹어 가로 프레임으로 맞춘다.
 
@@ -119,7 +135,7 @@ transition 은 반대로 `1ms` 로 남긴다. reveal 이 transition 기반이라
 
 `src` 가 `null` 이면 `<img>` 를 **아예 만들지 않고** 자리표시 블록을 그린다. 빈 `src` 는 깨진 아이콘을 띄우고 스크린리더에도 잡힌다.
 
-## 18. Storybook
+## 19. Storybook
 
 - preview 는 앱과 **같은** `global.css` 를 import 한다. SB 전용 CSS 를 만들지 않는다.
 - `@storybook/nextjs-vite` 가 `next/font` 를 처리해 `@font-face` 를 런타임 주입하지만, **variable 클래스를 `<html>` 에 거는 건 우리 몫**이다. `--font-body` 가 `:root` 에서 해석되므로 하위 엘리먼트에 걸면 소용없다.
@@ -127,7 +143,7 @@ transition 은 반대로 `1ms` 로 남긴다. reveal 이 transition 기반이라
 - **판별 union props 는 스토리 args 로 그대로 쓸 수 없다.** Storybook 의 Args 추론이 union 을 교집합으로 접어 `never` 가 된다(`href?: never` × `href: string`). 판별자를 뺀 평평한 타입으로 `satisfies Meta<...>` 를 쓰고, 그 역할은 `render` 로 직접 그린다.
 - **`a11y: { test: 'error' }` 는 지금 아무것도 강제하지 않는다.** `@storybook/addon-vitest` 가 있어야 작동하는데 도입하지 않았다(플랜 3단계 결정). 대비비는 사람이 a11y 패널로 본다.
 
-## 19. Steiger
+## 20. Steiger
 
 CSS 만 든 세그먼트도 `fsd/public-api` 에 걸린다. `shared/styles` 는 `fonts.ts`·`index.ts` 가 있어 통과한다. CSS 만 두는 세그먼트를 새로 만들 계획이면 `index.ts` 를 같이 만든다.
 

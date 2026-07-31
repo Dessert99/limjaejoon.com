@@ -35,3 +35,20 @@ class NoopIntersectionObserver {
 
 globalThis.IntersectionObserver =
   NoopIntersectionObserver as unknown as typeof IntersectionObserver;
+
+// jsdom 29 에는 dialog 의 showModal·close 가 없다 — open 속성만 토글하는 최소 폴리필로 대체한다.
+// 포커스 가둠·Escape·backdrop 은 브라우저가 하는 일이라 흉내 내지 않는다. 그건 Storybook 에서 사람이 본다.
+const dialogPrototype = globalThis.HTMLDialogElement?.prototype;
+
+if (dialogPrototype && typeof dialogPrototype.showModal !== 'function') {
+  const open = function open(this: HTMLDialogElement): void {
+    this.setAttribute('open', '');
+  };
+
+  dialogPrototype.showModal = open;
+  dialogPrototype.show = open;
+  dialogPrototype.close = function close(this: HTMLDialogElement): void {
+    this.removeAttribute('open');
+    this.dispatchEvent(new Event('close'));
+  };
+}

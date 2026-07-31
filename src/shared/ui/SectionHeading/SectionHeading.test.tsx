@@ -38,6 +38,22 @@ describe('SectionHeading', () => {
     expect(screen.getByText('최근에 만든 것들.')).toBeInTheDocument();
   });
 
+  it('titleId 는 래퍼가 아니라 heading 에 붙는다', () => {
+    // 래퍼에 붙으면 aria-labelledby 가 label·description 까지 이름으로 끌어와 랜드마크 이름이 장황해진다
+    render(
+      <SectionHeading
+        titleId='work-title'
+        label='Work'
+        title='선택한 작업'
+        description='최근에 만든 것들.'
+      />
+    );
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: '선택한 작업' })
+    ).toHaveAttribute('id', 'work-title');
+  });
+
   it('label 과 description 이 없으면 빈 엘리먼트를 남기지 않는다', () => {
     const { container } = render(<SectionHeading title='선택한 작업' />);
 

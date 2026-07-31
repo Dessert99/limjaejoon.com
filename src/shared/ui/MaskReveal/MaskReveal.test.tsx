@@ -23,6 +23,26 @@ describe('MaskReveal', () => {
     expect(html).not.toContain('data-reveal="out"');
   });
 
+  it("trigger='mount' 는 관찰자 대신 로드 시점 등장으로 전환한다", () => {
+    // Hero 는 늘 화면 맨 위라 관찰자가 곧장 in 을 보고한다 — 뷰포트 트리거로는 아무 일도 일어나지 않는다
+    const { container } = render(
+      <MaskReveal trigger='mount'>첫 화면 문구</MaskReveal>
+    );
+
+    expect(container.querySelector('[data-enter]')).not.toBeNull();
+    expect(container.querySelector('[data-reveal]')).toBeNull();
+  });
+
+  it("trigger='mount' 는 서버 렌더에서도 같은 마크업이다", () => {
+    // CSS 애니메이션이라 JS 상태가 없다 — 미지원·스크립트 실패에서도 최종 상태로 남는다
+    const html = renderToStaticMarkup(
+      <MaskReveal trigger='mount'>첫 화면 문구</MaskReveal>
+    );
+
+    expect(html).toContain('첫 화면 문구');
+    expect(html).toContain('data-enter');
+  });
+
   it('stagger 배수는 최대 단계에서 멈춘다', () => {
     const { container } = render(
       <MaskReveal staggerIndex={STAGGER_MAX_STEPS + 5}>문장</MaskReveal>

@@ -132,10 +132,14 @@
   --breakpoint-2xl: 96rem;
 
   /* 여백도 clamp — 섹션 리듬이 모바일에서 과하지 않고 데스크톱에서 충분히 벌어져야 한다 */
+  /* 고정 헤더 높이 — 헤더가 이 값으로 서고 global.css 의 scroll-padding-top 이 같은 값을 뺀다 */
+  --spacing-header: 4.5rem;
   --spacing-gutter: clamp(1.25rem, 4vw, 3rem);
   --spacing-section: clamp(6rem, 12vw, 12rem);
   --spacing-section-sm: clamp(3rem, 6vw, 6rem);
   --spacing-grid-gap: clamp(1.5rem, 3vw, 3rem);
+  /* Gallery rail 한 칸 — clamp 하나로 모바일·데스크톱을 덮어 브레이크포인트가 필요 없다 */
+  --spacing-rail-item: clamp(16rem, 45vw, 34rem);
 }
 
 /* controlled bleed — Container 의 gutter 만 되돌린다. 100vw 계열은 스크롤바 폭까지 세어 가로 오버플로를 만든다 */

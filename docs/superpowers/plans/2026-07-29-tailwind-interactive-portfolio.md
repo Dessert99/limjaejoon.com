@@ -17,8 +17,8 @@
 | 1. 조사와 계획 | 완료 | — |
 | 2. Foundation + Storybook | 완료 (사람 확인 대기) | `2846a95`…`e8bf14c` (6커밋) |
 | 3. 공통 UI 와 Effect | 완료 (사람 확인 대기) | `5536c66` |
-| 4. 콘텐츠 구조 + Media | 완료 (**콘텐츠는 전부 더미**) |  |
-| 5. 홈 페이지 조립 | 미착수 (잠정) |  |
+| 4. 콘텐츠 구조 + Media | 완료 (**콘텐츠는 전부 더미**) | `31566e2` |
+| 5. 홈 페이지 조립 | 완료 (**콘텐츠는 더미**) |  |
 | 6. 시각·성능 조정 | 미착수 (잠정) |  |
 
 ## 공통 규칙
@@ -393,41 +393,82 @@ priority : <img alt="p" decoding="async" data-nimg="fill" …>          ← load
 - **Hero 의 로드 시점 등장은 `useInView` 로 안 된다.** 이미 보이는 요소는 애니메이션하지 않는다(3단계 기록 참고).
 - 블로그 라우트가 서면 `navItems.ts` 와 `site.ts` 에 한 줄씩 더한다.
 
-## 5단계 — 홈 페이지 조립 (잠정)
+## 5단계 — 홈 페이지 조립
 
 ### 범위
 
 ```
-Navigation  Hero  Introduction  Work Index  Gallery  Contact
+widgets/site-navigation/ui/SiteNavigation.tsx
+pages/home/ui/HeroSection/  IntroductionSection/  WorkSection/  GallerySection/  ContactSection/
+pages/home/ui/HomePage.tsx
+pages/home/config/work.ts  gallery.ts        (4단계 config 에 두 개 추가)
 ```
 
-각 섹션의 layer·slice 는 프로젝트 컨벤션을 근거로 결정한다. Navigation 은 `widgets/site-navigation`, 나머지 섹션은 `pages/home/ui/{Section}/`.
+### 결정 — Work Index 는 4안 중 "행 내부 thumbnail"
 
-### 섹션별 주의
+판단 기준 셋을 다 통과하는 유일한 안이었다.
 
-**Navigation** — 데스크톱·모바일 분기, hover dot 또는 mask text transition, focus-visible. 모바일 메뉴는 **네이티브 `<dialog>` 로 먼저 시도**하고 부족할 때만 `radix-ui` 를 넣는다. fixed / sticky 선택 이유를 코드 주석에 남긴다.
+- **키보드 접근성** — 커서 추적 preview 는 포인터 위치에만 존재해 키보드로 닿을 방법이 없다.
+- **모바일 정보 손실 없음** — hover 로 여는 preview 는 터치에서 통째로 사라진다. 썸네일을 행 안에 늘 두면 그 문제가 없다.
+- **제목 길이와 이미지 비율** — 제목이 2~17자로 흩어져 있어 고정 preview 옆에 제목만 세우는 안은 짧은 제목에서 여백이 비고 긴 제목에서 넘친다. 썸네일 5 / 본문 7 비대칭 그리드는 양쪽을 다 받는다.
 
-**Hero** — `min-h-svh`(= `min-height: 100svh`. `min-h-100svh` 는 존재하지 않는 클래스라 조용히 무시된다), full-bleed media, oversized fluid title(marquee 가능). 등장 순서는 media → supporting text → title. 모바일은 모션 단순화. **preloader 금지.**
+**hover 는 정보를 추가하지 않는다.** 설명·기여·기간·스택이 전부 처음부터 보인다.
 
-**Introduction** — 데스크톱 비대칭 grid, 모바일 single column. statement 는 RevealText, supporting copy 는 약한 fade 또는 MaskReveal. ShowcaseButton 포함.
+### 결정 — Gallery rail 은 `overflow-hidden` 이 아니라 `overflow-x-auto`
 
-**Work Index** — 커서 추적 preview 금지. 4안(행 내부 thumbnail / 고정 preview / 텍스트 중심 / hover 행 내부 확대) 중 실제 콘텐츠에 맞는 것을 고른다. 판단 기준은 키보드 접근성, 모바일 정보 손실 없음, 제목 길이와 이미지 비율. 레퍼런스를 그대로 복제하지 않는다. 데이터는 `entities/project` public API 로 주입.
+플랜 원문은 "overflow hidden" 이었지만 설계 9절이 "horizontal rail 은 키보드로 스크롤 가능해야 한다" 고 못 박았다. 둘은 같이 갈 수 없다.
 
-**Gallery** — 2개 이상 rail, 반대 방향, 세로 scroll progress → x transform, viewport 보다 넓게, overflow hidden. **scroll pinning 금지, 세로 스크롤 가로채기 금지.** reduced-motion 에서는 정적 grid.
+`overflow-x-auto` + `tabindex=0` + `aria-label` 로 바꾸면 세 가지가 한꺼번에 풀린다.
 
-**Contact** — surface inverse, 대형 문구, ShowcaseButton 또는 명확한 이메일 링크, social links, footer landmark. 약한 parallax 가능, magnetic 금지.
+- 키보드로 좌우 이동이 된다(설계 9절 요구).
+- **감쇠에서 정보가 안 빠진다.** `animation-name: none` 으로 흐름이 멈춰도 화면 밖 항목을 직접 훑을 수 있다. `overflow-hidden` 이었다면 감쇠 사용자에게 뒤쪽 항목이 영구히 잘린다.
+- "감쇠에서는 정적 grid" 라는 별도 분기가 필요 없어진다.
 
-### 공통 금지
+### 실측 결과
 
-새 arbitrary color · 섹션 안에서 기존 Effect 재구현 · 한 요소에 복수 transform owner · 모바일 hover 의존 · 임시 placeholder.
+**배럴이 Server Component 그래프를 오염시켰다.** 조립하기 전까지는 드러나지 않던 문제다.
 
-### 검증
+```
+./src/shared/lib/navigation.ts
+x You're importing a module that depends on `usePathname` into a React Server Component module.
+```
 
-`HomePage.test.tsx` 재작성부터 시작한다 — 현재 "section 0개" 계약이 여기서 깨진다. 그 뒤 type-check · lint · Storybook build · application build · 키보드 확인 · a11y addon · responsive.
+`HomePage`(서버) → `@/shared/ui` → `@/shared/lib` 배럴 → `navigation.ts`·`useInView.ts`(클라이언트 훅). `folder-structure.md` 3절이 적어 둔 "서버 코드가 섞인 배럴이 클라 번들을 오염시킨다" 의 **거울상**이다. 두 파일에 `'use client'` 를 달아 사실을 진술하는 것으로 풀었다.
 
-섹션마다 스토리: Desktop · Tablet · Mobile · Reduced motion · Long content · surface 양쪽.
+**`npm run test` 는 이걸 못 잡는다.** Vitest 는 RSC 경계를 모른다. `npm run build` 가 유일한 검출 수단이라 단계 종료 검증에서 build 를 빼면 안 된다.
 
----
+**light surface 의 `text-subtle` 이 대비 미달이었다.** `--ds-neutral-500`(#807a70) on `--ds-neutral-50`(#f7f5f2) = **3.91:1** 로 본문 기준 4.5:1 에 못 미친다. `--ds-neutral-600` 으로 올려 6.10:1 이 됐다. 다크 쪽은 6.59:1 로 원래 통과였다.
+
+자동 검사가 없어 사람이 봐야 하는 지점이라고 3단계에 적어 뒀는데, 실제로 사람 눈이 아니라 **리뷰가 계산해서** 잡았다. 6단계 대비비 점검을 계속 못 박아 둔다.
+
+### 계획과 달랐던 것
+
+- **`MaskReveal` 에 `trigger='mount'` 를 열었다.** Hero 는 늘 화면 맨 위라 `useInView` 가 곧장 `in` 을 보고한다 — 뷰포트 트리거로는 **아무 일도 일어나지 않는 죽은 껍데기**였다. 3단계에서 "로드 시점 등장은 5단계에서 판단" 으로 넘긴 항목의 답이다. CSS 애니메이션(`[data-enter]`)이라 JS 상태가 없고 서버 렌더 마크업이 그대로다. `useInView` 에는 `enabled` 옵션을 더해 트리거가 뷰포트가 아닐 때 관찰자를 헛돌리지 않게 했다.
+- **Hero 배경의 `MediaReveal` 은 걷어냈다.** 같은 이유로 죽은 구조였고, 실물 이미지도 없어 빈 블록에 마스크를 걸 이유가 없었다. 필요해지면 `MediaReveal` 에도 `trigger` 를 연다.
+- **의미 엘리먼트를 등장 래퍼 *안*으로 넣었다.** `<h1><MaskReveal>` 은 heading 의 콘텐츠 모델을 위반하고(래퍼 루트가 `div`), 문단을 래퍼로만 감싸면 접근성 트리에서 문단 경계가 사라진다. style-foundation 17절에 규칙으로 올렸다.
+- **모든 섹션에 `aria-labelledby` 를 달았다.** 이름 없는 `<section>` 은 region 랜드마크로 노출되지 않아 랜드마크 목록 탐색에서 통째로 사라진다. `id` 만으로는 이름이 되지 않는다.
+- **섹션은 `tabIndex={-1}` 를 갖는다.** 내비게이션이 메뉴를 닫은 뒤 목적지로 포커스를 옮기기 위한 것이다. 이게 없으면 화면만 스크롤되고 포커스는 뒤에 남는다.
+- **`--spacing-header` 토큰이 생겼다.** fixed 헤더라 앵커로 이동하면 목적지 윗동이 헤더 뒤로 숨는다. 헤더가 이 값으로 서고 `html { scroll-padding-top }` 이 같은 값을 뺀다 — 출처가 하나다.
+- **`html:has(dialog[open]) { overflow: hidden }`.** `showModal()` 은 바깥을 inert 로 만들 뿐 스크롤은 안 막는다. CSS 로 두면 Escape 로 닫혀도 저절로 풀린다 — JS 상태로 잠그면 그 경로에서 새기 쉽다.
+- **Radix 는 넣지 않았다.** 네이티브 `<dialog>` + `showModal()` 로 Escape·포커스 가둠·backdrop 이 다 됐다. 다만 **jsdom 29 에는 `showModal` 자체가 없어** 단위 테스트는 열고 닫는 배선까지만 본다(폴리필을 `vitest.setup.ts` 에 깔았다). 포커스가 실제로 갇히는지는 Storybook 에서 사람이 확인한다.
+
+### 이 단계 종료 후 사람이 볼 것
+
+`npm run dev` 로 **실제 페이지**를 본다. 스크롤 감각은 Storybook 에서 판단되지 않는다(3단계 기록 참고).
+
+- Hero 등장 순서(보조문 → 제목 → 지역)가 자연스러운지, 새로고침마다 반복되는 게 거슬리지 않는지
+- 어두운 Hero → 밝은 Introduction → 어두운 Work → 어두운 Gallery → 밝은 Contact 의 명암 리듬
+- Work Index 에서 17자 제목이 레이아웃을 깨지 않는지
+- Gallery rail 두 줄이 반대로 흐르는 게 보이는지, 손으로 훑을 때 걸리지 않는지
+- 모바일 메뉴에서 Tab 이 메뉴 밖으로 새지 않는지, Escape 로 닫히는지
+- **375 / 430 / 768 / 1024 / 1440px 에서 가로 오버플로**
+
+### 6단계로 넘기는 주의사항
+
+- **더미 교체가 여전히 배포 전 필수 관문이다.**
+- **대비비 수동 검증** — 이번에 light `text-subtle` 이 실제로 미달이었다. 나머지 조합도 같은 방식으로 다 확인한다.
+- **모션 수치 전부 미확정** — 마스크 속도, stagger 간격, rail 이동 거리(6%), MediaReveal scale(1.15) 모두 실물 없이 정한 값이다.
+- `npm run build` 를 단계 검증에서 빼지 않는다. RSC 경계 위반은 build 만 잡는다.
 
 ## 6단계 — 시각 완성도와 성능 (잠정)
 

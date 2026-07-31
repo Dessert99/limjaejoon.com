@@ -148,6 +148,16 @@ describe('useInView', () => {
     expect(spy.disconnected).toBe(true);
   });
 
+  it('enabled 가 false 면 관찰을 시작하지 않는다', () => {
+    // 로드 시점 등장처럼 뷰포트와 무관한 트리거를 쓸 때 관찰자를 헛돌리지 않는다
+    stubObserver();
+
+    const { result, spy } = mount({ enabled: false });
+
+    expect(result.current).toBe('idle');
+    expect(spy).toBeUndefined();
+  });
+
   it('IntersectionObserver 가 없으면 은닉하지 않고 idle 에 머문다', () => {
     vi.stubGlobal('IntersectionObserver', undefined);
 

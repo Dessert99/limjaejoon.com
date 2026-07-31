@@ -1,3 +1,7 @@
+'use client';
+
+// 'use client' 는 사실 진술이다 — 이 훅은 클라이언트에서만 돈다.
+// 없으면 shared/lib 배럴을 거쳐 Server Component 그래프로 딸려 들어가 빌드가 깨진다.
 /** 뷰포트 진입 감지 — scroll 리스너를 직접 달지 않고 IntersectionObserver 하나로만 본다 */
 import { useEffect, useRef, useState } from 'react';
 import { IN_VIEW_DEFAULTS } from './motionPreset';
@@ -5,10 +9,12 @@ import { IN_VIEW_DEFAULTS } from './motionPreset';
 /** idle 은 "아직 JS 가 개입하지 않음" — 이 상태에만 은닉 스타일이 걸리지 않아 SSR·미지원 환경에서 콘텐츠가 남는다 */
 export type InViewState = 'idle' | 'out' | 'in';
 
+/** enabled=false 는 관찰 자체를 안 건다 — 트리거가 뷰포트가 아닐 때 관찰자를 헛돌리지 않기 위한 스위치다 */
 type UseInViewOptions = {
   rootMargin?: string;
   threshold?: number;
   once?: boolean;
+  enabled?: boolean;
 };
 
 /** 등장 애니메이션의 상태원 — CSS view timeline 은 되감으면 같이 되감겨 once 를 만들 수 없다 */
@@ -16,6 +22,7 @@ export const useInView = <T extends HTMLElement>({
   rootMargin = IN_VIEW_DEFAULTS.rootMargin,
   threshold = IN_VIEW_DEFAULTS.threshold,
   once = IN_VIEW_DEFAULTS.once,
+  enabled = true,
 }: UseInViewOptions = {}) => {
   const ref = useRef<T>(null);
   const [state, setState] = useState<InViewState>('idle');
@@ -23,7 +30,7 @@ export const useInView = <T extends HTMLElement>({
   useEffect(() => {
     const element = ref.current;
 
-    if (!element) {
+    if (!element || !enabled) {
       return;
     }
 
@@ -57,7 +64,7 @@ export const useInView = <T extends HTMLElement>({
     return () => {
       observer.disconnect();
     };
-  }, [rootMargin, threshold, once]);
+  }, [rootMargin, threshold, once, enabled]);
 
   return [ref, state] as const;
 };

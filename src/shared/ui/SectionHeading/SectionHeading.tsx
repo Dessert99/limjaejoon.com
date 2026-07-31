@@ -8,6 +8,7 @@ type SectionHeadingProps = Omit<ComponentPropsWithRef<'div'>, 'title'> & {
   title: ReactNode;
   description?: ReactNode;
   level?: 2 | 3;
+  titleId?: string;
 };
 
 const HEADING_TAG = { 2: 'h2', 3: 'h3' } as const;
@@ -18,6 +19,7 @@ export function SectionHeading({
   title,
   description,
   level = 2,
+  titleId,
   className,
   ...rest
 }: SectionHeadingProps) {
@@ -31,7 +33,12 @@ export function SectionHeading({
         <p className='text-label text-subtle uppercase'>{label}</p>
       ) : null}
       {/* break-keep — 한글은 어절 중간에서 끊기면 읽기가 급격히 나빠진다 */}
-      <Heading className='text-section break-keep'>{title}</Heading>
+      {/* id 는 heading 에 붙는다 — 래퍼에 붙이면 aria-labelledby 가 label·description 까지 이름으로 끌어온다 */}
+      <Heading
+        id={titleId}
+        className='text-section break-keep'>
+        {title}
+      </Heading>
       {description ? (
         <p className='text-body-lg break-keep text-muted'>{description}</p>
       ) : null}
