@@ -10,9 +10,9 @@
 
 스타일은 Tailwind CSS v4 토큰 계층을 쓴다. primitive/semantic 경계, 섹션 반전, 모션 규칙은 [style-foundation.md](docs/conventions/style-foundation.md) 참고. 토큰 값 자체는 `src/shared/styles/*.css` 가 유일한 출처다.
 
-`src/shared/ui/` 컴포넌트를 새로 만들거나 공개 API를 바꿀 때는 `composition-patterns` 스킬을 먼저 호출한다. boolean prop 누적 대신 합성(compound) 구조를 쓴다.
+컴포넌트 공개 API를 새로 만들거나 바꿀 때는 [composition-convention.md](docs/conventions/composition-convention.md)를 먼저 읽는다. **기본값은 단일 컴포넌트이고 compound는 예외다** — 소비자가 1곳이면 대상이 아니며, 그때 필요한 건 조립 자유도가 아니라 이름이다. RSC·React Compiler 제약(context·ref)도 같은 문서에 있다.
 
-모든 파일·로직에는 [comment-convention.md](docs/conventions/comment-convention.md)에 따라 주석을 남긴다. 파일 헤더와 모든 export는 단일 라인 JSDoc(`/** ... */`), 본문 안 비자명 로직은 한 줄 `//` 주석으로 WHY(의도·함정)를 적는다. 멀티라인 블록·`@param` 태그·코드 받아쓰기는 금지.
+주석은 파일 헤더와 모든 export에 단일 라인 JSDoc(`/** ... */`), 함수 본문 안 비자명 로직에 한 줄 `//`로 WHY(의도·함정)를 적는다. 본문은 한국어, 식별자는 영어. 멀티라인 블록·`@param`/`@returns` 태그·코드 받아쓰기(WHAT)는 금지 — 한 줄에 안 들어가면 주석 문제가 아니라 코드 분리·네이밍 신호다. 기초 개념(`fail-fast`, `barrel` 등)도 풀어쓰지 말고 한 줄 안에 단어로 녹인다. 단순 re-export만 하는 `index.ts`와 자명한 줄에는 달지 않는다. 보안 위험·법적 구속처럼 길게 풀 정당한 이유가 있을 때만 멀티라인을 허용한다.
 
 ## 개발 명령어
 

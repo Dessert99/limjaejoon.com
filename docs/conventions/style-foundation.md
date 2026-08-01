@@ -101,17 +101,7 @@ transition 은 반대로 `1ms` 로 남긴다. reveal 이 transition 기반이라
 
 오버행이 `em` 기준이라 **글자 크기 클래스는 자식이 아니라 마스크 컴포넌트에 건다.**
 
-## 16. 컴포넌트가 소유한 props 는 `{...rest}` 에 밀리지 않게 둔다
-
-`{...rest}` 는 앞에 쓴 것을 조용히 덮는다. 에러가 안 나서 발견이 늦다. 지금까지 세 번 밟았다.
-
-- **`ref`** — `MaskReveal`·`RevealText`·`MediaReveal` 의 루트 ref 는 IntersectionObserver 몫이다. 소비자 ref 가 덮으면 등장이 영원히 `idle` 로 죽는다. 세 컴포넌트만 `ComponentPropsWithoutRef` 로 ref 를 아예 안 연다.
-- **`type`** — `<button>` 의 `type` 은 `{...rest}` **뒤에** 두고 `?? 'button'` 으로 받는다. `type={undefined}` 가 흘러들면 속성이 지워져 form 안에서 브라우저 기본값 `submit` 이 되살아난다.
-- **`style`** — 같은 엘리먼트가 `style` 로 CSS 변수를 넘긴다면 `{...rest}` 뒤에서 병합한다(`{ ...style, ...소유값 }`). `MediaReveal` 은 마스크 층만 `--stagger` 를 잃어 안쪽 scale 층과 어긋났었다.
-
-기준: **한 엘리먼트에 컴포넌트 소유 prop 과 `{...rest}` 가 같이 있으면 순서를 의심한다.**
-
-## 17. 의미 엘리먼트는 등장 래퍼 **안**에 둔다
+## 16. 의미 엘리먼트는 등장 래퍼 **안**에 둔다
 
 `MaskReveal`·`MediaReveal` 의 루트는 `div` 다. 밖에 두면 두 가지가 깨진다.
 
@@ -127,7 +117,7 @@ transition 은 반대로 `1ms` 로 남긴다. reveal 이 transition 기반이라
 
 **섹션은 `aria-labelledby` 로 heading 과 잇는다.** 이름 없는 `<section>` 은 region 랜드마크로 노출되지 않아 랜드마크 목록 탐색에서 통째로 사라진다. `id` 만으로는 이름이 되지 않는다.
 
-## 18. 미디어 비율은 전부 가로다
+## 17. 미디어 비율은 전부 가로다
 
 `--aspect-hero`(16/10) · `--aspect-thumbnail`(4/3) · `--aspect-gallery`(3/2). 세로가 하나라도 섞이면 Work Index 그리드와 Gallery rail 의 높이가 통째로 흔들린다. 세로 앱 스크린샷은 기기 목업 안에 얹어 가로 프레임으로 맞춘다.
 
@@ -135,15 +125,16 @@ transition 은 반대로 `1ms` 로 남긴다. reveal 이 transition 기반이라
 
 `src` 가 `null` 이면 `<img>` 를 **아예 만들지 않고** 자리표시 블록을 그린다. 빈 `src` 는 깨진 아이콘을 띄우고 스크린리더에도 잡힌다.
 
-## 19. Storybook
+## 18. Storybook
 
 - preview 는 앱과 **같은** `global.css` 를 import 한다. SB 전용 CSS 를 만들지 않는다.
 - `@storybook/nextjs-vite` 가 `next/font` 를 처리해 `@font-face` 를 런타임 주입하지만, **variable 클래스를 `<html>` 에 거는 건 우리 몫**이다. `--font-body` 가 `:root` 에서 해석되므로 하위 엘리먼트에 걸면 소용없다.
 - Foundation story 는 값을 적지 않고 `document.styleSheets` 에서 토큰 이름을 훑는다. 토큰을 늘려도 스토리는 그대로 따라온다.
 - **판별 union props 는 스토리 args 로 그대로 쓸 수 없다.** Storybook 의 Args 추론이 union 을 교집합으로 접어 `never` 가 된다(`href?: never` × `href: string`). 판별자를 뺀 평평한 타입으로 `satisfies Meta<...>` 를 쓰고, 그 역할은 `render` 로 직접 그린다.
+- **compound 도 args 로 표현되지 않는다.** 부품 조립은 값이 아니라 구조라서 args 에 실을 수 없다. `component` 는 `Root` 로 두고 모든 스토리를 `render` 로 그린다(`SectionHeading.stories.tsx`). 조립 자유도를 보여주는 스토리를 하나 둔다 — 실제 소비자가 쓰는 변형이어야 한다.
 - **`a11y: { test: 'error' }` 는 지금 아무것도 강제하지 않는다.** `@storybook/addon-vitest` 가 있어야 작동하는데 도입하지 않았다(플랜 3단계 결정). 대비비는 사람이 a11y 패널로 본다.
 
-## 20. Steiger
+## 19. Steiger
 
 CSS 만 든 세그먼트도 `fsd/public-api` 에 걸린다. `shared/styles` 는 `fonts.ts`·`index.ts` 가 있어 통과한다. CSS 만 두는 세그먼트를 새로 만들 계획이면 `index.ts` 를 같이 만든다.
 

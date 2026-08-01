@@ -29,13 +29,13 @@
 `pages/{slice}`, `widgets/{slice}`, `features/{slice}`, `entities/{slice}` 는 필요한 segment 만 만든다.
 
 ```
-features/{slice}/
+entities/post/
 ├── ui/                 # 이 slice 의 화면 컴포넌트
 ├── api/                # 외부 데이터 소스 경계 (요청 함수)
-│   ├── getProblems.ts        # 조회 요청 함수(fetcher)
-│   └── createProblem.ts      # 변경 요청 함수
+│   ├── publicPosts.ts        # 조회 요청 함수(fetcher)
+│   └── adminPosts.ts         # 변경 요청 함수
 ├── model/              # 상태, schema 등 도메인 모델
-│   └── problem.types.ts      # slice 밖에서 공유되는 앱-facing 타입
+│   └── post.types.ts         # slice 밖에서 공유되는 앱-facing 타입
 ├── lib/                # 이 slice 전용 유틸
 └── config/             # 이 slice 전용 설정
 ```

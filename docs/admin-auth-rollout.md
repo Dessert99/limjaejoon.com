@@ -2,6 +2,8 @@
 
 Supabase Auth + RLS 기반 어드민 인증을 로컬/원격에 적용할 때의 운영 절차. 설계 근거는 [스펙](superpowers/specs/2026-07-23-admin-auth-design.md), 구현은 [계획](superpowers/plans/2026-07-24-admin-auth.md) 참고.
 
+> **지금은 서버 계층만 있다.** 디자인 시스템 철거로 `/admin/login` 화면이 사라졌고 API 라우트(`app/api/admin/*`)·RLS·통합 테스트만 남았다. 아래에서 **원격 마이그레이션·Auth 설정·운영자 계정** 절은 지금 그대로 유효하고, `/admin/login` 을 거치는 항목은 화면을 다시 세운 뒤에 수행한다.
+
 ## 로컬 (.env.local)
 
 - [ ] `LOCAL_POST_IMAGE_BUCKET=post-images` 로 맞춘다. (버킷명을 로컬/원격 `post-images` 로 통일했다. `.env.local` 은 수동 관리라 `post-images-local` 로 남아 있을 수 있다.)
