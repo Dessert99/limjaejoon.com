@@ -4,7 +4,14 @@
 // 없으면 shared/lib 배럴을 거쳐 Server Component 그래프로 딸려 들어가 빌드가 깨진다.
 /** 뷰포트 진입 감지 — scroll 리스너를 직접 달지 않고 IntersectionObserver 하나로만 본다 */
 import { useEffect, useRef, useState } from 'react';
-import { IN_VIEW_DEFAULTS } from './motionPreset';
+
+// 등장 시점은 rootMargin 한 곳으로만 늦춘다(아래 15%)
+// threshold 는 0 이다 — 뷰포트보다 큰 요소는 비율이 임계치에 영원히 못 닿아 등장 자체가 사라진다
+const IN_VIEW_DEFAULTS = {
+  rootMargin: '0px 0px -15% 0px',
+  threshold: 0,
+  once: true,
+} as const;
 
 /** idle 은 "아직 JS 가 개입하지 않음" — 이 상태에만 은닉 스타일이 걸리지 않아 SSR·미지원 환경에서 콘텐츠가 남는다 */
 export type InViewState = 'idle' | 'out' | 'in';

@@ -19,22 +19,21 @@ afterEach(() => {
   cleanup();
 });
 
-// jsdom 에는 IntersectionObserver 가 없다 — 무동작 스텁으로 마운트만 통과시키고,
-// 교차를 실제로 제어해야 하는 테스트는 vi.stubGlobal 로 각자 덮어쓴다.
-class NoopIntersectionObserver {
-  readonly root = null;
-  readonly rootMargin = '';
-  readonly thresholds: readonly number[] = [];
-  observe(): void {}
-  unobserve(): void {}
-  disconnect(): void {}
-  takeRecords(): IntersectionObserverEntry[] {
-    return [];
-  }
-}
-
-globalThis.IntersectionObserver =
-  NoopIntersectionObserver as unknown as typeof IntersectionObserver;
+// jsdom 에는 matchMedia 가 없다 — gsap.matchMedia() 가 마운트 단계에서 터진다.
+// 전부 false 로 답해 (prefers-reduced-motion: no-preference) 가 안 걸리게 한다
+// — 테스트는 마크업 계약만 보고 애니메이션 생성은 브라우저 몫으로 남긴다.
+globalThis.matchMedia = ((query: string) => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  };
+}) as unknown as typeof matchMedia;
 
 // jsdom 29 에는 dialog 의 showModal·close 가 없다 — open 속성만 토글하는 최소 폴리필로 대체한다.
 // 포커스 가둠·Escape·backdrop 은 브라우저가 하는 일이라 흉내 내지 않는다. 그건 Storybook 에서 사람이 본다.
