@@ -1,17 +1,14 @@
 'use client';
 
-/** 텍스트 등장 — 각 조각의 바깥이 overflow, 안쪽이 translate 를 소유한다(설계 7.3) */
-import {
-  Fragment,
-  type ComponentPropsWithoutRef,
-  type CSSProperties,
-} from 'react';
-import { cn, staggerIndex, useInView } from '@/shared/lib';
+/** 텍스트 등장 — 각 조각의 바깥이 overflow, 안쪽이 y 를 소유한다 */
+import { Fragment, useRef, type ComponentPropsWithoutRef } from 'react';
+import { cn } from '@/shared/lib';
+import { MOTION, gsap, useGSAP } from '../../lib';
 
 /** character 는 조각 사이에 줄바꿈 기회가 없다 — 한 줄에 들어가는 짧은 문구에만 쓴다 */
 type RevealUnit = 'line' | 'word' | 'character';
 
-/** ref 는 열지 않는다 — 루트 ref 는 관찰자 몫이라 소비자 ref 가 덮으면 등장이 조용히 죽는다 */
+/** ref 는 열지 않는다 — 루트 ref 는 애니메이션 scope 몫이라 소비자 ref 가 덮으면 등장이 조용히 죽는다 */
 type RevealTextProps = Omit<ComponentPropsWithoutRef<'span'>, 'children'> & {
   children: string;
   unit?: RevealUnit;
@@ -51,13 +48,45 @@ export function RevealText({
   className,
   ...rest
 }: RevealTextProps) {
-  const [ref, state] = useInView<HTMLSpanElement>({ once });
+  const rootRef = useRef<HTMLSpanElement>(null);
   const parts = splitText(children, unit);
   const display = UNIT_DISPLAY[unit];
 
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+
+      if (!root) {
+        return;
+      }
+
+      const media = gsap.matchMedia();
+
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        // 오버행만큼 더 내려야 한다 — 100% 만 내리면 디센더 여백에 글자 윗동이 비친다
+        const overhang =
+          getComputedStyle(root).getPropertyValue('--mask-overhang').trim() ||
+          '0px';
+
+        gsap.from('[data-reveal]', {
+          yPercent: 100,
+          y: overhang,
+          duration: MOTION.duration.reveal,
+          ease: MOTION.ease.reveal,
+          // amount 가 총 시차를 자른다 — 조각이 많아도 마지막이 하염없이 밀리지 않는다
+          stagger: { each: MOTION.stagger.step, amount: MOTION.stagger.total },
+          scrollTrigger: { trigger: root, start: 'top 85%', once },
+        });
+      });
+
+      return () => media.revert();
+    },
+    { scope: rootRef }
+  );
+
   return (
     <span
-      ref={ref}
+      ref={rootRef}
       className={cn('block break-keep', className)}
       {...rest}>
       <span className='sr-only'>{children}</span>
@@ -66,12 +95,10 @@ export function RevealText({
           return (
             <Fragment key={`${index}-${part}`}>
               <span className={cn('mask-track', display)}>
+                {/* 은닉 스타일이 마크업에 없다 — gsap.from 이 마운트 뒤에 시작 상태를 심는다 */}
                 <span
-                  // idle 에 해당하는 CSS 규칙은 없다 — 서버 렌더와 미지원 환경이 이 상태에 머문다
-                  data-reveal={state}
-                  style={{ '--stagger': staggerIndex(index) } as CSSProperties}
+                  data-reveal=''
                   className={cn(
-                    'transition-transform stagger-delay duration-slow ease-reveal',
                     display,
                     // 공백 자체가 조각이 되는 유일한 단위라 접힘을 막아야 한다
                     unit === 'character' && 'whitespace-pre'

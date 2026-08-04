@@ -46,22 +46,6 @@
   margin-block-end: calc(-1 * var(--mask-overhang));
 }
 
-/* stagger — RevealText 가 아직 CSS 로 돈다. GSAP 이관이 끝나면 사라진다 */
-@utility stagger-delay {
-  transition-delay: calc(var(--stagger, 0) * var(--ds-duration-100));
-}
-
-/* 등장 상태 — 은닉이 translate 뿐이라 스크립트가 죽어도 콘텐츠가 사라지지 않는다 */
-/* 오버행만큼 더 내려야 한다 — 100% 만 내리면 디센더 여백에 글자 윗동이 비친다 */
-/* 값이 out·in 일 때만 걸린다 — GSAP 이 쓰는 빈 data-reveal 과 서로 안 부딪힌다 */
-[data-reveal='out'] {
-  translate: 0 calc(100% + var(--mask-overhang, 0px));
-}
-
-[data-reveal='in'] {
-  translate: 0 0;
-}
-
 /* MediaReveal 의 clip-path 와 scale 은 컴포넌트가 GSAP 타임라인으로 소유한다 */
 
 /* Parallax — translate 만 소유한다. 부모가 overflow-hidden 이고 자식이 오버스캔돼야 빈 영역이 드러나지 않는다 */

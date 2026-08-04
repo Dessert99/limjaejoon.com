@@ -1,12 +1,8 @@
 /** Introduction — 밝은 섹션. 어두운 Hero 와의 대비가 이 페이지의 리듬을 만든다 */
 import { INTRODUCTION } from '../../config/introduction';
-import {
-  Container,
-  RevealText,
-  SectionHeading,
-  ShowcaseButton,
-} from '@/shared/ui';
+import { Container, SectionHeading, ShowcaseButton } from '@/shared/ui';
 import { MaskReveal } from '../MaskReveal/MaskReveal';
+import { RevealText } from '../RevealText/RevealText';
 
 // 섹션을 region 랜드마크로 만들려면 이름이 필요하다 — id 만으로는 랜드마크 목록에 안 뜬다
 const TITLE_ID = 'about-title';
