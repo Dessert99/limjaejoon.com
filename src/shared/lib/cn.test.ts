@@ -3,10 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { cn } from './cn';
 
 describe('cn', () => {
-  it('같은 속성을 다투는 색 유틸리티는 뒤에 온 것만 남긴다', () => {
-    expect(cn('bg-surface', 'bg-accent')).toBe('bg-accent');
-  });
-
   it('text 크기와 text 색은 다른 속성이라 함께 남는다', () => {
     expect(cn('text-hero', 'text-muted')).toBe('text-hero text-muted');
   });

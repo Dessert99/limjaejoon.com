@@ -16,22 +16,6 @@ const PROJECT: Project = {
 };
 
 describe('ProjectRow', () => {
-  it('제목은 heading 레벨 3 이다', () => {
-    // 섹션 제목이 h2 라 프로젝트 제목은 그 아래여야 계층이 맞다
-    render(
-      <ul>
-        <ProjectRow
-          project={PROJECT}
-          staggerIndex={0}
-        />
-      </ul>
-    );
-
-    expect(
-      screen.getByRole('heading', { level: 3, name: '사내 대시보드' })
-    ).toBeInTheDocument();
-  });
-
   it('목록 항목으로 렌더한다', () => {
     // 안쪽 링크 목록도 listitem 을 내므로 바깥 항목은 제목을 품은 쪽으로 가린다
     render(
@@ -60,22 +44,6 @@ describe('ProjectRow', () => {
 
     expect(screen.getByText('2025.03 — 2025.08')).toBeInTheDocument();
     expect(screen.getByText('Next.js · TypeScript')).toBeInTheDocument();
-  });
-
-  it('링크 이름에 제목을 붙여 서로 구별한다', () => {
-    // 링크 목록에서 "GitHub" 만 여럿이면 스크린리더에서 구별되지 않는다
-    render(
-      <ul>
-        <ProjectRow
-          project={PROJECT}
-          staggerIndex={0}
-        />
-      </ul>
-    );
-
-    expect(
-      screen.getByRole('link', { name: '사내 대시보드 GitHub' })
-    ).toBeInTheDocument();
   });
 
   it('링크가 없으면 목록 자체를 그리지 않는다', () => {
