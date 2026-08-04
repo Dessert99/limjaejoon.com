@@ -2,11 +2,11 @@
 import { INTRODUCTION } from '../../config/introduction';
 import {
   Container,
-  MaskReveal,
   RevealText,
   SectionHeading,
   ShowcaseButton,
 } from '@/shared/ui';
+import { MaskReveal } from '../MaskReveal/MaskReveal';
 
 // 섹션을 region 랜드마크로 만들려면 이름이 필요하다 — id 만으로는 랜드마크 목록에 안 뜬다
 const TITLE_ID = 'about-title';

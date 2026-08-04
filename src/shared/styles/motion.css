@@ -46,30 +46,14 @@
   margin-block-end: calc(-1 * var(--mask-overhang));
 }
 
-/* stagger — JS 는 배수만 넘기고 지연 값 자체는 CSS 가 소유한다(토큰 중복 금지) */
+/* stagger — RevealText 가 아직 CSS 로 돈다. GSAP 이관이 끝나면 사라진다 */
 @utility stagger-delay {
   transition-delay: calc(var(--stagger, 0) * var(--ds-duration-100));
 }
 
-/* 로드 시점 등장 — 트리거가 뷰포트가 아니라 페이지 진입이라 JS 상태가 필요 없다 */
-/* fill: both 로 끝 상태에 머문다. 감쇠 가드가 animation-name 을 끄면 자연 위치(= 최종 위치)에 그대로 선다 */
-@keyframes mask-enter {
-  from {
-    translate: 0 calc(100% + var(--mask-overhang, 0px));
-  }
-  to {
-    translate: 0 0;
-  }
-}
-
-[data-enter] {
-  animation: mask-enter var(--ds-duration-1200) var(--ds-ease-reveal) both;
-  animation-delay: calc(var(--stagger, 0) * var(--ds-duration-200));
-}
-
 /* 등장 상태 — 은닉이 translate 뿐이라 스크립트가 죽어도 콘텐츠가 사라지지 않는다 */
 /* 오버행만큼 더 내려야 한다 — 100% 만 내리면 디센더 여백에 글자 윗동이 비친다 */
-/* @layer 밖이라 소비자의 translate-* 유틸리티를 확실히 이긴다(변환 소유권이 여기 있음을 뜻한다) */
+/* 값이 out·in 일 때만 걸린다 — GSAP 이 쓰는 빈 data-reveal 과 서로 안 부딪힌다 */
 [data-reveal='out'] {
   translate: 0 calc(100% + var(--mask-overhang, 0px));
 }

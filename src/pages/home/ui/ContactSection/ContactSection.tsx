@@ -1,12 +1,8 @@
 /** Contact — surface inverse 로 뒤집어 페이지를 닫는다. magnetic·커서 추적은 쓰지 않는다 */
 import { EMAIL } from '@/shared/config';
-import {
-  Container,
-  MaskReveal,
-  SectionHeading,
-  ShowcaseButton,
-} from '@/shared/ui';
+import { Container, SectionHeading, ShowcaseButton } from '@/shared/ui';
 import { CONTACT } from '../../config/contact';
+import { MaskReveal } from '../MaskReveal/MaskReveal';
 
 const TITLE_ID = 'contact-title';
 

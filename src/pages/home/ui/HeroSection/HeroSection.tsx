@@ -1,6 +1,7 @@
 /** Hero — 첫 화면. 등장 순서는 보조 문구 → 제목이고 로드 애니메이션(preloader)은 두지 않는다 */
 import { HERO } from '../../config/hero';
-import { Container, MaskReveal, Media } from '@/shared/ui';
+import { Container, Media } from '@/shared/ui';
+import { MaskReveal } from '../MaskReveal/MaskReveal';
 
 // 섹션을 region 랜드마크로 만들려면 이름이 필요하다 — id 만으로는 랜드마크 목록에 안 뜬다
 const TITLE_ID = 'hero-title';
