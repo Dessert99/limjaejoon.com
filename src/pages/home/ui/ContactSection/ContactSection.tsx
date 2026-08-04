@@ -13,8 +13,6 @@ const TITLE_ID = 'contact-title';
 export function ContactSection() {
   return (
     <section
-      id='contact'
-      tabIndex={-1}
       aria-labelledby={TITLE_ID}
       // 마지막 섹션만 밝게 뒤집어 페이지가 닫히는 느낌을 준다
       data-surface='light'

@@ -29,14 +29,4 @@ describe('HeroSection', () => {
     expect(screen.getByText(HERO.location)).toBeInTheDocument();
     expect(screen.getByText(HERO.availability)).toBeInTheDocument();
   });
-
-  it('내비게이션이 포커스를 옮길 수 있는 앵커 목적지다', () => {
-    // tabIndex=-1 이라야 프로그램적 포커스만 받고 탭 순서에는 안 들어간다
-    const { container } = render(<HeroSection />);
-
-    const section = container.querySelector('section');
-
-    expect(section).toHaveAttribute('id', 'top');
-    expect(section).toHaveAttribute('tabindex', '-1');
-  });
 });

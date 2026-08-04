@@ -9,6 +9,7 @@ const TITLE_ID = 'work-title';
 
 export function WorkSection() {
   return (
+    // Introduction 의 CTA 가 유일한 진입점이다 — tabIndex=-1 이라야 앵커 이동에 포커스가 따라온다
     <section
       id='work'
       tabIndex={-1}

@@ -14,8 +14,6 @@ const TITLE_ID = 'about-title';
 export function IntroductionSection() {
   return (
     <section
-      id='about'
-      tabIndex={-1}
       aria-labelledby={TITLE_ID}
       // 컴포넌트는 자기가 밝은 곳에 있는지 모른다 — 반전은 이 한 속성이 담당한다(설계 4.4)
       data-surface='light'

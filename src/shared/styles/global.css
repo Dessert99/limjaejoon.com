@@ -36,17 +36,8 @@
   html {
     color-scheme: dark;
 
-    /* 헤더가 fixed 라 앵커로 이동하면 목적지 윗동이 헤더 뒤로 숨는다 — 그만큼 미리 비운다 */
-    scroll-padding-top: var(--spacing-header);
-
-    /* 아래 스크롤 잠금이 걸릴 때 스크롤바가 사라지며 생기는 가로 흔들림을 막는다 */
+    /* 스크롤바가 나타났다 사라지며 생기는 가로 흔들림을 막는다 */
     scrollbar-gutter: stable;
-  }
-
-  /* 모달이 열린 동안 뒤쪽 문서를 잠근다 — showModal 은 바깥을 inert 로 만들 뿐 스크롤은 막지 않는다 */
-  /* CSS 로 두면 Escape 로 닫혀도 저절로 풀린다. JS 상태로 잠그면 그 경로에서 새기 쉽다 */
-  html:has(dialog[open]) {
-    overflow: hidden;
   }
 
   body {

@@ -7,10 +7,7 @@ const TITLE_ID = 'hero-title';
 
 export function HeroSection() {
   return (
-    // tabIndex=-1 — 내비게이션이 프로그램적으로 포커스를 옮길 목적지다(탭 순서에는 안 들어간다)
     <section
-      id='top'
-      tabIndex={-1}
       aria-labelledby={TITLE_ID}
       className='relative flex min-h-svh flex-col justify-end pb-section-sm'>
       {/* MediaReveal 을 씌우지 않는다 — 늘 화면 안이라 관찰자가 곧장 in 을 보고해 아무 일도 안 일어난다.

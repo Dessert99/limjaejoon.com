@@ -16,7 +16,7 @@ Effect 컴포넌트의 움직임은 CSS 가 소유한다. JSX 는 상태를 `dat
 
 `--ds-*` 는 `:root` 의 평범한 커스텀 프로퍼티다. `@theme` 에 올리면 `bg-ds-neutral-900` 같은 유틸리티가 생성되어 semantic 계층을 우회하는 통로가 열린다.
 
-primitive 를 JSX 에서 직접 참조하는 곳은 **z 계층 하나뿐**이다(`z-(--ds-z-navigation)`). Tailwind 에 z 네임스페이스가 없고 semantic 승격의 이득이 없어 유일하게 예외로 둔다.
+primitive 를 JSX 에서 직접 참조하는 곳은 **z 계층 하나뿐**이다(`z-(--ds-z-content)`). Tailwind 에 z 네임스페이스가 없고 semantic 승격의 이득이 없어 유일하게 예외로 둔다.
 
 ## 3. `@theme inline` 을 쓰지 않는다
 

@@ -22,13 +22,9 @@ describe('ContactSection', () => {
     expect(screen.getByText(EMAIL)).toBeInTheDocument();
   });
 
-  it('앵커 목적지이자 이름 붙은 region 이다', () => {
+  it('이름 붙은 region 이다', () => {
     const { container } = render(<ContactSection />);
 
-    const section = container.querySelector('section');
-
-    expect(section).toHaveAttribute('id', 'contact');
-    expect(section).toHaveAttribute('tabindex', '-1');
-    expect(screen.getByRole('region')).toBe(section);
+    expect(screen.getByRole('region')).toBe(container.querySelector('section'));
   });
 });

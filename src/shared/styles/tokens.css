@@ -50,11 +50,10 @@
   --ds-ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
   --ds-ease-cinematic: cubic-bezier(0.65, 0, 0.35, 1);
 
-  /* z 계층 — semantic 승격을 하지 않는 유일한 층이라 JSX 에서 z-(--ds-z-navigation) 로 직접 참조한다 */
+  /* z 계층 — semantic 승격을 하지 않는 유일한 층이라 JSX 에서 z-(--ds-z-content) 로 직접 참조한다 */
   --ds-z-base: 0;
   --ds-z-content: 10;
   --ds-z-sticky: 100;
-  --ds-z-navigation: 200;
   --ds-z-overlay: 300;
   --ds-z-transition: 400;
 }
@@ -132,8 +131,6 @@
   --breakpoint-2xl: 96rem;
 
   /* 여백도 clamp — 섹션 리듬이 모바일에서 과하지 않고 데스크톱에서 충분히 벌어져야 한다 */
-  /* 고정 헤더 높이 — 헤더가 이 값으로 서고 global.css 의 scroll-padding-top 이 같은 값을 뺀다 */
-  --spacing-header: 4.5rem;
   --spacing-gutter: clamp(1.25rem, 4vw, 3rem);
   --spacing-section: clamp(6rem, 12vw, 12rem);
   --spacing-section-sm: clamp(3rem, 6vw, 6rem);

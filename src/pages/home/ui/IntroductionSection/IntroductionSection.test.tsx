@@ -47,13 +47,4 @@ describe('IntroductionSection', () => {
       screen.getByRole('link', { name: INTRODUCTION.cta.label })
     ).toHaveAttribute('href', INTRODUCTION.cta.href);
   });
-
-  it('내비게이션이 포커스를 옮길 수 있는 앵커 목적지다', () => {
-    const { container } = render(<IntroductionSection />);
-
-    const section = container.querySelector('section');
-
-    expect(section).toHaveAttribute('id', 'about');
-    expect(section).toHaveAttribute('tabindex', '-1');
-  });
 });
