@@ -8,7 +8,9 @@
 
 코드 변경은 RED -> GREEN -> REFACTOR 를 따르되, 테스트는 파일이 아니라 계약 단위로 만든다 — 소스마다 짝을 맞추지 말고 깨졌을 때 사용자가 겪는 계약이 있는 곳에만 둔다. 위임만 하는 래퍼, 라이브러리가 이미 보장하는 동작, 상위 테스트가 순회로 덮는 항목은 짝이 비어도 그대로 둔다. 렌더 스모크와 `className` 병합은 소비자가 실제로 덧입히는 shared public API에만 남긴다. `describe`·`it` 설명문은 한국어로 관찰 가능한 동작을 적고, 컴포넌트명·prop 같은 고유 식별자만 영문으로 둔다. 테스트 위치는 folder-structure.md 4절.
 
-스타일은 Tailwind CSS v4 토큰 계층을 쓴다. primitive/semantic 경계, 섹션 반전, 모션 규칙은 [style-foundation.md](docs/conventions/style-foundation.md) 참고. 토큰 값 자체는 `src/shared/styles/*.css` 가 유일한 출처다.
+스타일은 Tailwind CSS v4 토큰 계층을 쓴다. 토큰 값 자체는 `src/shared/styles/*.css` 가 유일한 출처다.
+
+홈의 스크롤 모션은 GSAP이 소유한다. DOM을 렌더하는 컴포넌트가 애니메이션 생명주기도 갖고, 복잡한 타임라인만 인접한 `create*Timeline.ts` 로 분리한다. 배치·셀렉터·감쇠·은닉 규칙은 [gsap.md](docs/conventions/gsap.md) 참고.
 
 compound(dot-notation)는 `src/shared/ui` 안에서만 쓴다. pages·widgets·features에서는 단일 컴포넌트로 추출한다 — 소비자가 1~2곳뿐이라 조립 자유도가 값을 못 하고, context가 정적 마크업을 클라이언트로 끌어내린다. 컴포넌트별 함정(`{...rest}` 순서, ref 미개방)은 해당 파일 주석에 있다.
 

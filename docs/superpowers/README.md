@@ -10,7 +10,7 @@
 
 | 문서 | 상태 |
 | --- | --- |
-| `2026-07-29-tailwind-interactive-portfolio` | **현행** — style-foundation.md 의 설계 근거 |
+| `2026-07-29-tailwind-interactive-portfolio` | **부분 생존** — 토큰 계층·섹션 반전은 살아 있고 모션 아키텍처(7절)는 GSAP 스펙으로 대체됨 |
 | `2026-07-31-compound-components` | **현행** — composition-convention.md 의 설계 근거 |
 | `2026-07-23-admin-auth` / `2026-07-24-admin-auth` | **부분 생존** — API 라우트·RLS·통합 테스트는 살아 있고 로그인 UI 는 철거됨 |
 | `2026-07-09-blog-platform-phase-1` | **부분 생존** — `posts` 테이블·API 는 살아 있고 블로그 화면은 철거됨 |
