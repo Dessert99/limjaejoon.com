@@ -6,7 +6,7 @@
 
 프론트엔드는 FSD(Feature-Sliced Design)를 따른다. 레이어 의존은 위에서 아래로만: `app → pages → widgets → features → entities → shared`. FSD 레이어는 `src/` 아래, Next 라우터는 `app/`(`@/pages/*` 를 re-export 하는 껍데기)에 둔다. 구조는 Steiger(`npm run fsd`)로 강제한다. 상세 규칙은 [folder-structure.md](docs/conventions/folder-structure.md) 참고.
 
-코드 변경 작업은 기본적으로 [tdd-convention.md](docs/conventions/tdd-convention.md)의 RED -> GREEN -> REFACTOR 루프를 따른다.
+코드 변경은 RED -> GREEN -> REFACTOR 를 따르되, 테스트는 파일이 아니라 계약 단위로 만든다 — 소스마다 짝을 맞추지 말고 깨졌을 때 사용자가 겪는 계약이 있는 곳에만 둔다. 위임만 하는 래퍼, 라이브러리가 이미 보장하는 동작, 상위 테스트가 순회로 덮는 항목은 짝이 비어도 그대로 둔다. 렌더 스모크와 `className` 병합은 소비자가 실제로 덧입히는 shared public API에만 남긴다. `describe`·`it` 설명문은 한국어로 관찰 가능한 동작을 적고, 컴포넌트명·prop 같은 고유 식별자만 영문으로 둔다. 테스트 위치는 folder-structure.md 4절.
 
 스타일은 Tailwind CSS v4 토큰 계층을 쓴다. primitive/semantic 경계, 섹션 반전, 모션 규칙은 [style-foundation.md](docs/conventions/style-foundation.md) 참고. 토큰 값 자체는 `src/shared/styles/*.css` 가 유일한 출처다.
 
