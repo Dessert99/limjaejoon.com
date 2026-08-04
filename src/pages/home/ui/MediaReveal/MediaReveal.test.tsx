@@ -2,7 +2,7 @@
 import { render, screen } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { STAGGER_MAX_STEPS } from '@/shared/lib';
+import { STAGGER_MAX_STEPS } from '../../lib';
 import { MediaReveal } from './MediaReveal';
 
 describe('MediaReveal', () => {
@@ -14,8 +14,8 @@ describe('MediaReveal', () => {
     ).toBeInTheDocument();
   });
 
-  it('마스크 층과 스케일 층이 상태를 따로 내보낸다', () => {
-    // 한 엘리먼트가 clip-path 와 scale 을 같이 잡으면 나중에 얹히는 변환이 앞의 것을 덮는다 (설계 7.3)
+  it('마스크 층과 스케일 층이 따로 표시된다', () => {
+    // 한 엘리먼트가 clip-path 와 scale 을 같이 잡으면 나중에 얹히는 변환이 앞의 것을 덮는다
     const { container } = render(<MediaReveal>이미지</MediaReveal>);
 
     const mask = container.querySelector('[data-media-reveal]');
@@ -27,28 +27,23 @@ describe('MediaReveal', () => {
     expect(mask).toContainElement(scale as HTMLElement);
   });
 
-  it('소비자 style 을 받아도 마스크 층이 stagger 배수를 잃지 않는다', () => {
-    // 마스크만 배수를 잃으면 덮개는 즉시 열리고 안쪽 스케일만 늦게 출발해 두 층이 어긋난다
+  it('소비자 style 을 그대로 받는다', () => {
     const { container } = render(
-      <MediaReveal
-        staggerIndex={2}
-        style={{ opacity: 0.5 }}>
-        이미지
-      </MediaReveal>
+      <MediaReveal style={{ opacity: 0.5 }}>이미지</MediaReveal>
     );
 
     expect(container.querySelector('[data-media-reveal]')).toHaveStyle({
-      '--stagger': '2',
       opacity: '0.5',
     });
   });
 
-  it('서버 렌더 결과에는 은닉 상태가 없다', () => {
+  it('서버 렌더 결과에는 은닉이 없다', () => {
+    // 은닉은 gsap.from 이 마운트 뒤에 건다 — JS 가 죽어도 이미지가 덮개에 가려지지 않는다
     const html = renderToStaticMarkup(<MediaReveal>이미지</MediaReveal>);
 
+    // 소비자가 style 을 안 넘기면 인라인 스타일이 아예 없어야 한다 — 은닉이 남을 자리가 그곳뿐이다
     expect(html).toContain('이미지');
-    expect(html).not.toContain('data-media-reveal="out"');
-    expect(html).not.toContain('data-media-scale="out"');
+    expect(html).not.toContain('style=');
   });
 
   it('stagger 배수는 최대 단계에서 멈춘다', () => {
@@ -56,8 +51,9 @@ describe('MediaReveal', () => {
       <MediaReveal staggerIndex={STAGGER_MAX_STEPS + 4}>이미지</MediaReveal>
     );
 
-    expect(container.querySelector('[data-media-reveal]')).toHaveStyle({
-      '--stagger': String(STAGGER_MAX_STEPS),
-    });
+    expect(container.querySelector('[data-media-reveal]')).toHaveAttribute(
+      'data-stagger',
+      String(STAGGER_MAX_STEPS)
+    );
   });
 });

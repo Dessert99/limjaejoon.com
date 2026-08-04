@@ -6,4 +6,3 @@ export { RevealText } from './RevealText/RevealText';
 export { Parallax } from './Parallax/Parallax';
 export { Marquee } from './Marquee/Marquee';
 export { Media, type MediaRatio } from './Media/Media';
-export { MediaReveal } from './MediaReveal/MediaReveal';

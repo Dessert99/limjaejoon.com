@@ -11,7 +11,7 @@ export function HeroSection() {
     <section
       aria-labelledby={TITLE_ID}
       className='relative flex min-h-svh flex-col justify-end pb-section-sm'>
-      {/* MediaReveal 을 씌우지 않는다 — 늘 화면 안이라 관찰자가 곧장 in 을 보고해 아무 일도 안 일어난다.
+      {/* MediaReveal 을 씌우지 않는다 — 늘 화면 안이라 스크롤 트리거가 곧장 발동해 아무 일도 안 일어난다.
           로드 시점 마스크가 필요해지면 MaskReveal 처럼 trigger='mount' 를 MediaReveal 에도 연다(실물 에셋이 들어온 뒤) */}
       {/* 배경 미디어는 Container 밖이다 — bleed 로 흉내 내면 스크롤바 폭만큼 가로가 넘친다 */}
       {/* z 는 유일하게 primitive 를 직접 쓰는 계층이다 — Tailwind 에 z 네임스페이스가 없다 */}

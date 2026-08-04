@@ -1,6 +1,7 @@
 /** Work Index 의 프로젝트 행 — 배치가 한 가지뿐이라 부품으로 쪼개지 않는다 */
 import type { Project } from '@/entities/project';
-import { Media, MediaReveal } from '@/shared/ui';
+import { Media } from '@/shared/ui';
+import { MediaReveal } from '../MediaReveal/MediaReveal';
 
 type ProjectRowProps = {
   project: Project;
