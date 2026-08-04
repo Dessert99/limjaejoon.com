@@ -79,7 +79,9 @@ export function RevealText({
         });
       });
 
-      return () => media.revert();
+      return () => {
+        return media.revert();
+      };
     },
     { scope: rootRef }
   );

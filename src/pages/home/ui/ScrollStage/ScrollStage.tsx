@@ -17,7 +17,9 @@ export function ScrollStage({ children }: { children: ReactNode }) {
         ScrollSmoother.create({ smooth: MOTION.smooth, effects: true });
       });
 
-      return () => media.revert();
+      return () => {
+        return media.revert();
+      };
     },
     { scope: wrapperRef }
   );

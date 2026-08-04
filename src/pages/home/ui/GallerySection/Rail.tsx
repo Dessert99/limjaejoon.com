@@ -49,7 +49,9 @@ export function Rail({ direction, label, items }: RailProps) {
         );
       });
 
-      return () => media.revert();
+      return () => {
+        return media.revert();
+      };
     },
     { scope: rootRef }
   );

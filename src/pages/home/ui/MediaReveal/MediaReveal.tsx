@@ -44,7 +44,9 @@ export function MediaReveal({
           .from('[data-media-scale]', { scale: 1.15 }, 0);
       });
 
-      return () => media.revert();
+      return () => {
+        return media.revert();
+      };
     },
     { scope: rootRef }
   );

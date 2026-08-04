@@ -31,7 +31,9 @@ globalThis.matchMedia = ((query: string) => {
     removeListener: () => {},
     addEventListener: () => {},
     removeEventListener: () => {},
-    dispatchEvent: () => false,
+    dispatchEvent: () => {
+      return false;
+    },
   };
 }) as unknown as typeof matchMedia;
 
