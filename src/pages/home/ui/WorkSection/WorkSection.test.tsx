@@ -48,13 +48,13 @@ describe('WorkSection', () => {
     }
   });
 
-  it('heading 으로 이름 붙은 region 랜드마크이자 앵커 목적지다', () => {
+  it('앵커 목적지로 초점을 받을 수 있다', () => {
+    // id 만 있으면 스크롤만 되고 초점은 안 옮겨간다 — 키보드 사용자는 이동 후 문서 맨 위에 남는다
     const { container } = render(<WorkSection />);
 
     const section = container.querySelector('section');
 
     expect(section).toHaveAttribute('id', 'work');
     expect(section).toHaveAttribute('tabindex', '-1');
-    expect(screen.getByRole('region')).toBe(section);
   });
 });

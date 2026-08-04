@@ -1,4 +1,4 @@
-/** ContactSection 테스트 — 연락 수단이 실제로 닿는지와 footer 랜드마크를 검증한다 */
+/** ContactSection 테스트 — 연락 수단이 실제로 닿는지를 검증한다 */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { EMAIL } from '@/shared/config';
@@ -20,11 +20,5 @@ describe('ContactSection', () => {
     render(<ContactSection />);
 
     expect(screen.getByText(EMAIL)).toBeInTheDocument();
-  });
-
-  it('이름 붙은 region 이다', () => {
-    const { container } = render(<ContactSection />);
-
-    expect(screen.getByRole('region')).toBe(container.querySelector('section'));
   });
 });

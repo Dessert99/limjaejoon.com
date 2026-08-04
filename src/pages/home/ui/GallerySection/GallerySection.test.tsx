@@ -25,10 +25,4 @@ describe('GallerySection', () => {
       expect(rail).toHaveAccessibleName();
     }
   });
-
-  it('heading 으로 이름 붙은 region 랜드마크다', () => {
-    const { container } = render(<GallerySection />);
-
-    expect(screen.getByRole('region')).toBe(container.querySelector('section'));
-  });
 });

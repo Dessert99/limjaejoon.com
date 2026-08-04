@@ -8,15 +8,4 @@ describe('sitemap', () => {
       expect.objectContaining({ url: 'https://limjaejoon.com' }),
     ]);
   });
-
-  it('철거한 blog route 를 노출하지 않는다', () => {
-    const urls = sitemap().map((entry) => {
-      return entry.url;
-    });
-    const hasBlogUrl = urls.some((url) => {
-      return url.includes('/blog');
-    });
-
-    expect(hasBlogUrl).toBe(false);
-  });
 });

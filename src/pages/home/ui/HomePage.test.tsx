@@ -17,11 +17,12 @@ describe('HomePage', () => {
   });
 
   it('모든 섹션이 이름을 가진 region 으로 노출된다', () => {
-    render(<HomePage />);
+    // 이름 없는 section 은 랜드마크로 노출되지 않아 목록 탐색에서 통째로 사라진다 — 개수를 맞춰 누락을 잡는다
+    const { container } = render(<HomePage />);
 
     const regions = screen.getAllByRole('region');
 
-    expect(regions.length).toBeGreaterThanOrEqual(5);
+    expect(regions).toHaveLength(container.querySelectorAll('section').length);
     for (const region of regions) {
       expect(region).toHaveAccessibleName();
     }
