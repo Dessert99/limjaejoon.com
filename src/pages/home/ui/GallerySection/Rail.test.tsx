@@ -36,7 +36,8 @@ describe('Rail', () => {
     expect(screen.getByRole('group')).toHaveAttribute('tabindex', '0');
   });
 
-  it('reverse 방향은 트랙에 표시된다', () => {
+  it('방향을 트랙에 드러낸다', () => {
+    // 흐름 자체는 GSAP 이 값으로 만들지만, 어느 줄이 뒤집혔는지는 GallerySection 의 교대 로직이라 관찰 가능해야 한다
     const { container } = render(
       <Rail
         direction='reverse'
@@ -48,8 +49,8 @@ describe('Rail', () => {
     expect(container.querySelector('[data-rail=reverse]')).toBeInTheDocument();
   });
 
-  it('forward 방향은 빈 data-rail 을 둔다', () => {
-    // motion.css 가 [data-rail] 존재로 흐름을 걸고 값으로 방향만 가른다
+  it('감쇠 레이아웃이 걸 수 있게 forward 도 트랙을 표시한다', () => {
+    // motion.css 가 [data-rail] 존재로 감쇠에서 한 줄을 그리드로 접는다 — 값이 비어도 셀렉터에 걸려야 한다
     const { container } = render(
       <Rail
         direction='forward'
@@ -58,7 +59,7 @@ describe('Rail', () => {
       />
     );
 
-    expect(container.querySelector('[data-rail=""]')).toBeInTheDocument();
+    expect(container.querySelector('[data-rail]')).toBeInTheDocument();
   });
 
   it('항목을 모두 그린다', () => {
