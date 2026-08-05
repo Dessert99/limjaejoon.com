@@ -2,7 +2,7 @@
 
 /** Hero 상단 내비게이션 — 글자만 늘어놓고, 일렁이는 덩어리 하나가 항목 사이를 옮겨 다닌다 */
 import { useRef, type PointerEvent, type PointerEventHandler } from 'react';
-import { TransitionLink } from '@/shared/ui';
+import { TransitionLink } from '@/shared/transition';
 import { HERO_NAV } from '../../config/navigation';
 import {
   MAGNETIC_FOLLOW,

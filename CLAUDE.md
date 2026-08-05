@@ -10,6 +10,8 @@
 
 스타일은 Tailwind CSS v4 토큰 계층을 쓴다. 토큰 값 자체는 `src/shared/styles/*.css` 가 유일한 출처다.
 
+story 는 `shared/ui` 컴포넌트와 `shared/styles` 의 Foundation 에만 둔다. 섹션·이펙트 같은 조립체는 variant 가 없어 story 가 값을 못 한다. `build-storybook` 은 `npm run ci` 에 없다.
+
 홈의 스크롤 모션은 GSAP이 소유한다. DOM을 렌더하는 컴포넌트가 애니메이션 생명주기도 갖고, 복잡한 타임라인만 인접한 `create*Timeline.ts` 로 분리한다. 배치·셀렉터·감쇠·은닉 규칙은 [gsap.md](docs/conventions/gsap.md) 참고.
 
 컴포넌트별 함정(`{...rest}` 순서, ref 미개방)은 해당 파일 주석에 있다.

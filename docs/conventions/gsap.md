@@ -1,6 +1,6 @@
 # GSAP 사용 규칙
 
-GSAP은 홈 화면의 스크롤 모션과 라우트 전환 커튼을 담당한다. 커튼은 `shared/ui/RouteTransition` 이 소유하고 플러그인이 필요 없어 `gsap` 패키지를 직접 가져온다 — 등록 지점을 `shared` 로 올리는 건 소비자가 셋이 된 뒤다(3절). 설계 근거는 [2026-08-05-gsap-scroll-smoother-design.md](../superpowers/specs/2026-08-05-gsap-scroll-smoother-design.md).
+GSAP은 홈 화면의 스크롤 모션과 라우트 전환 커튼을 담당한다. 커튼은 `shared/transition` 이 소유하고 플러그인이 필요 없어 `gsap` 패키지를 직접 가져온다 — 등록 지점을 `shared` 로 올리는 건 소비자가 셋이 된 뒤다(3절). 설계 근거는 [2026-08-05-gsap-scroll-smoother-design.md](../superpowers/specs/2026-08-05-gsap-scroll-smoother-design.md).
 
 ## 1. DOM 소유자가 생명주기를 소유한다
 
