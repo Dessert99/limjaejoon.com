@@ -36,7 +36,7 @@ describe('IntroOverlay', () => {
   });
 
   it('스크립트가 없는 환경에서는 인트로를 지운다', async () => {
-    // 걷는 주체가 GSAP 이라 스크립트가 죽으면 검은 화면이 영구히 남는다(gsap.md 7절)
+    // 걷는 주체가 GSAP 이라 스크립트가 죽으면 검은 화면이 영구히 남는다(gsap.md 5절)
     const IntroOverlay = await freshOverlay();
 
     const { container } = render(<IntroOverlay />);
