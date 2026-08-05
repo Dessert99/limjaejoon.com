@@ -120,12 +120,6 @@
   --container-content: 72rem;
   --container-wide: 90rem;
 
-  /* 미디어 비율 — 전부 가로다. 세로가 하나라도 섞이면 Work Index 와 Gallery rail 높이가 통째로 흔들린다 */
-  /* 세로 앱 스크린샷은 기기 목업 안에 얹어 가로 프레임으로 맞춘다 */
-  --aspect-hero: 16 / 10;
-  --aspect-thumbnail: 4 / 3;
-  --aspect-gallery: 3 / 2;
-
   /* Tailwind 기본값과 같은 수치를 명시한다 — Storybook 뷰포트 목록이 참조할 단일 출처가 필요하다 */
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
