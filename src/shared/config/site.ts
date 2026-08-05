@@ -12,7 +12,6 @@ export const SITE = {
   nameEn: 'Jaejoon Lim',
   role: '프론트엔드 개발자',
   roleEn: 'Frontend Engineer',
-  tagline: '나무가 아닌 숲을 보는 개발자',
 } as const;
 
 /** 소셜 링크 — metadata·footer·Contact 세 곳이 소비한다 */

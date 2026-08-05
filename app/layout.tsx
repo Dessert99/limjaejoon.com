@@ -13,19 +13,16 @@ export const metadata: Metadata = {
     default: pageTitle,
     template: `%s | ${SITE.name}`,
   },
-  description: SITE.tagline,
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
     url: SITE_URL,
     siteName: SITE.name,
     title: pageTitle,
-    description: SITE.tagline,
   },
   twitter: {
     card: 'summary',
     title: pageTitle,
-    description: SITE.tagline,
   },
 };
 
