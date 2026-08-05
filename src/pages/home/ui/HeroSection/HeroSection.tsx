@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import { HERO } from '../../config/hero';
 import { HeroMarquee } from './HeroMarquee';
+import { HeroNav } from './HeroNav';
 
 // 섹션을 region 랜드마크로 만들려면 이름이 필요하다 — id 만으로는 랜드마크 목록에 안 뜬다
 const TITLE_ID = 'hero-title';
@@ -20,6 +21,8 @@ export function HeroSection() {
         sizes='100vw'
         className='z-(--ds-z-base) object-cover'
       />
+
+      <HeroNav />
 
       <HeroMarquee
         text={HERO.headline}
