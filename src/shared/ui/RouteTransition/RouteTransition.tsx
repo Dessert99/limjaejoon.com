@@ -12,9 +12,9 @@ const SWEEP = { duration: 1, ease: 'power2.inOut' } as const;
 
 // 커튼을 뷰포트 위에 세워 둔다 — 스크립트가 죽어도 화면을 덮지 않고, GSAP 은 제 높이만큼 내려 채운다
 const CURTAIN_CLASS =
-  'fixed inset-x-0 bottom-full z-50 flex h-dvh items-center justify-center bg-black';
+  'fixed inset-x-0 bottom-full z-(--ds-z-transition) flex h-dvh items-center justify-center bg-background';
 
-const LABEL_CLASS = 'font-display text-section text-white';
+const LABEL_CLASS = 'font-display text-section text-foreground';
 
 /** 전환 단계 — 커튼이 내려오는 중(covering)과 목적지를 기다리는 중(navigating)을 가른다 */
 type Phase = 'idle' | 'covering' | 'navigating';
