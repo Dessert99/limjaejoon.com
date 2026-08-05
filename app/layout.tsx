@@ -1,7 +1,8 @@
 import '@/shared/styles/global.css';
 import { SITE, SITE_URL } from '@/shared/config';
 import { pretendard } from '@/shared/styles';
-import { RouteTransition } from '@/shared/ui';
+import { RouteTransition } from '@/shared/transition';
+import { SiteNav } from '@/widgets/site-nav';
 import type { Metadata } from 'next';
 
 // title·og·twitter 세 곳이 같은 문장을 쓴다 — 갈리면 검색 결과와 공유 카드가 서로 다른 말을 한다
@@ -13,19 +14,16 @@ export const metadata: Metadata = {
     default: pageTitle,
     template: `%s | ${SITE.name}`,
   },
-  description: SITE.tagline,
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
     url: SITE_URL,
     siteName: SITE.name,
     title: pageTitle,
-    description: SITE.tagline,
   },
   twitter: {
     card: 'summary',
     title: pageTitle,
-    description: SITE.tagline,
   },
 };
 
@@ -41,7 +39,12 @@ export default function RootLayout({
       data-scroll-behavior='smooth'
       className={pretendard.variable}>
       <body>
-        <RouteTransition>{children}</RouteTransition>
+        {/* nav 는 children 뒤다 — z-index 없이 DOM 순서로만 페이지 위에 올라야 blend 가 아래 화면을 배경으로 잡는다 */}
+        {/* 커튼은 z 계층이 있어 이 순서와 무관하게 nav 를 덮는다 */}
+        <RouteTransition>
+          {children}
+          <SiteNav />
+        </RouteTransition>
       </body>
     </html>
   );

@@ -15,12 +15,14 @@
     ├── entities/           # 핵심 도메인 모델과 그 모델 중심 UI/API
     └── shared/             # 도메인 무관 공용 코드
         ├── ui/             # Button, Input 같은 디자인 프리미티브
+        ├── transition/     # 라우트 전환 커튼(프로바이더 + TransitionLink)
         ├── api/            # apiClient, 공용 API 타입/헬퍼 (MSW 목 포함)
         ├── lib/            # 공용 유틸 (navigation 훅 래퍼 등)
         ├── styles/         # 전역 테마·토큰·breakpoint 등
-        ├── config/         # 전역 설정
-        └── types/          # 전역 공용 타입
+        └── config/         # 전역 설정
 ```
+
+segment 는 목적으로 이름 짓고 필요하면 새로 만든다(`transition` 이 그렇게 생겼다). 내용물이 무엇인지로 부르는 `components`·`hooks`·`utils`·`types` 등은 Steiger `fsd/segments-by-purpose` 가 막는다 — 훅은 도메인을 알면 `model/`, 모르면 `lib/` 로 간다.
 
 **Next.js 적응:** FSD 레이어는 `src/` 아래 둔다(`@/* → ./src/*`). Next 라우터는 `app/` 에 남기고 `page.tsx` 는 `@/pages/*` 를 re-export 하는 껍데기로만 쓴다. FSD `pages` 레이어는 `src/pages` 인데, Next 가 이를 레거시 Pages Router 로 오인하지 않도록 루트에 빈 `pages/` 를 둔다. 그 부작용으로 `useSearchParams`·`usePathname` 타입이 nullable 로 과대추정되므로 `shared/lib/navigation` 래퍼에서 non-null 로 가둔다. 구조는 Steiger(`npm run fsd`)로 강제한다.
 

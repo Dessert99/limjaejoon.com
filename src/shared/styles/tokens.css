@@ -97,6 +97,9 @@
   --text-body--line-height: 1.6;
   --text-body-lg: 1.125rem;
   --text-body-lg--line-height: 1.6;
+  /* body 계열의 마지막 칸 — 여기서 statement 로 넘어가면 1.75rem 이라, 그 사이가 필요한 자리(nav)를 위해 둔다 */
+  --text-body-xl: 1.25rem;
+  --text-body-xl--line-height: 1.5;
   --text-statement: clamp(1.75rem, 1.5rem + 1.25vw, 3rem);
   --text-statement--line-height: 1.25;
   --text-statement--letter-spacing: -0.01em;
@@ -117,12 +120,6 @@
   --container-content: 72rem;
   --container-wide: 90rem;
 
-  /* 미디어 비율 — 전부 가로다. 세로가 하나라도 섞이면 Work Index 와 Gallery rail 높이가 통째로 흔들린다 */
-  /* 세로 앱 스크린샷은 기기 목업 안에 얹어 가로 프레임으로 맞춘다 */
-  --aspect-hero: 16 / 10;
-  --aspect-thumbnail: 4 / 3;
-  --aspect-gallery: 3 / 2;
-
   /* Tailwind 기본값과 같은 수치를 명시한다 — Storybook 뷰포트 목록이 참조할 단일 출처가 필요하다 */
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
@@ -135,8 +132,6 @@
   --spacing-section: clamp(6rem, 12vw, 12rem);
   --spacing-section-sm: clamp(3rem, 6vw, 6rem);
   --spacing-grid-gap: clamp(1.5rem, 3vw, 3rem);
-  /* Gallery rail 한 칸 — clamp 하나로 모바일·데스크톱을 덮어 브레이크포인트가 필요 없다 */
-  --spacing-rail-item: clamp(16rem, 45vw, 34rem);
 }
 
 /* controlled bleed — Container 의 gutter 만 되돌린다. 100vw 계열은 스크롤바 폭까지 세어 가로 오버플로를 만든다 */
