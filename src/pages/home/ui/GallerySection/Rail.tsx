@@ -3,7 +3,7 @@
 /** Gallery 의 가로 rail 한 줄 — 세로 스크롤 진행률을 가로 이동으로 바꾼다. 트랙의 x 만 소유한다 */
 import { useRef } from 'react';
 import { Media, type MediaRatio } from '@/shared/ui';
-import { MOTION, gsap, useGSAP } from '../../lib';
+import { gsap, useGSAP } from '../../lib';
 
 /** rail 항목 한 건 — config 의 GalleryItem 이 구조적으로 이 형태다 */
 export interface RailItem {
@@ -27,23 +27,41 @@ export function Rail({ direction, label, items }: RailProps) {
     () => {
       const media = gsap.matchMedia();
 
+      const root = rootRef.current;
+
+      if (!root) {
+        return;
+      }
+
       media.add('(prefers-reduced-motion: no-preference)', () => {
+        // 넘치는 만큼만 움직인다 — 고정 비율이면 넘침이 클수록 끝 항목이 영원히 화면에 안 나온다
+        const overflow = (target: Element): number => {
+          return Math.max(0, target.scrollWidth - root.clientWidth);
+        };
+
         // 두 줄이 반대로 흘러야 한다 — 같은 방향이면 그냥 미끄러지는 것처럼만 보인다
-        const from =
-          direction === 'reverse' ? -MOTION.railDistance : MOTION.railDistance;
+        const isReverse = direction === 'reverse';
 
         gsap.fromTo(
           '[data-rail]',
-          { xPercent: from },
           {
-            xPercent: -from,
+            x: (_index: number, target: Element) => {
+              return isReverse ? -overflow(target) : 0;
+            },
+          },
+          {
+            x: (_index: number, target: Element) => {
+              return isReverse ? 0 : -overflow(target);
+            },
             // 스크롤 위치와 가로 위치를 선형으로 묶는다 — 이징이 끼면 스크럽이 고르지 않다
             ease: 'none',
             scrollTrigger: {
-              trigger: rootRef.current,
+              trigger: root,
               start: 'top bottom',
               end: 'bottom top',
               scrub: true,
+              // 폭이 바뀌면 실측을 다시 한다 — 리사이즈 뒤에도 끝 항목이 화면에 닿는다
+              invalidateOnRefresh: true,
             },
           }
         );
@@ -57,13 +75,13 @@ export function Rail({ direction, label, items }: RailProps) {
   );
 
   return (
-    // overflow-x-auto + tabindex — 애니메이션이 꺼져도 좌우로 직접 훑을 수 있어야 정보가 안 빠진다
+    // 수동 가로 스크롤을 열지 않는다 — 이동량이 넘침 전체를 덮어 모든 항목이 한 번씩 지나간다
+    // 스크롤 영역이 아니므로 tabIndex 도 두지 않는다(초점만 받고 할 일이 없는 요소가 된다)
     <div
       ref={rootRef}
       role='group'
       aria-label={label}
-      tabIndex={0}
-      className='overflow-x-auto'>
+      className='overflow-hidden'>
       {/* 값은 GallerySection 이 정한 교대를 드러내고, 존재 자체는 감쇠에서 한 줄을 그리드로 접는 셀렉터가 쓴다 */}
       <div
         data-rail={direction === 'reverse' ? 'reverse' : ''}

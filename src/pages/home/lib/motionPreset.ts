@@ -16,8 +16,6 @@ export const MOTION = {
     // amount 는 총 시차다 — 조각이 많아도 마지막 등장이 하염없이 밀리지 않게 자른다
     total: 0.8,
   },
-  // 트랙 제 폭 기준 백분율 — CSS 시절 --rail-distance 와 같은 값이다
-  railDistance: 6,
 } as const;
 
 /** stagger 최대 단계 — 컴포넌트 사이 시차를 자르는 지점 */

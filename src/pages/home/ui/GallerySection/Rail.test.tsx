@@ -23,8 +23,8 @@ describe('Rail', () => {
     ).toBeInTheDocument();
   });
 
-  it('키보드로 좌우를 훑을 수 있다', () => {
-    // 애니메이션이 꺼져도 화면 밖 항목에 닿아야 감쇠 사용자에게 정보가 안 빠진다
+  it('수동 가로 스크롤을 열지 않는다', () => {
+    // 초점을 받으면 스크롤 영역이라는 뜻이 된다 — 이동량이 넘침 전체를 덮으므로 손으로 훑을 이유가 없다
     render(
       <Rail
         direction='forward'
@@ -33,7 +33,7 @@ describe('Rail', () => {
       />
     );
 
-    expect(screen.getByRole('group')).toHaveAttribute('tabindex', '0');
+    expect(screen.getByRole('group')).not.toHaveAttribute('tabindex');
   });
 
   it('방향을 트랙에 드러낸다', () => {
