@@ -16,4 +16,3 @@
 | `2026-07-09-blog-platform-phase-1` | **부분 생존** — `posts` 테이블·API 는 살아 있고 블로그 화면은 철거됨 |
 | `2026-06-10-fsd-canonical-rearchitecture` | 현행 구조의 기원 — 세부는 folder-structure.md 가 최신 |
 | `2026-07-29-design-system-teardown` | 완료된 철거 작업. 삭제 대상 목록이라 죽은 경로가 가장 많다 |
-| `2026-06-13-comment-convention` | 이 문서가 만든 `comment-convention.md` 는 CLAUDE.md 로 흡수 후 삭제됨 |
