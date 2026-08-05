@@ -3,7 +3,7 @@
 /** 사이트 내비게이션 — 상단 나열과 햄버거·사이드바의 교대를 판정하고, 열려 있는 동안의 가둠을 소유한다 */
 import { useEffect, useId, useRef, useState } from 'react';
 import { usePathname } from '@/shared/lib';
-import { ScrollSmoother, ScrollTrigger, useGSAP } from '@/shared/motion';
+import { ScrollSmoother, ScrollTrigger } from '@/shared/motion';
 import { MenuButton } from '../MenuButton/MenuButton';
 import { NavBar } from '../NavBar/NavBar';
 import { SideMenu } from '../SideMenu/SideMenu';
@@ -22,7 +22,10 @@ export function SiteNav() {
   const panelId = useId();
   const pathname = usePathname();
 
-  useGSAP(() => {
+  // useGSAP 이 아니다 — 그 컨텍스트가 페이지 컨텍스트의 자식으로 딸려 들어가, 홈이 나갈 때 관찰자까지 함께 revert 된다
+  // 패널은 여기서 닫지 않는다 — 목적지를 누르는 순간 링크가 이미 닫는다
+  useEffect(() => {
+    // 라우트마다 새로 만든다 — 홈의 ScrollSmoother 가 갈리면 옛 관찰자는 죽은 scroller 를 붙들고 스크롤을 0 으로 읽는다
     // 감쇠에서도 만든다 — 이건 트윈이 아니라 관찰자다. 감쇠는 교대 길이만 0 으로 줄인다(gsap.md 8절 예외)
     const hide = ScrollTrigger.create({
       start: HIDE_AT,
@@ -30,7 +33,7 @@ export function SiteNav() {
       onEnter: () => {
         return setCollapsed(true);
       },
-      // 새로고침이 스크롤 위치를 되살린 경우 — 콜백 없이 지나가면 나열이 화면 중간에 떠 있게 된다
+      // 스크롤 위치가 되살아난 채 시작한 경우 — 콜백 없이 지나가면 나열이 화면 중간에 떠 있게 된다
       onRefresh: (self) => {
         return setCollapsed(self.isActive);
       },
@@ -48,12 +51,6 @@ export function SiteNav() {
       hide.kill();
       show.kill();
     };
-  }, []);
-
-  useEffect(() => {
-    // 라우트가 바뀌면 문서 높이와 스크롤 위치가 함께 갈아엎힌다 — 다시 재지 않으면 이전 페이지 기준으로 판정한다
-    // 패널을 여기서 닫지 않는다 — 목적지를 누르는 순간 링크가 이미 닫는다
-    ScrollTrigger.refresh();
   }, [pathname]);
 
   useEffect(() => {
