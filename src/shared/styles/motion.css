@@ -37,48 +37,6 @@
   transition-duration: var(--ds-duration-1200);
 }
 
-/* 마스크 트랙 — overflow 가 디센더(g·y)를 자르므로 em 여백을 주고 같은 만큼 되당겨 레이아웃을 유지한다 */
-/* 이 층은 overflow 만 소유한다 — translate 는 안쪽 [data-reveal] 이 가진다(설계 7.3) */
-@utility mask-track {
-  --mask-overhang: 0.18em;
-  overflow: hidden;
-  padding-block-end: var(--mask-overhang);
-  margin-block-end: calc(-1 * var(--mask-overhang));
-}
-
-/* MediaReveal 의 clip-path 와 scale 은 컴포넌트가 GSAP 타임라인으로 소유한다 */
-
-/* Gallery rail 의 가로 흐름은 Rail 컴포넌트가 GSAP 으로 소유한다 — 여기 남는 건 감쇠 레이아웃뿐이다 */
-/* 감쇠에서는 흐름만 끄는 게 아니라 레이아웃을 접는다 */
-/* 애니메이션만 끄면 화면보다 넓은 한 줄이 그대로 남아 375px 에서 1100px 짜리 트랙을 손으로 훑어야 한다 */
-@media (prefers-reduced-motion: reduce) {
-  [data-rail] {
-    display: grid;
-    width: auto;
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(min(100%, var(--spacing-rail-item)), 1fr)
-    );
-  }
-
-  [data-rail] > * {
-    width: auto;
-  }
-}
-
-[data-motion='reduced'] [data-rail] {
-  display: grid;
-  width: auto;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(min(100%, var(--spacing-rail-item)), 1fr)
-  );
-}
-
-[data-motion='reduced'] [data-rail] > * {
-  width: auto;
-}
-
 /* 감쇠는 두 셀렉터를 함께 건다 — 앞은 실사용자, 뒤는 Storybook 토글 */
 /* GSAP 모션은 여기 안 걸린다 — gsap.matchMedia 가 감쇠에서 생성 자체를 막는다 */
 @media (prefers-reduced-motion: reduce) {
