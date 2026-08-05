@@ -1,5 +1,5 @@
 /** Gallery — 세로 스크롤 진행률을 가로 이동으로 바꾸는 rail 두 줄. 스크롤을 가로채지 않는다 */
-import { Container, SectionHeading } from '@/shared/ui';
+import { Container } from '@/shared/ui';
 import { Rail } from './Rail';
 import { GALLERY, GALLERY_ROWS } from '../../config/gallery';
 
@@ -11,12 +11,15 @@ export function GallerySection() {
       aria-labelledby={TITLE_ID}
       className='bg-background py-section text-foreground'>
       <Container>
-        <SectionHeading.Root className='mb-section-sm'>
-          <SectionHeading.Label>{GALLERY.label}</SectionHeading.Label>
-          <SectionHeading.Title id={TITLE_ID}>
+        <div className='mb-section-sm flex flex-col gap-4'>
+          <p className='text-label text-subtle uppercase'>{GALLERY.label}</p>
+          {/* id 는 래퍼가 아니라 heading 에 붙는다 — 래퍼에 붙이면 랜드마크 이름이 라벨까지 끌어온다 */}
+          <h2
+            id={TITLE_ID}
+            className='text-section break-keep'>
             {GALLERY.title}
-          </SectionHeading.Title>
-        </SectionHeading.Root>
+          </h2>
+        </div>
       </Container>
 
       {/* Container 밖이다 — 화면보다 넓어야 흐르는 게 보인다 */}

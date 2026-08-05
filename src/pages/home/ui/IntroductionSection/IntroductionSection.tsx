@@ -1,6 +1,6 @@
 /** Introduction — 밝은 섹션. 어두운 Hero 와의 대비가 이 페이지의 리듬을 만든다 */
 import { INTRODUCTION } from '../../config/introduction';
-import { Container, SectionHeading, ShowcaseButton } from '@/shared/ui';
+import { Container, ShowcaseButton } from '@/shared/ui';
 import { MaskReveal } from '../MaskReveal/MaskReveal';
 import { RevealText } from '../RevealText/RevealText';
 
@@ -16,22 +16,22 @@ export function IntroductionSection() {
       className='bg-surface py-section text-foreground'>
       <Container>
         {/* 비대칭 — 라벨 4 / 본문 8. 모바일은 단일 열로 떨어진다 */}
-        <SectionHeading.Root className='grid gap-grid-gap md:grid-cols-12'>
-          <SectionHeading.Label className='md:col-span-4'>
+        <div className='grid gap-grid-gap md:grid-cols-12'>
+          <p className='text-label text-subtle uppercase md:col-span-4'>
             {INTRODUCTION.label}
-          </SectionHeading.Label>
+          </p>
 
           <div className='flex flex-col gap-10 md:col-span-8'>
             {/* RevealText 는 span 을 낸다 — heading 안에 들어가도 콘텐츠 모델이 깨지지 않는다 */}
-            <SectionHeading.Title
+            <h2
               id={TITLE_ID}
-              className='text-statement'>
+              className='text-statement break-keep'>
               <RevealText
                 unit='word'
                 className='text-foreground'>
                 {INTRODUCTION.statement}
               </RevealText>
-            </SectionHeading.Title>
+            </h2>
 
             <div className='flex flex-col gap-5'>
               {INTRODUCTION.body.map((paragraph, index) => {
@@ -65,7 +65,7 @@ export function IntroductionSection() {
               </ShowcaseButton>
             </div>
           </div>
-        </SectionHeading.Root>
+        </div>
       </Container>
     </section>
   );
