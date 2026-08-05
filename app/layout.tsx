@@ -1,6 +1,7 @@
 import '@/shared/styles/global.css';
 import { SITE, SITE_URL } from '@/shared/config';
 import { pretendard } from '@/shared/styles';
+import { RouteTransition } from '@/shared/ui';
 import type { Metadata } from 'next';
 
 // title·og·twitter 세 곳이 같은 문장을 쓴다 — 갈리면 검색 결과와 공유 카드가 서로 다른 말을 한다
@@ -39,7 +40,9 @@ export default function RootLayout({
       lang='ko'
       data-scroll-behavior='smooth'
       className={pretendard.variable}>
-      <body>{children}</body>
+      <body>
+        <RouteTransition>{children}</RouteTransition>
+      </body>
     </html>
   );
 }
