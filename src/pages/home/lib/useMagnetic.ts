@@ -6,10 +6,11 @@ import { useRef, type PointerEventHandler, type RefObject } from 'react';
 import { gsap, useGSAP } from './gsap';
 
 /** 커서 오프셋에 곱하는 비율 — 1 이면 커서에 붙어 버려 누르려는 손에서 도망간다 */
-const PULL = 0.35;
+/* 내보내는 이유는 하나다 — 자석과 나란히 움직여야 하는 요소가 같은 값을 써야 어긋나지 않는다 */
+export const MAGNETIC_PULL = 0.35;
 
-/** 추종 — 짧아야 손끝에 붙은 느낌이 난다 */
-const FOLLOW = { duration: 0.4, ease: 'power3.out' } as const;
+/** 추종 — 짧아야 손끝에 붙은 느낌이 난다. 같이 움직이는 요소도 이 감속을 써야 한 덩어리로 읽힌다 */
+export const MAGNETIC_FOLLOW = { duration: 0.4, ease: 'power3.out' } as const;
 
 /** 복귀 — elastic 이 제자리에서 한 번 더 흔들려 자석이 놓인 느낌을 만든다 */
 const RETURN = { duration: 1.1, ease: 'elastic.out(1, 0.32)' } as const;
@@ -69,8 +70,8 @@ export const useMagnetic = <T extends HTMLElement>(): Magnetic<T> => {
 
       // 들어올 때마다 새로 만든다 — 복귀 트윈이 overwrite 로 죽인 quickTo 는 되살아나지 않는다
       followRef.current = {
-        x: gsap.quickTo(event.currentTarget, 'x', FOLLOW),
-        y: gsap.quickTo(event.currentTarget, 'y', FOLLOW),
+        x: gsap.quickTo(event.currentTarget, 'x', MAGNETIC_FOLLOW),
+        y: gsap.quickTo(event.currentTarget, 'y', MAGNETIC_FOLLOW),
       };
     },
 
@@ -81,11 +82,11 @@ export const useMagnetic = <T extends HTMLElement>(): Magnetic<T> => {
         return;
       }
 
-      // 매번 실측한다 — 요소가 이미 끌려가 있어 마운트 시점 좌표는 중심이 아니다
+      // 이미 끌려간 자리를 기준으로 다시 잰다 — 되먹임이 걸려 실제 이동량은 PULL/(1+PULL) 로 수렴한다
       const box = event.currentTarget.getBoundingClientRect();
 
-      follow.x((event.clientX - (box.left + box.width / 2)) * PULL);
-      follow.y((event.clientY - (box.top + box.height / 2)) * PULL);
+      follow.x((event.clientX - (box.left + box.width / 2)) * MAGNETIC_PULL);
+      follow.y((event.clientY - (box.top + box.height / 2)) * MAGNETIC_PULL);
     },
 
     onPointerLeave: (event) => {
