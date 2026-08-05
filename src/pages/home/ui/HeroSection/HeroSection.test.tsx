@@ -1,4 +1,4 @@
-/** HeroSection 테스트 — 페이지 유일의 h1 과 앵커 목적지 계약을 검증한다 */
+/** HeroSection 테스트 — 페이지 유일의 h1 과 마퀴 복사본의 노출 계약을 검증한다 */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { HERO } from '../../config/hero';
@@ -22,11 +22,21 @@ describe('HeroSection', () => {
     ).toBeInTheDocument();
   });
 
-  it('보조 문구와 지역·상태를 함께 보여준다', () => {
+  it('마퀴 반복 복사본은 h1 하나만 남기고 접근성 트리에서 숨긴다', () => {
     render(<HeroSection />);
 
-    expect(screen.getByText(HERO.supporting).tagName).toBe('P');
-    expect(screen.getByText(HERO.location)).toBeInTheDocument();
-    expect(screen.getByText(HERO.availability)).toBeInTheDocument();
+    const copies = screen.getAllByText(HERO.headline);
+    const exposed = copies.filter((copy) => {
+      return copy.getAttribute('aria-hidden') !== 'true';
+    });
+
+    expect(copies.length).toBeGreaterThan(1);
+    expect(exposed).toEqual([screen.getByRole('heading', { level: 1 })]);
+  });
+
+  it('인물 사진을 alt 와 함께 보여준다', () => {
+    render(<HeroSection />);
+
+    expect(screen.getByAltText(HERO.portrait.alt)).toBeInTheDocument();
   });
 });
