@@ -11,6 +11,9 @@ const TYPING = { duration: 2, ease: 'none' } as const;
 /** 다 찍고 걷히기까지 멈추는 시간 — 문장을 읽을 틈 */
 const HOLD = 0.5;
 
+// 위로 빠지므로 뒤에 남는 변은 아랫변이다 — 50% 는 상자 절반을 타원으로 깎는 최대치라 거의 반원이 된다
+const CURVE = { flat: '0% 0% 0% 0%', bottom: '0% 0% 50% 50%' } as const;
+
 // 모듈 스코프 — 새로고침에만 초기화된다. 클라이언트 라우팅으로 홈에 돌아와도 다시 재생하지 않는다
 let played = false;
 
@@ -60,10 +63,12 @@ export function IntroOverlay() {
               );
             },
           })
-          .to(
+          .fromTo(
             root,
+            { borderRadius: CURVE.flat },
             {
               yPercent: -100,
+              borderRadius: CURVE.bottom,
               duration: MOTION.duration.cinematic,
               ease: MOTION.ease.cinematic,
             },
