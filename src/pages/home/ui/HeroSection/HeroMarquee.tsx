@@ -1,14 +1,17 @@
 'use client';
 
-/** Hero 하단 마퀴 — 같은 문구를 우→좌로 무한히 흘린다. 트랙의 x 만 소유한다 */
+/** Hero 하단 마퀴 — 스크롤 방향대로 문구를 무한히 흘린다. 트랙의 x 만 소유한다 */
 import { useRef } from 'react';
-import { gsap, useGSAP } from '../../lib';
+import { ScrollTrigger, gsap, useGSAP } from '../../lib';
 
 /** 초당 이동 픽셀 — 문구가 길어져도 체감 속도가 같게 duration 을 실측 폭에서 계산한다 */
 const SPEED = 90;
 
 /** 복사본 수 — 한 벌은 되감기에 쓰이므로 나머지가 화면을 덮어야 이음매가 안 보인다 */
 const COPY_COUNT = 4;
+
+/** 되감기가 바닥났을 때 앞으로 밀어 둘 바퀴 수 — 위로 계속 올려도 다시 바닥나지 않을 만큼만 크면 된다 */
+const REWIND_CYCLES = 100;
 
 /* leading 은 text-hero 의 0.9 를 덮는다 — 줄 상자가 글자보다 낮아 쉼표가 overflow 에 잘린다 */
 const COPY_CLASS = 'whitespace-nowrap text-hero leading-[1.15] font-medium';
@@ -36,12 +39,26 @@ export function HeroMarquee({ text, titleId }: HeroMarqueeProps) {
         // 한 벌 폭만큼 민 뒤 되감는다 — 복사본이 같아 되감는 순간이 눈에 띄지 않는다
         const span = copy.getBoundingClientRect().width;
 
-        gsap.to('[data-marquee-track]', {
+        // 타입을 적어야 onReverseComplete 안의 자기 참조가 순환 추론이 되지 않는다
+        const spin: gsap.core.Tween = gsap.to('[data-marquee-track]', {
           x: `-=${span}`,
           modifiers: { x: gsap.utils.unitize(gsap.utils.wrap(-span, 0)) },
           duration: span / SPEED,
           ease: 'none',
           repeat: -1,
+          // 역재생은 totalTime 0 에서 멈춘다 — 되감기 끝에서 앞으로 밀어 위로 올리는 동안 계속 흐르게 한다
+          onReverseComplete: () => {
+            return spin.totalTime(
+              spin.rawTime() + spin.duration() * REWIND_CYCLES
+            );
+          },
+        });
+
+        // direction 은 아래로 1, 위로 -1 이라 그대로 timeScale 이 된다 — 아래로 우→좌, 위로 좌→우
+        ScrollTrigger.create({
+          onUpdate: (self) => {
+            spin.timeScale(self.direction);
+          },
         });
       });
 
