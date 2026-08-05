@@ -1,108 +1,20 @@
-import Link from 'next/link';
-import {
-  getPublishedPosts,
-  type PostListItem,
-  type PostSearchParams,
-} from '@/entities/post';
-import {
-  parsePostSearchParams,
-  PostFilterForm,
-  type PostFilterOption,
-} from '@/features/post-filter';
-import { createSupabaseStaticClient } from '@/shared/api';
-import * as s from './BlogPage.css';
+/** Blog — 글 목록이 설 자리. 지금은 라우트만 세우고 목록은 entities/post 가 붙을 때 채운다 */
+import { Container } from '@/shared/ui';
+import { SiteFooter } from '@/widgets/site-footer';
 
-type BlogPageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-};
-
-type BlogPageViewProps = {
-  posts: PostListItem[];
-  filters?: PostSearchParams;
-};
-
-const toFilterOptions = (
-  values: Array<string | null | undefined>
-): PostFilterOption[] => {
-  return Array.from(
-    new Set(
-      values.filter((value): value is string => {
-        return Boolean(value);
-      })
-    )
-  ).map((value) => {
-    return { label: value, value };
-  });
-};
-
-/** 공개 블로그 목록 UI */
-export function BlogPageView({ posts, filters = {} }: BlogPageViewProps) {
-  const seriesOptions = toFilterOptions(
-    posts.map((post) => {
-      return post.series;
-    })
-  );
-
+export function BlogPage() {
   return (
-    <main className={s.main}>
-      <header className={s.header}>
-        <p className={s.eyebrow}>Blog</p>
-        <h1 className={s.title}>기술 블로그</h1>
-      </header>
-
-      <PostFilterForm
-        filters={filters}
-        seriesOptions={seriesOptions}
-      />
-
-      {posts.length === 0 ? (
-        <p
-          className={s.empty}
-          role='status'>
-          조건에 맞는 글이 없습니다.
-        </p>
-      ) : (
-        <section
-          aria-label='게시글 목록'
-          className={s.list}>
-          {posts.map((post) => {
-            return (
-              <article
-                className={s.item}
-                key={post.id}>
-                <h2 className={s.itemTitle}>
-                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                </h2>
-                <p className={s.description}>{post.description}</p>
-                <div className={s.meta}>
-                  {post.published_at ? (
-                    <time dateTime={post.published_at}>
-                      {post.published_at.slice(0, 10)}
-                    </time>
-                  ) : null}
-                  {post.tags.map((tag) => {
-                    return <span key={tag}>{tag}</span>;
-                  })}
-                </div>
-              </article>
-            );
-          })}
-        </section>
-      )}
-    </main>
-  );
-}
-
-/** 공개 블로그 목록 페이지 */
-export async function BlogPage({ searchParams }: BlogPageProps) {
-  const client = createSupabaseStaticClient();
-  const filters = parsePostSearchParams((await searchParams) ?? {});
-  const posts = await getPublishedPosts(client, filters);
-
-  return (
-    <BlogPageView
-      filters={filters}
-      posts={posts}
-    />
+    <>
+      <main className='bg-background py-section text-foreground'>
+        <Container className='flex min-h-[60svh] flex-col justify-center gap-5'>
+          <h1 className='text-statement'>블로그</h1>
+          <p className='text-body-lg break-keep text-muted'>
+            읽고 만들며 배운 것을 정리해 둔다. 목록은 준비 중이다.
+          </p>
+        </Container>
+      </main>
+      {/* main 밖이다 — main 안에 중첩된 footer 는 contentinfo 랜드마크가 되지 않는다 */}
+      <SiteFooter />
+    </>
   );
 }

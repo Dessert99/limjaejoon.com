@@ -1,0 +1,145 @@
+/* 디자인 토큰 — primitive 는 :root 의 평범한 변수, semantic 이상만 @theme 에 올려 유틸리티를 만든다 */
+
+/* primitive: @theme 에 올리지 않는다 — 올리면 bg-ds-neutral-900 이 생겨 semantic 계층을 우회하는 통로가 된다 */
+:root {
+  /* 중립 팔레트 — 앰버 accent 와 맞물리게 아주 옅은 웜톤을 섞었다 */
+  --ds-neutral-0: #ffffff;
+  --ds-neutral-50: #f7f5f2;
+  --ds-neutral-100: #efece7;
+  --ds-neutral-200: #e2ded7;
+  --ds-neutral-300: #c9c4bb;
+  --ds-neutral-400: #a49e94;
+  --ds-neutral-500: #807a70;
+  --ds-neutral-600: #615c54;
+  --ds-neutral-700: #46423c;
+  --ds-neutral-800: #2e2b27;
+  --ds-neutral-900: #1b1917;
+  --ds-neutral-950: #121110;
+  --ds-neutral-1000: #000000;
+
+  /* accent 팔레트 — 흔한 파랑·보라를 피해 앰버 계열로 잡았다 */
+  --ds-accent-100: #fdf0d9;
+  --ds-accent-200: #f9dda9;
+  --ds-accent-300: #f3c877;
+  --ds-accent-400: #ecb14a;
+  --ds-accent-500: #e09a24;
+  --ds-accent-600: #c17f16;
+  --ds-accent-700: #9a6412;
+  --ds-accent-800: #744b10;
+  --ds-accent-900: #4d320c;
+
+  /* raw radius — none·full 은 Tailwind 의 정적 유틸리티(rounded-none/full)가 이미 담당한다 */
+  --ds-radius-none: 0px;
+  --ds-radius-sm: 0.25rem;
+  --ds-radius-md: 0.5rem;
+  --ds-radius-lg: 1rem;
+  --ds-radius-full: 9999px;
+
+  /* raw duration — Tailwind 에 duration 네임스페이스가 없어 motion.css 가 @utility 로 이름을 붙인다 */
+  --ds-duration-100: 100ms;
+  --ds-duration-200: 200ms;
+  --ds-duration-400: 400ms;
+  --ds-duration-800: 800ms;
+  --ds-duration-1200: 1200ms;
+
+  /* raw easing — reveal 은 뒤끝을 길게, cinematic 은 앞뒤를 모두 눌러 큰 이동에 쓴다 */
+  --ds-ease-linear: linear;
+  --ds-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ds-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ds-ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-ease-cinematic: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* z 계층 — semantic 승격을 하지 않는 유일한 층이라 JSX 에서 z-(--ds-z-content) 로 직접 참조한다 */
+  --ds-z-base: 0;
+  --ds-z-content: 10;
+  --ds-z-sticky: 100;
+  --ds-z-overlay: 300;
+  --ds-z-transition: 400;
+}
+
+/* semantic — inline 을 쓰지 않는다: inline 은 유틸리티에 값을 박아 넣어 [data-surface] 반전을 죽인다 */
+/* static — 기본값은 "쓰인 변수만" 방출이라, 아직 소비자가 없는 2단계에서는 :root 가 텅 비고 반전이 성립하지 않는다 */
+@theme static {
+  /* 기본 팔레트를 지운다 — bg-red-500 같은 비토큰 색이 애초에 생성되지 않게 하는 유일한 강제 수단 */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-background: var(--ds-neutral-950);
+  --color-foreground: var(--ds-neutral-50);
+  --color-surface: var(--ds-neutral-900);
+  --color-surface-raised: var(--ds-neutral-800);
+  --color-surface-inverse: var(--ds-neutral-50);
+  --color-muted: var(--ds-neutral-200);
+  --color-subtle: var(--ds-neutral-400);
+  --color-inverse: var(--ds-neutral-950);
+  --color-border: var(--ds-neutral-800);
+  --color-border-strong: var(--ds-neutral-600);
+  --color-accent: var(--ds-accent-400);
+  --color-accent-hover: var(--ds-accent-300);
+  --color-accent-foreground: var(--ds-neutral-950);
+  --color-focus-ring: var(--ds-accent-300);
+
+  /* var() 폴백 — next/font 변수가 없으면 --font-body 통째가 무효값이 되어 폰트가 아니라 서체 스택 전체가 날아간다 */
+  --font-body:
+    var(--font-pretendard, 'Pretendard Variable'), system-ui, sans-serif;
+  --font-display: var(--font-body);
+  --default-font-family: var(--font-body);
+
+  /* statement 이상은 clamp — 320px~1920px 사이를 선형으로 잇고 양 끝에서 고정된다 */
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.08em;
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.55;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+  --text-statement: clamp(1.75rem, 1.5rem + 1.25vw, 3rem);
+  --text-statement--line-height: 1.25;
+  --text-statement--letter-spacing: -0.01em;
+  --text-section: clamp(2.5rem, 2rem + 2.5vw, 5rem);
+  --text-section--line-height: 1.05;
+  --text-section--letter-spacing: -0.02em;
+  --text-project: clamp(3rem, 2.2rem + 4vw, 7rem);
+  --text-project--line-height: 0.95;
+  --text-project--letter-spacing: -0.03em;
+  --text-hero: clamp(3.5rem, 1.8rem + 8.5vw, 12rem);
+  --text-hero--line-height: 0.9;
+  --text-hero--letter-spacing: -0.04em;
+
+  --radius-sm: var(--ds-radius-sm);
+  --radius-md: var(--ds-radius-md);
+  --radius-lg: var(--ds-radius-lg);
+
+  --container-content: 72rem;
+  --container-wide: 90rem;
+
+  /* 미디어 비율 — 전부 가로다. 세로가 하나라도 섞이면 Work Index 와 Gallery rail 높이가 통째로 흔들린다 */
+  /* 세로 앱 스크린샷은 기기 목업 안에 얹어 가로 프레임으로 맞춘다 */
+  --aspect-hero: 16 / 10;
+  --aspect-thumbnail: 4 / 3;
+  --aspect-gallery: 3 / 2;
+
+  /* Tailwind 기본값과 같은 수치를 명시한다 — Storybook 뷰포트 목록이 참조할 단일 출처가 필요하다 */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+
+  /* 여백도 clamp — 섹션 리듬이 모바일에서 과하지 않고 데스크톱에서 충분히 벌어져야 한다 */
+  --spacing-gutter: clamp(1.25rem, 4vw, 3rem);
+  --spacing-section: clamp(6rem, 12vw, 12rem);
+  --spacing-section-sm: clamp(3rem, 6vw, 6rem);
+  --spacing-grid-gap: clamp(1.5rem, 3vw, 3rem);
+  /* Gallery rail 한 칸 — clamp 하나로 모바일·데스크톱을 덮어 브레이크포인트가 필요 없다 */
+  --spacing-rail-item: clamp(16rem, 45vw, 34rem);
+}
+
+/* controlled bleed — Container 의 gutter 만 되돌린다. 100vw 계열은 스크롤바 폭까지 세어 가로 오버플로를 만든다 */
+@utility bleed-gutter {
+  margin-inline: calc(-1 * var(--spacing-gutter));
+}

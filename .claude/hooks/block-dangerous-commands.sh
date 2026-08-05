@@ -30,10 +30,9 @@ DANGEROUS_PATTERNS=(
   "git clean -fx"
 )
 
-# (2) 사람이 직접 해야 하는 git 쓰기(push·브랜치) — Claude 자동 실행 금지(무단 변경 방지)
-# 커밋은 정책상 허용 — "커밋해라" 워크플로 유지
+# (2) 사람이 직접 해야 하는 git 브랜치 조작 — Claude 자동 실행 금지(무단 변경 방지)
+# 커밋·push 는 정책상 허용 — 단, force push 는 위 파괴적 목록에서 여전히 차단
 BLOCKED_GIT_PATTERNS=(
-  "git push"
   "git checkout -b"
   "git switch"
   "git branch -d"

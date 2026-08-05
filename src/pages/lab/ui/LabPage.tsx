@@ -1,49 +1,20 @@
-/** 랩 목록 — 인터랙션 실험 페이지 인덱스 */
-import Link from 'next/link';
-import * as s from './LabPage.css';
+/** Lab — 실험을 늘어놓는 자리. 지금은 라우트만 세운다 */
+import { Container } from '@/shared/ui';
+import { SiteFooter } from '@/widgets/site-footer';
 
-// 아직 항목이 적어 로컬 상수로 관리 — 데이터 소스가 필요해지면 그때 분리한다
-const LAB_ENTRIES = [
-  {
-    href: '/lab/transition',
-    title: 'transition',
-    description: 'CSS transition 4요소를 실시간 조작하며 배우는 플레이그라운드',
-  },
-  {
-    href: '/lab/animation',
-    title: 'animation',
-    description:
-      '@keyframes 프리셋과 animation 고유 속성을 조작하며 배우는 플레이그라운드',
-  },
-];
-
-/** /lab 페이지 — 실험 목록 카드 */
 export function LabPage() {
   return (
-    <main className={s.main}>
-      <header className={s.header}>
-        <p className={s.eyebrow}>Lab</p>
-        <h1 className={s.title}>인터랙션 실험실</h1>
-        <p className={s.description}>
-          인터랙션 애니메이션 개념을 하나씩, 직접 만져보며 배우는 공간.
-        </p>
-      </header>
-      <section
-        aria-label='실험 목록'
-        className={s.list}>
-        {LAB_ENTRIES.map((entry) => {
-          return (
-            <article
-              className={s.item}
-              key={entry.href}>
-              <h2 className={s.itemTitle}>
-                <Link href={entry.href}>{entry.title}</Link>
-              </h2>
-              <p className={s.itemDescription}>{entry.description}</p>
-            </article>
-          );
-        })}
-      </section>
-    </main>
+    <>
+      <main className='bg-background py-section text-foreground'>
+        <Container className='flex min-h-[60svh] flex-col justify-center gap-5'>
+          <h1 className='text-statement'>랩</h1>
+          <p className='text-body-lg break-keep text-muted'>
+            제품이 되기 전의 것들 — 만들다 만 것과 실험 중인 것. 준비 중이다.
+          </p>
+        </Container>
+      </main>
+      {/* main 밖이다 — main 안에 중첩된 footer 는 contentinfo 랜드마크가 되지 않는다 */}
+      <SiteFooter />
+    </>
   );
 }

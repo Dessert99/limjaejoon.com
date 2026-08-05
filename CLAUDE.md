@@ -4,11 +4,17 @@
 
 ## 구조
 
-프론트엔드는 FSD(Feature-Sliced Design)를 따른다. 레이어 의존은 위에서 아래로만: `app → pages → widgets → features → entities → shared`. FSD 레이어는 `src/` 아래, Next 라우터는 `app/`(`@/pages/*` 를 re-export 하는 껍데기)에 둔다. 구조는 Steiger(`npm run fsd`)로 강제한다. 상세 규칙은 [folder-structure.md](docs/conventions/folder-structure.md) 참고. 컴포넌트 구현 기본값은 [component-convention.md](docs/conventions/component-convention.md) 참고.
+프론트엔드는 FSD(Feature-Sliced Design)를 따른다. 레이어 의존은 위에서 아래로만: `app → pages → widgets → features → entities → shared`. FSD 레이어는 `src/` 아래, Next 라우터는 `app/`(`@/pages/*` 를 re-export 하는 껍데기)에 둔다. 구조는 Steiger(`npm run fsd`)로 강제한다. 상세 규칙은 [folder-structure.md](docs/conventions/folder-structure.md) 참고.
 
-코드 변경 작업은 기본적으로 [tdd-convention.md](docs/conventions/tdd-convention.md)의 RED -> GREEN -> REFACTOR 루프를 따른다.
+코드 변경은 RED -> GREEN -> REFACTOR 를 따르되, 테스트는 파일이 아니라 계약 단위로 만든다 — 소스마다 짝을 맞추지 말고 깨졌을 때 사용자가 겪는 계약이 있는 곳에만 둔다. 위임만 하는 래퍼, 라이브러리가 이미 보장하는 동작, 상위 테스트가 순회로 덮는 항목은 짝이 비어도 그대로 둔다. 렌더 스모크와 `className` 병합은 소비자가 실제로 덧입히는 shared public API에만 남긴다. `describe`·`it` 설명문은 한국어로 관찰 가능한 동작을 적고, 컴포넌트명·prop 같은 고유 식별자만 영문으로 둔다. 테스트 위치는 folder-structure.md 4절.
 
-모든 파일·로직에는 [comment-convention.md](docs/conventions/comment-convention.md)에 따라 주석을 남긴다. 파일 헤더와 모든 export는 단일 라인 JSDoc(`/** ... */`), 본문 안 비자명 로직은 한 줄 `//` 주석으로 WHY(의도·함정)를 적는다. 멀티라인 블록·`@param` 태그·코드 받아쓰기는 금지.
+스타일은 Tailwind CSS v4 토큰 계층을 쓴다. 토큰 값 자체는 `src/shared/styles/*.css` 가 유일한 출처다.
+
+홈의 스크롤 모션은 GSAP이 소유한다. DOM을 렌더하는 컴포넌트가 애니메이션 생명주기도 갖고, 복잡한 타임라인만 인접한 `create*Timeline.ts` 로 분리한다. 배치·셀렉터·감쇠·은닉 규칙은 [gsap.md](docs/conventions/gsap.md) 참고.
+
+컴포넌트별 함정(`{...rest}` 순서, ref 미개방)은 해당 파일 주석에 있다.
+
+주석은 파일 헤더와 모든 export에 단일 라인 JSDoc(`/** ... */`), 함수 본문 안 비자명 로직에 한 줄 `//`로 WHY(의도·함정)를 적는다. 본문은 한국어, 식별자는 영어. 멀티라인 블록·`@param`/`@returns` 태그·코드 받아쓰기(WHAT)는 금지 — 한 줄에 안 들어가면 주석 문제가 아니라 코드 분리·네이밍 신호다. 기초 개념(`fail-fast`, `barrel` 등)도 풀어쓰지 말고 한 줄 안에 단어로 녹인다. 단순 re-export만 하는 `index.ts`와 자명한 줄에는 달지 않는다. 보안 위험·법적 구속처럼 길게 풀 정당한 이유가 있을 때만 멀티라인을 허용한다.
 
 ## 개발 명령어
 

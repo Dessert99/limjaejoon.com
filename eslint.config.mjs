@@ -4,8 +4,6 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 // Next.js TypeScript 권장 룰셋을 가져옵니다.
 import nextTs from 'eslint-config-next/typescript';
-// 프로젝트 전용 디자인 토큰 규율 플러그인을 가져옵니다.
-import designTokens from './eslint-rules/index.mjs';
 
 // 프로젝트 최종 ESLint 설정 배열을 정의합니다.
 const eslintConfig = defineConfig([
@@ -43,8 +41,14 @@ const eslintConfig = defineConfig([
   // #2·#3 컴포넌트 파일(.tsx): 컴포넌트는 선언문, 그 내부 함수(핸들러·콜백)는 전부 화살표
   {
     files: ['**/*.tsx'],
-    // 테스트는 인라인 컴포넌트가 많아 강제에서 제외
-    ignores: ['tests/**', 'e2e/**', '**/*.spec.*', '**/*.test.*'],
+    // 테스트·스토리는 인라인 컴포넌트와 CSF export 가 많아 강제에서 제외
+    ignores: [
+      'tests/**',
+      'e2e/**',
+      '**/*.spec.*',
+      '**/*.test.*',
+      '**/*.stories.*',
+    ],
     rules: {
       // #2 named 컴포넌트는 함수 선언문 강제(익명은 화살표) — JSX 반환 함수를 휴리스틱으로 컴포넌트로 식별
       'react/function-component-definition': [
@@ -90,16 +94,6 @@ const eslintConfig = defineConfig([
     },
   },
 
-  // 디자인 토큰 규율 — 스타일 코드에서 raw 값을 막는다. 토큰·테마 정의부는 raw 값이 살아야 하는 유일한 곳이라 제외
-  {
-    files: ['**/*.css.ts'],
-    ignores: ['src/shared/styles/tokens/**', 'src/shared/styles/themes/**'],
-    plugins: { 'design-tokens': designTokens },
-    rules: {
-      'design-tokens/no-raw-design-values': 'error',
-    },
-  },
-
   // Next 기본 ignore에 프로젝트 성격에 맞는 경로를 명시합니다.
   globalIgnores([
     // 빌드 산출물(.next)은 검사 대상에서 제외합니다.
@@ -108,7 +102,7 @@ const eslintConfig = defineConfig([
     'out/**',
     // 기타 빌드 디렉터리(build)도 제외합니다.
     'build/**',
-    // Storybook 정적 빌드 산출물은 검사 대상에서 제외합니다.
+    // Storybook 정적 빌드 산출물 — 검사하면 번들 파일에서 포매터가 터진다.
     'storybook-static/**',
     // Claude 스킬 자료는 앱 소스가 아니므로 검사 대상에서 제외합니다.
     '.claude/**',

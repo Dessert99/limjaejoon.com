@@ -1,49 +1,33 @@
-/** HeroSection — 이름 인사·소개 문장·블로그 CTA·연락처 */
-import Link from 'next/link';
-import type { ReactNode } from 'react';
-import { profile } from '@/entities/profile';
-import { Button } from '@/shared/ui';
-import { ContactLinks } from '../ContactLinks/ContactLinks';
-import * as s from './HeroSection.css';
+/** Hero — 첫 화면. 인물 사진이 화면을 덮고 하단을 마퀴가 가로지른다 */
+import Image from 'next/image';
+import { HERO } from '../../config/hero';
+import { HeroMarquee } from './HeroMarquee';
+import { HeroNav } from './HeroNav';
 
-/** `**볼드**` 마크업을 strong 요소로 바꿔 tagline 을 렌더 조각으로 변환한다 */
-function renderTagline(text: string): ReactNode[] {
-  return text.split(/(\*\*[^*]+\*\*)/).map((part, index) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return (
-        <strong
-          key={index}
-          className={s.taglineStrong}>
-          {part.slice(2, -2)}
-        </strong>
-      );
-    }
-    return part;
-  });
-}
+// 섹션을 region 랜드마크로 만들려면 이름이 필요하다 — id 만으로는 랜드마크 목록에 안 뜬다
+const TITLE_ID = 'hero-title';
 
-/** 프로필 인사와 지식 모음 CTA 를 담은 히어로 */
 export function HeroSection() {
   return (
-    <section className={s.hero}>
-      <h1 className={s.name}>안녕하세요, {profile.name}입니다.</h1>
-      <ul className={s.taglineList}>
-        {profile.taglines.map((line, index) => {
-          return (
-            <li
-              key={index}
-              className={s.taglineItem}>
-              {renderTagline(line)}
-            </li>
-          );
-        })}
-      </ul>
-      <div className={s.actions}>
-        <Button asChild>
-          <Link href='/blog'>지식 모음 보기</Link>
-        </Button>
-        <ContactLinks contacts={profile.contacts} />
-      </div>
+    <section
+      aria-labelledby={TITLE_ID}
+      className='relative flex min-h-svh flex-col justify-end overflow-hidden pb-6'>
+      {/* Media 를 쓰지 않는다 — 비율 상자라 h-full 과 만나면 높이에서 폭을 역산해 좁은 화면 밖으로 넘친다 */}
+      <Image
+        src={HERO.portrait.src}
+        alt={HERO.portrait.alt}
+        fill
+        priority
+        sizes='100vw'
+        className='z-(--ds-z-base) object-cover'
+      />
+
+      <HeroNav />
+
+      <HeroMarquee
+        text={HERO.headline}
+        titleId={TITLE_ID}
+      />
     </section>
   );
 }

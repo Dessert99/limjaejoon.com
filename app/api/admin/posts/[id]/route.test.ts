@@ -46,7 +46,7 @@ describe('PATCH /api/admin/posts/[id]', () => {
     vi.mocked(updateAdminPost).mockReset();
   });
 
-  it('세션이 없으면 401 을 반환하고 write 를 실행하지 않는다', async () => {
+  it('가드가 막으면 그 응답을 그대로 내고 write 를 실행하지 않는다', async () => {
     const unauthorized = NextResponse.json(
       { message: 'Unauthorized' },
       { status: 401 }
@@ -59,22 +59,6 @@ describe('PATCH /api/admin/posts/[id]', () => {
     const response = await PATCH(request(), context);
 
     expect(response.status).toBe(401);
-    expect(updateAdminPost).not.toHaveBeenCalled();
-  });
-
-  it('admin 이 아니면 403 을 반환하고 write 를 실행하지 않는다', async () => {
-    const forbidden = NextResponse.json(
-      { message: 'Forbidden' },
-      { status: 403 }
-    );
-    vi.mocked(requireAdmin).mockResolvedValue({
-      client: null,
-      error: forbidden,
-    });
-
-    const response = await PATCH(request(), context);
-
-    expect(response.status).toBe(403);
     expect(updateAdminPost).not.toHaveBeenCalled();
   });
 

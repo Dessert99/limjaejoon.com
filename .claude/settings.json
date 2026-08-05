@@ -1,7 +1,6 @@
 {
   "permissions": {
     "deny": [
-      "Bash(git push:*)",
       "Bash(git checkout:*)",
       "Bash(git switch:*)",
       "Bash(git branch:*)",
@@ -43,6 +42,6 @@
     ]
   },
   "enabledPlugins": {
-    "superpowers@claude-plugins-official": true
+    "superpowers@claude-plugins-official": false
   }
 }

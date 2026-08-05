@@ -1,0 +1,56 @@
+/* 전역 스타일 진입점 — 앱과 Storybook 이 이 파일 하나를 공유한다(Storybook 전용 CSS 를 만들지 않는다) */
+
+/* source(none) — 자동 스캔은 CWD 전체를 훑어 docs·.claude 의 산문까지 클래스 후보로 삼는다 */
+@import 'tailwindcss' source(none);
+@import './tokens.css';
+@import './motion.css';
+
+@source '../../../app';
+@source '../../../src';
+@source '../../../.storybook';
+
+/* 섹션 반전 — semantic 이름만 덮는다. primitive 를 덮으면 accent 까지 팔레트가 통째로 끌려간다 */
+/* @layer 밖에 둬야 @layer theme 의 :root 정의를 확실히 이긴다 */
+[data-surface='light'] {
+  color-scheme: light;
+
+  --color-background: var(--ds-neutral-100);
+  --color-foreground: var(--ds-neutral-950);
+  --color-surface: var(--ds-neutral-50);
+  --color-surface-raised: var(--ds-neutral-0);
+  --color-surface-inverse: var(--ds-neutral-950);
+  --color-muted: var(--ds-neutral-700);
+  /* 600 이다 — 500 은 밝은 표면에서 3.91:1 이라 본문 크기 기준(4.5:1)에 못 미친다 */
+  --color-subtle: var(--ds-neutral-600);
+  --color-inverse: var(--ds-neutral-50);
+  --color-border: var(--ds-neutral-200);
+  --color-border-strong: var(--ds-neutral-400);
+  --color-accent: var(--ds-accent-700);
+  --color-accent-hover: var(--ds-accent-800);
+  --color-accent-foreground: var(--ds-neutral-0);
+  --color-focus-ring: var(--ds-accent-700);
+}
+
+@layer base {
+  /* 다크가 기본이라 스크롤바·폼 컨트롤도 다크로 맞춘다(밝은 섹션은 위 반전 블록이 되돌린다) */
+  html {
+    color-scheme: dark;
+
+    /* 스크롤바가 나타났다 사라지며 생기는 가로 흔들림을 막는다 */
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* 포커스 링은 토큰으로 통일 — 컴포넌트마다 다시 정의하지 않는다 */
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+}

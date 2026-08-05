@@ -1,104 +1,52 @@
+/** Button 테스트 — 엘리먼트 선택(button/a)과 props 전달 계약만 검증한다 */
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Button } from './Button';
 
 describe('Button', () => {
-  it('asChild가 설정되면 자식 엘리먼트에 버튼 스타일과 props를 합성한다', () => {
-    render(
-      <Button
-        asChild
-        className='external'
-        data-testid='button-as-link'>
-        <a href='/about'>소개</a>
-      </Button>
-    );
+  it('기본은 type 이 button 인 button 엘리먼트다', () => {
+    render(<Button>보내기</Button>);
 
-    const link = screen.getByRole('link', { name: '소개' });
-    expect(link).toHaveAttribute('href', '/about');
-    expect(link).toHaveClass('external');
-    expect(screen.getByTestId('button-as-link')).toBe(link);
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    const button = screen.getByRole('button', { name: '보내기' });
+
+    expect(button.tagName).toBe('BUTTON');
+    expect(button).toHaveAttribute('type', 'button');
   });
 
-  it('기본 렌더에서는 ref를 실제 button 노드로 전달한다', () => {
-    const ref = { current: null as HTMLButtonElement | null };
-    render(<Button ref={ref}>확인</Button>);
+  it('소비자가 준 type 이 기본값을 이긴다', () => {
+    render(<Button type='submit'>보내기</Button>);
 
-    expect(ref.current).toBeInstanceOf(HTMLButtonElement);
-  });
-
-  it('기본 button type을 button으로 설정하고 명시 type은 유지한다', () => {
-    render(
-      <>
-        <Button>저장</Button>
-        <Button type='submit'>제출</Button>
-      </>
-    );
-
-    expect(screen.getByRole('button', { name: '저장' })).toHaveAttribute(
-      'type',
-      'button'
-    );
-    expect(screen.getByRole('button', { name: '제출' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: '보내기' })).toHaveAttribute(
       'type',
       'submit'
     );
   });
 
-  it('loading 상태에서는 접근성 이름을 유지하고 busy 상태만 노출한다', () => {
-    render(<Button loading>저장하기</Button>);
+  it('type 을 undefined 로 넘겨도 button 을 유지한다', () => {
+    // 감싸는 컴포넌트가 옵셔널 type 을 그대로 흘리는 흔한 경우 — 속성이 지워지면 form 안에서 submit 로 되살아난다
+    render(<Button type={undefined}>보내기</Button>);
 
-    const button = screen.getByRole('button', { name: '저장하기' });
-    expect(button).toHaveAttribute('aria-busy', 'true');
-    expect(button).toHaveAttribute('data-loading');
-    expect(button).not.toBeDisabled();
+    expect(screen.getByRole('button', { name: '보내기' })).toHaveAttribute(
+      'type',
+      'button'
+    );
   });
 
-  it('loading과 disabled는 분리한다', () => {
-    render(
-      <Button
-        loading
-        disabled>
-        저장하기
-      </Button>
-    );
+  it('href 를 주면 링크로 렌더한다', () => {
+    render(<Button href='/blog'>블로그</Button>);
 
-    const button = screen.getByRole('button', { name: '저장하기' });
-    expect(button).toHaveAttribute('data-loading');
-    expect(button).toHaveAttribute('data-disabled');
-    expect(button).toBeDisabled();
+    const link = screen.getByRole('link', { name: '블로그' });
+
+    expect(link).toHaveAttribute('href', '/blog');
+    expect(link).not.toHaveAttribute('type');
   });
 
-  it('secondary variant에서 block prop이 className을 변경한다', () => {
-    const { rerender } = render(<Button variant='secondary'>저장</Button>);
-    const plain = screen.getByRole('button', { name: '저장' }).className;
+  it('소비자 className 이 variant 색을 덮는다', () => {
+    render(<Button className='bg-surface'>보내기</Button>);
 
-    rerender(
-      <Button
-        variant='secondary'
-        block>
-        저장
-      </Button>
-    );
-    const blocked = screen.getByRole('button', { name: '저장' }).className;
+    const button = screen.getByRole('button', { name: '보내기' });
 
-    expect(blocked).not.toBe(plain);
-  });
-
-  it('compound icon slot을 렌더링하고 iconOnly 접근성 이름 누락을 개발 경고로 알려준다', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-    render(
-      <Button layout='iconOnly'>
-        <Button.Icon>
-          <span aria-hidden>+</span>
-        </Button.Icon>
-      </Button>
-    );
-
-    expect(screen.getByText('+')).toBeInTheDocument();
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining('iconOnly'));
-
-    warn.mockRestore();
+    expect(button).toHaveClass('bg-surface');
+    expect(button).not.toHaveClass('bg-accent');
   });
 });

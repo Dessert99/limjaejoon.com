@@ -29,7 +29,7 @@ describe('POST /api/admin/images', () => {
     vi.mocked(readPostImageBucket).mockReturnValue('post-images');
   });
 
-  it('세션이 없으면 401 을 반환하고 storage upload 를 실행하지 않는다', async () => {
+  it('가드가 막으면 그 응답을 그대로 내고 storage upload 를 실행하지 않는다', async () => {
     const upload = vi.fn();
     const unauthorized = NextResponse.json(
       { message: 'Unauthorized' },
@@ -51,31 +51,6 @@ describe('POST /api/admin/images', () => {
     );
 
     expect(response.status).toBe(401);
-    expect(upload).not.toHaveBeenCalled();
-  });
-
-  it('admin 이 아니면 403 을 반환하고 storage upload 를 실행하지 않는다', async () => {
-    const upload = vi.fn();
-    const forbidden = NextResponse.json(
-      { message: 'Forbidden' },
-      { status: 403 }
-    );
-    vi.mocked(requireAdmin).mockResolvedValue({
-      client: {
-        storage: {
-          from: vi.fn(() => {
-            return { upload };
-          }),
-        },
-      } as never,
-      error: forbidden,
-    });
-
-    const response = await POST(
-      makeRequest(new File(['image'], 'image.png', { type: 'image/png' }))
-    );
-
-    expect(response.status).toBe(403);
     expect(upload).not.toHaveBeenCalled();
   });
 

@@ -1,0 +1,108 @@
+/* 모션 토큰과 감쇠 가드 — 이 파일은 어떤 엘리먼트의 transform 도 소유하지 않는다(소유권은 각 Effect 컴포넌트) */
+
+/* easing 은 Tailwind 네임스페이스가 있어 ease-reveal 이 자동 생성된다 */
+@theme static {
+  --ease-linear: var(--ds-ease-linear);
+  --ease-standard: var(--ds-ease-standard);
+  --ease-enter: var(--ds-ease-enter);
+  --ease-exit: var(--ds-ease-exit);
+  --ease-reveal: var(--ds-ease-reveal);
+  --ease-cinematic: var(--ds-ease-cinematic);
+}
+
+/* duration 은 네임스페이스가 없다 — @utility 로 이름을 붙여 JSX 가 --ds-* 를 직접 물지 않게 한다 */
+/* --tw-duration 도 같이 채운다 — transition 유틸리티가 그 변수를 읽어, 안 채우면 hover:transition 류에 되밀린다 */
+@utility duration-instant {
+  --tw-duration: var(--ds-duration-100);
+  transition-duration: var(--ds-duration-100);
+}
+
+@utility duration-quick {
+  --tw-duration: var(--ds-duration-200);
+  transition-duration: var(--ds-duration-200);
+}
+
+@utility duration-standard {
+  --tw-duration: var(--ds-duration-400);
+  transition-duration: var(--ds-duration-400);
+}
+
+@utility duration-slow {
+  --tw-duration: var(--ds-duration-800);
+  transition-duration: var(--ds-duration-800);
+}
+
+@utility duration-cinematic {
+  --tw-duration: var(--ds-duration-1200);
+  transition-duration: var(--ds-duration-1200);
+}
+
+/* 마스크 트랙 — overflow 가 디센더(g·y)를 자르므로 em 여백을 주고 같은 만큼 되당겨 레이아웃을 유지한다 */
+/* 이 층은 overflow 만 소유한다 — translate 는 안쪽 [data-reveal] 이 가진다(설계 7.3) */
+@utility mask-track {
+  --mask-overhang: 0.18em;
+  overflow: hidden;
+  padding-block-end: var(--mask-overhang);
+  margin-block-end: calc(-1 * var(--mask-overhang));
+}
+
+/* MediaReveal 의 clip-path 와 scale 은 컴포넌트가 GSAP 타임라인으로 소유한다 */
+
+/* Gallery rail 의 가로 흐름은 Rail 컴포넌트가 GSAP 으로 소유한다 — 여기 남는 건 감쇠 레이아웃뿐이다 */
+/* 감쇠에서는 흐름만 끄는 게 아니라 레이아웃을 접는다 */
+/* 애니메이션만 끄면 화면보다 넓은 한 줄이 그대로 남아 375px 에서 1100px 짜리 트랙을 손으로 훑어야 한다 */
+@media (prefers-reduced-motion: reduce) {
+  [data-rail] {
+    display: grid;
+    width: auto;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(100%, var(--spacing-rail-item)), 1fr)
+    );
+  }
+
+  [data-rail] > * {
+    width: auto;
+  }
+}
+
+[data-motion='reduced'] [data-rail] {
+  display: grid;
+  width: auto;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--spacing-rail-item)), 1fr)
+  );
+}
+
+[data-motion='reduced'] [data-rail] > * {
+  width: auto;
+}
+
+/* 감쇠는 두 셀렉터를 함께 건다 — 앞은 실사용자, 뒤는 Storybook 토글 */
+/* GSAP 모션은 여기 안 걸린다 — gsap.matchMedia 가 감쇠에서 생성 자체를 막는다 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* 애니메이션은 늦추는 게 아니라 끈다 — fill:both 를 1ms 로 끝내면 끝 상태가 굳어 밀린 자리에서 멈춘다 */
+    animation-name: none !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* Next 가 <html> 에 거는 부드러운 스크롤도 여기서 되돌린다 */
+  [data-scroll-behavior='smooth'] {
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-motion='reduced'],
+[data-motion='reduced'] *,
+[data-motion='reduced'] *::before,
+[data-motion='reduced'] *::after {
+  animation-name: none !important;
+  transition-duration: 1ms !important;
+  transition-delay: 0ms !important;
+  scroll-behavior: auto !important;
+}

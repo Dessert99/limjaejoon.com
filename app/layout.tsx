@@ -1,27 +1,31 @@
-import { themeBootScript } from '@/features/theme-toggle';
-import { SITE_URL } from '@/shared/config';
 import '@/shared/styles/global.css';
+import { SITE, SITE_URL } from '@/shared/config';
+import { pretendard } from '@/shared/styles';
+import { RouteTransition } from '@/shared/ui';
 import type { Metadata } from 'next';
+
+// title·og·twitter 세 곳이 같은 문장을 쓴다 — 갈리면 검색 결과와 공유 카드가 서로 다른 말을 한다
+const pageTitle = `${SITE.name} — ${SITE.role}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'limjaejoon.com',
-    template: '%s | 임재준',
+    default: pageTitle,
+    template: `%s | ${SITE.name}`,
   },
-  description: 'limjaejoon.com shell',
+  description: SITE.tagline,
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
     url: SITE_URL,
-    siteName: '임재준',
-    title: 'limjaejoon.com',
-    description: 'limjaejoon.com shell',
+    siteName: SITE.name,
+    title: pageTitle,
+    description: SITE.tagline,
   },
   twitter: {
     card: 'summary',
-    title: 'limjaejoon.com',
-    description: 'limjaejoon.com shell',
+    title: pageTitle,
+    description: SITE.tagline,
   },
 };
 
@@ -30,16 +34,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 폰트 variable 은 <html> 에 걸어야 한다 — :root 에서 선언된 --font-body 가 그 자리에서 해석되기 때문
   return (
-    // suppressHydrationWarning: 부트 스크립트가 서버 HTML에 없는 data-theme을 심는다
     <html
       lang='ko'
       data-scroll-behavior='smooth'
-      suppressHydrationWarning>
+      className={pretendard.variable}>
       <body>
-        {/* 첫 페인트 전에 저장된 테마 적용 — 다크 모드 새로고침 시 흰 화면 번쩍임 방지 */}
-        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
-        {children}
+        <RouteTransition>{children}</RouteTransition>
       </body>
     </html>
   );

@@ -20,11 +20,5 @@ export type Post = Database['public']['Tables']['posts']['Row'];
 /** 공개 목록에서 필요한 posts 필드만 노출한다 */
 export type PostListItem = Pick<
   Post,
-  | 'id'
-  | 'slug'
-  | 'title'
-  | 'description'
-  | 'tags'
-  | 'series'
-  | 'published_at'
+  'id' | 'slug' | 'title' | 'description' | 'tags' | 'series' | 'published_at'
 >;

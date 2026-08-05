@@ -1,168 +1,107 @@
-/** Button 상태 문서 — variant, size, layout, icon slot, loading, asChild 매트릭스 */
+/** Button 스토리 — variant×size 조합과 링크/버튼 역할 분기를 눈으로 확인한다 */
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { Button } from './Button';
+import type { ComponentProps } from 'react';
+import { Button, type ButtonStyleProps } from './Button';
 
-/** 데모용 인라인 아이콘 — 별도 prop 없이 children에 넣으면 base의 svg 규칙이 크기를 잡는다 */
-function PlusIcon() {
-  return (
-    <svg
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      aria-hidden>
-      <path d='M12 5v14M5 12h14' />
-    </svg>
-  );
-}
+/** args 에서 href 를 뺀다 — 판별 union 을 그대로 주면 Storybook 의 Args 추론이 never 로 접는다 */
+type ButtonStoryArgs = ComponentProps<'button'> & ButtonStyleProps;
 
 const meta = {
-  title: 'shared/ui/Button',
+  title: 'UI/Button',
   component: Button,
-} satisfies Meta<typeof Button>;
+  decorators: [
+    (Story) => {
+      return (
+        <div className='bg-background p-10 text-foreground'>
+          <Story />
+        </div>
+      );
+    },
+  ],
+  args: { children: '프로젝트 보기' },
+} satisfies Meta<ButtonStoryArgs>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = { args: { children: '버튼' } };
+export const Default: Story = {};
 
-export const Variants: Story = {
-  render: () => {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          gap: '1rem',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-        }}>
-        <Button variant='primary'>primary</Button>
-        <Button variant='secondary'>secondary</Button>
-        <Button variant='outline'>outline</Button>
-        <Button variant='ghost'>ghost</Button>
-        <Button variant='critical'>critical</Button>
-      </div>
-    );
-  },
+export const Outline: Story = {
+  args: { variant: 'outline' },
 };
 
 export const Sizes: Story = {
-  render: () => {
+  render: (args) => {
     return (
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        <Button size='xsmall'>xsmall</Button>
-        <Button size='small'>small</Button>
-        <Button size='medium'>medium</Button>
-        <Button size='large'>large</Button>
-      </div>
-    );
-  },
-};
-
-export const Block: Story = {
-  render: () => {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-          maxWidth: '20rem',
-        }}>
-        <Button block>primary block</Button>
+      <div className='flex flex-wrap items-center gap-4'>
         <Button
-          variant='secondary'
-          block>
-          secondary block
-        </Button>
-      </div>
-    );
-  },
-};
-
-export const WithIconSlots: Story = {
-  render: () => {
-    return (
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        <Button>
-          <Button.PrefixIcon>
-            <PlusIcon />
-          </Button.PrefixIcon>
-          왼쪽 아이콘
-        </Button>
-        <Button variant='outline'>
-          오른쪽 아이콘
-          <Button.SuffixIcon>
-            <PlusIcon />
-          </Button.SuffixIcon>
-        </Button>
-      </div>
-    );
-  },
-};
-
-export const IconOnly: Story = {
-  render: () => {
-    return (
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          {...args}
+          size='sm'
+        />
         <Button
-          layout='iconOnly'
-          size='small'
-          aria-label='추가'>
-          <Button.Icon>
-            <PlusIcon />
-          </Button.Icon>
-        </Button>
+          {...args}
+          size='md'
+        />
         <Button
-          layout='iconOnly'
-          size='medium'
+          {...args}
+          size='sm'
           variant='outline'
-          aria-label='추가'>
-          <Button.Icon>
-            <PlusIcon />
-          </Button.Icon>
-        </Button>
+        />
         <Button
-          layout='iconOnly'
-          size='large'
-          variant='ghost'
-          aria-label='추가'>
-          <Button.Icon>
-            <PlusIcon />
-          </Button.Icon>
-        </Button>
+          {...args}
+          size='md'
+          variant='outline'
+        />
       </div>
     );
   },
 };
 
-export const Loading: Story = {
-  render: () => {
-    return (
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        <Button loading>저장 중</Button>
-        <Button
-          loading
-          disabled
-          variant='outline'>
-          비활성 로딩
-        </Button>
-      </div>
-    );
-  },
-};
-
+/** href 가 있으면 role 이 link 가 된다 — 키보드 Enter 동작과 스크린리더 안내가 달라진다 */
 export const AsLink: Story = {
   render: () => {
     return (
-      <Button
-        variant='ghost'
-        asChild>
-        <a href='#'>링크 버튼</a>
-      </Button>
+      <div className='flex flex-wrap items-center gap-4'>
+        <Button href='#work'>프로젝트 보기</Button>
+        <Button
+          href='#work'
+          variant='outline'>
+          프로젝트 보기
+        </Button>
+      </div>
     );
   },
 };
 
-export const Disabled: Story = { args: { children: '비활성', disabled: true } };
+export const Disabled: Story = {
+  args: { disabled: true },
+};
+
+/** 두 surface 에서 accent 대비를 같이 본다 — outline 은 반전 때 테두리가 가장 얕아진다 */
+export const Surfaces: Story = {
+  globals: { theme: 'dark' },
+  parameters: { layout: 'fullscreen' },
+  render: (args) => {
+    return (
+      <div className='grid md:grid-cols-2'>
+        <div className='flex gap-4 bg-surface p-10'>
+          <Button {...args} />
+          <Button
+            {...args}
+            variant='outline'
+          />
+        </div>
+        <div
+          className='flex gap-4 bg-surface p-10'
+          data-surface='light'>
+          <Button {...args} />
+          <Button
+            {...args}
+            variant='outline'
+          />
+        </div>
+      </div>
+    );
+  },
+};
