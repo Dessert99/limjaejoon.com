@@ -3,7 +3,7 @@
 /** 진입 인트로 — 인사 문구를 타이핑하고 위로 걷힌다. 최초 페이지 로드 한 번만 재생한다 */
 import { useEffect, useRef, useState } from 'react';
 import { INTRO_GREETING } from '../../config/intro';
-import { MOTION, gsap, useGSAP } from '../../lib';
+import { MOTION, gsap, useGSAP } from '@/shared/motion';
 
 /** 문장 전체가 찍히는 데 쓰는 시간 — 글자 수가 바뀌어도 이 시간은 그대로다(값은 GSAP 이 소유한다) */
 const TYPING = { duration: 2, ease: 'none' } as const;

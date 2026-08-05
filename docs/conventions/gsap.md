@@ -1,6 +1,6 @@
 # GSAP 사용 규칙
 
-GSAP은 홈 화면의 스크롤 모션과 라우트 전환 커튼을 담당한다. 커튼은 `shared/transition` 이 소유하고 플러그인이 필요 없어 `gsap` 패키지를 직접 가져온다 — 등록 지점을 `shared` 로 올리는 건 소비자가 셋이 된 뒤다(3절). 설계 근거는 [2026-08-05-gsap-scroll-smoother-design.md](../superpowers/specs/2026-08-05-gsap-scroll-smoother-design.md).
+GSAP은 홈 화면의 스크롤 모션, 라우트 전환 커튼, 사이트 내비게이션을 담당한다. 소비자가 셋이 되어 등록 지점을 `shared/motion` 으로 올렸다(3절) — 어떤 레이어든 `gsap` 패키지를 직접 가져오지 않고 이 세그먼트를 거친다. 설계 근거는 [2026-08-05-gsap-scroll-smoother-design.md](../superpowers/specs/2026-08-05-gsap-scroll-smoother-design.md).
 
 ## 1. DOM 소유자가 생명주기를 소유한다
 
@@ -21,13 +21,14 @@ hover·focus 의 단발 transition 은 GSAP 대상이 아니다. GSAP 은 여러
 ## 5. 배치
 
 ```
-pages/home/lib/gsap.ts                          registerPlugin 한 곳 — 컴포넌트는 이 파일로만 gsap 을 가져온다
-pages/home/lib/motionPreset.ts                  duration·ease·stagger 상수
-pages/home/ui/{Name}/{Name}.tsx                 DOM·ref·생성·정리
-pages/home/ui/{Name}/create{Name}Timeline.ts    복잡할 때만
+shared/motion/gsap.ts                           registerPlugin 한 곳 — 컴포넌트는 이 파일로만 gsap 을 가져온다
+shared/motion/motionPreset.ts                   duration·ease·stagger 상수
+shared/motion/useMagnetic.ts                    커서 추종 훅 — 레이어를 가리지 않는다
+{layer}/{slice}/ui/{Name}/{Name}.tsx            DOM·ref·생성·정리
+{layer}/{slice}/ui/{Name}/create{Name}Timeline.ts   복잡할 때만
 ```
 
-`shared` 로 올리지 않는다 — 소비자가 전부 홈이다.
+연출 자체는 올리지 않는다 — `shared/motion` 이 갖는 건 등록·값·범용 훅뿐이고, 타임라인은 DOM 을 렌더하는 슬라이스에 남는다(1절).
 
 ## 6. 셀렉터는 `data-*`, scope 는 루트 ref
 

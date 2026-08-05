@@ -2,7 +2,7 @@
 
 /** 스크롤 무대 — ScrollSmoother 만 소유한다. 다른 컴포넌트의 애니메이션을 대신 등록하지 않는다 */
 import { useRef, type ReactNode } from 'react';
-import { MOTION, ScrollSmoother, gsap, useGSAP } from '../../lib';
+import { MOTION, ScrollSmoother, gsap, useGSAP } from '@/shared/motion';
 
 /** 홈 전체를 감싸 관성을 건다 — children 으로 받아 섹션을 서버 컴포넌트로 남긴다 */
 export function ScrollStage({ children }: { children: ReactNode }) {

@@ -2,7 +2,7 @@
 
 /** Hero 하단 마퀴 — 스크롤 방향대로 문구를 무한히 흘린다. 트랙의 x 만 소유한다 */
 import { useRef } from 'react';
-import { ScrollTrigger, gsap, useGSAP } from '../../lib';
+import { ScrollTrigger, gsap, useGSAP } from '@/shared/motion';
 
 /** 초당 이동 픽셀 — 문구가 길어져도 체감 속도가 같게 duration 을 실측 폭에서 계산한다 */
 const SPEED = 90;

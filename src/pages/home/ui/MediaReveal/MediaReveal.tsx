@@ -3,7 +3,7 @@
 /** 미디어 등장 — 바깥이 clip-path, 안쪽이 scale 을 소유한다(Media 는 aspect-ratio·object-fit) */
 import { useRef, type ComponentPropsWithoutRef, type ReactNode } from 'react';
 import { cn } from '@/shared/lib';
-import { MOTION, gsap, staggerIndex, useGSAP } from '../../lib';
+import { MOTION, gsap, staggerIndex, useGSAP } from '@/shared/motion';
 
 /** ref 는 열지 않는다 — 루트 ref 는 애니메이션 scope 몫이라 소비자 ref 가 덮으면 등장이 조용히 죽는다 */
 type MediaRevealProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {

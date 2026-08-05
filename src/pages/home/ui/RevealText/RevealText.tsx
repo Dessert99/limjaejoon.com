@@ -3,7 +3,7 @@
 /** 텍스트 등장 — 각 조각의 바깥이 overflow, 안쪽이 y 를 소유한다 */
 import { Fragment, useRef, type ComponentPropsWithoutRef } from 'react';
 import { cn } from '@/shared/lib';
-import { MOTION, gsap, useGSAP } from '../../lib';
+import { MOTION, gsap, useGSAP } from '@/shared/motion';
 
 /** character 는 조각 사이에 줄바꿈 기회가 없다 — 한 줄에 들어가는 짧은 문구에만 쓴다 */
 type RevealUnit = 'line' | 'word' | 'character';

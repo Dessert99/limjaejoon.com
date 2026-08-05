@@ -3,7 +3,7 @@
 /** 마스크 등장 — 바깥이 overflow, 안쪽이 y 를 소유한다(한 엘리먼트가 둘 다 잡지 않는다) */
 import { useRef, type ComponentPropsWithoutRef } from 'react';
 import { cn } from '@/shared/lib';
-import { MOTION, gsap, staggerIndex, useGSAP } from '../../lib';
+import { MOTION, gsap, staggerIndex, useGSAP } from '@/shared/motion';
 
 /** ref 는 열지 않는다 — 루트 ref 는 애니메이션 scope 몫이라 소비자 ref 가 덮으면 등장이 조용히 죽는다 */
 type MaskRevealProps = ComponentPropsWithoutRef<'div'> & {

@@ -1,6 +1,6 @@
 /** GSAP 모션 값 — duration·ease·stagger 는 GSAP 이 소유한다(CSS 변수를 읽어 오지 않는다) */
 
-/** 홈 모션 값 한 벌 — 초 단위와 GSAP 이름 이징을 쓴다(CSS 토큰과 어휘를 겹치지 않게 둔다) */
+/** 모션 값 한 벌 — 초 단위와 GSAP 이름 이징을 쓴다(CSS 토큰과 어휘를 겹치지 않게 둔다) */
 export const MOTION = {
   smooth: 1.2,
   duration: {

@@ -2,7 +2,7 @@
 import { render, screen } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { STAGGER_MAX_STEPS } from '../../lib';
+import { STAGGER_MAX_STEPS } from '@/shared/motion';
 import { MaskReveal } from './MaskReveal';
 
 describe('MaskReveal', () => {

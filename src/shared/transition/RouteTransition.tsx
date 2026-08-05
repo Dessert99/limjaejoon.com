@@ -2,7 +2,7 @@
 
 /** 라우트 전환 커튼 — 덮고, 이동하고, 걷는다. TransitionLink 로 누른 링크만 이 흐름을 탄다 */
 import { usePathname, useRouter } from '@/shared/lib';
-import { gsap } from 'gsap';
+import { gsap } from '@/shared/motion';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { routeLabel } from './routeLabel';

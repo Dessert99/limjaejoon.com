@@ -3,7 +3,7 @@
 /** Gallery 의 가로 rail 한 줄 — 세로 스크롤 진행률을 가로 이동으로 바꾼다. 트랙의 x 만 소유한다 */
 import { useRef } from 'react';
 import { Media, type MediaRatio } from '@/shared/ui';
-import { gsap, useGSAP } from '../../lib';
+import { gsap, useGSAP } from '@/shared/motion';
 
 /** rail 항목 한 건 — config 의 GalleryItem 이 구조적으로 이 형태다 */
 export interface RailItem {
