@@ -14,6 +14,12 @@ const DESTINATIONS = [
   }),
 ];
 
+// 이름으로 찾지 않는다 — 나열이 펼쳐진 동안 GSAP 이 손잡이의 visibility 를 끄고, 그러면 접근성 이름까지 빈 문자열이 된다
+/** 손잡이 — 트리에 버튼은 이것 하나다. 고지 내용은 이름 대신 속성과 글자로 확인한다 */
+function menuButton(): HTMLElement {
+  return screen.getByRole('button', { hidden: true });
+}
+
 /** 링크 묶음을 [글자, 목적지] 로 편다 */
 function toDestinations(links: HTMLElement[]): (string | null)[][] {
   return links.map((link) => {
@@ -43,40 +49,34 @@ describe('SiteNav', () => {
     const user = userEvent.setup();
     render(<SiteNav />);
 
-    const button = screen.getByRole('button', { name: '메뉴 열기' });
+    const button = menuButton();
 
     expect(button).toHaveAttribute('aria-expanded', 'false');
+    expect(button).toHaveTextContent('메뉴 열기');
 
     await user.click(button);
-    expect(screen.getByRole('button', { name: '메뉴 닫기' })).toHaveAttribute(
-      'aria-expanded',
-      'true'
-    );
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+    expect(button).toHaveTextContent('메뉴 닫기');
 
-    await user.click(screen.getByRole('button', { name: '메뉴 닫기' }));
-    expect(screen.getByRole('button', { name: '메뉴 열기' })).toHaveAttribute(
-      'aria-expanded',
-      'false'
-    );
+    await user.click(button);
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+    expect(button).toHaveTextContent('메뉴 열기');
   });
 
   it('Escape 로 사이드바를 닫는다', async () => {
     const user = userEvent.setup();
     render(<SiteNav />);
 
-    await user.click(screen.getByRole('button', { name: '메뉴 열기' }));
+    await user.click(menuButton());
     await user.keyboard('{Escape}');
 
-    expect(screen.getByRole('button', { name: '메뉴 열기' })).toHaveAttribute(
-      'aria-expanded',
-      'false'
-    );
+    expect(menuButton()).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('손잡이가 제어하는 패널을 aria-controls 로 가리킨다', () => {
     render(<SiteNav />);
 
-    const button = screen.getByRole('button', { name: '메뉴 열기' });
+    const button = menuButton();
     const panel = screen.getByRole('dialog', { hidden: true });
 
     expect(button.getAttribute('aria-controls')).toBe(panel.id);
