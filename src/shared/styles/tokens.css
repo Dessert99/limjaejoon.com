@@ -97,6 +97,9 @@
   --text-body--line-height: 1.6;
   --text-body-lg: 1.125rem;
   --text-body-lg--line-height: 1.6;
+  /* body 계열의 마지막 칸 — 여기서 statement 로 넘어가면 1.75rem 이라, 그 사이가 필요한 자리(nav)를 위해 둔다 */
+  --text-body-xl: 1.25rem;
+  --text-body-xl--line-height: 1.5;
   --text-statement: clamp(1.75rem, 1.5rem + 1.25vw, 3rem);
   --text-statement--line-height: 1.25;
   --text-statement--letter-spacing: -0.01em;

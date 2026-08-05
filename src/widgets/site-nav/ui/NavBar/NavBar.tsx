@@ -1,16 +1,18 @@
 'use client';
 
-/** Hero 상단 내비게이션 — 글자만 늘어놓고, 일렁이는 덩어리 하나가 항목 사이를 옮겨 다닌다 */
+/** 상단 나열 — 왼쪽에 홈, 가운데에 글자, 일렁이는 덩어리가 항목 사이를 옮겨 다닌다 */
 import { useRef, type PointerEvent, type PointerEventHandler } from 'react';
-import { TransitionLink } from '@/shared/transition';
-import { HERO_NAV } from '../../config/navigation';
+import { SITE } from '@/shared/config';
 import {
   MAGNETIC_FOLLOW,
   MAGNETIC_PULL,
   gsap,
   useGSAP,
   useMagnetic,
-} from '../../lib';
+} from '@/shared/motion';
+import { TransitionLink } from '@/shared/transition';
+import { SITE_NAV } from '../../config/navigation';
+import { SWAP, swapDuration } from '../../lib/swapMotion';
 import {
   BLOB_SHAPES,
   BLOB_VIEW_BOX,
@@ -20,23 +22,35 @@ import {
 /** 나타나고 사라지는 시간 */
 const FADE = 0.3;
 
-// z-index 를 주지 않는다 — 새 stacking context 가 생기면 아래 글자의 difference 가 사진을 배경에서 놓친다
-// 사진보다 뒤에 오므로 DOM 순서만으로 위에 그려진다
+// z-index 도 transform 도 주지 않는다 — 둘 중 하나만 생겨도 stacking context 가 서고,
+// 그러면 안쪽 difference·plus-lighter 가 아래 페이지를 배경에서 놓쳐 글자가 크림색으로 굳는다
+// 숨길 때 y 가 아니라 top 을 미는 것도 같은 이유다
 // pt 는 덩어리가 화면 위로 잘리지 않을 만큼 준다 — 덩어리가 글자보다 훨씬 크고 위아래로 넘친다
-const NAV_CLASS = 'absolute inset-x-0 top-0 px-gutter pt-20';
+const NAV_CLASS = 'fixed inset-x-0 top-0 px-gutter pt-20';
+
+// 가운데 칸만 auto 다 — 홈 이름 길이가 바뀌어도 글자 나열은 화면 정중앙에 남는다
+// 오른쪽 1fr 은 비워 둔다 — 나열이 물러난 자리에 햄버거가 들어선다
+const ROW_CLASS = 'grid grid-cols-[1fr_auto_1fr] items-center';
 
 // 여백을 좁게 잡는다 — 자석이 이 상자를 기준으로 재므로, 넓으면 글자가 덩어리 밖까지 끌려간다
-// difference 는 크림 덩어리 위에서 정확히 검정으로 뒤집힌다 — knockout 을 따로 칠하지 않는다
 const ITEM_CLASS =
-  'flex items-center justify-center px-3 py-3 text-body-lg text-foreground mix-blend-difference';
+  'flex items-center justify-center px-3 py-3 text-body-xl font-medium text-foreground mix-blend-difference';
+
+// difference 는 미감이 아니라 가독성 장치다 — nav 가 밝은 라우트 위에도 떠 있어서, 반전이 없으면 크림 글자가 통째로 사라진다
+const HOME_CLASS =
+  'justify-self-start py-3 text-body-xl font-medium text-foreground mix-blend-difference';
 
 // 덩어리가 링크보다 먼저 그려져야 글자가 그 위에 얹힌다
+// plus-lighter 는 덩어리를 칠하는 대신 뒷 배경에 더한다 — 사진 결이 그대로 비쳐 흰 판때기로 읽히지 않는다
 const SLOT_CLASS =
-  'pointer-events-none absolute top-0 left-0 size-44 opacity-0';
+  'pointer-events-none absolute top-0 left-0 size-44 opacity-0 mix-blend-plus-lighter';
 
-const PATH_CLASS = 'fill-foreground';
+// 알파를 fill 에 둔다 — 슬롯의 opacity 는 GSAP 이 나타남·사라짐에 쓰고 있어 겹쳐 쓰면 서로를 덮는다
+const PATH_CLASS = 'fill-foreground/75';
 
-export function HeroNav() {
+/** 상단 나열 — collapsed 면 화면 위로 물러난다(그 자리는 햄버거가 받는다) */
+export function NavBar({ collapsed }: { collapsed: boolean }) {
+  const navRef = useRef<HTMLElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const slotRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
@@ -78,6 +92,25 @@ export function HeroNav() {
       };
     },
     { scope: rootRef }
+  );
+
+  useGSAP(
+    () => {
+      const nav = navRef.current;
+
+      if (!nav) {
+        return;
+      }
+
+      // 제 높이만큼만 올린다 — 고정 수치를 박으면 글꼴이 커졌을 때 글자 끝이 화면에 걸린다
+      gsap.to(nav, {
+        top: collapsed ? -nav.offsetHeight : 0,
+        duration: swapDuration(SWAP.duration),
+        ease: SWAP.ease,
+        overwrite: 'auto',
+      });
+    },
+    { dependencies: [collapsed] }
   );
 
   /** 덩어리를 링크 자리로 보낸다 — 기울임까지 라벨과 같은 식으로 계산해 둘이 한 덩어리로 움직인다 */
@@ -131,47 +164,57 @@ export function HeroNav() {
 
   return (
     <nav
-      aria-label='주요 섹션'
+      ref={navRef}
+      aria-label='주요 메뉴'
       className={NAV_CLASS}>
-      <div
-        ref={rootRef}
-        onPointerLeave={handleLeave}
-        className='relative mx-auto w-max'>
-        {/* 덩어리는 장식이다 — 스크립트가 죽으면 나타나지 않고 글자만 남는다 */}
-        <div
-          ref={slotRef}
-          aria-hidden='true'
-          className={SLOT_CLASS}>
-          <svg
-            viewBox={BLOB_VIEW_BOX}
-            className='size-full overflow-visible'>
-            <path
-              ref={pathRef}
-              d={BLOB_SHAPES[0]}
-              className={PATH_CLASS}
-            />
-          </svg>
-        </div>
+      <div className={ROW_CLASS}>
+        {/* 덩어리를 태우지 않는다 — 나열 항목이 아니라 어느 라우트에서든 돌아오는 자리다 */}
+        <TransitionLink
+          href='/'
+          className={HOME_CLASS}>
+          {SITE.name}
+        </TransitionLink>
 
-        <ul className='flex items-center gap-9'>
-          {HERO_NAV.map((item) => {
-            return (
-              <HeroNavItem
-                key={item.href}
-                href={item.href}
-                label={item.label}
-                onEnter={handleEnter}
-                onMove={handleMove}
+        <div
+          ref={rootRef}
+          onPointerLeave={handleLeave}
+          className='relative w-max'>
+          {/* 덩어리는 장식이다 — 스크립트가 죽으면 나타나지 않고 글자만 남는다 */}
+          <div
+            ref={slotRef}
+            aria-hidden='true'
+            className={SLOT_CLASS}>
+            <svg
+              viewBox={BLOB_VIEW_BOX}
+              className='size-full overflow-visible'>
+              <path
+                ref={pathRef}
+                d={BLOB_SHAPES[0]}
+                className={PATH_CLASS}
               />
-            );
-          })}
-        </ul>
+            </svg>
+          </div>
+
+          <ul className='flex items-center gap-9'>
+            {SITE_NAV.map((item) => {
+              return (
+                <NavBarItem
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  onEnter={handleEnter}
+                  onMove={handleMove}
+                />
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </nav>
   );
 }
 
-type HeroNavItemProps = {
+type NavBarItemProps = {
   href: string;
   label: string;
   onEnter: PointerEventHandler<HTMLAnchorElement>;
@@ -179,7 +222,7 @@ type HeroNavItemProps = {
 };
 
 /** 항목 하나 — 자석은 항목마다 하나씩 필요해서 여기까지 내려왔다(훅은 반복문 안에서 못 부른다) */
-function HeroNavItem({ href, label, onEnter, onMove }: HeroNavItemProps) {
+function NavBarItem({ href, label, onEnter, onMove }: NavBarItemProps) {
   const magnetic = useMagnetic<HTMLAnchorElement>();
 
   const handleEnter = (event: PointerEvent<HTMLAnchorElement>): void => {

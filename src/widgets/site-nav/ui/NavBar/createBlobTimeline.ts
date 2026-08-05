@@ -1,5 +1,5 @@
 /** blob 모양과 일렁임 — 마크업과 무관하게 이해되는 연출 단위라 컴포넌트에서 뺐다 */
-import { gsap } from '../../lib';
+import { gsap } from '@/shared/motion';
 
 /** 좌표계 — 원점이 한가운데다. 모양 좌표가 원점 기준이라 창을 옮겨 맞췄다 */
 export const BLOB_VIEW_BOX = '-100 -100 200 200';
