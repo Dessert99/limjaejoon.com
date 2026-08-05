@@ -5,4 +5,4 @@ export const metadata: Metadata = {
   description: '어떤 문제를 어떻게 풀어 왔는지',
 };
 
-export { AboutPage as default } from '@/pages/about';
+export { DocsPage as default } from '@/pages/docs';

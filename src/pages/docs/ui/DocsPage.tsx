@@ -2,7 +2,7 @@
 import { Container } from '@/shared/ui';
 import { SiteFooter } from '@/widgets/site-footer';
 
-export function AboutPage() {
+export function DocsPage() {
   return (
     <>
       <main className='bg-background py-section text-foreground'>
