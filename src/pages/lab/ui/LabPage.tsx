@@ -1,0 +1,20 @@
+/** Lab — 실험을 늘어놓는 자리. 지금은 라우트만 세운다 */
+import { Container } from '@/shared/ui';
+import { SiteFooter } from '@/widgets/site-footer';
+
+export function LabPage() {
+  return (
+    <>
+      <main className='bg-background py-section text-foreground'>
+        <Container className='flex min-h-[60svh] flex-col justify-center gap-5'>
+          <h1 className='text-statement'>랩</h1>
+          <p className='text-body-lg break-keep text-muted'>
+            제품이 되기 전의 것들 — 만들다 만 것과 실험 중인 것. 준비 중이다.
+          </p>
+        </Container>
+      </main>
+      {/* main 밖이다 — main 안에 중첩된 footer 는 contentinfo 랜드마크가 되지 않는다 */}
+      <SiteFooter />
+    </>
+  );
+}
