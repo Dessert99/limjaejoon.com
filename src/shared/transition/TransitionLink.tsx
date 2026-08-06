@@ -4,6 +4,7 @@
 import Link from 'next/link';
 import type { ComponentPropsWithRef, MouseEvent } from 'react';
 import { usePathname } from '@/shared/lib';
+import { shouldCurtain } from './curtainPolicy';
 import { useCurtainStart } from './RouteTransition';
 
 /** href 를 문자열로 좁힌다 — 커튼은 목적지 이름을 경로에서 읽으므로 UrlObject 를 다루지 않는다 */
@@ -43,7 +44,7 @@ export function TransitionLink({
       !start ||
       event.defaultPrevented ||
       !isPlainNavigation(event, href) ||
-      href === pathname
+      !shouldCurtain(pathname, href)
     ) {
       return;
     }

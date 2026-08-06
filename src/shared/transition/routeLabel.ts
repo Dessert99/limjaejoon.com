@@ -4,6 +4,7 @@
 const HOME_LABEL = 'home';
 
 /** 라우트 이름 — 목록을 두지 않아 라우트가 늘어도 따로 등록할 것이 없다 */
-export function routeLabel(pathname: string): string {
-  return pathname.split('/')[1] || HOME_LABEL;
+export function routeLabel(href: string): string {
+  // 쿼리·해시를 먼저 뗀다 — 두면 태그 링크가 'blog?tag=react' 라는 이름으로 찍힌다
+  return href.split(/[?#]/)[0].split('/')[1] || HOME_LABEL;
 }
