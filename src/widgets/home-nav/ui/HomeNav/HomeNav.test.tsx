@@ -1,9 +1,9 @@
-/** SiteNav 테스트 — 나열·사이드바가 같은 목적지를 담고, 손잡이가 여닫힘을 알린다는 계약을 검증한다 */
+/** HomeNav 테스트 — 나열·사이드바가 같은 목적지를 담고, 손잡이가 여닫힘을 알린다는 계약을 검증한다 */
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { SITE_NAV } from '../../config/navigation';
-import { SiteNav } from './SiteNav';
+import { HomeNav } from './HomeNav';
 
 /** 목적지 목록 — 나열과 사이드바가 함께 지켜야 하는 순서다 */
 const DESTINATIONS = SITE_NAV.map((item) => {
@@ -23,9 +23,9 @@ function toDestinations(links: HTMLElement[]): (string | null)[][] {
   });
 }
 
-describe('SiteNav', () => {
+describe('HomeNav', () => {
   it('navigation 랜드마크 안에 항목을 config 순서대로 늘어놓는다', () => {
-    render(<SiteNav />);
+    render(<HomeNav />);
 
     const links = within(screen.getByRole('navigation')).getAllByRole('link');
 
@@ -33,7 +33,7 @@ describe('SiteNav', () => {
   });
 
   it('사이드바는 상단 나열과 같은 목적지를 같은 순서로 담는다', () => {
-    render(<SiteNav />);
+    render(<HomeNav />);
 
     const panel = screen.getByRole('dialog', { hidden: true });
     const links = within(panel).getAllByRole('link', { hidden: true });
@@ -43,7 +43,7 @@ describe('SiteNav', () => {
 
   it('손잡이를 누르면 열림 상태를 알리고 다시 누르면 되돌린다', async () => {
     const user = userEvent.setup();
-    render(<SiteNav />);
+    render(<HomeNav />);
 
     const button = menuButton();
 
@@ -61,7 +61,7 @@ describe('SiteNav', () => {
 
   it('Escape 로 사이드바를 닫는다', async () => {
     const user = userEvent.setup();
-    render(<SiteNav />);
+    render(<HomeNav />);
 
     await user.click(menuButton());
     await user.keyboard('{Escape}');
@@ -70,7 +70,7 @@ describe('SiteNav', () => {
   });
 
   it('손잡이가 제어하는 패널을 aria-controls 로 가리킨다', () => {
-    render(<SiteNav />);
+    render(<HomeNav />);
 
     const button = menuButton();
     const panel = screen.getByRole('dialog', { hidden: true });

@@ -1,8 +1,7 @@
 'use client';
 
-/** 사이트 내비게이션 — 상단 나열과 햄버거·사이드바의 교대를 판정하고, 열려 있는 동안의 가둠을 소유한다 */
+/** 홈 내비게이션 — 상단 나열과 햄버거·사이드바의 교대를 판정하고, 열려 있는 동안의 가둠을 소유한다 */
 import { useEffect, useId, useRef, useState } from 'react';
-import { usePathname } from '@/shared/lib';
 import { ScrollSmoother, ScrollTrigger } from '@/shared/motion';
 import { MenuButton } from '../MenuButton/MenuButton';
 import { NavBar } from '../NavBar/NavBar';
@@ -14,18 +13,17 @@ const HIDE_AT = 120;
 /** 나열이 돌아오는 지점(px) — 물러난 지점과 벌려 둔다. 같은 값이면 경계에서 둘이 번갈아 깜빡인다 */
 const SHOW_AT = 40;
 
-/** 루트 레이아웃이 마운트하는 사이트 내비게이션 */
-export function SiteNav() {
+/** 홈 레이아웃이 마운트하는 홈 내비게이션 */
+export function HomeNav() {
   const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
-  const pathname = usePathname();
 
   // useGSAP 이 아니다 — 그 컨텍스트가 페이지 컨텍스트의 자식으로 딸려 들어가, 홈이 나갈 때 관찰자까지 함께 revert 된다(gsap.md 3절)
   // 패널은 여기서 닫지 않는다 — 목적지를 누르는 순간 링크가 이미 닫는다
   useEffect(() => {
-    // 라우트마다 새로 만든다 — 홈의 ScrollSmoother 가 갈리면 옛 관찰자는 죽은 scroller 를 붙들고 스크롤을 0 으로 읽는다
+    // 홈에 들어올 때마다 새로 만든다 — 홈의 ScrollSmoother 가 갈리면 옛 관찰자는 죽은 scroller 를 붙들고 스크롤을 0 으로 읽는다
     // 감쇠에서도 만든다 — 이건 트윈이 아니라 관찰자다. 감쇠는 교대 길이만 0 으로 줄인다(gsap.md 6절)
     const hide = ScrollTrigger.create({
       start: HIDE_AT,
@@ -51,7 +49,7 @@ export function SiteNav() {
       hide.kill();
       show.kill();
     };
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     const boundary = menuRef.current;
@@ -138,11 +136,6 @@ export function SiteNav() {
       return !previous;
     });
   };
-
-  // 어드민에는 세우지 않는다 — 공개 라우트 목록일 뿐이고, 폭 전체를 덮는 상자라 어드민 헤더의 버튼 클릭을 가로챈다
-  if (pathname?.startsWith('/admin')) {
-    return null;
-  }
 
   return (
     <>

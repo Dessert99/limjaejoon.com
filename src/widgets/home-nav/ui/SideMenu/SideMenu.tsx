@@ -37,7 +37,7 @@ type SideMenuProps = {
   onClose: () => void;
 };
 
-/** 사이드바 — 자기 등장·퇴장만 소유한다(스크롤 잠금과 포커스 가두기는 SiteNav 가 갖는다) */
+/** 사이드바 — 자기 등장·퇴장만 소유한다(스크롤 잠금과 포커스 가두기는 HomeNav 가 갖는다) */
 export function SideMenu({ panelId, open, onClose }: SideMenuProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
