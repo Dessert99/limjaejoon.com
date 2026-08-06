@@ -6,15 +6,14 @@ import type { Post, PostListItem, PostSearchParams } from '../model/post.types';
 const POST_LIST_SELECT =
   'id, slug, title, description, tags, series, published_at';
 
-/** published 글 목록을 최신 발행일 순서로 조회한다 */
-export const getPublishedPosts = async (
+/** 글 목록을 최신 발행일 순서로 조회한다 */
+export const getPosts = async (
   client: SupabaseClient<Database>,
   params?: PostSearchParams
 ): Promise<PostListItem[]> => {
   let query = client
     .from('posts')
     .select(POST_LIST_SELECT)
-    .eq('status', 'published')
     .order('published_at', { ascending: false });
 
   if (params?.series) {
@@ -41,21 +40,13 @@ export const getPublishedPosts = async (
   return data ?? [];
 };
 
-/** sitemap 과 필터 메타데이터에서 재사용할 published 글 목록 shape을 조회한다 */
-export const getPublishedPostNavigationData = async (
-  client: SupabaseClient<Database>
-): Promise<PostListItem[]> => {
-  return getPublishedPosts(client);
-};
-
-/** SSG 경로 생성을 위해 published 글 slug 만 조회한다 */
-export const getPublishedPostSlugs = async (
+/** SSG 경로 생성을 위해 slug 만 조회한다 */
+export const getPostSlugs = async (
   client: SupabaseClient<Database>
 ): Promise<string[]> => {
   const { data, error } = await client
     .from('posts')
     .select('slug')
-    .eq('status', 'published')
     .order('published_at', { ascending: false });
 
   if (error) {
@@ -69,8 +60,8 @@ export const getPublishedPostSlugs = async (
   );
 };
 
-/** slug 와 published 상태가 일치하는 단일 글을 조회한다 */
-export const getPublishedPostBySlug = async (
+/** slug 로 단일 글을 조회한다 */
+export const getPostBySlug = async (
   client: SupabaseClient<Database>,
   slug: string
 ): Promise<Post | null> => {
@@ -78,7 +69,6 @@ export const getPublishedPostBySlug = async (
     .from('posts')
     .select('*')
     .eq('slug', slug)
-    .eq('status', 'published')
     .maybeSingle();
 
   if (error) {

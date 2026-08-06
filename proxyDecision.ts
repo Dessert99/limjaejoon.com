@@ -12,7 +12,7 @@ export const decideRedirect = (
   }
 
   if (isLogin && admin) {
-    return '/admin/posts';
+    return '/blog';
   }
 
   return null;

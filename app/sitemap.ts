@@ -1,9 +1,12 @@
-import type { MetadataRoute } from 'next';
+import { getPostSlugs } from '@/entities/post';
+import { createSupabaseStaticClient } from '@/shared/api';
 import { SITE_URL } from '@/shared/config';
+import type { MetadataRoute } from 'next';
 
-/** 존재하는 public route 만 sitemap 에 노출한다 */
-export default function sitemap(): MetadataRoute.Sitemap {
+/** 존재하는 public route 와 발행된 글만 sitemap 에 노출한다 */
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const today = new Date().toISOString().split('T')[0];
+  const slugs = await getPostSlugs(createSupabaseStaticClient());
 
   return [
     {
@@ -30,5 +33,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
+    ...slugs.map((slug) => {
+      return {
+        url: `${SITE_URL}/blog/${slug}`,
+        lastModified: today,
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      };
+    }),
   ];
 }

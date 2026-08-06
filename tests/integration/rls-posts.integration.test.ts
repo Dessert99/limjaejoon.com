@@ -11,8 +11,7 @@ import {
 
 describe('posts RLS 정책', () => {
   const serviceRole = createServiceRoleClient();
-  const publishedSlug = `integration-published-${Date.now()}`;
-  const draftSlug = `integration-draft-${Date.now()}`;
+  const postSlug = `integration-post-${Date.now()}`;
   let adminUser: TestUser;
   let memberUser: TestUser;
 
@@ -20,25 +19,14 @@ describe('posts RLS 정책', () => {
     adminUser = await createTestUser('admin');
     memberUser = await createTestUser('member');
 
-    const { error } = await serviceRole.from('posts').insert([
-      {
-        slug: publishedSlug,
-        title: 'Integration published post',
-        description: 'integration test fixture',
-        content_markdown: 'body',
-        tags: ['integration-test'],
-        status: 'published',
-        published_at: new Date().toISOString(),
-      },
-      {
-        slug: draftSlug,
-        title: 'Integration draft post',
-        description: 'integration test fixture',
-        content_markdown: 'body',
-        tags: ['integration-test'],
-        status: 'draft',
-      },
-    ]);
+    const { error } = await serviceRole.from('posts').insert({
+      slug: postSlug,
+      title: 'Integration post',
+      description: 'integration test fixture',
+      content_markdown: 'body',
+      tags: ['integration-test'],
+      published_at: new Date().toISOString(),
+    });
 
     if (error) {
       throw error;
@@ -46,35 +34,22 @@ describe('posts RLS 정책', () => {
   });
 
   afterAll(async () => {
-    await serviceRole
-      .from('posts')
-      .delete()
-      .in('slug', [publishedSlug, draftSlug]);
+    await serviceRole.from('posts').delete().eq('slug', postSlug);
     await deleteTestUser(adminUser.id);
     await deleteTestUser(memberUser.id);
   });
 
   describe('anon 사용자', () => {
-    it('published 글은 SELECT 할 수 있다', async () => {
+    // 초안 개념이 없어 읽기는 전부 열려 있다 — 경계는 이제 쓰기에만 선다
+    it('글을 SELECT 할 수 있다', async () => {
       const { data, error } = await createAnonClient()
         .from('posts')
         .select('slug')
-        .eq('slug', publishedSlug)
+        .eq('slug', postSlug)
         .maybeSingle();
 
       expect(error).toBeNull();
-      expect(data?.slug).toBe(publishedSlug);
-    });
-
-    it('draft 글은 SELECT 되지 않는다', async () => {
-      const { data, error } = await createAnonClient()
-        .from('posts')
-        .select('slug')
-        .eq('slug', draftSlug)
-        .maybeSingle();
-
-      expect(error).toBeNull();
-      expect(data).toBeNull();
+      expect(data?.slug).toBe(postSlug);
     });
 
     it('INSERT 는 거부된다', async () => {
@@ -86,10 +61,20 @@ describe('posts RLS 정책', () => {
           description: 'should be rejected',
           content_markdown: 'body',
           tags: ['integration-test'],
-          status: 'draft',
         });
 
       expect(error).not.toBeNull();
+    });
+
+    it('DELETE 는 거부된다', async () => {
+      const { data, error } = await createAnonClient()
+        .from('posts')
+        .delete()
+        .eq('slug', postSlug)
+        .select('slug');
+
+      // 정책이 행을 가려 0건 삭제로 끝나거나 에러로 막히거나 — 지워지지만 않으면 된다
+      expect(error ?? data).not.toEqual([{ slug: postSlug }]);
     });
   });
 
@@ -102,22 +87,20 @@ describe('posts RLS 정책', () => {
         description: 'should be rejected',
         content_markdown: 'body',
         tags: ['integration-test'],
-        status: 'draft',
       });
 
       expect(error?.code).toBe('42501');
     });
 
-    it('draft 글은 SELECT 되지 않는다', async () => {
+    it('DELETE 로 남의 글을 지우지 못한다', async () => {
       const member = await signInTestUser(memberUser);
-      const { data, error } = await member
+      const { data } = await member
         .from('posts')
-        .select('slug')
-        .eq('slug', draftSlug)
-        .maybeSingle();
+        .delete()
+        .eq('slug', postSlug)
+        .select('slug');
 
-      expect(error).toBeNull();
-      expect(data).toBeNull();
+      expect(data ?? []).toEqual([]);
     });
   });
 
@@ -131,7 +114,6 @@ describe('posts RLS 정책', () => {
         description: 'integration test fixture',
         content_markdown: 'body',
         tags: ['integration-test'],
-        status: 'draft',
       });
 
       try {
@@ -141,29 +123,39 @@ describe('posts RLS 정책', () => {
       }
     });
 
-    it('draft 글도 SELECT 할 수 있다', async () => {
-      const admin = await signInTestUser(adminUser);
-      const { data, error } = await admin
-        .from('posts')
-        .select('slug')
-        .eq('slug', draftSlug)
-        .maybeSingle();
-
-      expect(error).toBeNull();
-      expect(data?.slug).toBe(draftSlug);
-    });
-
     it('UPDATE 가 성공한다', async () => {
       const admin = await signInTestUser(adminUser);
       const { data, error } = await admin
         .from('posts')
         .update({ title: 'Updated by admin' })
-        .eq('slug', draftSlug)
+        .eq('slug', postSlug)
         .select('title')
         .maybeSingle();
 
       expect(error).toBeNull();
       expect(data?.title).toBe('Updated by admin');
+    });
+
+    it('DELETE 가 성공한다', async () => {
+      const admin = await signInTestUser(adminUser);
+      const deletableSlug = `integration-admin-delete-${Date.now()}`;
+
+      await serviceRole.from('posts').insert({
+        slug: deletableSlug,
+        title: 'admin delete target',
+        description: 'integration test fixture',
+        content_markdown: 'body',
+        tags: ['integration-test'],
+      });
+
+      const { data, error } = await admin
+        .from('posts')
+        .delete()
+        .eq('slug', deletableSlug)
+        .select('slug');
+
+      expect(error).toBeNull();
+      expect(data).toEqual([{ slug: deletableSlug }]);
     });
   });
 });

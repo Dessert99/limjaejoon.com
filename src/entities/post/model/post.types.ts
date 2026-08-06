@@ -1,9 +1,6 @@
 /** posts 엔티티의 앱-facing 타입 별칭 */
 import type { Database } from '@/shared/api';
 
-/** posts 상태값 타입 — DB enum 변경 시 생성 타입을 통해 함께 바뀐다 */
-export type PostStatus = Database['public']['Enums']['post_status'];
-
 /** posts series 타입 — 단발 글은 null 로 둔다 */
 export type PostSeries = string | null;
 

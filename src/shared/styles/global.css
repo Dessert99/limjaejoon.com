@@ -4,6 +4,7 @@
 @import 'tailwindcss' source(none);
 @import './tokens.css';
 @import './motion.css';
+@import './prose.css';
 
 @source '../../../app';
 @source '../../../src';

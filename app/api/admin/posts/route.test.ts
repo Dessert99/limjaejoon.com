@@ -2,10 +2,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createAdminPost } from '@/entities/post';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '../_lib/adminGuard';
+import { revalidatePublicPosts } from '../_lib/revalidatePublicPosts';
 import { POST } from './route';
 
 vi.mock('../_lib/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
+});
+
+// 실제 revalidatePath 는 Next 요청 컨텍스트 밖에서 터진다
+vi.mock('../_lib/revalidatePublicPosts', () => {
+  return { revalidatePublicPosts: vi.fn() };
 });
 
 vi.mock('@/entities/post', () => {
@@ -18,8 +24,7 @@ const input = {
   description: '새 글 설명',
   series: null,
   tags: ['Next.js'],
-  status: 'draft' as const,
-  published_at: null,
+  published_at: '2026-07-09T00:00:00Z',
   content_markdown: '# 새 글',
 };
 
@@ -73,6 +78,8 @@ describe('POST /api/admin/posts', () => {
     expect(createAdminPost).toHaveBeenCalledWith(client, input);
     await expect(response.json()).resolves.toEqual({ post });
     expect(response.status).toBe(201);
+    // 재검증이 빠지면 저장은 되는데 공개 목록에만 안 뜬다
+    expect(revalidatePublicPosts).toHaveBeenCalled();
   });
 
   it('write 실패 시 mapWriteError 결과를 그대로 반환한다', async () => {

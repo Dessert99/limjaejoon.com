@@ -2,7 +2,7 @@
 
 Supabase Auth + RLS 기반 어드민 인증을 로컬/원격에 적용할 때의 운영 절차. 설계 근거는 [스펙](superpowers/specs/2026-07-23-admin-auth-design.md), 구현은 [계획](superpowers/plans/2026-07-24-admin-auth.md) 참고.
 
-> **지금은 서버 계층만 있다.** 디자인 시스템 철거로 `/admin/login` 화면이 사라졌고 API 라우트(`app/api/admin/*`)·RLS·통합 테스트만 남았다. 아래에서 **원격 마이그레이션·Auth 설정·운영자 계정** 절은 지금 그대로 유효하고, `/admin/login` 을 거치는 항목은 화면을 다시 세운 뒤에 수행한다.
+> **마이그레이션 두 개가 밀려 있다.** [블로그 개편](superpowers/specs/2026-08-06-blog-redesign-design.md)에서 `20260806000000_posts_admin_delete_policy.sql`(삭제 정책)과 `20260806010000_drop_post_status.sql`(초안 개념 제거)을 더했다. **둘 다 원격에 `db push` 하기 전까지 삭제는 RLS 에 막히고, 새 글은 조용히 초안으로 저장돼 목록에 안 뜬다.**
 
 ## 로컬 (.env.local)
 

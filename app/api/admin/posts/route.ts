@@ -1,6 +1,7 @@
 import { createAdminPost, type UpsertPostInput } from '@/entities/post';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '../_lib/adminGuard';
+import { revalidatePublicPosts } from '../_lib/revalidatePublicPosts';
 
 /** 로그인한 admin 세션만 새 글을 생성한다 (권한은 RLS 가 최종 집행) */
 export const POST = async (request: Request) => {
@@ -14,6 +15,9 @@ export const POST = async (request: Request) => {
 
   try {
     const post = await createAdminPost(guard.client, input);
+
+    revalidatePublicPosts();
+
     return NextResponse.json({ post }, { status: 201 });
   } catch (writeError) {
     return mapWriteError(writeError);
