@@ -2,7 +2,6 @@
 
 /** 사이드바 — 오른쪽에서 들어와 나열을 대신한다. 앞모서리가 휘었다 펴지는 건 라우트 커튼과 같은 어휘다 */
 import { useRef } from 'react';
-import { SITE } from '@/shared/config';
 import { gsap, useGSAP } from '@/shared/motion';
 import { TransitionLink } from '@/shared/transition';
 import { SITE_NAV } from '../../config/navigation';
@@ -123,15 +122,6 @@ export function SideMenu({ panelId, open, onClose }: SideMenuProps) {
         aria-label='사이트 메뉴'
         className={PANEL_CLASS}>
         <ul className='flex flex-col gap-2'>
-          <li data-menu-item>
-            <TransitionLink
-              href='/'
-              onClick={onClose}
-              className={ITEM_CLASS}>
-              {SITE.name}
-            </TransitionLink>
-          </li>
-
           {SITE_NAV.map((item) => {
             return (
               <li

@@ -2,17 +2,13 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { SITE } from '@/shared/config';
 import { SITE_NAV } from '../../config/navigation';
 import { SiteNav } from './SiteNav';
 
-/** 홈을 맨 앞에 둔 목적지 목록 — 나열과 사이드바가 함께 지켜야 하는 순서다 */
-const DESTINATIONS = [
-  [SITE.name, '/'],
-  ...SITE_NAV.map((item) => {
-    return [item.label, item.href];
-  }),
-];
+/** 목적지 목록 — 나열과 사이드바가 함께 지켜야 하는 순서다 */
+const DESTINATIONS = SITE_NAV.map((item) => {
+  return [item.label, item.href];
+});
 
 // 이름으로 찾지 않는다 — 나열이 펼쳐진 동안 GSAP 이 손잡이의 visibility 를 끄고, 그러면 접근성 이름까지 빈 문자열이 된다
 /** 손잡이 — 트리에 버튼은 이것 하나다. 고지 내용은 이름 대신 속성과 글자로 확인한다 */
@@ -28,7 +24,7 @@ function toDestinations(links: HTMLElement[]): (string | null)[][] {
 }
 
 describe('SiteNav', () => {
-  it('navigation 랜드마크 안에 홈을 맨 앞에 두고 항목을 config 순서대로 늘어놓는다', () => {
+  it('navigation 랜드마크 안에 항목을 config 순서대로 늘어놓는다', () => {
     render(<SiteNav />);
 
     const links = within(screen.getByRole('navigation')).getAllByRole('link');
