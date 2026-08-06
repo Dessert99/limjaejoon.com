@@ -1,4 +1,4 @@
-import { getPublishedPostBySlug } from '@/entities/post';
+import { getPostBySlug } from '@/entities/post';
 import { createSupabaseServerClient } from '@/shared/api';
 import { NextResponse } from 'next/server';
 
@@ -12,7 +12,7 @@ type RouteContext = {
 export const GET = async (_request: Request, context: RouteContext) => {
   const { slug } = await context.params;
   const client = await createSupabaseServerClient();
-  const post = await getPublishedPostBySlug(client, slug);
+  const post = await getPostBySlug(client, slug);
 
   if (!post) {
     return NextResponse.json({ message: 'Post not found' }, { status: 404 });

@@ -14,4 +14,9 @@ describe('routeLabel', () => {
   it('하위 경로는 첫 세그먼트로 묶는다', () => {
     expect(routeLabel('/blog/hello-world')).toBe('blog');
   });
+
+  it('쿼리와 해시는 이름에서 걷어낸다', () => {
+    expect(routeLabel('/blog?tag=react')).toBe('blog');
+    expect(routeLabel('/blog/hello-world#intro')).toBe('blog');
+  });
 });

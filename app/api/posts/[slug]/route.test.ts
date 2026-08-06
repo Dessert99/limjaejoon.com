@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getPublishedPostBySlug } from '@/entities/post';
+import { getPostBySlug } from '@/entities/post';
 import { createSupabaseServerClient } from '@/shared/api';
 import { GET } from './route';
 
@@ -8,18 +8,18 @@ vi.mock('@/shared/api', () => {
 });
 
 vi.mock('@/entities/post', () => {
-  return { getPublishedPostBySlug: vi.fn() };
+  return { getPostBySlug: vi.fn() };
 });
 
 describe('GET /api/posts/[slug]', () => {
   beforeEach(() => {
     vi.mocked(createSupabaseServerClient).mockReset();
-    vi.mocked(getPublishedPostBySlug).mockReset();
+    vi.mocked(getPostBySlug).mockReset();
   });
 
   it('글이 없으면 404 JSON 을 반환한다', async () => {
     vi.mocked(createSupabaseServerClient).mockResolvedValue({} as never);
-    vi.mocked(getPublishedPostBySlug).mockResolvedValue(null);
+    vi.mocked(getPostBySlug).mockResolvedValue(null);
 
     const response = await GET(new Request('https://limjaejoon.com'), {
       params: Promise.resolve({ slug: 'missing' }),

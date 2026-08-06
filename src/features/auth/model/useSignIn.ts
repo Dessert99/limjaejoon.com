@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from '../api/signIn';
 
-/** 로그인 성공 시 이동할 기본 목적지 */
-const ADMIN_HOME = '/admin/posts';
+/** 로그인 성공 시 이동할 기본 목적지 — 블로그가 곧 관리 화면이다 */
+const ADMIN_HOME = '/blog';
 
 /** 이메일/비밀번호 입력과 제출, 에러 노출을 담당한다 */
 export const useSignIn = () => {

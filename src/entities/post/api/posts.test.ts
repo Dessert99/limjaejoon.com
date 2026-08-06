@@ -2,11 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 import type { Database } from '@/shared/api';
 import type { Post, PostListItem } from '../model/post.types';
-import {
-  getPublishedPostBySlug,
-  getPublishedPosts,
-  getPublishedPostSlugs,
-} from './posts';
+import { getPostBySlug, getPosts, getPostSlugs } from './posts';
 
 const listRows: PostListItem[] = [
   {
@@ -32,7 +28,6 @@ const listRows: PostListItem[] = [
 const detailRow: Post = {
   ...listRows[0],
   content_markdown: '# 새 글\n\n본문입니다.',
-  status: 'published',
   created_at: '2026-04-03T00:00:00Z',
   updated_at: '2026-04-03T00:00:00Z',
 };
@@ -100,33 +95,29 @@ const makeSlugClient = (result: {
   error: unknown;
 }) => {
   const order = vi.fn().mockResolvedValue(result);
-  const eq = vi.fn(() => {
-    return { order };
-  });
   const select = vi.fn(() => {
-    return { eq };
+    return { order };
   });
   const from = vi.fn(() => {
     return { select };
   });
   const client = { from } as unknown as SupabaseClient<Database>;
 
-  return { client, from, select, eq, order };
+  return { client, from, select, order };
 };
 
 describe('post fetchers', () => {
-  it('published 글 목록을 published_at 내림차순으로 조회한다', async () => {
-    const { client, from, select, eq, order } = makeListClient({
+  it('글 목록을 published_at 내림차순으로 조회한다', async () => {
+    const { client, from, select, order } = makeListClient({
       data: listRows,
       error: null,
     });
 
-    await expect(getPublishedPosts(client)).resolves.toEqual(listRows);
+    await expect(getPosts(client)).resolves.toEqual(listRows);
     expect(from).toHaveBeenCalledWith('posts');
     expect(select).toHaveBeenCalledWith(
       'id, slug, title, description, tags, series, published_at'
     );
-    expect(eq).toHaveBeenCalledWith('status', 'published');
     expect(order).toHaveBeenCalledWith('published_at', { ascending: false });
   });
 
@@ -136,7 +127,7 @@ describe('post fetchers', () => {
       error: null,
     });
 
-    await getPublishedPosts(client, { series: 'Next.js App Router' });
+    await getPosts(client, { series: 'Next.js App Router' });
 
     expect(eq).toHaveBeenCalledWith('series', 'Next.js App Router');
   });
@@ -147,7 +138,7 @@ describe('post fetchers', () => {
       error: null,
     });
 
-    await getPublishedPosts(client, { tag: 'Next.js' });
+    await getPosts(client, { tag: 'Next.js' });
 
     expect(contains).toHaveBeenCalledWith('tags', ['Next.js']);
   });
@@ -158,7 +149,7 @@ describe('post fetchers', () => {
       error: null,
     });
 
-    await getPublishedPosts(client, { q: 'cache' });
+    await getPosts(client, { q: 'cache' });
 
     expect(or).toHaveBeenCalledWith(
       'title.ilike.%cache%,description.ilike.%cache%,content_markdown.ilike.%cache%'
@@ -171,34 +162,33 @@ describe('post fetchers', () => {
       error: null,
     });
 
-    await expect(getPublishedPostBySlug(client, 'newer-post')).resolves.toEqual(
+    await expect(getPostBySlug(client, 'newer-post')).resolves.toEqual(
       detailRow
     );
     expect(eq).toHaveBeenNthCalledWith(1, 'slug', 'newer-post');
-    expect(eq).toHaveBeenNthCalledWith(2, 'status', 'published');
+    expect(eq).toHaveBeenCalledWith('slug', 'newer-post');
     expect(maybeSingle).toHaveBeenCalled();
   });
 
-  it('slug 와 일치하는 published 글이 없으면 null 을 반환한다', async () => {
+  it('slug 와 일치하는 글이 없으면 null 을 반환한다', async () => {
     const { client } = makeDetailClient({ data: null, error: null });
 
-    await expect(getPublishedPostBySlug(client, 'missing')).resolves.toBeNull();
+    await expect(getPostBySlug(client, 'missing')).resolves.toBeNull();
   });
 
-  it('SSG 경로 생성을 위해 published 글 slug 목록을 조회한다', async () => {
+  it('SSG 경로 생성을 위해 slug 목록을 조회한다', async () => {
     const rows = [{ slug: 'newer-post' }, { slug: 'older-post' }];
-    const { client, from, select, eq, order } = makeSlugClient({
+    const { client, from, select, order } = makeSlugClient({
       data: rows,
       error: null,
     });
 
-    await expect(getPublishedPostSlugs(client)).resolves.toEqual([
+    await expect(getPostSlugs(client)).resolves.toEqual([
       'newer-post',
       'older-post',
     ]);
     expect(from).toHaveBeenCalledWith('posts');
     expect(select).toHaveBeenCalledWith('slug');
-    expect(eq).toHaveBeenCalledWith('status', 'published');
     expect(order).toHaveBeenCalledWith('published_at', { ascending: false });
   });
 
@@ -208,6 +198,6 @@ describe('post fetchers', () => {
       error: new Error('posts failed'),
     });
 
-    await expect(getPublishedPosts(client)).rejects.toThrow('posts failed');
+    await expect(getPosts(client)).rejects.toThrow('posts failed');
   });
 });

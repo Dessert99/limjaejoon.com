@@ -1,15 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { updateAdminPost } from '@/entities/post';
+import { deleteAdminPost, updateAdminPost } from '@/entities/post';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '../../_lib/adminGuard';
-import { PATCH } from './route';
+import { revalidatePublicPosts } from '../../_lib/revalidatePublicPosts';
+import { DELETE, PATCH } from './route';
 
 vi.mock('../../_lib/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 
+vi.mock('../../_lib/revalidatePublicPosts', () => {
+  return { revalidatePublicPosts: vi.fn() };
+});
+
 vi.mock('@/entities/post', () => {
-  return { updateAdminPost: vi.fn() };
+  return { updateAdminPost: vi.fn(), deleteAdminPost: vi.fn() };
 });
 
 const input = {
@@ -18,7 +23,6 @@ const input = {
   description: '수정 글 설명',
   series: null,
   tags: ['Next.js'],
-  status: 'published' as const,
   published_at: '2026-07-09T00:00:00Z',
   content_markdown: '# 수정 글',
 };
@@ -44,6 +48,8 @@ describe('PATCH /api/admin/posts/[id]', () => {
     vi.mocked(requireAdmin).mockReset();
     vi.mocked(mapWriteError).mockReset();
     vi.mocked(updateAdminPost).mockReset();
+    vi.mocked(deleteAdminPost).mockReset();
+    vi.mocked(revalidatePublicPosts).mockReset();
   });
 
   it('가드가 막으면 그 응답을 그대로 내고 write 를 실행하지 않는다', async () => {
@@ -75,6 +81,8 @@ describe('PATCH /api/admin/posts/[id]', () => {
     expect(updateAdminPost).toHaveBeenCalledWith(client, '1', input);
     await expect(response.json()).resolves.toEqual({ post });
     expect(response.status).toBe(200);
+    // 재검증이 빠지면 저장은 되는데 공개 화면만 옛 내용으로 남는다
+    expect(revalidatePublicPosts).toHaveBeenCalled();
   });
 
   it('write 실패 시 mapWriteError 결과를 그대로 반환한다', async () => {
@@ -91,5 +99,60 @@ describe('PATCH /api/admin/posts/[id]', () => {
 
     expect(mapWriteError).toHaveBeenCalledWith({ code: '42501' });
     expect(response.status).toBe(403);
+  });
+});
+
+const deleteRequest = () => {
+  return new Request('https://limjaejoon.com/api/admin/posts/1', {
+    method: 'DELETE',
+  });
+};
+
+describe('DELETE /api/admin/posts/[id]', () => {
+  beforeEach(() => {
+    vi.mocked(requireAdmin).mockReset();
+    vi.mocked(mapWriteError).mockReset();
+    vi.mocked(deleteAdminPost).mockReset();
+    vi.mocked(revalidatePublicPosts).mockReset();
+  });
+
+  it('가드가 막으면 그 응답을 그대로 내고 삭제하지 않는다', async () => {
+    vi.mocked(requireAdmin).mockResolvedValue({
+      client: null,
+      error: NextResponse.json({ message: 'Forbidden' }, { status: 403 }),
+    });
+
+    const response = await DELETE(deleteRequest(), context);
+
+    expect(response.status).toBe(403);
+    expect(deleteAdminPost).not.toHaveBeenCalled();
+  });
+
+  it('admin 세션이면 글을 지우고 공개 화면을 재검증한다', async () => {
+    const client = { id: 'session-client' };
+    vi.mocked(requireAdmin).mockResolvedValue({
+      client: client as never,
+      error: null,
+    });
+    vi.mocked(deleteAdminPost).mockResolvedValue(true);
+
+    const response = await DELETE(deleteRequest(), context);
+
+    expect(deleteAdminPost).toHaveBeenCalledWith(client, '1');
+    expect(response.status).toBe(204);
+    expect(revalidatePublicPosts).toHaveBeenCalled();
+  });
+
+  it('지울 글이 없으면 404 를 내고 재검증하지 않는다', async () => {
+    vi.mocked(requireAdmin).mockResolvedValue({
+      client: { id: 'session-client' } as never,
+      error: null,
+    });
+    vi.mocked(deleteAdminPost).mockResolvedValue(false);
+
+    const response = await DELETE(deleteRequest(), context);
+
+    expect(response.status).toBe(404);
+    expect(revalidatePublicPosts).not.toHaveBeenCalled();
   });
 });

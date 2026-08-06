@@ -20,7 +20,9 @@ let played = false;
 const OVERLAY_CLASS =
   'fixed inset-0 z-(--ds-z-transition) flex items-center justify-center bg-background px-gutter motion-reduce:hidden';
 
-const TEXT_CLASS = 'font-display text-section text-foreground text-balance';
+// pre-line 이 없으면 문구의 개행이 공백 하나로 접힌다 — 반대로 pre 는 들여쓴 소스의 공백까지 살려 버린다
+const TEXT_CLASS =
+  'font-display text-section text-foreground text-balance whitespace-pre-line text-center';
 
 /** 홈 최초 진입 연출 — 무대(ScrollStage) 밖에 둔다 */
 export function IntroOverlay() {

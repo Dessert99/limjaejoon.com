@@ -1,4 +1,4 @@
-/** 라우트 전환 커튼 테스트 — 모션이 없는 환경에서 커튼이 화면을 가로막지 않는다는 계약을 검증한다 */
+/** 라우트 전환 커튼 테스트 — 어떤 이동이 커튼을 타고 어떤 이동이 그냥 흐르는지 검증한다 */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -7,13 +7,15 @@ import { TransitionLink } from './TransitionLink';
 
 const push = vi.fn();
 
+let pathname = '/';
+
 vi.mock('next/navigation', () => {
   return {
     useRouter: () => {
       return { push };
     },
     usePathname: () => {
-      return '/';
+      return pathname;
     },
   };
 });
@@ -26,6 +28,8 @@ const reduceMotion = (reduce: boolean): void => {
 
 afterEach(() => {
   reduceMotion(false);
+  push.mockClear();
+  pathname = '/';
 });
 
 describe('RouteTransition', () => {
@@ -51,6 +55,21 @@ describe('RouteTransition', () => {
     await userEvent.click(screen.getByRole('link', { name: 'Blog' }));
 
     expect(screen.getByTestId('route-curtain')).toHaveTextContent('');
+    expect(push).not.toHaveBeenCalled();
+  });
+
+  it('같은 섹션 안 링크는 커튼 없이 이동한다', async () => {
+    pathname = '/blog';
+
+    render(
+      <RouteTransition>
+        <TransitionLink href='/blog/hello-world'>글</TransitionLink>
+      </RouteTransition>
+    );
+
+    await userEvent.click(screen.getByRole('link', { name: '글' }));
+
+    expect(screen.getByTestId('route-curtain').textContent).toBe('');
     expect(push).not.toHaveBeenCalled();
   });
 });

@@ -4,6 +4,7 @@ import type { Database } from '@/shared/api';
 import type { Post } from '../model/post.types';
 import {
   createAdminPost,
+  deleteAdminPost,
   updateAdminPost,
   type UpsertPostInput,
 } from './adminPosts';
@@ -14,8 +15,7 @@ const input: UpsertPostInput = {
   description: '새 글 설명',
   series: null,
   tags: ['Next.js'],
-  status: 'draft',
-  published_at: null,
+  published_at: '2026-07-09T00:00:00Z',
   content_markdown: '# 새 글',
 };
 
@@ -61,6 +61,25 @@ const makeUpdateClient = (result: { data: Post | null; error: unknown }) => {
   return { client, from, update, eq, select, single };
 };
 
+const makeDeleteClient = (result: {
+  data: { id: string }[] | null;
+  error: unknown;
+}) => {
+  const select = vi.fn().mockResolvedValue(result);
+  const eq = vi.fn(() => {
+    return { select };
+  });
+  const remove = vi.fn(() => {
+    return { eq };
+  });
+  const from = vi.fn(() => {
+    return { delete: remove };
+  });
+  const client = { from } as unknown as SupabaseClient<Database>;
+
+  return { client, from, remove, eq, select };
+};
+
 describe('admin post helpers', () => {
   it('admin 글을 생성한다', async () => {
     const { client, from, insert, select, single } = makeCreateClient({
@@ -87,6 +106,25 @@ describe('admin post helpers', () => {
     expect(eq).toHaveBeenCalledWith('id', '1');
     expect(select).toHaveBeenCalledWith('*');
     expect(single).toHaveBeenCalled();
+  });
+
+  it('admin 글을 삭제하면 true 를 돌려준다', async () => {
+    const { client, from, eq, select } = makeDeleteClient({
+      data: [{ id: '1' }],
+      error: null,
+    });
+
+    await expect(deleteAdminPost(client, '1')).resolves.toBe(true);
+    expect(from).toHaveBeenCalledWith('posts');
+    expect(eq).toHaveBeenCalledWith('id', '1');
+    expect(select).toHaveBeenCalledWith('id');
+  });
+
+  it('지울 글이 없으면 false 를 돌려준다', async () => {
+    // 없는 id 로 delete 해도 Supabase 는 성공이라 응답한다 — 지운 행 수로만 구분된다
+    const { client } = makeDeleteClient({ data: [], error: null });
+
+    await expect(deleteAdminPost(client, 'ghost')).resolves.toBe(false);
   });
 
   it('Supabase 에러를 호출 측으로 전파한다', async () => {

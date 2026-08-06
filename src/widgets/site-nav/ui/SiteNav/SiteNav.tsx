@@ -139,6 +139,11 @@ export function SiteNav() {
     });
   };
 
+  // 어드민에는 세우지 않는다 — 공개 라우트 목록일 뿐이고, 폭 전체를 덮는 상자라 어드민 헤더의 버튼 클릭을 가로챈다
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <>
       <NavBar collapsed={collapsed} />

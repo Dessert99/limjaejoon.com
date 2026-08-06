@@ -14,6 +14,8 @@ story 는 `shared/ui` 컴포넌트와 `shared/styles` 의 Foundation 에만 둔�
 
 스크롤 모션은 GSAP이 소유한다. DOM을 렌더하는 컴포넌트가 애니메이션 생명주기도 갖고, 복잡한 타임라인만 인접한 `create*Timeline.ts` 로 분리한다. [gsap.md](docs/conventions/gsap.md) 는 GSAP 사용법이 아니라 이 저장소가 관행과 다르게 정한 것만 담는다 — 위치·기법·확장성 순.
 
+블로그는 빌드 시점에 Supabase 를 직접 읽어 정적으로 굳고, 어드민 쓰기가 `revalidatePath` 로 다시 굽는다. 초안 상태는 없다 — 저장하면 곧 공개다. 운영자 버튼은 `/blog` 와 글 상세에 클라이언트로 얹어, 정적 HTML 한 벌이 로그인 여부와 무관하게 유지된다(감춤은 편의일 뿐 인가는 `requireAdmin` 과 RLS 가 집행). 본문 렌더는 서버 전용 `PostContent` 가 맡고 규칙은 `markdownPlugins.ts` 한 곳이 소유한다 — 이 둘은 `entities/post` 배럴에 넣지 않는다. shiki 를 모듈 최상위에서 만들어, 클라이언트 컴포넌트가 배럴을 스치기만 해도 번들에 딸려 들기 때문이다. 설계는 [블로그 개편](docs/superpowers/specs/2026-08-06-blog-redesign-design.md).
+
 컴포넌트별 함정(`{...rest}` 순서, ref 미개방)은 해당 파일 주석에 있다.
 
 주석은 파일 헤더와 모든 export에 단일 라인 JSDoc(`/** ... */`), 함수 본문 안 비자명 로직에 한 줄 `//`로 WHY(의도·함정)를 적는다. 본문은 한국어, 식별자는 영어. 멀티라인 블록·`@param`/`@returns` 태그·코드 받아쓰기(WHAT)는 금지 — 한 줄에 안 들어가면 주석 문제가 아니라 코드 분리·네이밍 신호다. 기초 개념(`fail-fast`, `barrel` 등)도 풀어쓰지 말고 한 줄 안에 단어로 녹인다. 단순 re-export만 하는 `index.ts`와 자명한 줄에는 달지 않는다. 보안 위험·법적 구속처럼 길게 풀 정당한 이유가 있을 때만 멀티라인을 허용한다.

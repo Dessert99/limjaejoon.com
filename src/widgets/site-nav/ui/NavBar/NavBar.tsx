@@ -1,8 +1,7 @@
 'use client';
 
-/** 상단 나열 — 왼쪽에 홈, 가운데에 글자, 일렁이는 덩어리가 항목 사이를 옮겨 다닌다 */
+/** 상단 나열 — 가운데에 글자, 일렁이는 덩어리가 항목 사이를 옮겨 다닌다 */
 import { useRef, type PointerEvent, type PointerEventHandler } from 'react';
-import { SITE } from '@/shared/config';
 import {
   MAGNETIC_FOLLOW,
   MAGNETIC_PULL,
@@ -28,17 +27,12 @@ const FADE = 0.3;
 // pt 는 덩어리가 화면 위로 잘리지 않을 만큼 준다 — 덩어리가 글자보다 훨씬 크고 위아래로 넘친다
 const NAV_CLASS = 'fixed inset-x-0 top-0 px-gutter pt-20';
 
-// 가운데 칸만 auto 다 — 홈 이름 길이가 바뀌어도 글자 나열은 화면 정중앙에 남는다
-// 오른쪽 1fr 은 비워 둔다 — 나열이 물러난 자리에 햄버거가 들어선다
-const ROW_CLASS = 'grid grid-cols-[1fr_auto_1fr] items-center';
+const ROW_CLASS = 'flex justify-center';
 
+// difference 는 미감이 아니라 가독성 장치다 — nav 가 밝은 라우트 위에도 떠 있어서, 반전이 없으면 크림 글자가 통째로 사라진다
 // 여백을 좁게 잡는다 — 자석이 이 상자를 기준으로 재므로, 넓으면 글자가 덩어리 밖까지 끌려간다
 const ITEM_CLASS =
   'flex items-center justify-center px-3 py-3 text-body-xl font-medium text-foreground mix-blend-difference';
-
-// difference 는 미감이 아니라 가독성 장치다 — nav 가 밝은 라우트 위에도 떠 있어서, 반전이 없으면 크림 글자가 통째로 사라진다
-const HOME_CLASS =
-  'justify-self-start py-3 text-body-xl font-medium text-foreground mix-blend-difference';
 
 // 덩어리가 링크보다 먼저 그려져야 글자가 그 위에 얹힌다
 // plus-lighter 는 덩어리를 칠하는 대신 뒷 배경에 더한다 — 사진 결이 그대로 비쳐 흰 판때기로 읽히지 않는다
@@ -168,13 +162,6 @@ export function NavBar({ collapsed }: { collapsed: boolean }) {
       aria-label='주요 메뉴'
       className={NAV_CLASS}>
       <div className={ROW_CLASS}>
-        {/* 덩어리를 태우지 않는다 — 나열 항목이 아니라 어느 라우트에서든 돌아오는 자리다 */}
-        <TransitionLink
-          href='/'
-          className={HOME_CLASS}>
-          {SITE.name}
-        </TransitionLink>
-
         <div
           ref={rootRef}
           onPointerLeave={handleLeave}
