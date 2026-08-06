@@ -1,4 +1,4 @@
-/** browser 전용 Supabase client — literal NEXT_PUBLIC_* 참조로 webpack 클라 번들 인라인을 보장한다 */
+/** browser 전용 Supabase client — literal NEXT_PUBLIC_* 참조로 클라 번들 인라인을 보장한다 */
 import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from './database.types';
 
@@ -11,7 +11,7 @@ const requireBrowserEnv = (value: string | undefined, key: string): string => {
   return value;
 };
 
-// source[key] 동적 접근은 webpack이 인라인하지 못해 브라우저에서 undefined가 된다 — target별로 literal process.env.NEXT_PUBLIC_* 를 그대로 나열
+// source[key] 동적 접근은 빌드타임 문자열 치환 대상이 아니라 브라우저에서 undefined가 된다 — target별로 literal process.env.NEXT_PUBLIC_* 를 그대로 나열
 const resolveBrowserSupabaseEnv = (): { url: string; anonKey: string } => {
   const target = process.env.NEXT_PUBLIC_SUPABASE_TARGET;
 
