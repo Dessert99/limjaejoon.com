@@ -1,4 +1,3 @@
-import { toDraft } from '@/features/manage-post';
 import { AdminPostEditorPage } from '@/pages/admin-post-editor';
 import { createSupabaseServerClient } from '@/shared/api';
 import type { Metadata } from 'next';
@@ -31,5 +30,5 @@ export default async function Page(context: RouteContext) {
     notFound();
   }
 
-  return <AdminPostEditorPage initial={{ id, draft: toDraft(data) }} />;
+  return <AdminPostEditorPage />;
 }
