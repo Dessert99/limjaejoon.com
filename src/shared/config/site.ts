@@ -1,4 +1,4 @@
-/** 사이트 전역 상수 — metadata·footer·Contact 가 같은 출처를 본다 */
+/** 사이트 전역 상수 — metadata·Contact 가 같은 출처를 본다 */
 
 /** 절대 URL 기준점 — sitemap·metadata 가 소비한다 */
 export const SITE_URL = 'https://limjaejoon.com';
@@ -14,7 +14,7 @@ export const SITE = {
   roleEn: 'Frontend Engineer',
 } as const;
 
-/** 소셜 링크 — metadata·footer·Contact 세 곳이 소비한다 */
+/** 소셜 링크 — metadata·Contact 가 소비한다 */
 /* 블로그는 아직 라우트가 없다(철거 후 재구축 전) — 라우트가 서면 여기 한 줄을 더한다 */
 export const SOCIAL_LINKS = [
   { label: 'Email', href: `mailto:${EMAIL}` },

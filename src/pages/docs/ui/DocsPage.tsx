@@ -1,6 +1,5 @@
 /** About — 홈의 Introduction 이 요약이라면 이쪽이 상세. 지금은 라우트만 세운다 */
 import { Container } from '@/shared/ui';
-import { SiteFooter } from '@/widgets/site-footer';
 
 export function DocsPage() {
   return (
@@ -16,8 +15,6 @@ export function DocsPage() {
           </p>
         </Container>
       </main>
-      {/* main 밖이다 — main 안에 중첩된 footer 는 contentinfo 랜드마크가 되지 않는다 */}
-      <SiteFooter />
     </div>
   );
 }
