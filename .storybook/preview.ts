@@ -1,5 +1,4 @@
 /** Storybook preview — 앱과 같은 global.css 한 파일을 쓴다(SB 전용 스타일을 만들지 않는다) */
-import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import type { Decorator, Preview } from '@storybook/nextjs-vite';
 import { pretendard } from '../src/shared/styles';
 import '../src/shared/styles/global.css';
@@ -10,6 +9,19 @@ document.documentElement.classList.add(pretendard.variable);
 /** 모션 감쇠 토글 — 무한 애니메이션을 스토리에서 멈추는 수단을 겸한다 */
 const withMotionPreference: Decorator = (Story, context) => {
   document.documentElement.dataset.motion = String(context.globals.motion);
+  return Story();
+};
+
+/** 서피스 반전 토글 — 테마가 아니라 섹션 반전이라, 앱처럼 light 만 걸었다 뗀다(다크는 :root 기본값이다) */
+const withSurface: Decorator = (Story, context) => {
+  const root = document.documentElement;
+
+  if (context.globals.surface === 'light') {
+    root.dataset.surface = 'light';
+  } else {
+    delete root.dataset.surface;
+  }
+
   return Story();
 };
 
@@ -40,8 +52,21 @@ const preview: Preview = {
   },
   initialGlobals: {
     motion: 'full',
+    surface: 'dark',
   },
   globalTypes: {
+    surface: {
+      description: '서피스 반전',
+      toolbar: {
+        title: 'Surface',
+        icon: 'contrast',
+        items: [
+          { value: 'dark', title: '기본 (dark)' },
+          { value: 'light', title: 'data-surface=light' },
+        ],
+        dynamicTitle: true,
+      },
+    },
     motion: {
       description: '모션 감쇠',
       toolbar: {
@@ -55,14 +80,7 @@ const preview: Preview = {
       },
     },
   },
-  decorators: [
-    withMotionPreference,
-    withThemeByDataAttribute({
-      themes: { dark: 'dark', light: 'light' },
-      defaultTheme: 'dark',
-      attributeName: 'data-surface',
-    }),
-  ],
+  decorators: [withMotionPreference, withSurface],
   tags: ['autodocs'],
 };
 

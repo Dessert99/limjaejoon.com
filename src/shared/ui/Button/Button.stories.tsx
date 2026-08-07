@@ -80,7 +80,7 @@ export const Disabled: Story = {
 
 /** 두 surface 에서 accent 대비를 같이 본다 — outline 은 반전 때 테두리가 가장 얕아진다 */
 export const Surfaces: Story = {
-  globals: { theme: 'dark' },
+  globals: { surface: 'dark' },
   parameters: { layout: 'fullscreen' },
   render: (args) => {
     return (

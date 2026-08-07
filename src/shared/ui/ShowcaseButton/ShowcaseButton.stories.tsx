@@ -67,7 +67,7 @@ export const Disabled: Story = {
 
 /** 두 surface 에서 fill 색과 라벨 대비를 같이 본다 */
 export const Surfaces: Story = {
-  globals: { theme: 'dark' },
+  globals: { surface: 'dark' },
   parameters: { layout: 'fullscreen' },
   render: (args) => {
     return (

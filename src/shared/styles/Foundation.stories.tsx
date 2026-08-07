@@ -351,7 +351,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Colors: Story = {
   // 루트를 dark 로 고정한다 — 툴바가 light 면 두 칸이 모두 light 가 되어 반전 비교가 무의미해진다
-  globals: { theme: 'dark' },
+  globals: { surface: 'dark' },
   render: () => {
     const semantic = readTokens(':root', '--color-');
 
