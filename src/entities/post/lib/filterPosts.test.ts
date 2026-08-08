@@ -70,6 +70,24 @@ describe('filterPosts', () => {
     expect(filterPosts(POSTS, { q: '   ' })).toHaveLength(3);
   });
 
+  it('띄어쓰기를 무시하고 견준다', () => {
+    // 붙여 쳐도, 띄어 쳐도, 원문과 다르게 끊어 쳐도 같은 글이 걸린다
+    const posts = [post('d', { title: 'React Fiber' })];
+
+    expect(filterPosts(posts, { q: 'Reactfiber' })).toHaveLength(1);
+    expect(filterPosts(posts, { q: 'react fiber' })).toHaveLength(1);
+    expect(filterPosts(posts, { q: 'Re actFi ber' })).toHaveLength(1);
+  });
+
+  it('필드 경계를 넘는 검색어는 걸리지 않는다', () => {
+    // 제목 끝과 설명 첫 글자가 이어 붙어 없는 말이 만들어지면 안 된다
+    const posts = [
+      post('d', { title: 'Zod', description: 'TypeScript 런타임' }),
+    ];
+
+    expect(filterPosts(posts, { q: 'zodtype' })).toHaveLength(0);
+  });
+
   it('검색어와 태그는 AND 로 겹친다', () => {
     expect(filterPosts(POSTS, { q: 'GSAP', tags: ['GSAP'] })).toHaveLength(1);
     expect(filterPosts(POSTS, { q: 'Supabase', tags: ['GSAP'] })).toHaveLength(
