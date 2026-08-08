@@ -44,9 +44,10 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
       {tags.length > 0 ? (
         <aside className='lg:sticky lg:top-8 lg:self-start'>
           <h2 className='text-label text-muted-foreground uppercase'>태그</h2>
+          {/* 태그가 화면보다 길면 여기서만 스크롤한다 — 아니면 아래쪽 태그를 보려고 글 목록을 통째로 내려야 한다 */}
           <ul
             aria-label='태그 필터'
-            className='mt-4 flex flex-wrap gap-2 lg:flex-col lg:items-start'>
+            className='mt-4 flex flex-wrap gap-2 lg:max-h-[calc(100svh-8rem)] lg:flex-col lg:flex-nowrap lg:items-start lg:overflow-y-auto lg:overscroll-contain lg:pr-2'>
             {tags.map((tag) => {
               const active = filters.tags.includes(tag);
 
