@@ -34,6 +34,36 @@ export type Database = {
   };
   public: {
     Tables: {
+      post_tags: {
+        Row: {
+          post_id: string;
+          tag_id: string;
+        };
+        Insert: {
+          post_id: string;
+          tag_id: string;
+        };
+        Update: {
+          post_id?: string;
+          tag_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'post_tags_post_id_fkey';
+            columns: ['post_id'];
+            isOneToOne: false;
+            referencedRelation: 'posts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'post_tags_tag_id_fkey';
+            columns: ['tag_id'];
+            isOneToOne: false;
+            referencedRelation: 'tags';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       posts: {
         Row: {
           content_markdown: string;
@@ -42,7 +72,6 @@ export type Database = {
           id: string;
           published_at: string;
           slug: string;
-          tags: string[];
           title: string;
           updated_at: string;
         };
@@ -53,7 +82,6 @@ export type Database = {
           id?: string;
           published_at?: string;
           slug: string;
-          tags?: string[];
           title: string;
           updated_at?: string;
         };
@@ -64,9 +92,26 @@ export type Database = {
           id?: string;
           published_at?: string;
           slug?: string;
-          tags?: string[];
           title?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      tags: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
         };
         Relationships: [];
       };
