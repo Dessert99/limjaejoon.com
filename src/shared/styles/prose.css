@@ -18,15 +18,16 @@
     scroll-margin-block-start: 6rem;
   }
 
+  /* em 이다 — 본문 크기에 매어 두면 제목이 글 크기와 따로 놀지 않는다(--text-statement 는 나열·페이지 제목용이라 본문에는 과했다) */
   & h2 {
-    font-size: var(--text-statement);
-    line-height: 1.25;
+    font-size: 1.5em;
+    line-height: 1.3;
     letter-spacing: -0.01em;
   }
 
   & h3 {
-    font-size: var(--text-body-xl);
-    line-height: 1.4;
+    font-size: 1.1em;
+    line-height: 1.45;
   }
 
   & > h2 + *,
@@ -43,7 +44,7 @@
   }
 
   & a {
-    color: var(--color-accent);
+    color: var(--color-primary);
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
@@ -65,28 +66,43 @@
     list-style: decimal;
   }
 
-  & li + li {
+  & ul > li + li {
     margin-block-start: 0.5em;
   }
 
+  /* 항목 하나가 낱말이 아니라 완결된 문장이라 문단과 같은 간격을 준다 */
+  & ol > li + li {
+    margin-block-start: 1.5em;
+  }
+
+  /* 바깥의 `> * + *` 는 직계 자식만 잡는다 — 코드블록이 전부 항목 안에 중첩돼 있어 여기가 없으면 문장에 딱 붙는다 */
+  & li > * + * {
+    margin-block-start: 1em;
+  }
+
   & blockquote {
-    border-inline-start: 2px solid var(--color-border-strong);
+    border-inline-start: 2px solid var(--color-input);
     padding-inline-start: 1.25em;
-    color: var(--color-muted);
+    color: var(--color-muted-foreground);
   }
 
   /* 인라인 code 만 칠한다 — pre 안쪽 code 는 shiki 가 색을 소유한다 */
+  /* 바탕에 테두리까지 두른 칩 — 색만으로는 본문에 묻혀서 어디까지가 식별자인지 경계가 안 보인다 */
   & :not(pre) > code {
-    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
-    padding: 0.15em 0.4em;
-    font-size: 0.9em;
+    background-color: var(--color-muted);
+    /* 세로 여백은 줄 상자를 못 늘린다 — 인라인 요소라 넘친 만큼 위아래 줄로 새므로 좁게 잡는다 */
+    padding: 0.08em 0.36em;
+    font-size: 0.875em;
+    font-weight: 500;
+    color: var(--color-primary);
   }
 
   & pre {
+    background-color: var(--color-muted);
     border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    padding: 1.25em;
+    padding: 1em 1.15em;
     font-size: var(--text-body-sm);
     line-height: 1.7;
     /* 긴 줄은 페이지가 아니라 코드 블록 안에서 흐른다 */
@@ -118,7 +134,7 @@
   }
 
   & th {
-    background-color: var(--color-surface);
+    background-color: var(--color-card);
     font-weight: 600;
   }
 

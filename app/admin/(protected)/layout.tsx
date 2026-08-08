@@ -1,6 +1,5 @@
 import { isAdmin, type SessionClaims } from '@/entities/session';
 import { createSupabaseServerClient } from '@/shared/api';
-import { Container } from '@/shared/ui';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
@@ -31,15 +30,22 @@ export default async function ProtectedAdminLayout({
       <div
         data-surface='light'
         className='flex min-h-svh flex-col justify-center bg-background text-foreground'>
-        <Container>
+        <div className='mx-auto max-w-content px-gutter'>
           <h1 className='text-statement'>권한이 없다</h1>
-          <p className='mt-4 text-body-lg text-muted'>
+          <p className='mt-4 text-body-lg text-muted-foreground'>
             이 계정에는 운영자 권한이 없다.
           </p>
-        </Container>
+        </div>
       </div>
     );
   }
 
-  return children;
+  // 어드민 화면은 전부 밝게 뒤집는다 — 페이지마다 다시 걸지 않는다
+  return (
+    <div
+      data-surface='light'
+      className='flex min-h-svh flex-col bg-background text-foreground'>
+      {children}
+    </div>
+  );
 }

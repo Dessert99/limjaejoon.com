@@ -4,12 +4,13 @@ import { TransitionLink } from '@/shared/transition';
 
 // sticky 다 — 홈 nav 와 달리 blend 를 쓰지 않으니 문서 흐름에 남겨 본문을 가리지 않게 한다
 const NAV_CLASS =
-  'sticky top-0 z-(--ds-z-sticky) flex items-center gap-6 border-b border-border bg-surface px-gutter py-4';
+  'sticky top-0 z-(--ds-z-sticky) flex items-center gap-6 border-b border-border bg-card px-gutter py-4';
 
-const BRAND_CLASS = 'mr-auto text-label tracking-widest text-subtle uppercase';
+const BRAND_CLASS =
+  'mr-auto text-label tracking-widest text-muted-foreground uppercase';
 
 const LINK_CLASS =
-  'text-body font-medium text-foreground transition-colors duration-quick ease-standard hover:text-accent';
+  'text-body font-medium text-foreground transition-colors duration-quick ease-standard hover:text-primary';
 
 /** docs 라우트가 세우는 임시 나열 */
 export function DocsNav() {

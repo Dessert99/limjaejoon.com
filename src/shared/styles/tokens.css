@@ -28,6 +28,20 @@
   --ds-accent-800: #744b10;
   --ds-accent-900: #4d320c;
 
+  /* 무채색 중립 — 위 웜톤은 다크에서 앰버와 맞물리라고 넣은 것이고, 밝은 바탕에서는 그 온기가 베이지로 읽힌다 */
+  /* 밝기 단계는 웜 램프와 짝을 맞췄다 — 반전 블록이 같은 번호끼리 갈아 끼우면 대비 판단이 그대로 넘어온다 */
+  --ds-gray-0: #ffffff;
+  --ds-gray-50: #fafafa;
+  --ds-gray-100: #f4f4f5;
+  --ds-gray-200: #e4e4e7;
+  --ds-gray-400: #a1a1aa;
+  --ds-gray-600: #5c5c63;
+  --ds-gray-950: #111113;
+
+  /* danger 팔레트 — 웜뉴트럴 위에 얹으므로 순색 빨강 대신 채도를 눌러 벽돌색 쪽으로 잡았다 */
+  --ds-danger-500: #c4443a;
+  --ds-danger-600: #9d2f26;
+
   /* raw radius — none·full 은 Tailwind 의 정적 유틸리티(rounded-none/full)가 이미 담당한다 */
   --ds-radius-none: 0px;
   --ds-radius-sm: 0.25rem;
@@ -65,21 +79,34 @@
   --color-*: initial;
   --color-transparent: transparent;
   --color-current: currentColor;
+  /* 지운 팔레트에서 흑백만 되살린다 — shadcn 이 destructive 대비색으로 text-white 를 박아 쓴다 */
+  --color-white: var(--ds-neutral-0);
+  --color-black: var(--ds-neutral-1000);
 
+  /* 이름은 shadcn 규약을 그대로 따른다 — npx shadcn add 가 받아오는 코드를 손대지 않기 위한 대가다 */
+  /* 값은 우리 앰버·웜뉴트럴이다 — 이름만 빌리고 shadcn 기본 팔레트는 들이지 않는다 */
   --color-background: var(--ds-neutral-950);
   --color-foreground: var(--ds-neutral-50);
-  --color-surface: var(--ds-neutral-900);
-  --color-surface-raised: var(--ds-neutral-800);
-  --color-surface-inverse: var(--ds-neutral-50);
-  --color-muted: var(--ds-neutral-200);
-  --color-subtle: var(--ds-neutral-400);
-  --color-inverse: var(--ds-neutral-950);
+  --color-card: var(--ds-neutral-900);
+  --color-card-foreground: var(--ds-neutral-50);
+  --color-popover: var(--ds-neutral-900);
+  --color-popover-foreground: var(--ds-neutral-50);
+  --color-primary: var(--ds-accent-400);
+  --color-primary-foreground: var(--ds-neutral-950);
+  --color-secondary: var(--ds-neutral-800);
+  --color-secondary-foreground: var(--ds-neutral-50);
+  --color-muted: var(--ds-neutral-800);
+  --color-muted-foreground: var(--ds-neutral-400);
+  /* shadcn 의 accent 는 브랜드색이 아니라 호버·선택 배경이다 — 앰버는 primary 가 갖는다 */
+  --color-accent: var(--ds-neutral-800);
+  --color-accent-foreground: var(--ds-neutral-50);
+  --color-destructive: var(--ds-danger-500);
+  --color-destructive-foreground: var(--ds-neutral-0);
   --color-border: var(--ds-neutral-800);
-  --color-border-strong: var(--ds-neutral-600);
-  --color-accent: var(--ds-accent-400);
-  --color-accent-hover: var(--ds-accent-300);
-  --color-accent-foreground: var(--ds-neutral-950);
-  --color-focus-ring: var(--ds-accent-300);
+  --color-input: var(--ds-neutral-600);
+  --color-ring: var(--ds-accent-300);
+  /* shadcn 에 대응이 없는 우리 고유 축 — 배경을 통째로 뒤집는 오버레이·햄버거 바가 쓴다 */
+  --color-inverse: var(--ds-neutral-950);
 
   /* var() 폴백 — next/font 변수가 없으면 --font-body 통째가 무효값이 되어 폰트가 아니라 서체 스택 전체가 날아간다 */
   --font-body:
@@ -132,9 +159,4 @@
   --spacing-section: clamp(6rem, 12vw, 12rem);
   --spacing-section-sm: clamp(3rem, 6vw, 6rem);
   --spacing-grid-gap: clamp(1.5rem, 3vw, 3rem);
-}
-
-/* controlled bleed — Container 의 gutter 만 되돌린다. 100vw 계열은 스크롤바 폭까지 세어 가로 오버플로를 만든다 */
-@utility bleed-gutter {
-  margin-inline: calc(-1 * var(--spacing-gutter));
 }

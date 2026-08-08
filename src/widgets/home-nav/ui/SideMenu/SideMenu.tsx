@@ -26,10 +26,10 @@ const SCRIM_CLASS =
   'invisible fixed inset-0 z-(--ds-z-overlay) bg-inverse/60 opacity-0';
 
 const PANEL_CLASS =
-  'invisible fixed inset-y-0 right-0 z-(--ds-z-overlay) flex w-[min(24rem,85vw)] flex-col justify-center bg-surface px-gutter opacity-0';
+  'invisible fixed inset-y-0 right-0 z-(--ds-z-overlay) flex w-[min(24rem,85vw)] flex-col justify-center bg-card px-gutter opacity-0';
 
 const ITEM_CLASS =
-  'inline-block py-2 text-statement text-foreground transition-colors duration-quick ease-standard hover:text-accent';
+  'inline-block py-2 text-statement text-foreground transition-colors duration-quick ease-standard hover:text-primary';
 
 type SideMenuProps = {
   panelId: string;
