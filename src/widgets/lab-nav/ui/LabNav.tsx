@@ -21,7 +21,7 @@ export function LabNav() {
     <nav
       aria-label='주요 메뉴'
       className={NAV_CLASS}>
-      <span className={BRAND_CLASS}>lab</span>
+      <span className={BRAND_CLASS}>labs</span>
 
       {SITE_ROUTES.map((route) => {
         return (

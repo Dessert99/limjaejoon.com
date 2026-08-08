@@ -5,5 +5,5 @@ export const SITE_ROUTES = [
   { label: 'Home', href: '/' },
   { label: 'Docs', href: '/docs' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Lab', href: '/lab' },
+  { label: 'Labs', href: '/lab' },
 ] as const;
