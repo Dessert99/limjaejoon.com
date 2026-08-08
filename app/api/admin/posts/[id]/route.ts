@@ -24,6 +24,14 @@ export const PATCH = async (request: Request, context: RouteContext) => {
   const { id } = await context.params;
   const input = (await request.json()) as UpsertPostInput;
 
+  // 조인으로 옮기면서 "글에 태그 최소 1개" 를 DB 에서 지킬 자리가 사라졌다 — 여기가 그 자리다
+  if (input.tag_ids.length === 0) {
+    return NextResponse.json(
+      { message: '태그를 하나 이상 골라야 한다' },
+      { status: 400 }
+    );
+  }
+
   try {
     const post = await updateAdminPost(guard.client, id, input);
 

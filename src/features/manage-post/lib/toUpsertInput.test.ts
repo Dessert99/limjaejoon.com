@@ -1,4 +1,4 @@
-/** toUpsertInput 테스트 — 폼 문자열이 저장 계약으로 정확히 접히는지 검증한다 */
+/** toUpsertInput 테스트 — 폼 값이 저장 계약으로 정확히 접히는지 검증한다 */
 import { describe, expect, it } from 'vitest';
 import { EMPTY_DRAFT, toUpsertInput, type PostDraft } from './toUpsertInput';
 
@@ -9,14 +9,14 @@ const draft = (overrides: Partial<PostDraft> = {}): PostDraft => {
 };
 
 describe('toUpsertInput', () => {
-  it('태그를 쉼표로 가르고 공백을 턴다', () => {
-    const input = toUpsertInput(draft({ tags: 'Next.js , Supabase ,' }), NOW);
+  it('고른 태그 id 를 tag_ids 로 넘긴다', () => {
+    const input = toUpsertInput(draft({ tags: ['tag-a', 'tag-b'] }), NOW);
 
-    expect(input.tags).toEqual(['Next.js', 'Supabase']);
+    expect(input.tag_ids).toEqual(['tag-a', 'tag-b']);
   });
 
-  it('비어 있는 시리즈는 null 로 접는다', () => {
-    expect(toUpsertInput(draft(), NOW).series).toBeNull();
+  it('태그를 안 고르면 tag_ids 가 빈 배열이다 (거부는 저장 라우트가 한다)', () => {
+    expect(toUpsertInput(draft(), NOW).tag_ids).toEqual([]);
   });
 
   it('발행일을 비워 두면 지금 시각을 박는다', () => {

@@ -9,11 +9,11 @@ type ShowcaseButtonProps =
 
 // overflow-hidden 이 fill 레이어를 가둔다 — 이게 없으면 아래에서 올라오는 면이 버튼 밖으로 새어 보인다
 const ROOT_CLASS =
-  'group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-border-strong px-8 py-4 text-body-lg font-medium text-foreground transition duration-quick ease-standard active:scale-98 hover:text-accent-foreground focus-visible:text-accent-foreground disabled:pointer-events-none disabled:opacity-50';
+  'group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-input px-8 py-4 text-body-lg font-medium text-foreground transition duration-quick ease-standard active:scale-98 hover:text-primary-foreground focus-visible:text-primary-foreground disabled:pointer-events-none disabled:opacity-50';
 
 // hover 뿐 아니라 focus-visible 에도 건다 — 키보드 사용자가 같은 상태 신호를 받아야 한다
 const FILL_CLASS =
-  'absolute inset-0 translate-y-full bg-accent transition-transform duration-standard ease-reveal group-hover:translate-y-0 group-focus-visible:translate-y-0';
+  'absolute inset-0 translate-y-full bg-primary transition-transform duration-standard ease-reveal group-hover:translate-y-0 group-focus-visible:translate-y-0';
 
 const LABEL_CLASS =
   'relative transition-transform duration-standard ease-reveal group-hover:-translate-y-px';

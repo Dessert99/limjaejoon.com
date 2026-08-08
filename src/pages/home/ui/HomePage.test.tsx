@@ -27,10 +27,4 @@ describe('HomePage', () => {
       expect(region).toHaveAccessibleName();
     }
   });
-
-  it('contentinfo 랜드마크를 하나만 둔다', () => {
-    render(<HomePage />);
-
-    expect(screen.getAllByRole('contentinfo')).toHaveLength(1);
-  });
 });

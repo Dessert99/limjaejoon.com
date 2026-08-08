@@ -114,6 +114,10 @@ describe('mapWriteError', () => {
   it('unique_violation 은 409 다', () => {
     expect(mapWriteError({ code: '23505' }).status).toBe(409);
   });
+  it('foreign_key_violation 은 409 다', () => {
+    // 연결된 글이 있는 태그를 지우는 정상적인 거부다 — 500 이면 장애로 보인다
+    expect(mapWriteError({ code: '23503' }).status).toBe(409);
+  });
   it('RLS 거부(42501)는 403 이다', () => {
     expect(mapWriteError({ code: '42501' }).status).toBe(403);
   });

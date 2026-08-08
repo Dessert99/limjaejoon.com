@@ -84,7 +84,7 @@ const useComputed = <T extends HTMLElement>(property: string) => {
 };
 
 function Declared({ value }: { value: string }) {
-  return <code className='text-body-sm text-subtle'>{value}</code>;
+  return <code className='text-body-sm text-muted-foreground'>{value}</code>;
 }
 
 function Section({
@@ -96,7 +96,9 @@ function Section({
 }) {
   return (
     <section className='border-b border-border py-10'>
-      <h2 className='mb-6 text-label text-subtle uppercase'>{title}</h2>
+      <h2 className='mb-6 text-label text-muted-foreground uppercase'>
+        {title}
+      </h2>
       {children}
     </section>
   );
@@ -126,10 +128,12 @@ function ColorRow({ token }: { token: Token }) {
         <div className='flex items-center gap-2'>
           <div
             ref={rootRef}
-            className='size-8 rounded-sm border border-border-strong'
+            className='size-8 rounded-sm border border-input'
             style={{ backgroundColor: `var(${token.name})` }}
           />
-          <code className='text-body-sm text-subtle'>{rootValue}</code>
+          <code className='text-body-sm text-muted-foreground'>
+            {rootValue}
+          </code>
         </div>
       </td>
       <td
@@ -138,10 +142,12 @@ function ColorRow({ token }: { token: Token }) {
         <div className='flex items-center gap-2'>
           <div
             ref={lightRef}
-            className='size-8 rounded-sm border border-border-strong'
+            className='size-8 rounded-sm border border-input'
             style={{ backgroundColor: `var(${token.name})` }}
           />
-          <code className='text-body-sm text-subtle'>{lightValue}</code>
+          <code className='text-body-sm text-muted-foreground'>
+            {lightValue}
+          </code>
         </div>
       </td>
     </tr>
@@ -162,7 +168,7 @@ function Ramp({ prefix }: { prefix: string }) {
               className='h-14 rounded-sm border border-border'
               style={{ backgroundColor: `var(${token.name})` }}
             />
-            <p className='mt-1 text-body-sm break-all text-subtle'>
+            <p className='mt-1 text-body-sm break-all text-muted-foreground'>
               {token.name.replace(prefix, '')}
             </p>
           </div>
@@ -175,16 +181,16 @@ function Ramp({ prefix }: { prefix: string }) {
 /** 같은 클래스가 문맥만 바꿔 뒤집히는지 — 컴포넌트가 자기 밝기를 몰라도 되는 게 이 설계의 목표다 */
 function SurfaceCard({ label }: { label: string }) {
   return (
-    <div className='rounded-lg border border-border bg-surface p-6 text-foreground'>
-      <p className='text-label text-subtle uppercase'>{label}</p>
+    <div className='rounded-lg border border-border bg-card p-6 text-foreground'>
+      <p className='text-label text-muted-foreground uppercase'>{label}</p>
       <p className='mt-2 text-statement'>같은 클래스, 다른 문맥</p>
-      <p className='mt-2 text-body text-muted'>
-        bg-surface text-foreground 만 쓴다.
+      <p className='mt-2 text-body text-muted-foreground'>
+        bg-card text-foreground 만 쓴다.
       </p>
       <button
         type='button'
-        className='mt-4 rounded-sm bg-accent px-4 py-2 text-accent-foreground transition duration-quick ease-standard hover:bg-accent-hover'>
-        accent
+        className='mt-4 rounded-sm bg-primary px-4 py-2 text-primary-foreground transition duration-quick ease-standard hover:bg-primary/90'>
+        primary
       </button>
     </div>
   );
@@ -195,7 +201,7 @@ function TypeRow({ token }: { token: Token }) {
 
   return (
     <div className='border-t border-border py-4'>
-      <div className='flex gap-3 text-body-sm text-subtle'>
+      <div className='flex gap-3 text-body-sm text-muted-foreground'>
         <span className='font-medium text-foreground'>
           {token.name.replace('--text-', '')}
         </span>
@@ -222,10 +228,12 @@ function SpacingRow({ token }: { token: Token }) {
   return (
     <div className='flex items-center gap-4 border-t border-border py-2'>
       <span className='w-40 shrink-0 text-body-sm'>{token.name}</span>
-      <code className='w-24 shrink-0 text-body-sm text-subtle'>{width}</code>
+      <code className='w-24 shrink-0 text-body-sm text-muted-foreground'>
+        {width}
+      </code>
       <div
         ref={ref}
-        className='h-4 rounded-sm bg-accent'
+        className='h-4 rounded-sm bg-primary'
         style={{ width: `var(${token.name})` }}
       />
     </div>
@@ -252,7 +260,7 @@ function MotionTrack({
   duration: string;
 }) {
   return (
-    <div className='mt-2 overflow-hidden rounded-sm bg-surface'>
+    <div className='mt-2 overflow-hidden rounded-sm bg-card'>
       <div
         className='w-full transition-transform'
         style={{
@@ -263,7 +271,7 @@ function MotionTrack({
             : 'translateX(0)',
         }}>
         <div
-          className='rounded-sm bg-accent'
+          className='rounded-sm bg-primary'
           style={{ width: SAMPLE_SIZE, height: SAMPLE_SIZE }}
         />
       </div>
@@ -287,10 +295,10 @@ function MotionTokens() {
               return !previous;
             });
           }}
-          className='rounded-sm bg-accent px-4 py-2 text-accent-foreground transition duration-quick ease-standard hover:bg-accent-hover'>
+          className='rounded-sm bg-primary px-4 py-2 text-primary-foreground transition duration-quick ease-standard hover:bg-primary/90'>
           {moved ? '되돌리기' : '이동'}
         </button>
-        <p className='mt-2 text-body-sm text-subtle'>
+        <p className='mt-2 text-body-sm text-muted-foreground'>
           툴바의 Motion 을 Reduced 로 바꾸면 전부 즉시 도착해야 한다.
         </p>
       </Section>
@@ -351,7 +359,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Colors: Story = {
   // 루트를 dark 로 고정한다 — 툴바가 light 면 두 칸이 모두 light 가 되어 반전 비교가 무의미해진다
-  globals: { theme: 'dark' },
+  globals: { surface: 'dark' },
   render: () => {
     const semantic = readTokens(':root', '--color-');
 
@@ -360,7 +368,7 @@ export const Colors: Story = {
         <Section title='semantic — dark 기본과 light 반전'>
           <table className='w-full text-left'>
             <thead>
-              <tr className='text-label text-subtle uppercase'>
+              <tr className='text-label text-muted-foreground uppercase'>
                 <th className='pb-2 font-normal'>token</th>
                 <th className='pb-2 font-normal'>declared</th>
                 <th className='pb-2 font-normal'>:root (dark)</th>
@@ -395,6 +403,10 @@ export const Colors: Story = {
 
         <Section title='primitive — accent'>
           <Ramp prefix='--ds-accent-' />
+        </Section>
+
+        <Section title='primitive — danger'>
+          <Ramp prefix='--ds-danger-' />
         </Section>
       </Page>
     );
@@ -481,10 +493,10 @@ export const Layout: Story = {
                   key={token.name}
                   className='w-28'>
                   <div
-                    className='h-16 border border-border-strong bg-surface-raised'
+                    className='h-16 border border-input bg-secondary'
                     style={{ borderRadius: `var(${token.name})` }}
                   />
-                  <p className='mt-1 text-body-sm text-subtle'>
+                  <p className='mt-1 text-body-sm text-muted-foreground'>
                     {token.name.replace('--ds-radius-', '')} {token.value}
                   </p>
                 </div>

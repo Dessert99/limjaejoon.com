@@ -71,8 +71,12 @@ export const requireAdmin = async (
 export const mapWriteError = (error: unknown): NextResponse => {
   const code = (error as { code?: string })?.code;
 
-  // 23505=unique_violation, 42501=insufficient_privilege(RLS 거부)
+  // 23505=unique_violation, 23503=foreign_key_violation, 42501=insufficient_privilege(RLS 거부)
   if (code === '23505') {
+    return NextResponse.json({ message: 'Conflict' }, { status: 409 });
+  }
+  // 연결된 글이 있는 태그를 지우는 정상적인 거부다 — 500 으로 두면 장애로 보인다
+  if (code === '23503') {
     return NextResponse.json({ message: 'Conflict' }, { status: 409 });
   }
   if (code === '42501') {

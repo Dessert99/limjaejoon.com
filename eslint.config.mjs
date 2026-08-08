@@ -94,6 +94,20 @@ const eslintConfig = defineConfig([
     },
   },
 
+  // shadcn CLI 가 받아오는 벤더 파일 — 우리 문체 규칙을 씌우면 add·업데이트마다 손으로 고쳐야 해 원본 대조가 깨집니다.
+  // glob 이 직계 파일만 잡으므로 폴더로 감싼 자체 제작 컴포넌트(shared/ui/Xxx/)는 규칙을 그대로 받습니다.
+  {
+    files: ['src/shared/ui/*.tsx'],
+    rules: {
+      curly: 'off',
+      'arrow-body-style': 'off',
+      'brace-style': 'off',
+      'no-restricted-syntax': 'off',
+      'prefer-arrow-callback': 'off',
+      'react/function-component-definition': 'off',
+    },
+  },
+
   // Next 기본 ignore에 프로젝트 성격에 맞는 경로를 명시합니다.
   globalIgnores([
     // 빌드 산출물(.next)은 검사 대상에서 제외합니다.

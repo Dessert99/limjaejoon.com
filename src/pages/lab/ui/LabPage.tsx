@@ -1,23 +1,17 @@
-/** Lab — 실험을 늘어놓는 자리. 지금은 라우트만 세운다 */
-import { Container } from '@/shared/ui';
-import { SiteFooter } from '@/widgets/site-footer';
+/** Lab — 실험을 늘어놓는 자리. 지금은 우주 배경과 행성까지 세운다 */
+import { LabBackdrop } from './LabBackdrop/LabBackdrop';
+import { LabPlanet } from './LabPlanet/LabPlanet';
 
+/** lab 페이지 구성 */
 export function LabPage() {
   return (
-    // 임시 페이지는 밝게 뒤집는다 — svh 를 채워야 뒤로 body 의 다크 배경이 비치지 않는다
-    <div
-      data-surface='light'
-      className='flex min-h-svh flex-col bg-background'>
-      <main className='grow bg-background py-section text-foreground'>
-        <Container className='flex min-h-[60svh] flex-col justify-center gap-5'>
-          <h1 className='text-statement'>랩</h1>
-          <p className='text-body-lg break-keep text-muted'>
-            제품이 되기 전의 것들 — 만들다 만 것과 실험 중인 것. 준비 중이다.
-          </p>
-        </Container>
+    <>
+      <LabBackdrop />
+
+      {/* 배경이 z-base 로 깔려 있어 본문은 스스로 층을 올려야 한다 */}
+      <main className='relative z-(--ds-z-content) flex grow flex-col items-center justify-center gap-10 px-lab-gutter text-center'>
+        <LabPlanet />
       </main>
-      {/* main 밖이다 — main 안에 중첩된 footer 는 contentinfo 랜드마크가 되지 않는다 */}
-      <SiteFooter />
-    </div>
+    </>
   );
 }

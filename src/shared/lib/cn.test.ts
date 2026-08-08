@@ -4,7 +4,9 @@ import { cn } from './cn';
 
 describe('cn', () => {
   it('text 크기와 text 색은 다른 속성이라 함께 남는다', () => {
-    expect(cn('text-hero', 'text-muted')).toBe('text-hero text-muted');
+    expect(cn('text-hero', 'text-muted-foreground')).toBe(
+      'text-hero text-muted-foreground'
+    );
   });
 
   it('이름 붙은 text 크기끼리는 뒤에 온 것만 남긴다', () => {
@@ -28,8 +30,8 @@ describe('cn', () => {
   });
 
   it('소비자가 덧붙인 클래스가 컴포넌트 기본값을 이긴다', () => {
-    expect(cn('bg-surface px-gutter', 'bg-surface-raised')).toBe(
-      'px-gutter bg-surface-raised'
+    expect(cn('bg-card px-gutter', 'bg-secondary')).toBe(
+      'px-gutter bg-secondary'
     );
   });
 });

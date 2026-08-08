@@ -2,10 +2,10 @@
 
 /** 어드민 로그인 — 여기는 입구일 뿐이고, 인가의 집행자는 (protected) layout 과 RLS 다 */
 import { useSignIn } from '@/features/auth';
-import { Button, Container } from '@/shared/ui';
+import { Button } from '@/shared/ui';
 
 const FIELD_CLASS =
-  'text-body w-full rounded-md border border-border bg-surface px-4 py-2 text-foreground';
+  'text-body w-full rounded-md border border-border bg-card px-4 py-2 text-foreground';
 
 export function AdminLoginPage() {
   const { email, setEmail, password, setPassword, error, pending, submit } =
@@ -16,7 +16,7 @@ export function AdminLoginPage() {
       data-surface='light'
       className='flex min-h-svh flex-col justify-center bg-background text-foreground'>
       <main className='py-section'>
-        <Container className='max-w-sm'>
+        <div className='mx-auto max-w-sm px-gutter'>
           <h1 className='text-statement'>어드민</h1>
 
           <form
@@ -28,7 +28,7 @@ export function AdminLoginPage() {
             <div className='flex flex-col gap-2'>
               <label
                 htmlFor='admin-email'
-                className='text-body-sm text-muted'>
+                className='text-body-sm text-muted-foreground'>
                 이메일
               </label>
               <input
@@ -47,7 +47,7 @@ export function AdminLoginPage() {
             <div className='flex flex-col gap-2'>
               <label
                 htmlFor='admin-password'
-                className='text-body-sm text-muted'>
+                className='text-body-sm text-muted-foreground'>
                 비밀번호
               </label>
               <input
@@ -67,7 +67,7 @@ export function AdminLoginPage() {
             {error ? (
               <p
                 role='alert'
-                className='text-body-sm text-accent'>
+                className='text-body-sm text-destructive'>
                 {error}
               </p>
             ) : null}
@@ -79,7 +79,7 @@ export function AdminLoginPage() {
               {pending ? '확인 중…' : '로그인'}
             </Button>
           </form>
-        </Container>
+        </div>
       </main>
     </div>
   );

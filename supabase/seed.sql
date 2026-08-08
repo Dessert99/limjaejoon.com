@@ -9,8 +9,6 @@ insert into public.posts (
   title,
   description,
   content_markdown,
-  tags,
-  status,
   published_at
 ) values
   (
@@ -25,10 +23,8 @@ insert into public.posts (
 
 - 목록 화면에 제목과 설명이 보이는지
 - 상세 화면에서 Markdown 본문이 렌더링되는지
-- `published` 글만 공개 API에서 조회되는지
+- 태그가 `post_tags` 조인을 거쳐 목록·상세에 함께 실리는지
 $$,
-    array['Next.js', 'Supabase'],
-    'published',
     '2026-04-03T00:00:00Z'
   ),
   (
@@ -45,10 +41,26 @@ $$,
 2. `/blog/second-post` 상세 페이지로 이동할 수 있다.
 3. 태그와 발행일이 함께 표시된다.
 $$,
-    array['MDX', 'Blog'],
-    'published',
     '2026-04-02T00:00:00Z'
   );
+
+insert into public.tags (name) values
+  ('Next.js'),
+  ('Supabase'),
+  ('MDX'),
+  ('Blog');
+
+-- 태그는 글과 따로 서므로 연결도 따로 넣는다 — slug·name 으로 이어 id 를 손으로 적지 않는다
+insert into public.post_tags (post_id, tag_id)
+select posts.id, tags.id
+from (values
+  ('hello-post', 'Next.js'),
+  ('hello-post', 'Supabase'),
+  ('second-post', 'MDX'),
+  ('second-post', 'Blog')
+) as link(slug, name)
+join public.posts on posts.slug = link.slug
+join public.tags on tags.name = link.name;
 
 -- 어드민 계정 부트스트랩은 seed.sql 에 두지 않는다. 이 파일은 `db push --include-seed`·`db reset --linked`
 -- 로 원격에서도 실행될 수 있어, 공개 레포의 고정 비밀번호 어드민이 프로덕션에 생길 위험이 있다.

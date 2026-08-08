@@ -42,7 +42,7 @@ export const Keyboard: Story = {
   render: (args) => {
     return (
       <div className='flex flex-col items-start gap-4'>
-        <p className='text-body-sm text-subtle'>
+        <p className='text-body-sm text-muted-foreground'>
           Tab 을 눌러 두 버튼을 차례로 지나가 본다.
         </p>
         <div className='flex gap-4'>
@@ -67,16 +67,16 @@ export const Disabled: Story = {
 
 /** 두 surface 에서 fill 색과 라벨 대비를 같이 본다 */
 export const Surfaces: Story = {
-  globals: { theme: 'dark' },
+  globals: { surface: 'dark' },
   parameters: { layout: 'fullscreen' },
   render: (args) => {
     return (
       <div className='grid md:grid-cols-2'>
-        <div className='bg-surface p-10'>
+        <div className='bg-card p-10'>
           <ShowcaseButton {...args} />
         </div>
         <div
-          className='bg-surface p-10'
+          className='bg-card p-10'
           data-surface='light'>
           <ShowcaseButton {...args} />
         </div>

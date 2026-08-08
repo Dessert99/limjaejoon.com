@@ -24,7 +24,6 @@ describe('posts RLS 정책', () => {
       title: 'Integration post',
       description: 'integration test fixture',
       content_markdown: 'body',
-      tags: ['integration-test'],
       published_at: new Date().toISOString(),
     });
 
@@ -60,7 +59,6 @@ describe('posts RLS 정책', () => {
           title: 'anon insert attempt',
           description: 'should be rejected',
           content_markdown: 'body',
-          tags: ['integration-test'],
         });
 
       expect(error).not.toBeNull();
@@ -86,7 +84,6 @@ describe('posts RLS 정책', () => {
         title: 'member insert attempt',
         description: 'should be rejected',
         content_markdown: 'body',
-        tags: ['integration-test'],
       });
 
       expect(error?.code).toBe('42501');
@@ -113,7 +110,6 @@ describe('posts RLS 정책', () => {
         title: 'admin insert',
         description: 'integration test fixture',
         content_markdown: 'body',
-        tags: ['integration-test'],
       });
 
       try {
@@ -145,7 +141,6 @@ describe('posts RLS 정책', () => {
         title: 'admin delete target',
         description: 'integration test fixture',
         content_markdown: 'body',
-        tags: ['integration-test'],
       });
 
       const { data, error } = await admin

@@ -22,22 +22,26 @@ const input = {
   title: '새 글',
   slug: 'new-post',
   description: '새 글 설명',
-  series: null,
-  tags: ['Next.js'],
+  tag_ids: ['tag-a'],
   published_at: '2026-07-09T00:00:00Z',
   content_markdown: '# 새 글',
 };
 
 const post = {
   id: '1',
-  ...input,
+  title: input.title,
+  slug: input.slug,
+  description: input.description,
+  published_at: input.published_at,
+  content_markdown: input.content_markdown,
+  tags: ['Next.js'],
   created_at: '2026-07-09T00:00:00Z',
   updated_at: '2026-07-09T00:00:00Z',
 };
 
-const request = () => {
+const request = (body: unknown = input) => {
   return new Request('https://limjaejoon.com/api/admin/posts', {
-    body: JSON.stringify(input),
+    body: JSON.stringify(body),
     method: 'POST',
   });
 };
@@ -62,6 +66,19 @@ describe('POST /api/admin/posts', () => {
     const response = await POST(request());
 
     expect(response.status).toBe(401);
+    expect(createAdminPost).not.toHaveBeenCalled();
+  });
+
+  it('태그를 하나도 안 고르면 400 으로 막는다', async () => {
+    // 조인으로 옮기면서 "글에 태그 최소 1개" 를 DB 에서 지킬 자리가 사라졌다
+    vi.mocked(requireAdmin).mockResolvedValue({
+      client: {} as never,
+      error: null,
+    });
+
+    const response = await POST(request({ ...input, tag_ids: [] }));
+
+    expect(response.status).toBe(400);
     expect(createAdminPost).not.toHaveBeenCalled();
   });
 

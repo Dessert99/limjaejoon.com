@@ -37,6 +37,21 @@ globalThis.matchMedia = ((query: string) => {
   };
 }) as unknown as typeof matchMedia;
 
+// jsdom 에는 IntersectionObserver 가 없다 — 목차의 활성 절 추적이 마운트 단계에서 터진다.
+// 아무것도 관찰하지 않는 빈 구현이다: 교차 판정은 브라우저 몫이고, 판정을 받은 뒤의 규칙만
+// 테스트가 직접 콜백을 불러 검증한다(PostToc.test.tsx 가 이 전역을 자기 것으로 덮는다).
+globalThis.IntersectionObserver = class {
+  readonly root = null;
+  readonly rootMargin = '';
+  readonly thresholds: readonly number[] = [];
+  observe(): void {}
+  unobserve(): void {}
+  disconnect(): void {}
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+} as unknown as typeof IntersectionObserver;
+
 // jsdom 29 에는 dialog 의 showModal·close 가 없다 — open 속성만 토글하는 최소 폴리필로 대체한다.
 // 포커스 가둠·Escape·backdrop 은 브라우저가 하는 일이라 흉내 내지 않는다. 그건 Storybook 에서 사람이 본다.
 const dialogPrototype = globalThis.HTMLDialogElement?.prototype;

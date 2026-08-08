@@ -1,5 +1,5 @@
-export { deletePost } from './api/deletePost';
 export { usePostEditor } from './model/usePostEditor';
+export { composeSlug, parseSlug, toPublishedAt } from './lib/postSlug';
 export {
   EMPTY_DRAFT,
   toDraft,
