@@ -138,9 +138,20 @@ describe('post fetchers', () => {
       error: null,
     });
 
-    await getPosts(client, { tag: 'Next.js' });
+    await getPosts(client, { tags: ['Next.js'] });
 
     expect(contains).toHaveBeenCalledWith('tags', ['Next.js']);
+  });
+
+  it('tag 가 여러 개면 전부 가진 글만 조회한다', async () => {
+    const { client, contains } = makeListClient({
+      data: listRows,
+      error: null,
+    });
+
+    await getPosts(client, { tags: ['Next.js', 'cache'] });
+
+    expect(contains).toHaveBeenCalledWith('tags', ['Next.js', 'cache']);
   });
 
   it('q 조건으로 제목, 설명, 본문을 검색한다', async () => {

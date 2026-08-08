@@ -20,7 +20,7 @@ const post = (
 };
 
 const POSTS: PostListItem[] = [
-  post('a', { title: 'Supabase RLS 정리', tags: ['Supabase'] }),
+  post('a', { title: 'Supabase RLS 정리', tags: ['Supabase', '인증'] }),
   post('b', { title: 'GSAP 스크롤', tags: ['GSAP'], series: '모션' }),
   post('c', { description: 'Tailwind 토큰 계층', series: '모션' }),
 ];
@@ -31,13 +31,27 @@ describe('filterPosts', () => {
   });
 
   it('tag 가 든 글만 남긴다', () => {
-    const result = filterPosts(POSTS, { tag: 'GSAP' });
+    const result = filterPosts(POSTS, { tags: ['GSAP'] });
 
     expect(
       result.map((item) => {
         return item.id;
       })
     ).toEqual(['b']);
+  });
+
+  it('tag 가 여러 개면 전부 가진 글만 남긴다', () => {
+    expect(
+      filterPosts(POSTS, { tags: ['Supabase', '인증'] }).map((item) => {
+        return item.id;
+      })
+    ).toEqual(['a']);
+    // 하나만 가진 글은 떨어진다 — 겹치는 태그를 넓히는 OR 가 아니라 좁히는 AND 다
+    expect(filterPosts(POSTS, { tags: ['Supabase', 'GSAP'] })).toHaveLength(0);
+  });
+
+  it('tag 가 빈 배열이면 거르지 않는다', () => {
+    expect(filterPosts(POSTS, { tags: [] })).toHaveLength(3);
   });
 
   it('series 가 같은 글만 남긴다', () => {
@@ -68,7 +82,9 @@ describe('filterPosts', () => {
   });
 
   it('여러 조건은 AND 로 겹친다', () => {
-    expect(filterPosts(POSTS, { series: '모션', tag: 'GSAP' })).toHaveLength(1);
+    expect(filterPosts(POSTS, { series: '모션', tags: ['GSAP'] })).toHaveLength(
+      1
+    );
     expect(filterPosts(POSTS, { series: '모션', q: 'Supabase' })).toHaveLength(
       0
     );

@@ -8,7 +8,8 @@ export type PostSeries = string | null;
 export type PostSearchParams = {
   q?: string;
   series?: string;
-  tag?: string;
+  /** 겹칠수록 좁아진다 — 전부 가진 글만 남는 AND 다 */
+  tags?: string[];
 };
 
 /** posts 상세 행 타입 — Markdown 본문과 관리용 메타데이터를 포함한다 */

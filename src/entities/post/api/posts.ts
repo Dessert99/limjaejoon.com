@@ -20,8 +20,9 @@ export const getPosts = async (
     query = query.eq('series', params.series);
   }
 
-  if (params?.tag) {
-    query = query.contains('tags', [params.tag]);
+  // contains 는 배열을 통째로 받아 전부 가진 행만 남긴다 — filterPosts 의 AND 와 같은 뜻이다
+  if (params?.tags?.length) {
+    query = query.contains('tags', params.tags);
   }
 
   if (params?.q) {

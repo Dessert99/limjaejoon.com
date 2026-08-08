@@ -13,7 +13,13 @@ export const filterPosts = (
       return false;
     }
 
-    if (params.tag && !post.tags.includes(params.tag)) {
+    const required = params.tags ?? [];
+
+    if (
+      !required.every((tag) => {
+        return post.tags.includes(tag);
+      })
+    ) {
       return false;
     }
 
