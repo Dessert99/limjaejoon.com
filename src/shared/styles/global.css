@@ -3,6 +3,8 @@
 /* source(none) — 자동 스캔은 CWD 전체를 훑어 docs·.claude 의 산문까지 클래스 후보로 삼는다 */
 @import 'tailwindcss' source(none);
 @import './tokens.css';
+/* tokens.css 뒤여야 한다 — 그쪽 --color-*: initial 이 앞선 색 네임스페이스를 지운다 */
+@import './themes/lab.css';
 @import './motion.css';
 @import './prose.css';
 

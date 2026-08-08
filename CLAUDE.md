@@ -10,6 +10,8 @@
 
 스타일은 Tailwind CSS v4 토큰 계층을 쓴다. 토큰 값 자체는 `src/shared/styles/*.css` 가 유일한 출처다.
 
+`/lab` 은 공용 토큰 대신 `lab-` 접두어 한 벌(`shared/styles/themes/lab.css`)만 쓴다 — 대상은 색·글자크기·레이아웃 여백(gutter·container)이고, `flex`·`gap-4`·`rounded-md` 처럼 컴포넌트 안쪽 배치를 잡는 유틸리티는 정체성이 아니라 배치라 공용 그대로다. 공용 토큰이 박힌 `shared/ui` 의 shadcn 컴포넌트는 `/lab` 에서 쓰지 않고, 필요하면 lab 슬라이스가 자기 것을 만든다. 아직 린트가 없어 이 경계는 규약으로만 지킨다.
+
 story 는 `shared/ui` 컴포넌트와 `shared/styles` 의 Foundation 에만 둔다. 섹션·이펙트 같은 조립체는 variant 가 없어 story 가 값을 못 한다. `build-storybook` 은 `npm run ci` 에 없다.
 
 스크롤 모션은 GSAP이 소유한다. DOM을 렌더하는 컴포넌트가 애니메이션 생명주기도 갖고, 복잡한 타임라인만 인접한 `create*Timeline.ts` 로 분리한다. [gsap.md](docs/conventions/gsap.md) 는 GSAP 사용법이 아니라 이 저장소가 관행과 다르게 정한 것만 담는다 — 위치·기법·확장성 순.

@@ -1,18 +1,21 @@
-/** lab 임시 내비게이션 — 라우트 그룹이 nav 를 갈아 끼우는지 눈으로 확인하려고 세운 자리다. 고유 디자인이 서면 통째로 갈린다 */
+/** lab 내비게이션 — 우주 위에 떠 있다. 판을 깔지 않고 안개만 깔아 배경이 그대로 이어져 보이게 한다 */
 import { SITE_ROUTES } from '@/shared/config';
 import { TransitionLink } from '@/shared/transition';
 
-// sticky 다 — 홈 nav 와 달리 blend 를 쓰지 않으니 문서 흐름에 남겨 본문을 가리지 않게 한다
+// 완전 투명은 아니다 — 별이 글자 사이를 지나가면 읽기가 나빠져 위에서 아래로 사라지는 베일을 깐다
+// 베일을 pseudo 로 nav 보다 아래까지 늘인다 — 높이를 맞추면 사라지다 만 끝이 선처럼 드러난다
+// isolate 다 — before 의 -z-10 이 nav 밖으로 새면 배경 이미지 뒤로 숨는다
 const NAV_CLASS =
-  'sticky top-0 z-(--ds-z-sticky) flex items-center justify-center gap-6 border-b border-border bg-secondary px-gutter py-4';
+  'sticky top-0 isolate z-(--ds-z-sticky) flex items-center justify-center gap-6 px-lab-gutter py-5 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:-z-10 before:h-40 before:bg-gradient-to-b before:from-lab-background before:via-lab-background/55 before:to-transparent';
 
+// tracking 을 안 붙인다 — text-lab-label 토큰이 자간을 이미 갖고 있다
 const BRAND_CLASS =
-  'absolute left-gutter text-label tracking-widest text-muted-foreground uppercase';
+  'absolute left-lab-gutter text-lab-label text-lab-muted uppercase';
 
 const LINK_CLASS =
-  'text-body font-medium text-foreground transition-colors duration-quick ease-standard hover:text-primary';
+  'text-lab-body font-medium text-lab-foreground transition-colors duration-quick ease-standard hover:text-lab-accent';
 
-/** lab 라우트가 세우는 임시 나열 */
+/** lab 라우트가 세우는 내비게이션 */
 export function LabNav() {
   return (
     <nav
