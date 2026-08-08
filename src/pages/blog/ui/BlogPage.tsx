@@ -22,7 +22,8 @@ export async function BlogPage() {
 
   return (
     // 밝은 바탕과 svh 는 app/blog/layout.tsx 가 소유한다
-    <main className='grow py-section'>
+    // 위아래가 다르다 — 위는 nav 가 이미 자리를 먹어 절반이면 되고, 아래는 글이 끝났다는 여백이 그대로 필요하다
+    <main className='grow pt-section-sm pb-section'>
       <div className='mx-auto max-w-content px-gutter'>
         <BlogAdminActions />
         <PostBrowser

@@ -33,7 +33,8 @@ export async function BlogPostPage({ slug }: { slug: string }) {
 
   return (
     // 밝은 바탕과 svh 는 app/blog/layout.tsx 가 소유한다
-    <main className='grow py-section'>
+    // 위아래가 다르다 — 위는 nav 가 이미 자리를 먹어 절반이면 되고, 아래는 글이 끝났다는 여백이 그대로 필요하다
+    <main className='grow pt-section-sm pb-section'>
       {/* wide 다 — 읽기 폭은 그대로 두고 목차만 화면 오른쪽으로 더 밀어내려면 바깥 그릇이 넓어야 한다 */}
       <div className='mx-auto max-w-wide px-gutter'>
         <article>
