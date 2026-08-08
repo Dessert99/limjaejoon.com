@@ -3,6 +3,7 @@
 /** 글 편집 폼 상태 — plain state 로 관리한다(useSignIn 과 같은 방식, RHF 미사용) */
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { deletePost } from '../api/deletePost';
 import { savePost } from '../api/savePost';
 import { uploadPostImage } from '../api/uploadPostImage';
 import {
@@ -60,6 +61,20 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
     });
   };
 
+  /** 글을 지운다 — 되돌릴 수 없어 호출 측이 확인 단계를 거친 뒤에만 부른다 */
+  const remove = async () => {
+    // 새 글에는 지울 대상이 없다
+    if (!initial) {
+      return;
+    }
+
+    await run(async () => {
+      await deletePost(initial.id);
+
+      return '/blog';
+    });
+  };
+
   /** 이미지를 올리고 본문 커서 자리에 Markdown 문법으로 끼운다 */
   const insertImage = async (file: File, at: number) => {
     setPending(true);
@@ -91,6 +106,7 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
     error,
     pending,
     save,
+    remove,
     insertImage,
     isEditing: Boolean(initial),
   };
