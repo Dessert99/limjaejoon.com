@@ -6,7 +6,6 @@ export type PostDraft = {
   title: string;
   slug: string;
   description: string;
-  series: string;
   tags: string;
   publishedAt: string;
   contentMarkdown: string;
@@ -17,7 +16,6 @@ export const EMPTY_DRAFT: PostDraft = {
   title: '',
   slug: '',
   description: '',
-  series: '',
   tags: '',
   publishedAt: '',
   contentMarkdown: '',
@@ -29,14 +27,13 @@ export const toDraft = (post: Post): PostDraft => {
     title: post.title,
     slug: post.slug,
     description: post.description,
-    series: post.series ?? '',
     tags: post.tags.join(', '),
     publishedAt: post.published_at,
     contentMarkdown: post.content_markdown,
   };
 };
 
-/** 초안을 저장 payload 로 바꾼다 — 빈 시리즈는 null 로, 태그는 쉼표로 가른다 */
+/** 초안을 저장 payload 로 바꾼다 — 태그는 쉼표로 가른다 */
 export const toUpsertInput = (
   draft: PostDraft,
   now: string
@@ -45,7 +42,6 @@ export const toUpsertInput = (
     title: draft.title.trim(),
     slug: draft.slug.trim(),
     description: draft.description.trim(),
-    series: draft.series.trim() || null,
     tags: draft.tags
       .split(',')
       .map((tag) => {

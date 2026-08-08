@@ -15,10 +15,6 @@ describe('toUpsertInput', () => {
     expect(input.tags).toEqual(['Next.js', 'Supabase']);
   });
 
-  it('비어 있는 시리즈는 null 로 접는다', () => {
-    expect(toUpsertInput(draft(), NOW).series).toBeNull();
-  });
-
   it('발행일을 비워 두면 지금 시각을 박는다', () => {
     // 정렬 기준이라 비면 목록에서 자리를 못 잡는다
     expect(toUpsertInput(draft(), NOW).published_at).toBe(NOW);

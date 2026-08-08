@@ -38,11 +38,7 @@ export async function BlogPostPage({ slug }: { slug: string }) {
       <div className='mx-auto max-w-wide px-gutter'>
         <article>
           <header className={COLUMN}>
-            {post.series ? (
-              <p className='text-label text-primary uppercase'>{post.series}</p>
-            ) : null}
-
-            <h1 className='mt-2 text-3xl font-semibold break-keep sm:text-4xl'>
+            <h1 className='text-3xl font-semibold break-keep sm:text-4xl'>
               {post.title}
             </h1>
 

@@ -15,7 +15,6 @@ const post = (
     title: `제목 ${id}`,
     description: `설명 ${id}`,
     tags: [],
-    series: null,
     published_at: '2026-08-01T00:00:00Z',
     ...overrides,
   };
@@ -23,7 +22,7 @@ const post = (
 
 const POSTS: PostListItem[] = [
   post('a', { title: 'Supabase RLS 정리', tags: ['Supabase', '인증'] }),
-  post('b', { title: 'GSAP 스크롤', tags: ['GSAP'], series: '모션' }),
+  post('b', { title: 'GSAP 스크롤', tags: ['GSAP'] }),
   post('c', { title: 'Tailwind 토큰', tags: ['인증'] }),
 ];
 
@@ -108,16 +107,6 @@ describe('PostBrowser', () => {
     await user.click(filterChip('#GSAP'));
 
     expect(screen.getByRole('heading', { name: '글 3편' })).toBeInTheDocument();
-  });
-
-  it('글에 붙은 시리즈를 누르면 그 시리즈 글만 남는다', async () => {
-    const user = userEvent.setup();
-
-    renderBrowser();
-    await user.click(screen.getByRole('button', { name: '모션' }));
-
-    expect(screen.getByRole('heading', { name: '글 1편' })).toBeInTheDocument();
-    expect(screen.getByText('GSAP 스크롤')).toBeInTheDocument();
   });
 
   it('조건을 지우면 전체가 돌아온다', async () => {

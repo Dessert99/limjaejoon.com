@@ -11,7 +11,6 @@ const listRows: PostListItem[] = [
     title: '새 글',
     description: '최근 글',
     tags: ['Next.js'],
-    series: 'Next.js App Router',
     published_at: '2026-04-03T00:00:00Z',
   },
   {
@@ -20,7 +19,6 @@ const listRows: PostListItem[] = [
     title: '이전 글',
     description: '이전 글',
     tags: ['React'],
-    series: null,
     published_at: '2026-04-02T00:00:00Z',
   },
 ];
@@ -116,20 +114,9 @@ describe('post fetchers', () => {
     await expect(getPosts(client)).resolves.toEqual(listRows);
     expect(from).toHaveBeenCalledWith('posts');
     expect(select).toHaveBeenCalledWith(
-      'id, slug, title, description, tags, series, published_at'
+      'id, slug, title, description, tags, published_at'
     );
     expect(order).toHaveBeenCalledWith('published_at', { ascending: false });
-  });
-
-  it('series 조건으로 published 글 목록을 필터링한다', async () => {
-    const { client, eq } = makeListClient({
-      data: listRows,
-      error: null,
-    });
-
-    await getPosts(client, { series: 'Next.js App Router' });
-
-    expect(eq).toHaveBeenCalledWith('series', 'Next.js App Router');
   });
 
   it('tag 조건으로 published 글 목록을 필터링한다', async () => {

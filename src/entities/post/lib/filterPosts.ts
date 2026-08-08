@@ -9,10 +9,6 @@ export const filterPosts = (
   const term = params.q?.trim().toLowerCase();
 
   return posts.filter((post) => {
-    if (params.series && post.series !== params.series) {
-      return false;
-    }
-
     const required = params.tags ?? [];
 
     if (

@@ -199,15 +199,6 @@ export function AdminPostEditorPage({
           </div>
 
           <Field
-            id='post-series'
-            label='시리즈 (없으면 비운다)'
-            value={draft.series}
-            onChange={(value) => {
-              setField('series', value);
-            }}
-          />
-
-          <Field
             id='post-tags'
             label='태그 (쉼표로 구분)'
             value={draft.tags}

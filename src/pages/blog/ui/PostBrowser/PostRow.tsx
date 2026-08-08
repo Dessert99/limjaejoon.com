@@ -8,12 +8,11 @@ const CHIP_CLASS = 'cursor-pointer';
 
 type PostRowProps = {
   post: PostListItem;
-  onSelectSeries: (series: string) => void;
   onSelectTag: (tag: string) => void;
 };
 
 /** 구분선으로 갈린 목록의 한 줄 — 구분선 자체는 목록이 그린다 */
-export function PostRow({ post, onSelectSeries, onSelectTag }: PostRowProps) {
+export function PostRow({ post, onSelectTag }: PostRowProps) {
   const publishedAt = formatPublishedAt(post.published_at);
 
   return (
@@ -33,21 +32,6 @@ export function PostRow({ post, onSelectSeries, onSelectTag }: PostRowProps) {
       <div className='mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-body-sm text-muted-foreground'>
         {publishedAt ? (
           <time dateTime={post.published_at ?? undefined}>{publishedAt}</time>
-        ) : null}
-
-        {post.series ? (
-          <Badge
-            asChild
-            variant='outline'>
-            <button
-              type='button'
-              className={CHIP_CLASS}
-              onClick={() => {
-                onSelectSeries(post.series ?? '');
-              }}>
-              {post.series}
-            </button>
-          </Badge>
         ) : null}
 
         {post.tags.map((tag) => {

@@ -41,7 +41,6 @@ export type Database = {
           description: string;
           id: string;
           published_at: string;
-          series: string | null;
           slug: string;
           tags: string[];
           title: string;
@@ -53,7 +52,6 @@ export type Database = {
           description: string;
           id?: string;
           published_at?: string;
-          series?: string | null;
           slug: string;
           tags?: string[];
           title: string;
@@ -65,7 +63,6 @@ export type Database = {
           description?: string;
           id?: string;
           published_at?: string;
-          series?: string | null;
           slug?: string;
           tags?: string[];
           title?: string;

@@ -35,15 +35,8 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
     });
   };
 
-  // 빈 문자열을 undefined 로 바꾼다 — filterPosts 는 값이 있으면 조건으로 보므로 ''가 전부를 걸러낸다
-  const visible = filterPosts(posts, {
-    q: filters.q,
-    tags: filters.tags,
-    series: filters.series || undefined,
-  });
-  const hasFilter = Boolean(
-    filters.q || filters.tags.length > 0 || filters.series
-  );
+  const visible = filterPosts(posts, { q: filters.q, tags: filters.tags });
+  const hasFilter = Boolean(filters.q || filters.tags.length > 0);
 
   return (
     <div className='grid gap-grid-gap lg:grid-cols-[13rem_1fr]'>
@@ -124,9 +117,6 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
                   <Separator />
                   <PostRow
                     post={post}
-                    onSelectSeries={(series) => {
-                      update({ series });
-                    }}
                     onSelectTag={toggleTag}
                   />
                 </Fragment>

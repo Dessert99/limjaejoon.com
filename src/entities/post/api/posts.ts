@@ -3,8 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/shared/api';
 import type { Post, PostListItem, PostSearchParams } from '../model/post.types';
 
-const POST_LIST_SELECT =
-  'id, slug, title, description, tags, series, published_at';
+const POST_LIST_SELECT = 'id, slug, title, description, tags, published_at';
 
 /** 글 목록을 최신 발행일 순서로 조회한다 */
 export const getPosts = async (
@@ -15,10 +14,6 @@ export const getPosts = async (
     .from('posts')
     .select(POST_LIST_SELECT)
     .order('published_at', { ascending: false });
-
-  if (params?.series) {
-    query = query.eq('series', params.series);
-  }
 
   // contains 는 배열을 통째로 받아 전부 가진 행만 남긴다 — filterPosts 의 AND 와 같은 뜻이다
   if (params?.tags?.length) {

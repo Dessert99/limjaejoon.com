@@ -22,7 +22,6 @@ const input = {
   title: '새 글',
   slug: 'new-post',
   description: '새 글 설명',
-  series: null,
   tags: ['Next.js'],
   published_at: '2026-07-09T00:00:00Z',
   content_markdown: '# 새 글',

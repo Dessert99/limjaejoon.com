@@ -12,9 +12,4 @@ export { extractHeadings, type PostHeading } from './lib/extractHeadings';
 export { filterPosts } from './lib/filterPosts';
 export { formatPublishedAt } from './lib/formatPublishedAt';
 export { pickAdjacentPosts, type AdjacentPosts } from './lib/pickAdjacentPosts';
-export type {
-  Post,
-  PostListItem,
-  PostSearchParams,
-  PostSeries,
-} from './model/post.types';
+export type { Post, PostListItem, PostSearchParams } from './model/post.types';

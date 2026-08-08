@@ -3,15 +3,14 @@
 /** URL 쿼리를 필터 상태의 출처로 삼는다 — 새로고침·공유·뒤로가기가 모두 같은 규칙을 탄다 */
 import { useCallback, useSyncExternalStore } from 'react';
 
-/** 목록을 좁히는 세 조건 */
+/** 목록을 좁히는 두 조건 */
 export type UrlFilters = {
   q: string;
   /** 겹칠수록 좁아진다 — URL 에는 ?tag=a&tag=b 처럼 같은 이름을 반복해 담는다 */
   tags: string[];
-  series: string;
 };
 
-export const EMPTY_FILTERS: UrlFilters = { q: '', tags: [], series: '' };
+export const EMPTY_FILTERS: UrlFilters = { q: '', tags: [] };
 
 const listeners = new Set<() => void>();
 let popstateBound = false;
@@ -56,7 +55,6 @@ export const useUrlFilters = (): [UrlFilters, (next: UrlFilters) => void] => {
   const filters: UrlFilters = {
     q: params.get('q') ?? '',
     tags: params.getAll('tag'),
-    series: params.get('series') ?? '',
   };
 
   const setFilters = useCallback((next: UrlFilters) => {
@@ -68,10 +66,6 @@ export const useUrlFilters = (): [UrlFilters, (next: UrlFilters) => void] => {
     next.tags.forEach((tag) => {
       nextParams.append('tag', tag);
     });
-    if (next.series) {
-      nextParams.set('series', next.series);
-    }
-
     const nextSearch = nextParams.toString();
 
     // history API 를 직접 쓴다 — router 로 갈면 키 입력마다 정적 페이지를 다시 받아온다
