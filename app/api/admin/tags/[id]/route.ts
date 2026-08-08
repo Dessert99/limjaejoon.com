@@ -1,8 +1,8 @@
 import {
-  deleteAdminPost,
-  updateAdminPost,
-  type UpsertPostInput,
-} from '@/entities/post';
+  deleteAdminTag,
+  normalizeTagName,
+  updateAdminTag,
+} from '@/entities/tag';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '../../_lib/adminGuard';
 import { revalidatePublicPosts } from '../../_lib/revalidatePublicPosts';
@@ -13,7 +13,7 @@ type RouteContext = {
   }>;
 };
 
-/** 로그인한 admin 세션만 기존 글을 수정한다 (권한은 RLS 가 최종 집행) */
+/** 로그인한 admin 세션만 태그 이름을 고친다 (권한은 RLS 가 최종 집행) */
 export const PATCH = async (request: Request, context: RouteContext) => {
   const guard = await requireAdmin(request);
   // guard.error 로 좁혀야 판별 유니언에 따라 guard.client 도 non-null 로 좁혀진다(구조분해 시 유니언 링크가 끊김)
@@ -22,30 +22,35 @@ export const PATCH = async (request: Request, context: RouteContext) => {
   }
 
   const { id } = await context.params;
-  const input = (await request.json()) as UpsertPostInput;
+  const { name } = (await request.json()) as { name?: string };
 
-  // 조인으로 옮기면서 "글에 태그 최소 1개" 를 DB 에서 지킬 자리가 사라졌다 — 여기가 그 자리다
-  if (input.tag_ids.length === 0) {
+  if (!name || !normalizeTagName(name)) {
     return NextResponse.json(
-      { message: '태그를 하나 이상 골라야 한다' },
+      { message: '태그 이름이 비었다' },
       { status: 400 }
     );
   }
 
   try {
-    const post = await updateAdminPost(guard.client, id, input);
+    const tag = await updateAdminTag(guard.client, id, name);
 
+    if (!tag) {
+      return NextResponse.json({ message: 'Not Found' }, { status: 404 });
+    }
+
+    // 태그명은 목록·상세의 정적 HTML 에 그대로 박혀 있다 — 다시 굽지 않으면 옛 이름이 남는다
     revalidatePublicPosts();
 
-    return NextResponse.json({ post });
+    return NextResponse.json({ tag });
   } catch (writeError) {
     return mapWriteError(writeError);
   }
 };
 
-/** 로그인한 admin 세션만 글을 지운다 (권한은 RLS 가 최종 집행) */
+/** 로그인한 admin 세션만 태그를 지운다 — 연결된 글이 있으면 FK 가 거부한다 */
 export const DELETE = async (request: Request, context: RouteContext) => {
   const guard = await requireAdmin(request);
+
   if (guard.error) {
     return guard.error;
   }
@@ -53,15 +58,13 @@ export const DELETE = async (request: Request, context: RouteContext) => {
   const { id } = await context.params;
 
   try {
-    const deleted = await deleteAdminPost(guard.client, id);
+    const deleted = await deleteAdminTag(guard.client, id);
 
-    // 지운 행이 없으면 재검증할 것도 없다
     if (!deleted) {
       return NextResponse.json({ message: 'Not Found' }, { status: 404 });
     }
 
-    revalidatePublicPosts();
-
+    // 지워졌다는 건 연결된 글이 0이었다는 뜻이라, 공개 화면에는 애초에 안 나오던 태그다
     return new NextResponse(null, { status: 204 });
   } catch (writeError) {
     return mapWriteError(writeError);

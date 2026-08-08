@@ -3,6 +3,7 @@
 /** 글 편집 — 신규와 수정이 같은 폼을 쓴다(차이는 초기값과 저장 대상뿐이다) */
 import Link from 'next/link';
 import { useRef, useState } from 'react';
+import type { TagWithUsage } from '@/entities/tag';
 import {
   composeSlug,
   parseSlug,
@@ -32,6 +33,7 @@ import {
 } from '@/shared/ui';
 import { MarkdownPreview } from './MarkdownPreview/MarkdownPreview';
 import { SlugField } from './SlugField/SlugField';
+import { TagPicker } from './TagPicker/TagPicker';
 
 /** 오늘 — 새 글의 기본 날짜 */
 const today = (): string => {
@@ -72,8 +74,10 @@ function Field({
 
 export function AdminPostEditorPage({
   initial,
+  tags: initialTags,
 }: {
   initial?: { id: string; draft: PostDraft };
+  tags: TagWithUsage[];
 }) {
   const {
     draft,
@@ -86,6 +90,25 @@ export function AdminPostEditorPage({
     isEditing,
   } = usePostEditor(initial);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const [tags, setTags] = useState(initialTags);
+
+  const changeTags = (next: TagWithUsage[]) => {
+    setTags(next);
+
+    // 모달에서 지운 태그가 선택에 남으면 없는 tag_id 로 저장이 터지고, 재동기화가 delete-then-insert 라 멀쩡한 연결까지 날아간다
+    const alive = new Set(
+      next.map((tag) => {
+        return tag.id;
+      })
+    );
+
+    setField(
+      'tags',
+      draft.tags.filter((id) => {
+        return alive.has(id);
+      })
+    );
+  };
 
   // 친 그대로를 들고 있는다 — slug 에서 되읽으면 눕히는 규칙 탓에 공백을 칠 수 없다
   const parsed = parseSlug(initial?.draft.slug ?? '');
@@ -198,14 +221,13 @@ export function AdminPostEditorPage({
             />
           </div>
 
-          <Field
-            id='post-tags'
-            label='태그 (쉼표로 구분)'
-            value={draft.tags}
-            onChange={(value) => {
-              setField('tags', value);
+          <TagPicker
+            tags={tags}
+            selected={draft.tags}
+            onSelectedChange={(ids) => {
+              setField('tags', ids);
             }}
-            placeholder='React, hydration'
+            onTagsChange={changeTags}
           />
         </div>
 

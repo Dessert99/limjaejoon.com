@@ -1,51 +1,39 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 import type { Database } from '@/shared/api';
-import type { Post, PostListItem } from '../model/post.types';
 import { getPostBySlug, getPosts, getPostSlugs } from './posts';
 
-const listRows: PostListItem[] = [
+/** 조인이 실제로 돌려주는 모양 — 연결마다 tags 한 겹이 딸려 온다 */
+const listRows = [
   {
     id: '1',
     slug: 'newer-post',
     title: '새 글',
     description: '최근 글',
-    tags: ['Next.js'],
     published_at: '2026-04-03T00:00:00Z',
+    post_tags: [{ tags: { name: 'Supabase' } }, { tags: { name: 'Next.js' } }],
   },
   {
     id: '2',
     slug: 'older-post',
     title: '이전 글',
     description: '이전 글',
-    tags: ['React'],
     published_at: '2026-04-02T00:00:00Z',
+    post_tags: [],
   },
 ];
 
-const detailRow: Post = {
+const detailRow = {
   ...listRows[0],
   content_markdown: '# 새 글\n\n본문입니다.',
   created_at: '2026-04-03T00:00:00Z',
   updated_at: '2026-04-03T00:00:00Z',
 };
 
-const makeListClient = (result: {
-  data: PostListItem[] | null;
-  error: unknown;
-}) => {
+const makeListClient = (result: { data: unknown; error: unknown }) => {
   const resultPromise = Promise.resolve(result);
   const query = {
-    eq: vi.fn(() => {
-      return query;
-    }),
     order: vi.fn(() => {
-      return query;
-    }),
-    contains: vi.fn(() => {
-      return query;
-    }),
-    or: vi.fn(() => {
       return query;
     }),
     then: resultPromise.then.bind(resultPromise),
@@ -58,18 +46,10 @@ const makeListClient = (result: {
   });
   const client = { from } as unknown as SupabaseClient<Database>;
 
-  return {
-    client,
-    from,
-    select,
-    eq: query.eq,
-    order: query.order,
-    contains: query.contains,
-    or: query.or,
-  };
+  return { client, from, select, order: query.order };
 };
 
-const makeDetailClient = (result: { data: Post | null; error: unknown }) => {
+const makeDetailClient = (result: { data: unknown; error: unknown }) => {
   const maybeSingle = vi.fn().mockResolvedValue(result);
   const query = {
     eq: vi.fn(() => {
@@ -88,10 +68,7 @@ const makeDetailClient = (result: { data: Post | null; error: unknown }) => {
   return { client, from, select, eq: query.eq, maybeSingle };
 };
 
-const makeSlugClient = (result: {
-  data: Array<Pick<Post, 'slug'>> | null;
-  error: unknown;
-}) => {
+const makeSlugClient = (result: { data: unknown; error: unknown }) => {
   const order = vi.fn().mockResolvedValue(result);
   const select = vi.fn(() => {
     return { order };
@@ -111,61 +88,45 @@ describe('post fetchers', () => {
       error: null,
     });
 
-    await expect(getPosts(client)).resolves.toEqual(listRows);
+    await getPosts(client);
+
     expect(from).toHaveBeenCalledWith('posts');
     expect(select).toHaveBeenCalledWith(
-      'id, slug, title, description, tags, published_at'
+      'id, slug, title, description, published_at, post_tags(tags(name))'
     );
     expect(order).toHaveBeenCalledWith('published_at', { ascending: false });
   });
 
-  it('tag 조건으로 published 글 목록을 필터링한다', async () => {
-    const { client, contains } = makeListClient({
-      data: listRows,
-      error: null,
-    });
+  it('조인 결과를 태그 이름 배열로 되접는다', async () => {
+    const { client } = makeListClient({ data: listRows, error: null });
 
-    await getPosts(client, { tags: ['Next.js'] });
+    const posts = await getPosts(client);
 
-    expect(contains).toHaveBeenCalledWith('tags', ['Next.js']);
+    // 조인 순서는 보장되지 않아 정렬한다 — 안 하면 정적 HTML 이 빌드마다 흔들린다
+    expect(posts[0].tags).toEqual(['Next.js', 'Supabase']);
+    expect(posts).not.toHaveProperty('0.post_tags.0.tags');
   });
 
-  it('tag 가 여러 개면 전부 가진 글만 조회한다', async () => {
-    const { client, contains } = makeListClient({
-      data: listRows,
-      error: null,
-    });
+  it('연결이 없는 글은 빈 태그 배열이 된다', async () => {
+    const { client } = makeListClient({ data: listRows, error: null });
 
-    await getPosts(client, { tags: ['Next.js', 'cache'] });
+    const posts = await getPosts(client);
 
-    expect(contains).toHaveBeenCalledWith('tags', ['Next.js', 'cache']);
+    expect(posts[1].tags).toEqual([]);
   });
 
-  it('q 조건으로 제목, 설명, 본문을 검색한다', async () => {
-    const { client, or } = makeListClient({
-      data: listRows,
-      error: null,
-    });
-
-    await getPosts(client, { q: 'cache' });
-
-    expect(or).toHaveBeenCalledWith(
-      'title.ilike.%cache%,description.ilike.%cache%,content_markdown.ilike.%cache%'
-    );
-  });
-
-  it('slug 와 published 상태가 일치하는 글 상세를 조회한다', async () => {
-    const { client, eq, maybeSingle } = makeDetailClient({
+  it('slug 로 글 상세를 조회하고 태그를 되접는다', async () => {
+    const { client, select, eq } = makeDetailClient({
       data: detailRow,
       error: null,
     });
 
-    await expect(getPostBySlug(client, 'newer-post')).resolves.toEqual(
-      detailRow
-    );
-    expect(eq).toHaveBeenNthCalledWith(1, 'slug', 'newer-post');
+    const post = await getPostBySlug(client, 'newer-post');
+
+    expect(select).toHaveBeenCalledWith('*, post_tags(tags(name))');
     expect(eq).toHaveBeenCalledWith('slug', 'newer-post');
-    expect(maybeSingle).toHaveBeenCalled();
+    expect(post?.tags).toEqual(['Next.js', 'Supabase']);
+    expect(post?.content_markdown).toBe('# 새 글\n\n본문입니다.');
   });
 
   it('slug 와 일치하는 글이 없으면 null 을 반환한다', async () => {

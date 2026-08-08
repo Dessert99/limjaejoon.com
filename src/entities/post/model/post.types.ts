@@ -8,8 +8,10 @@ export type PostSearchParams = {
   tags?: string[];
 };
 
-/** posts 상세 행 타입 — Markdown 본문과 관리용 메타데이터를 포함한다 */
-export type Post = Database['public']['Tables']['posts']['Row'];
+/** posts 상세 행 타입 — tags 는 컬럼이 아니라 post_tags 조인을 되접은 값이다 */
+export type Post = Database['public']['Tables']['posts']['Row'] & {
+  tags: string[];
+};
 
 /** 공개 목록에서 필요한 posts 필드만 노출한다 */
 export type PostListItem = Pick<
