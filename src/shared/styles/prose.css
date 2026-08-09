@@ -2,8 +2,13 @@
 
 @utility prose-post {
   color: var(--color-foreground);
-  font-size: var(--text-body-lg);
+  /* 좁은 화면은 한 단계 낮춘다 — body-lg 로는 한 줄에 21자밖에 안 들어가 시선이 너무 자주 꺾인다 */
+  font-size: var(--text-body);
   line-height: 1.85;
+
+  @media (width >= theme(--breakpoint-sm)) {
+    font-size: var(--text-body-lg);
+  }
 
   /* 블록 사이 리듬을 한 곳에서 준다 — 태그마다 margin 을 적으면 조합마다 값이 어긋난다 */
   & > * + * {
