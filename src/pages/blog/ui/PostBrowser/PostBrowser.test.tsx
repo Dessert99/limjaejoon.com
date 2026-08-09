@@ -128,4 +128,47 @@ describe('PostBrowser', () => {
     expect(screen.getByRole('heading', { name: '글 0편' })).toBeInTheDocument();
     expect(screen.getByText(/조건에 맞는 글이 없다/)).toBeInTheDocument();
   });
+
+  // 좁은 화면 전용 시트다 — jsdom 에는 Tailwind 가 없어 lg:hidden 이 안 먹고 트리거가 늘 잡힌다
+  describe('태그 시트', () => {
+    it('트리거를 누르면 태그를 시트 안에서 고를 수 있다', async () => {
+      const user = userEvent.setup();
+
+      renderBrowser();
+      await user.click(screen.getByRole('button', { name: '태그' }));
+
+      const sheet = within(await screen.findByRole('dialog'));
+
+      expect(sheet.getByRole('button', { name: '#GSAP' })).toBeInTheDocument();
+    });
+
+    it('시트에서 태그를 고르면 목록이 좁아지고 URL 에 남는다', async () => {
+      const user = userEvent.setup();
+
+      renderBrowser();
+      await user.click(screen.getByRole('button', { name: '태그' }));
+
+      const sheet = within(await screen.findByRole('dialog'));
+      await user.click(sheet.getByRole('button', { name: '#GSAP' }));
+
+      expect(sheet.getByText('글 1편')).toBeInTheDocument();
+      expect(window.location.search).toBe('?tag=GSAP');
+    });
+
+    // 시트가 열려 있는 동안 Radix 가 바깥 전부에 aria-hidden 을 건다 — 트리거도 포함이라 닫고 봐야 한다
+    it('시트를 닫으면 고른 태그 수가 트리거에 남는다', async () => {
+      const user = userEvent.setup();
+
+      renderBrowser();
+      await user.click(screen.getByRole('button', { name: '태그' }));
+
+      const sheet = within(await screen.findByRole('dialog'));
+      await user.click(sheet.getByRole('button', { name: '#GSAP' }));
+      await user.click(sheet.getByRole('button', { name: 'Close' }));
+
+      expect(
+        await screen.findByRole('button', { name: '태그 1개 고름' })
+      ).toBeInTheDocument();
+    });
+  });
 });

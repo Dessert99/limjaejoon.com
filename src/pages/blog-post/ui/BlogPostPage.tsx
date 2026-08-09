@@ -43,7 +43,7 @@ export async function BlogPostPage({ slug }: { slug: string }) {
               {post.title}
             </h1>
 
-            <p className='mt-4 text-body-lg break-keep text-muted-foreground'>
+            <p className='mt-4 text-body break-keep text-muted-foreground sm:text-body-lg'>
               {post.description}
             </p>
 
