@@ -3,13 +3,15 @@
 /** 목록 필터 — 조건은 URL 이 갖고, 거르는 일은 filterPosts 에 맡긴다 */
 import { Fragment } from 'react';
 import { filterPosts, type PostListItem } from '@/entities/post';
-import { Badge, Button, Input, Separator } from '@/shared/ui';
+import { Button, Input, Separator } from '@/shared/ui';
 import {
   EMPTY_FILTERS,
   useUrlFilters,
   type UrlFilters,
 } from '../../lib/useUrlFilters';
 import { PostRow } from './PostRow';
+import { TagFilterList } from './TagFilterList';
+import { TagFilterSheet } from './TagFilterSheet';
 
 type PostBrowserProps = {
   posts: PostListItem[];
@@ -39,38 +41,30 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
   const hasFilter = Boolean(filters.q || filters.tags.length > 0);
 
   return (
-    <div className='grid gap-grid-gap lg:grid-cols-[13rem_1fr]'>
-      {/* 좁은 화면에서는 목록 위로 접힌다 — 세로 한 줄은 모바일 폭에서 화면을 통째로 잡아먹는다 */}
+    <div className='grid gap-4 lg:grid-cols-[13rem_1fr] lg:gap-grid-gap'>
+      {/* 같은 목록을 폭에 따라 갈아 끼운다 — CSS 로만 갈라야 정적 HTML 한 벌에 태그가 다 남는다 */}
       {tags.length > 0 ? (
-        <aside className='lg:sticky lg:top-8 lg:self-start'>
-          <h2 className='text-label text-muted-foreground uppercase'>태그</h2>
-          {/* 태그가 화면보다 길면 여기서만 스크롤한다 — 아니면 아래쪽 태그를 보려고 글 목록을 통째로 내려야 한다 */}
-          <ul
-            aria-label='태그 필터'
-            className='mt-4 flex flex-wrap gap-2 lg:max-h-[calc(100svh-8rem)] lg:flex-col lg:flex-nowrap lg:items-start lg:overflow-y-auto lg:overscroll-contain lg:pr-2'>
-            {tags.map((tag) => {
-              const active = filters.tags.includes(tag);
+        <>
+          <aside className='hidden lg:sticky lg:top-8 lg:block lg:self-start'>
+            <h2 className='text-label text-muted-foreground uppercase'>태그</h2>
+            {/* 태그가 화면보다 길면 여기서만 스크롤한다 — 아니면 아래쪽 태그를 보려고 글 목록을 통째로 내려야 한다 */}
+            <TagFilterList
+              tags={tags}
+              selected={filters.tags}
+              onToggle={toggleTag}
+              className='mt-4 lg:max-h-[calc(100svh-8rem)] lg:flex-col lg:flex-nowrap lg:items-start lg:overflow-y-auto lg:overscroll-contain lg:pr-2'
+            />
+          </aside>
 
-              return (
-                <li key={tag}>
-                  <Badge
-                    asChild
-                    variant={active ? 'default' : 'outline'}>
-                    <button
-                      type='button'
-                      aria-pressed={active}
-                      className='cursor-pointer'
-                      onClick={() => {
-                        toggleTag(tag);
-                      }}>
-                      #{tag}
-                    </button>
-                  </Badge>
-                </li>
-              );
-            })}
-          </ul>
-        </aside>
+          <div className='lg:hidden'>
+            <TagFilterSheet
+              tags={tags}
+              selected={filters.tags}
+              onToggle={toggleTag}
+              matchCount={visible.length}
+            />
+          </div>
+        </>
       ) : null}
 
       <section aria-labelledby='post-list-heading'>
