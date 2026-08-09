@@ -2,7 +2,6 @@
 import { HeroSection } from './HeroSection/HeroSection';
 import { IntroOverlay } from './IntroOverlay/IntroOverlay';
 import { ScrollStage } from './ScrollStage/ScrollStage';
-import { StackSection } from './StackSection/StackSection';
 
 /** 홈 페이지 구성 */
 export function HomePage() {
@@ -15,7 +14,6 @@ export function HomePage() {
       <ScrollStage>
         <main>
           <HeroSection />
-          <StackSection />
         </main>
       </ScrollStage>
     </>
