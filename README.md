@@ -24,7 +24,6 @@ proxy.ts           # /admin optimistic redirect
 supabase/          # 마이그레이션·로컬 설정
 tests/integration/ # 실제 Supabase 를 쓰는 통합 테스트
 public/            # 정적 에셋
-docs/design-records/ # 과거 설계 기록 (시점 스냅샷, 현행 규칙 아님)
 ```
 
 ## 개발 명령어
