@@ -11,10 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "vitest run --config vitest.integration.config.ts",
-    "fsd": "CHOKIDAR_USEPOLLING=1 steiger ./src",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "ci": "npm run fsd && npm run lint && npm run type-check && npm run test && npm run build",
+    "ci": "npm run lint && npm run type-check && npm run test && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:types": "supabase gen types typescript --local > src/shared/api/supabase/database.types.ts",
@@ -47,7 +46,6 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@feature-sliced/steiger-plugin": "^0.6.0",
     "@storybook/addon-a11y": "^10.5.5",
     "@storybook/addon-docs": "^10.5.5",
     "@storybook/nextjs-vite": "^10.5.5",
@@ -66,7 +64,6 @@
     "msw": "^2.14.6",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
-    "steiger": "^0.5.13",
     "storybook": "^10.5.5",
     "typescript": "^5",
     "vitest": "^4.1.8"

@@ -23,11 +23,11 @@ const eslintConfig = defineConfig([
     },
   },
 
-  // 함수 스타일 규칙 — folder-structure.md의 "위치 단일 출처"에 맞춰 경로별 flat config 블록으로 분리(블록=특정 glob에만 적용되는 설정 단위)
+  // 함수 스타일 규칙 — 계층마다 기대가 달라 경로별 flat config 블록으로 분리(블록=특정 glob에만 적용되는 설정 단위)
   // #1 api·lib·utils(순수 로직 계층): 함수 선언문 금지, 화살표/표현식만 허용
   {
     files: [
-      // src/ 하위 모든 레이어(entities/features/widgets/shared)의 순수 로직 계층
+      // src/ 어느 폴더에 있든 api·lib·utils 는 순수 로직 계층이다
       'src/**/api/**/*.ts',
       'src/**/lib/**/*.ts',
       'src/**/utils/**/*.ts',

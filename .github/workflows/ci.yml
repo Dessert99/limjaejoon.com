@@ -30,7 +30,6 @@ jobs:
       - run: npm ci
 
       # npm run ci 와 같은 순서를 단계로 쪼갠다 — 어느 게이트가 깨졌는지 UI 에서 바로 보인다.
-      - run: npm run fsd
       - run: npm run lint
       - run: npm run type-check
       - run: npm run test

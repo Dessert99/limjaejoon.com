@@ -16,7 +16,7 @@ https://www.limjaejoon.com
 ```
 app/               # Next.js App Router
 pages/             # 빈 폴더(.gitkeep): src/pages를 Pages Router로 오인하지 않게 슬롯 점유
-src/               # FSD 레이어
+src/               # 애플리케이션 코드 (@/* alias)
   pages/           # 라우트 단위 화면 조립
   widgets/         # 큰 UI 블록
   features/        # 사용자 행동 단위 기능
@@ -37,6 +37,6 @@ npm run dev        # 개발 서버
 npm run build      # 프로덕션 빌드
 npm run lint       # 린트
 npm run storybook  # 컴포넌트 카탈로그
-npm run ci         # fsd + lint + type-check + test + build
+npm run ci         # lint + type-check + test + build
 npm run format     # 전체 포맷
 ```

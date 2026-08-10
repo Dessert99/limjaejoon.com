@@ -1,4 +1,3 @@
-/** tag 엔티티 public API */
 export {
   createAdminTag,
   deleteAdminTag,

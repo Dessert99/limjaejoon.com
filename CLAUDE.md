@@ -4,21 +4,9 @@
 
 ## 구조
 
-프론트엔드는 FSD(Feature-Sliced Design)를 따른다. 레이어 의존은 위에서 아래로만: `app → pages → widgets → features → entities → shared`. FSD 레이어는 `src/` 아래, Next 라우터는 `app/`(`@/pages/*` 를 re-export 하는 껍데기)에 둔다. 구조는 Steiger(`npm run fsd`)로 강제한다. 상세 규칙은 [folder-structure.md](docs/conventions/folder-structure.md) 참고.
-
-코드 변경은 RED -> GREEN -> REFACTOR 를 따르되, 테스트는 파일이 아니라 계약 단위로 만든다 — 소스마다 짝을 맞추지 말고 깨졌을 때 사용자가 겪는 계약이 있는 곳에만 둔다. 위임만 하는 래퍼, 라이브러리가 이미 보장하는 동작, 상위 테스트가 순회로 덮는 항목은 짝이 비어도 그대로 둔다. 렌더 스모크와 `className` 병합은 소비자가 실제로 덧입히는 shared public API에만 남긴다. `describe`·`it` 설명문은 한국어로 관찰 가능한 동작을 적고, 컴포넌트명·prop 같은 고유 식별자만 영문으로 둔다. 테스트 위치는 folder-structure.md 4절.
-
-스타일은 Tailwind CSS v4 토큰 계층을 쓴다. 토큰 값 자체는 `src/shared/styles/*.css` 가 유일한 출처다.
-
-`/lab` 은 공용 토큰 대신 `lab-` 접두어 한 벌(`shared/styles/themes/lab.css`)만 쓴다 — 대상은 색·글자크기·레이아웃 여백(gutter·container)이고, `flex`·`gap-4`·`rounded-md` 처럼 컴포넌트 안쪽 배치를 잡는 유틸리티는 정체성이 아니라 배치라 공용 그대로다. 공용 토큰이 박힌 `shared/ui` 의 shadcn 컴포넌트는 `/lab` 에서 쓰지 않고, 필요하면 lab 슬라이스가 자기 것을 만든다. 아직 린트가 없어 이 경계는 규약으로만 지킨다.
-
-story 는 `shared/ui` 컴포넌트와 `shared/styles` 의 Foundation 에만 둔다. 섹션·이펙트 같은 조립체는 variant 가 없어 story 가 값을 못 한다. `build-storybook` 은 `npm run ci` 에 없다.
+애플리케이션 코드는 `src/` 아래 두고 `@/*` 로 참조한다. Next 라우터는 `app/` 에 남기고 `page.tsx` 는 `@/pages/*` 를 re-export 하는 껍데기로만 쓴다. 루트의 빈 `pages/` 는 Next 가 `src/pages` 를 레거시 Pages Router 로 오인하지 않게 두는 슬롯이다.
 
 스크롤 모션은 GSAP이 소유한다. DOM을 렌더하는 컴포넌트가 애니메이션 생명주기도 갖고, 복잡한 타임라인만 인접한 `create*Timeline.ts` 로 분리한다. [gsap.md](docs/conventions/gsap.md) 는 GSAP 사용법이 아니라 이 저장소가 관행과 다르게 정한 것만 담는다 — 위치·기법·확장성 순.
-
-블로그는 빌드 시점에 Supabase 를 직접 읽어 정적으로 굳고, 어드민 쓰기가 `revalidatePath` 로 다시 굽는다. 초안 상태는 없다 — 저장하면 곧 공개다. 운영자 버튼은 `/blog` 와 글 상세에 클라이언트로 얹어, 정적 HTML 한 벌이 로그인 여부와 무관하게 유지된다(감춤은 편의일 뿐 인가는 `requireAdmin` 과 RLS 가 집행). 본문 렌더는 서버 전용 `PostContent` 가 맡고 규칙은 `markdownPlugins.ts` 한 곳이 소유한다 — 이 둘은 `entities/post` 배럴에 넣지 않는다. shiki 를 모듈 최상위에서 만들어, 클라이언트 컴포넌트가 배럴을 스치기만 해도 번들에 딸려 들기 때문이다. 설계는 [블로그 개편](docs/superpowers/specs/2026-08-06-blog-redesign-design.md).
-
-컴포넌트별 함정(`{...rest}` 순서, ref 미개방)은 해당 파일 주석에 있다.
 
 주석은 파일 헤더와 모든 export에 단일 라인 JSDoc(`/** ... */`), 함수 본문 안 비자명 로직에 한 줄 `//`로 WHY(의도·함정)를 적는다. 본문은 한국어, 식별자는 영어. 멀티라인 블록·`@param`/`@returns` 태그·코드 받아쓰기(WHAT)는 금지 — 한 줄에 안 들어가면 주석 문제가 아니라 코드 분리·네이밍 신호다. 기초 개념(`fail-fast`, `barrel` 등)도 풀어쓰지 말고 한 줄 안에 단어로 녹인다. 단순 re-export만 하는 `index.ts`와 자명한 줄에는 달지 않는다. 보안 위험·법적 구속처럼 길게 풀 정당한 이유가 있을 때만 멀티라인을 허용한다.
 
@@ -28,7 +16,7 @@ story 는 `shared/ui` 컴포넌트와 `shared/styles` 의 Foundation 에만 둔�
 npm run dev        # 개발 서버
 npm run build      # 프로덕션 빌드
 npm run lint       # 린트
-npm run ci         # fsd + lint + type-check + test + build
+npm run ci         # lint + type-check + test + build
 npm run format     # 전체 포맷
 ```
 
