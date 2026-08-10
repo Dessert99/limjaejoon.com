@@ -7,7 +7,6 @@ yarn-error.log*
 .next
 dist/
 build/
-storybook-static/
 coverage/
 .out/
 out/

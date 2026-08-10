@@ -37,7 +37,6 @@
   transition-duration: var(--ds-duration-1200);
 }
 
-/* 감쇠는 두 셀렉터를 함께 건다 — 앞은 실사용자, 뒤는 Storybook 토글 */
 /* GSAP 모션은 여기 안 걸린다 — gsap.matchMedia 가 감쇠에서 생성 자체를 막는다 */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -53,14 +52,4 @@
   [data-scroll-behavior='smooth'] {
     scroll-behavior: auto !important;
   }
-}
-
-[data-motion='reduced'],
-[data-motion='reduced'] *,
-[data-motion='reduced'] *::before,
-[data-motion='reduced'] *::after {
-  animation-name: none !important;
-  transition-duration: 1ms !important;
-  transition-delay: 0ms !important;
-  scroll-behavior: auto !important;
 }

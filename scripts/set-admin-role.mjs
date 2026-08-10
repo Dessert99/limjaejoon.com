@@ -1,7 +1,7 @@
 // 운영자 유저에 app_metadata.role='admin' 을 1회 부여한다 (service role 필요)
 import { createClient } from '@supabase/supabase-js';
 
-// src/shared/config/env.ts 의 target 해석 규칙과 동일하게 url/key 를 짝으로 고른다
+// config/env.ts 의 target 해석 규칙과 동일하게 url/key 를 짝으로 고른다
 const targetEnvKeys = {
   local: {
     url: 'NEXT_PUBLIC_LOCAL_SUPABASE_URL',

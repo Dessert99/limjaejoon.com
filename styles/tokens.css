@@ -147,7 +147,7 @@
   --container-content: 72rem;
   --container-wide: 90rem;
 
-  /* Tailwind 기본값과 같은 수치를 명시한다 — Storybook 뷰포트 목록이 참조할 단일 출처가 필요하다 */
+  /* Tailwind 기본값과 같은 수치를 명시한다 — 라우트가 못 덮는 유일한 축이라 출처를 눈에 보이게 둔다 */
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
   --breakpoint-lg: 64rem;

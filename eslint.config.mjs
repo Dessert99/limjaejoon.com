@@ -117,8 +117,6 @@ const eslintConfig = defineConfig([
     'out/**',
     // 기타 빌드 디렉터리(build)도 제외합니다.
     'build/**',
-    // 제거한 Storybook 이 남긴 산출물 — 검사하면 번들 파일에서 규칙이 수만 건 터진다. 폴더를 지우면 이 줄도 지운다.
-    'storybook-static/**',
     // Claude 스킬 자료는 앱 소스가 아니므로 검사 대상에서 제외합니다.
     '.claude/**',
     // Next 자동 생성 타입 파일은 제외합니다.

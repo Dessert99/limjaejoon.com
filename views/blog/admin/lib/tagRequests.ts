@@ -1,6 +1,5 @@
 /** 태그 관리 — Route Handler 호출 네 벌 */
 import type { Tag, TagWithUsage } from '../../lib/tag.types';
-// barrel(@/shared/api) 대신 client 모듈을 직접 import — 서버 전용 코드(next/headers)가 클라 번들에 섞이는 것을 막는다
 import { clientFetchJson } from '@/lib/http/client';
 
 /** 등록된 태그를 글 수와 함께 읽는다 */

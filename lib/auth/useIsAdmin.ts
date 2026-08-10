@@ -5,7 +5,6 @@ import type { User } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { isAdmin } from '@/lib/auth/isAdmin';
 import { type SessionClaims } from '@/lib/auth/session';
-// barrel(@/shared/api) 대신 client 모듈을 직접 import — 서버 전용 코드(next/headers)가 클라 번들에 섞이는 것을 막는다
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 const toClaims = (user: User): SessionClaims => {
