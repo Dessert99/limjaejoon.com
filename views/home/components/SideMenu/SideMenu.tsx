@@ -20,7 +20,7 @@ const ITEM = { duration: 0.55, ease: 'power3.out', stagger: 0.06 } as const;
 /** 항목이 패널보다 늦게 출발하는 지점(패널 길이 대비) */
 const ITEM_OFFSET = 0.35;
 
-// 숨김을 CSS 로 미리 건다(gsap.md 5절) — 패널은 콘텐츠가 아니라 나열의 사본이고,
+// 숨김을 CSS 로 미리 건다 — 패널은 콘텐츠가 아니라 나열의 사본이고,
 // 스크립트가 죽으면 열 방법이 없는 패널이 화면을 덮은 채 남는 쪽이 훨씬 나쁘다
 const SCRIM_CLASS =
   'invisible fixed inset-0 z-(--ds-z-overlay) bg-inverse/60 opacity-0';

@@ -20,11 +20,11 @@ export function HomeNav() {
   const menuRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
 
-  // useGSAP 이 아니다 — 그 컨텍스트가 페이지 컨텍스트의 자식으로 딸려 들어가, 홈이 나갈 때 관찰자까지 함께 revert 된다(gsap.md 3절)
+  // useGSAP 이 아니다 — 그 컨텍스트가 페이지 컨텍스트의 자식으로 딸려 들어가, 홈이 나갈 때 관찰자까지 함께 revert 된다
   // 패널은 여기서 닫지 않는다 — 목적지를 누르는 순간 링크가 이미 닫는다
   useEffect(() => {
     // 홈에 들어올 때마다 새로 만든다 — 홈의 ScrollSmoother 가 갈리면 옛 관찰자는 죽은 scroller 를 붙들고 스크롤을 0 으로 읽는다
-    // 감쇠에서도 만든다 — 이건 트윈이 아니라 관찰자다. 감쇠는 교대 길이만 0 으로 줄인다(gsap.md 6절)
+    // 감쇠에서도 만든다 — 이건 트윈이 아니라 관찰자다. 감쇠는 교대 길이만 0 으로 줄인다
     const hide = ScrollTrigger.create({
       start: HIDE_AT,
       end: 'max',

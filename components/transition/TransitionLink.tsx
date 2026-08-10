@@ -49,7 +49,7 @@ export function TransitionLink({
       return;
     }
 
-    // 감쇠 환경은 커튼을 만들지 않는다 — 만들지 않으니 되돌릴 것도 없다(gsap.md 6절)
+    // 감쇠 환경은 커튼을 만들지 않는다 — 만들지 않으니 되돌릴 것도 없다
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return;
     }

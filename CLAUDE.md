@@ -2,31 +2,7 @@
 
 개인 포트폴리오 & 기술 블로그.
 
-## 구조
-
-애플리케이션 코드는 루트에 평탄하게 두고 `@/*`(= `./*`) 로 참조한다. `src/` 껍데기는 두지 않는다.
-
-```
-app/          Next 라우터. 조립은 여기서 끝난다
-views/        라우트별 실체 — components·lib·server·config·<route>.css
-components/   여러 라우트가 쓰는 UI (ui=shadcn 벤더, transition)
-lib/          라우트를 넘는 데이터·유틸 (supabase, auth, http, motion, utils)
-config/       site·env
-styles/       primitive 토큰과 전역 진입점
-```
-
-경계 규칙 넷:
-
-1. **`app/` 에는 Next 가 이름으로 아는 파일만** — `page`·`layout`·`route`·`sitemap`·`robots`(+ 옆에 붙는 테스트). 그 대신 `page.tsx` 가 조립을 끝낸다: metadata·`generateStaticParams`·params await·데이터 조회 호출·JSX 조립·`notFound()`. 쿼리 내용물과 표현 디테일은 갖지 않는다. 1줄 re-export 껍데기를 다시 만들지 않는다.
-2. **view 끼리 import 하지 않는다** — 둘이 쓰면 `components/` 나 `lib/` 로 올린다.
-3. **view 안은 상대경로, 밖은 `@/`** — `@/` 가 보이면 라우트를 넘는다는 뜻이다.
-4. **`lib/` 에 둘지의 기준은 "그 라우트를 통째로 지웠을 때 같이 사라지는가"** — posts·tags 쿼리는 사라지므로 `views/blog/server/`, 인증·supabase 연결·http·gsap 은 남으므로 `lib/`.
-
-`views/<route>/server/` 와 서버 전용 컴포넌트는 맨 위에 `import 'server-only'` 를 건다. 서버 쿼리와 클라 훅이 한 폴더에서 이웃이 되므로, 실수로 클라가 물면 빌드가 즉시 터지게 둔다. 단 `markdownPlugins.ts` 는 예외다 — 공개 상세(서버)와 어드민 미리보기(클라)가 의도적으로 공유해, shiki 를 어드민 번들에만 지우는 구조가 여기 달려 있다.
-
-라우트별 디자인 시스템은 2층이다. `styles/tokens.css` 가 `@theme static` 으로 semantic 토큰을 **선언**하고(유틸리티는 여기서만 생성된다), 라우트는 `views/<route>/<route>.css` 에서 `[data-route='...']` 로 그 값을 **덮는다**. 유틸리티가 `var()` 참조를 내므로 색뿐 아니라 `--text-*`·`--spacing-*`·`--radius-*`·`--font-*`·`--container-*` 가 전부 갈린다 — 컴포넌트는 한 줄도 안 고친다. `--breakpoint-*` 만 빌드 타임에 박혀 못 덮는다. 그 CSS 는 layout 에서 JS 로 import 하지 말고 `global.css` 에 `@import` 로 등록한다(안 그러면 `@theme`·`@utility`·`theme()` 가 안 먹는다). 실제로 갈라지기 전에는 파일을 미리 만들지 않는다.
-
-스크롤 모션은 GSAP이 소유한다. DOM을 렌더하는 컴포넌트가 애니메이션 생명주기도 갖고, 복잡한 타임라인만 인접한 `create*Timeline.ts` 로 분리한다. [gsap.md](docs/conventions/gsap.md) 는 GSAP 사용법이 아니라 이 저장소가 관행과 다르게 정한 것만 담는다 — 위치·기법·확장성 순.
+## 주석
 
 주석은 파일 헤더와 모든 export에 단일 라인 JSDoc(`/** ... */`), 함수 본문 안 비자명 로직에 한 줄 `//`로 WHY(의도·함정)를 적는다. 본문은 한국어, 식별자는 영어. 멀티라인 블록·`@param`/`@returns` 태그·코드 받아쓰기(WHAT)는 금지 — 한 줄에 안 들어가면 주석 문제가 아니라 코드 분리·네이밍 신호다. 기초 개념(`fail-fast`, `barrel` 등)도 풀어쓰지 말고 한 줄 안에 단어로 녹인다. 단순 re-export만 하는 `index.ts`와 자명한 줄에는 달지 않는다. 보안 위험·법적 구속처럼 길게 풀 정당한 이유가 있을 때만 멀티라인을 허용한다.
 

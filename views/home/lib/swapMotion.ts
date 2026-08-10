@@ -11,7 +11,7 @@ const prefersReducedMotion = (): boolean => {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
-/** 감쇠에서는 트윈을 없애는 대신 길이를 0 으로 만든다 — nav 가 영영 안 숨는 것보다 즉시 교대가 낫다(gsap.md 6절) */
+/** 감쇠에서는 트윈을 없애는 대신 길이를 0 으로 만든다 — nav 가 영영 안 숨는 것보다 즉시 교대가 낫다 */
 export const swapDuration = (duration: number): number => {
   return prefersReducedMotion() ? 0 : duration;
 };

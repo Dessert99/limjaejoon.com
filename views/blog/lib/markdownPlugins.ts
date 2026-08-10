@@ -1,4 +1,5 @@
 /** Markdown 렌더 규칙 한 벌 — 공개 상세와 어드민 미리보기가 같은 규칙으로 돌게 한 곳에 모은다 */
+// 이웃한 server/ 와 달리 server-only 를 안 건다 — 미리보기가 클라에서 이걸 물어야 shiki 가 어드민 번들에만 실린다
 import rehypeShikiFromHighlighter from '@shikijs/rehype/core';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
