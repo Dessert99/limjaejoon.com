@@ -1,6 +1,6 @@
 # GSAP 사용 정책
 
-GSAP 사용법은 적지 않는다 — 공식 문서가 더 정확하고 최신이다. 여기 있는 건 **이 저장소가 일반적인 관행과 다르게 정한 것과 그 경계**뿐이다. 규칙에 부딪히는 사례가 나오면 코드에 예외를 다는 대신 이 문서의 경계를 다시 긋는다. 설계 근거는 [2026-08-05-gsap-scroll-smoother-design.md](../superpowers/specs/2026-08-05-gsap-scroll-smoother-design.md).
+GSAP 사용법은 적지 않는다 — 공식 문서가 더 정확하고 최신이다. 여기 있는 건 **이 저장소가 일반적인 관행과 다르게 정한 것과 그 경계**뿐이다. 규칙에 부딪히는 사례가 나오면 코드에 예외를 다는 대신 이 문서의 경계를 다시 긋는다. 설계 근거는 [2026-08-05-gsap-scroll-smoother-design.md](../design-records/specs/2026-08-05-gsap-scroll-smoother-design.md).
 
 ## 위치
 

@@ -2,7 +2,7 @@
 
 **이 폴더는 현행 규칙이 아니다.** 각 문서는 작성 시점의 스냅샷이며, 그 뒤 코드가 바뀌어도 갱신하지 않는다. 의도적으로 고치지 않는다 — 기록을 사후 수정하면 "왜 그때 그렇게 정했나"를 잃는다.
 
-따라서 여기 적힌 경로·패키지·명령어는 **지금 존재하지 않을 수 있다.** 실제로 `vanilla-extract`, `.css.ts`, `content/blog/`, `radix-ui`, `docs/conventions/component-convention.md` 는 전부 철거됐지만 본문에는 그대로 남아 있다.
+따라서 여기 적힌 경로·패키지·명령어는 **지금 존재하지 않을 수 있다.** 실제로 `vanilla-extract`, `.css.ts`, `content/blog/`, `radix-ui`, `docs/conventions/component-convention.md` 는 전부 철거됐지만 본문에는 그대로 남아 있다. 이 폴더 자체도 2026-08-10 까지 `docs/superpowers/` 였고, 본문의 `docs/superpowers/...` 경로는 그 시절 이름이다 — 지금은 `docs/design-records/` 로 읽는다.
 
 현행 규칙의 출처는 `docs/conventions/` 와 `CLAUDE.md` 다. 충돌하면 그쪽이 이긴다.
 

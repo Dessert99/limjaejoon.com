@@ -27,7 +27,7 @@ tests/integration/ # 실제 Supabase 를 쓰는 통합 테스트
 public/            # 정적 에셋
 docs/
   conventions/     # 코드/스타일 규칙 (CLAUDE.md에서 참조)
-  superpowers/     # 과거 설계 기록 (시점 스냅샷, 현행 규칙 아님)
+  design-records/  # 과거 설계 기록 (시점 스냅샷, 현행 규칙 아님)
 ```
 
 ## 개발 명령어
