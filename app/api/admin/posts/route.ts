@@ -1,7 +1,8 @@
-import { createAdminPost, type UpsertPostInput } from '@/entities/post';
+import { createAdminPost } from '@/views/blog/server/adminPosts';
+import type { UpsertPostInput } from '@/views/blog/lib/post.types';
 import { NextResponse } from 'next/server';
-import { mapWriteError, requireAdmin } from '../_lib/adminGuard';
-import { revalidatePublicPosts } from '../_lib/revalidatePublicPosts';
+import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
+import { revalidatePublicPosts } from '@/views/blog/server/revalidate';
 
 /** 로그인한 admin 세션만 새 글을 생성한다 (권한은 RLS 가 최종 집행) */
 export const POST = async (request: Request) => {

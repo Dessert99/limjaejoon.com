@@ -3,7 +3,7 @@ module.exports = {
   // Tailwind 클래스 정렬 — 순서 차이로 생기는 diff 소음을 없앤다(플러그인은 항상 마지막에 로드)
   plugins: ['prettier-plugin-tailwindcss'],
   // 클래스 스캔 기준 CSS — @theme·@utility 를 읽어야 커스텀 유틸리티까지 정렬한다
-  tailwindStylesheet: './src/shared/styles/global.css',
+  tailwindStylesheet: './styles/global.css',
 
   // === Base (모든 프로젝트 공통) ===
 

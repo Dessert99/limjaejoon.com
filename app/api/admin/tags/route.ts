@@ -1,6 +1,10 @@
-import { createAdminTag, getTags, normalizeTagName } from '@/entities/tag';
+import {
+  createAdminTag,
+  normalizeTagName,
+} from '@/views/blog/server/adminTags';
+import { getTags } from '@/views/blog/server/tags';
 import { NextResponse } from 'next/server';
-import { mapWriteError, requireAdmin } from '../_lib/adminGuard';
+import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
 
 /** 로그인한 admin 세션만 태그 목록을 읽는다 — 글 수까지 함께 온다 */
 export const GET = async (request: Request) => {

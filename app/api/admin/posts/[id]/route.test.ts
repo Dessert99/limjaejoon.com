@@ -1,19 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { deleteAdminPost, updateAdminPost } from '@/entities/post';
+import {
+  deleteAdminPost,
+  updateAdminPost,
+} from '@/views/blog/server/adminPosts';
 import { NextResponse } from 'next/server';
-import { mapWriteError, requireAdmin } from '../../_lib/adminGuard';
-import { revalidatePublicPosts } from '../../_lib/revalidatePublicPosts';
+import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
+import { revalidatePublicPosts } from '@/views/blog/server/revalidate';
 import { DELETE, PATCH } from './route';
 
-vi.mock('../../_lib/adminGuard', () => {
+vi.mock('@/lib/auth/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 
-vi.mock('../../_lib/revalidatePublicPosts', () => {
+vi.mock('@/views/blog/server/revalidate', () => {
   return { revalidatePublicPosts: vi.fn() };
 });
 
-vi.mock('@/entities/post', () => {
+vi.mock('@/views/blog/server/adminPosts', () => {
   return { updateAdminPost: vi.fn(), deleteAdminPost: vi.fn() };
 });
 

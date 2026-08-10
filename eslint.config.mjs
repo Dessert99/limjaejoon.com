@@ -27,10 +27,11 @@ const eslintConfig = defineConfig([
   // #1 api·lib·utils(순수 로직 계층): 함수 선언문 금지, 화살표/표현식만 허용
   {
     files: [
-      // src/ 어느 폴더에 있든 api·lib·utils 는 순수 로직 계층이다
-      'src/**/api/**/*.ts',
-      'src/**/lib/**/*.ts',
-      'src/**/utils/**/*.ts',
+      // lib·server·config 는 React 없이 도는 순수 로직 계층이다 (공용이든 라우트 소유든)
+      'lib/**/*.ts',
+      'config/**/*.ts',
+      'views/**/lib/**/*.ts',
+      'views/**/server/**/*.ts',
     ],
     rules: {
       // 'expression' = 함수 선언문(function f(){}) 금지 → 화살표/함수 표현식만 (표현식은 관례상 허용)
@@ -95,9 +96,9 @@ const eslintConfig = defineConfig([
   },
 
   // shadcn CLI 가 받아오는 벤더 파일 — 우리 문체 규칙을 씌우면 add·업데이트마다 손으로 고쳐야 해 원본 대조가 깨집니다.
-  // glob 이 직계 파일만 잡으므로 폴더로 감싼 자체 제작 컴포넌트(shared/ui/Xxx/)는 규칙을 그대로 받습니다.
+  // glob 이 ui/ 직계 파일만 잡으므로 폴더로 감싼 자체 제작 컴포넌트(components/Xxx/)는 규칙을 그대로 받습니다.
   {
-    files: ['src/shared/ui/*.tsx'],
+    files: ['components/ui/*.tsx'],
     rules: {
       curly: 'off',
       'arrow-body-style': 'off',
@@ -116,7 +117,7 @@ const eslintConfig = defineConfig([
     'out/**',
     // 기타 빌드 디렉터리(build)도 제외합니다.
     'build/**',
-    // Storybook 정적 빌드 산출물 — 검사하면 번들 파일에서 포매터가 터진다.
+    // 제거한 Storybook 이 남긴 산출물 — 검사하면 번들 파일에서 규칙이 수만 건 터진다. 폴더를 지우면 이 줄도 지운다.
     'storybook-static/**',
     // Claude 스킬 자료는 앱 소스가 아니므로 검사 대상에서 제외합니다.
     '.claude/**',

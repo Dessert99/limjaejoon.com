@@ -1,6 +1,6 @@
-import { readPostImageBucket } from '@/shared/config';
+import { readPostImageBucket } from '@/config/env';
 import { NextResponse } from 'next/server';
-import { mapWriteError, requireAdmin } from '../_lib/adminGuard';
+import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
 
 /** 업로드 허용 MIME — 임의 파일 실행·과대 용량으로부터 Storage 를 보호한다 */
 const ALLOWED_MIME_TYPES = [

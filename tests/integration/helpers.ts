@@ -4,7 +4,7 @@ import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@/shared/api/supabase';
+import type { Database } from '@/lib/supabase/database.types';
 
 // vitest 는 .env.local 을 자동 로드하지 않으므로 helpers 임포트 시점에 직접 채운다
 const loadEnvLocal = (): void => {

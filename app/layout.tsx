@@ -1,7 +1,7 @@
-import '@/shared/styles/global.css';
-import { SITE, SITE_URL } from '@/shared/config';
-import { pretendard } from '@/shared/styles';
-import { RouteTransition } from '@/shared/transition';
+import '@/styles/global.css';
+import { SITE, SITE_URL } from '@/config/site';
+import { pretendard } from '@/styles/fonts';
+import { RouteTransition } from '@/components/transition/RouteTransition';
 import type { Metadata } from 'next';
 
 // title·og·twitter 세 곳이 같은 문장을 쓴다 — 갈리면 검색 결과와 공유 카드가 서로 다른 말을 한다

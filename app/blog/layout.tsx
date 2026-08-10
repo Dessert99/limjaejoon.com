@@ -1,4 +1,4 @@
-import { BlogNav } from '@/widgets/blog-nav';
+import { BlogNav } from '@/views/blog/components/BlogNav';
 import type { ReactNode } from 'react';
 
 /** blog 레이아웃 — 목록·글·앞으로 늘어날 라우트가 같은 밝은 바탕을 쓴다(페이지마다 반전을 다시 걸지 않는다) */

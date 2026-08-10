@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createAdminTag } from '@/entities/tag';
+import { createAdminTag } from '@/views/blog/server/adminTags';
 import { NextResponse } from 'next/server';
-import { mapWriteError, requireAdmin } from '../_lib/adminGuard';
+import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
 import { POST } from './route';
 
-vi.mock('../_lib/adminGuard', () => {
+vi.mock('@/lib/auth/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 
-vi.mock('@/entities/tag', () => {
+vi.mock('@/views/blog/server/adminTags', () => {
   return {
     createAdminTag: vi.fn(),
     getTags: vi.fn(),

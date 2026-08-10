@@ -1,6 +1,6 @@
-import { getPostSlugs } from '@/entities/post';
-import { createSupabaseStaticClient } from '@/shared/api';
-import { SITE_URL } from '@/shared/config';
+import { getPostSlugs } from '@/views/blog/server/posts';
+import { createSupabaseStaticClient } from '@/lib/supabase/static';
+import { SITE_URL } from '@/config/site';
 import type { MetadataRoute } from 'next';
 
 /** 존재하는 public route 와 발행된 글만 sitemap 에 노출한다 */

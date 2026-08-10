@@ -1,7 +1,8 @@
 /** Next 16 proxy — 세션 쿠키를 갱신하고 비로그인/역할에 따라 optimistic redirect 한다 */
-import { getSessionClaims, isAdmin } from '@/entities/session';
-import { readPublicEnv } from '@/shared/config';
-import type { Database } from '@/shared/api';
+import { isAdmin } from '@/lib/auth/isAdmin';
+import { getSessionClaims } from '@/lib/auth/session';
+import { readPublicEnv } from '@/config/env';
+import type { Database } from '@/lib/supabase/database.types';
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { decideRedirect } from './proxyDecision';

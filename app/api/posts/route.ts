@@ -1,5 +1,5 @@
-import { getPosts } from '@/entities/post';
-import { createSupabaseServerClient } from '@/shared/api';
+import { getPosts } from '@/views/blog/server/posts';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 /** 공개 발행 글 목록을 반환한다 */

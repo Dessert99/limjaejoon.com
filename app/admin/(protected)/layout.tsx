@@ -1,5 +1,6 @@
-import { isAdmin, type SessionClaims } from '@/entities/session';
-import { createSupabaseServerClient } from '@/shared/api';
+import { isAdmin } from '@/lib/auth/isAdmin';
+import { type SessionClaims } from '@/lib/auth/session';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 

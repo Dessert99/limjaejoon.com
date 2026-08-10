@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll } from 'vitest';
-import { server } from '@/shared/api/mocks/server';
+import { server } from '@/lib/mocks/server';
 
 // MSW 목 서버: 테스트 전체에서 켜고, 핸들링 안 된 요청은 에러로 드러낸다.
 beforeAll(() => {
@@ -53,7 +53,7 @@ globalThis.IntersectionObserver = class {
 } as unknown as typeof IntersectionObserver;
 
 // jsdom 29 에는 dialog 의 showModal·close 가 없다 — open 속성만 토글하는 최소 폴리필로 대체한다.
-// 포커스 가둠·Escape·backdrop 은 브라우저가 하는 일이라 흉내 내지 않는다. 그건 Storybook 에서 사람이 본다.
+// 포커스 가둠·Escape·backdrop 은 브라우저가 하는 일이라 흉내 내지 않는다 — 실제 브라우저에서 눈으로 본다.
 const dialogPrototype = globalThis.HTMLDialogElement?.prototype;
 
 if (dialogPrototype && typeof dialogPrototype.showModal !== 'function') {

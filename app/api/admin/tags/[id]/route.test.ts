@@ -1,20 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { deleteAdminTag, updateAdminTag } from '@/entities/tag';
+import { deleteAdminTag, updateAdminTag } from '@/views/blog/server/adminTags';
 import { NextResponse } from 'next/server';
-import { mapWriteError, requireAdmin } from '../../_lib/adminGuard';
-import { revalidatePublicPosts } from '../../_lib/revalidatePublicPosts';
+import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
+import { revalidatePublicPosts } from '@/views/blog/server/revalidate';
 import { DELETE, PATCH } from './route';
 
-vi.mock('../../_lib/adminGuard', () => {
+vi.mock('@/lib/auth/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 
 // 실제 revalidatePath 는 Next 요청 컨텍스트 밖에서 터진다
-vi.mock('../../_lib/revalidatePublicPosts', () => {
+vi.mock('@/views/blog/server/revalidate', () => {
   return { revalidatePublicPosts: vi.fn() };
 });
 
-vi.mock('@/entities/tag', () => {
+vi.mock('@/views/blog/server/adminTags', () => {
   return {
     deleteAdminTag: vi.fn(),
     updateAdminTag: vi.fn(),

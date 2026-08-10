@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { readPostImageBucket } from '@/shared/config';
+import { readPostImageBucket } from '@/config/env';
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../_lib/adminGuard';
+import { requireAdmin } from '@/lib/auth/adminGuard';
 import { POST } from './route';
 
-vi.mock('@/shared/config', () => {
+vi.mock('@/config/env', () => {
   return { readPostImageBucket: vi.fn() };
 });
 
-vi.mock('../_lib/adminGuard', () => {
+vi.mock('@/lib/auth/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 

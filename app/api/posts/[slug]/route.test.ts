@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getPostBySlug } from '@/entities/post';
-import { createSupabaseServerClient } from '@/shared/api';
+import { getPostBySlug } from '@/views/blog/server/posts';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { GET } from './route';
 
-vi.mock('@/shared/api', () => {
+vi.mock('@/lib/supabase/server', () => {
   return { createSupabaseServerClient: vi.fn() };
 });
 
-vi.mock('@/entities/post', () => {
+vi.mock('@/views/blog/server/posts', () => {
   return { getPostBySlug: vi.fn() };
 });
 

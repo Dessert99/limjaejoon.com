@@ -1,6 +1,6 @@
-import { getTags } from '@/entities/tag';
-import { AdminPostEditorPage } from '@/pages/admin-post-editor';
-import { createSupabaseServerClient } from '@/shared/api';
+import { getTags } from '@/views/blog/server/tags';
+import { PostEditor } from '@/views/blog/admin/components/PostEditor/PostEditor';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,5 +12,5 @@ export const metadata: Metadata = {
 export default async function Page() {
   const client = await createSupabaseServerClient();
 
-  return <AdminPostEditorPage tags={await getTags(client)} />;
+  return <PostEditor tags={await getTags(client)} />;
 }

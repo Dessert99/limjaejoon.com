@@ -1,4 +1,4 @@
-import { HomeNav } from '@/widgets/home-nav';
+import { HomeNav } from '@/views/home/components/HomeNav/HomeNav';
 import type { ReactNode } from 'react';
 
 /** 홈 전용 레이아웃 — (home) 은 URL 에 안 찍히는 칸막이다. 홈에만 nav 를 세우려고 홈에게 자기 폴더를 준다 */
