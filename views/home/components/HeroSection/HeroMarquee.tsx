@@ -9,7 +9,8 @@ const COPY_COUNT = 4;
 
 const REWIND_CYCLES = 100;
 
-const COPY_CLASS = 'whitespace-nowrap text-hero leading-[1.15] font-medium';
+const COPY_CLASS =
+  'whitespace-nowrap px-[0.7em] text-hero leading-[1.15] font-medium';
 
 type HeroMarqueeProps = {
   text: string;
@@ -71,7 +72,6 @@ export function HeroMarquee({ text, titleId }: HeroMarqueeProps) {
           data-marquee-copy
           className={COPY_CLASS}>
           {text}
-          <Separator />
         </h1>
 
         {Array.from({ length: COPY_COUNT - 1 }, (_, index) => {
@@ -81,21 +81,10 @@ export function HeroMarquee({ text, titleId }: HeroMarqueeProps) {
               aria-hidden='true'
               className={COPY_CLASS}>
               {text}
-              <Separator />
             </span>
           );
         })}
       </div>
     </div>
-  );
-}
-
-function Separator() {
-  return (
-    <span
-      aria-hidden='true'
-      className='px-[0.5em] text-[1em]'>
-      -
-    </span>
   );
 }

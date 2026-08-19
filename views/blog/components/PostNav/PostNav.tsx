@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { AdjacentPosts } from '../../lib/pickAdjacentPosts';
 import type { PostListItem } from '../../lib/post.types';
-import { cn } from '@/lib/utils';
+import { clsx } from 'clsx';
 
 function PostNavLink({
   post,
@@ -15,7 +15,7 @@ function PostNavLink({
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className={cn(
+      className={clsx(
         'group flex h-full flex-col gap-2 rounded-lg border border-blog-border p-4 transition-colors duration-200 ease-in-out hover:border-blog-input',
         align === 'end' && 'sm:items-end sm:text-end'
       )}>
