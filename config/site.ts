@@ -3,12 +3,11 @@ export const SITE_URL = 'https://www.limjaejoon.com';
 export const EMAIL = 'lsjh1234@naver.com';
 
 export const SITE = {
-  name: '임재준',
+  name: '재준',
   nameEn: 'Jaejoon Lim',
-  role: '프론트엔드 개발자',
+  role: 'Frontend Engineer',
   roleEn: 'Frontend Engineer',
-  description:
-    '프론트엔드 개발자 임재준의 포트폴리오와 기술 블로그. 읽고 만들며 배운 것을 정리한다.',
+  description: '작업공간',
 } as const;
 
 export const SITE_ROUTES = [
