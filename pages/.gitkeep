@@ -1,2 +1,0 @@
-# FSD pages 레이어는 src/pages 에 있다(표준 명명). 이 빈 폴더는 Next App Router(app/)와
-# 같은 폴더(루트)에 pages 슬롯을 둬, Next 가 src/pages 를 레거시 Pages Router 로 오인하지 않게 한다.

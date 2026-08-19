@@ -1,6 +1,6 @@
-import { getTags } from '@/entities/tag';
-import { AdminPostEditorPage } from '@/pages/admin-post-editor';
-import { createSupabaseServerClient } from '@/shared/api';
+import { getTags } from '@/views/blog/server/tags';
+import { PostEditor } from '@/views/blog/admin/components/PostEditor/PostEditor';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,9 +8,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-// 그대로 re-export 하지 않는다 — page 의 default export 는 params·searchParams 외의 prop 을 받을 수 없다
 export default async function Page() {
   const client = await createSupabaseServerClient();
 
-  return <AdminPostEditorPage tags={await getTags(client)} />;
+  return <PostEditor tags={await getTags(client)} />;
 }

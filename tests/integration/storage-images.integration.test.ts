@@ -1,4 +1,3 @@
-/** post-images 스토리지 정책 통합 테스트 — non-admin 업로드 거부, admin 업로드·public URL 조회를 검증한다 */
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   createServiceRoleClient,
@@ -9,7 +8,6 @@ import {
 } from './helpers';
 
 const BUCKET = 'post-images';
-// 1x1 투명 PNG — 버킷의 allowed_mime_types(image/*) 를 통과시켜 MIME 필터가 아닌 RLS 만 검증되게 한다
 const PNG_FIXTURE = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
   'base64'

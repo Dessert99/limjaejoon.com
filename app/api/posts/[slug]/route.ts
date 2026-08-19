@@ -1,5 +1,5 @@
-import { getPostBySlug } from '@/entities/post';
-import { createSupabaseServerClient } from '@/shared/api';
+import { getPostBySlug } from '@/views/blog/server/posts';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 type RouteContext = {
@@ -8,7 +8,6 @@ type RouteContext = {
   }>;
 };
 
-/** 공개 발행 글 상세를 반환한다 */
 export const GET = async (_request: Request, context: RouteContext) => {
   const { slug } = await context.params;
   const client = await createSupabaseServerClient();

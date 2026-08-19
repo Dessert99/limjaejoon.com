@@ -1,4 +1,3 @@
-/** decideRedirect 의 인증상태×권한×경로 조합을 검증한다 */
 import { describe, expect, it } from 'vitest';
 import { decideRedirect } from './proxyDecision';
 

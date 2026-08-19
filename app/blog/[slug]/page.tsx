@@ -1,13 +1,37 @@
-import { getPostSlugs } from '@/entities/post';
-import { BlogPostPage, loadPost } from '@/pages/blog-post';
-import { createSupabaseStaticClient } from '@/shared/api';
+import { Badge } from '@/components/ui/badge';
+import { SITE_OPEN_GRAPH } from '@/lib/seo';
+import { createSupabaseStaticClient } from '@/lib/supabase/static';
+import { PostAdminActions } from '@/views/blog/components/PostAdminActions/PostAdminActions';
+import { PostContent } from '@/views/blog/components/PostContent';
+import { PostJsonLd } from '@/views/blog/components/PostJsonLd';
+import { PostNav } from '@/views/blog/components/PostNav/PostNav';
+import { PostToc } from '@/views/blog/components/PostToc/PostToc';
+import { extractHeadings } from '@/views/blog/lib/extractHeadings';
+import { formatPublishedAt } from '@/views/blog/lib/formatPublishedAt';
+import { pickAdjacentPosts } from '@/views/blog/lib/pickAdjacentPosts';
+import {
+  getPostBySlug,
+  getPostSlugs,
+  getPosts,
+} from '@/views/blog/server/posts';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { cache } from 'react';
 
 type RouteContext = {
   params: Promise<{ slug: string }>;
 };
 
-/** 발행된 글 경로를 빌드 시점에 미리 만든다 (그 뒤 발행분은 첫 요청에 생성된다) */
+const COLUMN = 'max-w-[54rem]';
+
+const loadPost = cache(async (slug: string) => {
+  return getPostBySlug(createSupabaseStaticClient(), slug);
+});
+
+const loadPublishedPosts = cache(async () => {
+  return getPosts(createSupabaseStaticClient());
+});
+
 export const generateStaticParams = async () => {
   const slugs = await getPostSlugs(createSupabaseStaticClient());
 
@@ -16,7 +40,6 @@ export const generateStaticParams = async () => {
   });
 };
 
-/** 글마다 제목·설명·공유 카드를 붙인다 (없는 글이면 레이아웃 기본값이 남는다) */
 export const generateMetadata = async (
   context: RouteContext
 ): Promise<Metadata> => {
@@ -30,7 +53,9 @@ export const generateMetadata = async (
   return {
     title: post.title,
     description: post.description,
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
+      ...SITE_OPEN_GRAPH,
       type: 'article',
       title: post.title,
       description: post.description,
@@ -39,15 +64,83 @@ export const generateMetadata = async (
       tags: [...post.tags],
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title: post.title,
       description: post.description,
     },
   };
 };
 
-export default async function Page(context: RouteContext) {
+export default async function BlogPostPage(context: RouteContext) {
   const { slug } = await context.params;
+  const post = await loadPost(slug);
 
-  return <BlogPostPage slug={slug} />;
+  if (!post) {
+    notFound();
+  }
+
+  const { previous, next } = pickAdjacentPosts(
+    await loadPublishedPosts(),
+    post
+  );
+  const headings = extractHeadings(post.content_markdown);
+  const publishedAt = formatPublishedAt(post.published_at);
+
+  return (
+    <main className='grow pt-section-sm pb-section'>
+      <div className='mx-auto max-w-wide px-gutter'>
+        <article>
+          <PostJsonLd post={post} />
+
+          <header className={COLUMN}>
+            <h1 className='text-3xl font-semibold break-keep sm:text-4xl'>
+              {post.title}
+            </h1>
+
+            <p className='mt-4 text-body break-keep text-muted-foreground sm:text-body-lg'>
+              {post.description}
+            </p>
+
+            <div className='mt-6 flex flex-wrap items-center gap-3 text-body-sm text-muted-foreground'>
+              {publishedAt ? (
+                <time dateTime={post.published_at ?? undefined}>
+                  {publishedAt}
+                </time>
+              ) : null}
+
+              {post.tags.map((tag) => {
+                return (
+                  <Badge
+                    key={tag}
+                    variant='secondary'>
+                    #{tag}
+                  </Badge>
+                );
+              })}
+            </div>
+
+            <PostAdminActions id={post.id} />
+          </header>
+
+          <div className='mt-12 grid gap-x-grid-gap lg:grid-cols-[minmax(0,54rem)_15rem] lg:justify-between'>
+            <PostToc
+              headings={headings}
+              className='mb-8 lg:sticky lg:top-24 lg:col-start-2 lg:row-start-1 lg:mb-0 lg:self-start'
+            />
+
+            <div className='min-w-0 lg:col-start-1 lg:row-start-1'>
+              <PostContent markdown={post.content_markdown} />
+            </div>
+          </div>
+        </article>
+
+        <div className={COLUMN}>
+          <PostNav
+            previous={previous}
+            next={next}
+          />
+        </div>
+      </div>
+    </main>
+  );
 }

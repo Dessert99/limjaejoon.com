@@ -1,4 +1,3 @@
-/** tags·post_tags RLS 와 삭제 가드 통합 테스트 — 요구의 집행자가 앱이 아니라 DB 임을 실제 Postgres 로 확인한다 */
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
@@ -77,7 +76,6 @@ describe('tags RLS 와 삭제 가드', () => {
 
   describe('삭제 가드', () => {
     it('연결된 글이 있는 태그는 admin 도 지우지 못한다', async () => {
-      // 앱이 조회 후 지우면 확인과 삭제 사이에 글이 저장될 때 샌다 — FK 가 집행자다
       const admin = await signInTestUser(adminUser);
       const { error } = await admin.from('tags').delete().eq('id', linkedTagId);
 
@@ -95,7 +93,6 @@ describe('tags RLS 와 삭제 가드', () => {
       expect(error).toBeNull();
       expect(data).toEqual([{ id: looseTagId }]);
 
-      // 뒤 케이스에 영향이 없도록 되돌린다
       await serviceRole
         .from('tags')
         .insert({ id: looseTagId, name: looseName });
@@ -145,7 +142,6 @@ describe('tags RLS 와 삭제 가드', () => {
     });
 
     it('앞뒤 공백이 붙은 이름은 check 제약으로 막힌다', async () => {
-      // lower(name) unique 는 'React' 와 'React ' 를 서로 다른 값으로 통과시킨다
       const admin = await signInTestUser(adminUser);
       const { error } = await admin
         .from('tags')
@@ -192,7 +188,6 @@ describe('tags RLS 와 삭제 가드', () => {
 
   describe('공개 읽기', () => {
     it('anon 이 태그와 연결을 읽는다', async () => {
-      // 정적 빌드가 anon 으로 조인을 읽으므로 막히면 목록에 태그가 통째로 빠진다
       const anon = createAnonClient();
       const { data: tags, error: tagError } = await anon
         .from('tags')

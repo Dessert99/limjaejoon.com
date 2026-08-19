@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { readPostImageBucket } from '@/shared/config';
+import { readPostImageBucket } from '@/config/env';
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../_lib/adminGuard';
+import { requireAdmin } from '@/lib/auth/adminGuard';
 import { POST } from './route';
 
-vi.mock('@/shared/config', () => {
+vi.mock('@/config/env', () => {
   return { readPostImageBucket: vi.fn() };
 });
 
-vi.mock('../_lib/adminGuard', () => {
+vi.mock('@/lib/auth/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 
@@ -96,7 +96,6 @@ describe('POST /api/admin/images', () => {
         type: 'image/png',
       }
     );
-    // jsdom 의 Request→FormData 왕복 직렬화가 대용량 바이너리를 깨뜨려 formData 를 직접 stub 한다
     const formData = new FormData();
     formData.set('file', oversized);
     const request = {

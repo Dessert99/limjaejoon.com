@@ -1,7 +1,4 @@
 #!/bin/bash
-# Hook: PreToolUse (Edit|Write)
-# 보호 대상 파일 수정을 차단한다.
-# exit 0 = 허용, exit 2 = 차단
 
 set -euo pipefail
 
@@ -14,13 +11,11 @@ fi
 
 BASENAME=$(basename "$FILE_PATH")
 
-# package-lock.json 차단
 if [[ "$BASENAME" == "package-lock.json" ]]; then
   echo "BLOCKED: package-lock.json은 npm install로만 변경해야 합니다." >&2
   exit 2
 fi
 
-# .git/ 내부 파일 차단
 if [[ "$FILE_PATH" == *"/.git/"* || "$FILE_PATH" == ".git/"* ]]; then
   echo "BLOCKED: .git/ 내부 파일은 수정할 수 없습니다." >&2
   exit 2

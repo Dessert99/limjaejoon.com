@@ -1,6 +1,4 @@
 #!/bin/bash
-# Hook: Notification
-# macOS 네이티브 알림을 전송한다.
 
 INPUT=$(cat)
 TITLE=$(echo "$INPUT" | jq -r '.title // "Claude Code"')

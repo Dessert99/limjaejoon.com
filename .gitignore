@@ -1,40 +1,26 @@
-# dependencies
 node_modules/
 
-# next.js
 .next/
 out/
 
-# production
 build/
-storybook-static/
 
-# misc
 .DS_Store
 *.pem
 
-# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
 .env
 .env.local
 
-# vercel
 .vercel
 
-# typescript
 *.tsbuildinfo
 next-env.d.ts
 
-# superpowers (brainstorm 비주얼 컴패니언 산출물)
-.superpowers/
-
-
-# Playwright
 test-results/
 playwright-report/
 blob-report/

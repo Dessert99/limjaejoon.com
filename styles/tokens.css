@@ -1,0 +1,138 @@
+
+:root {
+  --ds-neutral-0: #ffffff;
+  --ds-neutral-50: #f7f5f2;
+  --ds-neutral-100: #efece7;
+  --ds-neutral-200: #e2ded7;
+  --ds-neutral-300: #c9c4bb;
+  --ds-neutral-400: #a49e94;
+  --ds-neutral-500: #807a70;
+  --ds-neutral-600: #615c54;
+  --ds-neutral-700: #46423c;
+  --ds-neutral-800: #2e2b27;
+  --ds-neutral-900: #1b1917;
+  --ds-neutral-950: #121110;
+  --ds-neutral-1000: #000000;
+
+  --ds-accent-100: #fdf0d9;
+  --ds-accent-200: #f9dda9;
+  --ds-accent-300: #f3c877;
+  --ds-accent-400: #ecb14a;
+  --ds-accent-500: #e09a24;
+  --ds-accent-600: #c17f16;
+  --ds-accent-700: #9a6412;
+  --ds-accent-800: #744b10;
+  --ds-accent-900: #4d320c;
+
+  --ds-gray-0: #ffffff;
+  --ds-gray-50: #fafafa;
+  --ds-gray-100: #f4f4f5;
+  --ds-gray-200: #e4e4e7;
+  --ds-gray-400: #a1a1aa;
+  --ds-gray-600: #5c5c63;
+  --ds-gray-950: #111113;
+
+  --ds-danger-500: #c4443a;
+  --ds-danger-600: #9d2f26;
+
+  --ds-radius-none: 0px;
+  --ds-radius-sm: 0.25rem;
+  --ds-radius-md: 0.5rem;
+  --ds-radius-lg: 1rem;
+  --ds-radius-full: 9999px;
+
+  --ds-duration-100: 100ms;
+  --ds-duration-200: 200ms;
+  --ds-duration-400: 400ms;
+  --ds-duration-800: 800ms;
+  --ds-duration-1200: 1200ms;
+
+  --ds-ease-linear: linear;
+  --ds-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ds-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ds-ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-ease-cinematic: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --ds-z-base: 0;
+  --ds-z-content: 10;
+  --ds-z-sticky: 100;
+  --ds-z-overlay: 300;
+  --ds-z-transition: 400;
+}
+
+@theme static {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: var(--ds-neutral-0);
+  --color-black: var(--ds-neutral-1000);
+
+  --color-background: var(--ds-neutral-950);
+  --color-foreground: var(--ds-neutral-50);
+  --color-card: var(--ds-neutral-900);
+  --color-card-foreground: var(--ds-neutral-50);
+  --color-popover: var(--ds-neutral-900);
+  --color-popover-foreground: var(--ds-neutral-50);
+  --color-primary: var(--ds-accent-400);
+  --color-primary-foreground: var(--ds-neutral-950);
+  --color-secondary: var(--ds-neutral-800);
+  --color-secondary-foreground: var(--ds-neutral-50);
+  --color-muted: var(--ds-neutral-800);
+  --color-muted-foreground: var(--ds-neutral-400);
+  --color-accent: var(--ds-neutral-800);
+  --color-accent-foreground: var(--ds-neutral-50);
+  --color-destructive: var(--ds-danger-500);
+  --color-destructive-foreground: var(--ds-neutral-0);
+  --color-border: var(--ds-neutral-800);
+  --color-input: var(--ds-neutral-600);
+  --color-ring: var(--ds-accent-300);
+  --color-inverse: var(--ds-neutral-950);
+
+  --font-body:
+    var(--font-pretendard, 'Pretendard Variable'), system-ui, sans-serif;
+  --font-display: var(--font-body);
+  --default-font-family: var(--font-body);
+
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.08em;
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.55;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+  --text-body-xl: 1.25rem;
+  --text-body-xl--line-height: 1.5;
+  --text-statement: clamp(1.75rem, 1.5rem + 1.25vw, 3rem);
+  --text-statement--line-height: 1.25;
+  --text-statement--letter-spacing: -0.01em;
+  --text-section: clamp(2.5rem, 2rem + 2.5vw, 5rem);
+  --text-section--line-height: 1.05;
+  --text-section--letter-spacing: -0.02em;
+  --text-project: clamp(3rem, 2.2rem + 4vw, 7rem);
+  --text-project--line-height: 0.95;
+  --text-project--letter-spacing: -0.03em;
+  --text-hero: clamp(3.5rem, 1.8rem + 8.5vw, 12rem);
+  --text-hero--line-height: 0.9;
+  --text-hero--letter-spacing: -0.04em;
+
+  --radius-sm: var(--ds-radius-sm);
+  --radius-md: var(--ds-radius-md);
+  --radius-lg: var(--ds-radius-lg);
+
+  --container-content: 72rem;
+  --container-wide: 90rem;
+
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+
+  --spacing-gutter: clamp(1.25rem, 4vw, 3rem);
+  --spacing-section: clamp(6rem, 12vw, 12rem);
+  --spacing-section-sm: clamp(3rem, 6vw, 6rem);
+  --spacing-grid-gap: clamp(1.5rem, 3vw, 3rem);
+}
