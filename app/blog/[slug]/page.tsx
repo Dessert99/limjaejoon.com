@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/views/blog/components/ui/badge';
 import { SITE_OPEN_GRAPH } from '@/lib/seo';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
 import { PostAdminActions } from '@/views/blog/components/PostAdminActions/PostAdminActions';
@@ -87,8 +87,8 @@ export default async function BlogPostPage(context: RouteContext) {
   const publishedAt = formatPublishedAt(post.published_at);
 
   return (
-    <main className='grow pt-section-sm pb-section'>
-      <div className='mx-auto max-w-wide px-gutter'>
+    <main className='grow pt-blog-section-sm pb-blog-section'>
+      <div className='mx-auto max-w-blog-wide px-blog-gutter'>
         <article>
           <PostJsonLd post={post} />
 
@@ -97,11 +97,11 @@ export default async function BlogPostPage(context: RouteContext) {
               {post.title}
             </h1>
 
-            <p className='mt-4 text-body break-keep text-muted-foreground sm:text-body-lg'>
+            <p className='mt-4 text-base break-keep text-blog-muted-foreground sm:text-lg'>
               {post.description}
             </p>
 
-            <div className='mt-6 flex flex-wrap items-center gap-3 text-body-sm text-muted-foreground'>
+            <div className='mt-6 flex flex-wrap items-center gap-3 text-sm text-blog-muted-foreground'>
               {publishedAt ? (
                 <time dateTime={post.published_at ?? undefined}>
                   {publishedAt}
@@ -122,7 +122,7 @@ export default async function BlogPostPage(context: RouteContext) {
             <PostAdminActions id={post.id} />
           </header>
 
-          <div className='mt-12 grid gap-x-grid-gap lg:grid-cols-[minmax(0,54rem)_15rem] lg:justify-between'>
+          <div className='gap-x-grid-gap mt-12 grid lg:grid-cols-[minmax(0,54rem)_15rem] lg:justify-between'>
             <PostToc
               headings={headings}
               className='mb-8 lg:sticky lg:top-24 lg:col-start-2 lg:row-start-1 lg:mb-0 lg:self-start'

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/views/blog/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -8,7 +8,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
+} from '@/views/blog/components/ui/sheet';
 import { TagFilterList } from './TagFilterList';
 
 type TagFilterSheetProps = {

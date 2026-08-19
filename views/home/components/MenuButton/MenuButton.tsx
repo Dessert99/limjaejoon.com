@@ -5,10 +5,10 @@ import { gsap, useGSAP } from '@/lib/motion/gsap';
 import { SWAP, swapDuration } from '../../lib/swapMotion';
 
 const ROOT_CLASS =
-  'group invisible fixed top-20 right-gutter grid size-16 place-items-center rounded-full bg-foreground opacity-0 mix-blend-difference data-[open=true]:z-(--ds-z-overlay) data-[open=true]:mix-blend-normal';
+  'group invisible fixed top-20 right-gutter grid size-16 place-items-center rounded-full bg-home-foreground opacity-0 mix-blend-difference data-[open=true]:z-(--z-overlay) data-[open=true]:mix-blend-normal';
 
 const LINE_CLASS =
-  'absolute right-0 h-0.5 origin-center rounded-full bg-inverse transition-all duration-quick ease-standard';
+  'absolute right-0 h-0.5 origin-center rounded-full bg-home-inverse transition-all duration-200 ease-in-out';
 
 const TOP_LINE_CLASS = `${LINE_CLASS} top-[10px] w-5 group-hover:w-7 group-data-[open=true]:w-7 group-data-[open=true]:translate-y-[3px] group-data-[open=true]:rotate-45`;
 

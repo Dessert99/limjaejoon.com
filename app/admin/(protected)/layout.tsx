@@ -25,12 +25,10 @@ export default async function ProtectedAdminLayout({
 
   if (!isAdmin(claims)) {
     return (
-      <div
-        data-surface='light'
-        className='flex min-h-svh flex-col justify-center bg-background text-foreground'>
-        <div className='mx-auto max-w-content px-gutter'>
-          <h1 className='text-statement'>권한이 없다</h1>
-          <p className='mt-4 text-body-lg text-muted-foreground'>
+      <div className='flex min-h-svh flex-col justify-center bg-blog-background text-blog-foreground scheme-light'>
+        <div className='mx-auto max-w-blog px-blog-gutter'>
+          <h1 className='text-blog-statement'>권한이 없다</h1>
+          <p className='mt-4 text-lg text-blog-muted-foreground'>
             이 계정에는 운영자 권한이 없다.
           </p>
         </div>
@@ -39,9 +37,7 @@ export default async function ProtectedAdminLayout({
   }
 
   return (
-    <div
-      data-surface='light'
-      className='flex min-h-svh flex-col bg-background text-foreground'>
+    <div className='flex min-h-svh flex-col bg-blog-background text-blog-foreground scheme-light'>
       {children}
     </div>
   );

@@ -62,7 +62,7 @@ function TocList({
   activeId: string | null;
 }) {
   return (
-    <ol className='space-y-2 text-body-sm'>
+    <ol className='space-y-2 text-sm'>
       {headings.map((heading) => {
         const active = heading.id === activeId;
 
@@ -74,10 +74,10 @@ function TocList({
               href={`#${heading.id}`}
               aria-current={active ? 'location' : undefined}
               className={cn(
-                'block break-keep transition-colors duration-quick ease-standard',
+                'block break-keep transition-colors duration-200 ease-in-out',
                 active
-                  ? 'text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'text-blog-primary'
+                  : 'text-blog-muted-foreground hover:text-blog-foreground'
               )}>
               {heading.text}
             </a>
@@ -114,7 +114,7 @@ export function PostToc({
         type='button'
         aria-expanded={open}
         aria-controls='post-toc-list'
-        className='w-full rounded-md border border-border px-4 py-2 text-start text-body-sm lg:hidden'
+        className='w-full rounded-lg border border-blog-border px-4 py-2 text-start text-sm lg:hidden'
         onClick={() => {
           setOpen((previous) => {
             return !previous;
@@ -123,7 +123,7 @@ export function PostToc({
         목차
       </button>
 
-      <p className='hidden text-label text-muted-foreground uppercase lg:block'>
+      <p className='hidden text-xs tracking-widest text-blog-muted-foreground uppercase lg:block'>
         목차
       </p>
 

@@ -1,0 +1,34 @@
+@theme static {
+  --color-blog-background: var(--color-white);
+  --color-blog-foreground: var(--color-zinc-950);
+  --color-blog-card: var(--color-zinc-50);
+  --color-blog-card-foreground: var(--color-zinc-950);
+  --color-blog-popover: var(--color-white);
+  --color-blog-popover-foreground: var(--color-zinc-950);
+  --color-blog-primary: var(--color-yellow-700);
+  --color-blog-primary-foreground: var(--color-white);
+  --color-blog-secondary: var(--color-zinc-100);
+  --color-blog-secondary-foreground: var(--color-zinc-950);
+  --color-blog-muted: var(--color-zinc-100);
+  --color-blog-muted-foreground: var(--color-zinc-600);
+  --color-blog-accent: var(--color-zinc-100);
+  --color-blog-accent-foreground: var(--color-zinc-950);
+  --color-blog-destructive: var(--color-red-800);
+  --color-blog-destructive-foreground: var(--color-white);
+  --color-blog-overlay: var(--color-black);
+  --color-blog-border: var(--color-zinc-200);
+  --color-blog-input: var(--color-zinc-400);
+  --color-blog-ring: var(--color-yellow-700);
+
+  --spacing-blog-gutter: clamp(1.25rem, 4vw, 3rem);
+  --spacing-blog-section: clamp(6rem, 12vw, 12rem);
+  --spacing-blog-section-sm: clamp(3rem, 6vw, 6rem);
+  --spacing-blog-grid-gap: clamp(1.5rem, 3vw, 3rem);
+
+  --container-blog: 72rem;
+  --container-blog-wide: 90rem;
+
+  --text-blog-statement: clamp(1.75rem, 1.5rem + 1.25vw, 3rem);
+  --text-blog-statement--line-height: 1.25;
+  --text-blog-statement--letter-spacing: -0.01em;
+}

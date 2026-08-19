@@ -16,12 +16,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
+} from '@/views/blog/components/ui/alert-dialog';
+import { Button, buttonVariants } from '@/views/blog/components/ui/button';
+import { Input } from '@/views/blog/components/ui/input';
+import { Label } from '@/views/blog/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/views/blog/components/ui/tabs';
+import { Textarea } from '@/views/blog/components/ui/textarea';
 import { MarkdownPreview } from '../MarkdownPreview/MarkdownPreview';
 import { SlugField } from '../SlugField/SlugField';
 import { TagPicker } from '../TagPicker/TagPicker';
@@ -115,8 +115,8 @@ export function PostEditor({
   };
 
   return (
-    <main className='grow py-section-sm'>
-      <div className='mx-auto max-w-wide px-gutter'>
+    <main className='grow py-blog-section-sm'>
+      <div className='mx-auto max-w-blog-wide px-blog-gutter'>
         <div className='flex flex-wrap items-center justify-between gap-4'>
           <h1 className='text-3xl font-semibold'>
             {isEditing ? '글 수정' : '새 글'}
@@ -174,7 +174,7 @@ export function PostEditor({
         {error ? (
           <p
             role='alert'
-            className='mt-4 text-body-sm text-destructive'>
+            className='mt-4 text-sm text-blog-destructive'>
             {error}
           </p>
         ) : null}
@@ -229,7 +229,7 @@ export function PostEditor({
             <div className='flex items-center gap-2'>
               <Label
                 htmlFor='post-image'
-                className='text-muted-foreground'>
+                className='text-blog-muted-foreground'>
                 이미지 삽입
               </Label>
               <Input
@@ -267,7 +267,7 @@ export function PostEditor({
               ref={bodyRef}
               value={draft.contentMarkdown}
               rows={28}
-              className='font-mono text-body-sm'
+              className='font-mono text-sm'
               onChange={(event) => {
                 setField('contentMarkdown', event.target.value);
               }}
@@ -275,7 +275,7 @@ export function PostEditor({
           </TabsContent>
 
           <TabsContent value='preview'>
-            <div className='rounded-md border border-border p-6'>
+            <div className='rounded-lg border border-blog-border p-6'>
               <div className='max-w-[54rem]'>
                 <MarkdownPreview markdown={draft.contentMarkdown} />
               </div>

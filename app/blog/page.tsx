@@ -28,8 +28,8 @@ export default async function BlogPage() {
   const posts = await getPosts(createSupabaseStaticClient());
 
   return (
-    <main className='grow pt-section-sm pb-section'>
-      <div className='mx-auto max-w-content px-gutter'>
+    <main className='grow pt-blog-section-sm pb-blog-section'>
+      <div className='mx-auto max-w-blog px-blog-gutter'>
         <BlogAdminActions />
         <PostBrowser
           posts={posts}

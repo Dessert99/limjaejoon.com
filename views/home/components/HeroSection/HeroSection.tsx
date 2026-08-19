@@ -5,7 +5,7 @@ import { HeroMarquee } from './HeroMarquee';
 const TITLE_ID = 'hero-title';
 
 const FADE_CLASS =
-  'pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-b from-transparent to-background';
+  'pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-b from-transparent to-home-background';
 
 export function HeroSection() {
   return (
@@ -18,7 +18,7 @@ export function HeroSection() {
         fill
         priority
         sizes='100vw'
-        className='z-(--ds-z-base) object-cover'
+        className='z-(--z-base) object-cover'
       />
 
       <div

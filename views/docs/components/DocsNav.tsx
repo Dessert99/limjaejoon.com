@@ -2,13 +2,13 @@ import { SITE_ROUTES } from '@/config/site';
 import { TransitionLink } from '@/components/transition/TransitionLink';
 
 const NAV_CLASS =
-  'sticky top-0 z-(--ds-z-sticky) flex items-center gap-6 border-b border-border bg-card px-gutter py-4';
+  'sticky top-0 z-(--z-sticky) flex items-center gap-6 border-b border-docs-border bg-docs-card px-docs-gutter py-4';
 
 const BRAND_CLASS =
-  'mr-auto text-label tracking-widest text-muted-foreground uppercase';
+  'mr-auto text-xs tracking-widest text-docs-muted-foreground uppercase';
 
 const LINK_CLASS =
-  'text-body font-medium text-foreground transition-colors duration-quick ease-standard hover:text-primary';
+  'text-base font-medium text-docs-foreground transition-colors duration-200 ease-in-out hover:text-docs-primary';
 
 export function DocsNav() {
   return (

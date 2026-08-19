@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useIsAdmin } from '@/lib/auth/useIsAdmin';
 import { SignOutButton } from './SignOutButton';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/views/blog/components/ui/button';
 
 export function BlogAdminActions() {
   const admin = useIsAdmin();

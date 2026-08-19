@@ -1,0 +1,21 @@
+@theme static {
+  --color-home-background: var(--color-stone-950);
+  --color-home-foreground: var(--color-stone-50);
+  --color-home-card: var(--color-stone-900);
+  --color-home-primary: var(--color-yellow-500);
+  --color-home-inverse: var(--color-stone-950);
+
+  --spacing-home-gutter: clamp(1.25rem, 4vw, 3rem);
+
+  --text-home-statement: clamp(1.75rem, 1.5rem + 1.25vw, 3rem);
+  --text-home-statement--line-height: 1.25;
+  --text-home-statement--letter-spacing: -0.01em;
+
+  --text-home-intro: clamp(2.5rem, 2rem + 2.5vw, 5rem);
+  --text-home-intro--line-height: 1.05;
+  --text-home-intro--letter-spacing: -0.02em;
+
+  --text-hero: clamp(3.5rem, 1.8rem + 8.5vw, 12rem);
+  --text-hero--line-height: 0.9;
+  --text-hero--letter-spacing: -0.04em;
+}

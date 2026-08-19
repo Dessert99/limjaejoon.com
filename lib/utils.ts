@@ -1,27 +1,17 @@
 import { clsx, type ClassValue } from 'clsx';
 import { extendTailwindMerge } from 'tailwind-merge';
 
+const isViewToken = (value: string): boolean => {
+  return /^(?:blog|docs|home|lab)(?:-|$)/.test(value);
+};
+
 const twMerge = extendTailwindMerge({
   extend: {
     theme: {
-      text: [
-        'label',
-        'body-sm',
-        'body',
-        'body-lg',
-        'statement',
-        'section',
-        'project',
-        'hero',
-      ],
-      spacing: ['gutter', 'section', 'section-sm', 'grid-gap', 'header'],
-      container: ['content', 'wide'],
-      ease: ['standard', 'enter', 'exit', 'reveal', 'cinematic'],
-    },
-    classGroups: {
-      duration: [
-        { duration: ['instant', 'quick', 'standard', 'slow', 'cinematic'] },
-      ],
+      font: ['display'],
+      text: [isViewToken, 'hero', 'curtain'],
+      spacing: [isViewToken],
+      container: [isViewToken],
     },
   },
 });

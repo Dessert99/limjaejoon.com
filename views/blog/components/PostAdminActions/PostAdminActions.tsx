@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useIsAdmin } from '@/lib/auth/useIsAdmin';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/views/blog/components/ui/button';
 
 export function PostAdminActions({ id }: { id: string }) {
   const admin = useIsAdmin();

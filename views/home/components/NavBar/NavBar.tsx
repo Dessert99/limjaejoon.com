@@ -18,17 +18,17 @@ import {
 
 const FADE = 0.3;
 
-const NAV_CLASS = 'fixed inset-x-0 top-0 px-gutter pt-20';
+const NAV_CLASS = 'fixed inset-x-0 top-0 px-home-gutter pt-20';
 
 const ROW_CLASS = 'flex justify-center';
 
 const ITEM_CLASS =
-  'flex items-center justify-center px-3 py-3 text-body-xl font-medium text-foreground mix-blend-difference';
+  'flex items-center justify-center px-3 py-3 text-xl font-medium text-home-foreground mix-blend-difference';
 
 const SLOT_CLASS =
   'pointer-events-none absolute top-0 left-0 size-44 opacity-0 mix-blend-plus-lighter';
 
-const PATH_CLASS = 'fill-foreground/75';
+const PATH_CLASS = 'fill-home-foreground/75';
 
 export function NavBar({ collapsed }: { collapsed: boolean }) {
   const navRef = useRef<HTMLElement>(null);

@@ -12,8 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
+} from '@/views/blog/components/ui/alert-dialog';
+import { Button } from '@/views/blog/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -21,8 +21,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
+} from '@/views/blog/components/ui/dialog';
+import { Input } from '@/views/blog/components/ui/input';
 import { useTagManager } from '../../lib/useTagManager';
 
 type TagManagerDialogProps = {
@@ -88,7 +88,7 @@ export function TagManagerDialog({
         {error ? (
           <p
             role='alert'
-            className='text-body-sm text-destructive'>
+            className='text-sm text-blog-destructive'>
             {error}
           </p>
         ) : null}
@@ -114,7 +114,7 @@ export function TagManagerDialog({
 
         <ul
           aria-label='태그 목록'
-          className='max-h-80 divide-y divide-border overflow-y-auto'>
+          className='max-h-80 divide-y divide-blog-border overflow-y-auto'>
           {tags.map((tag) => {
             const editing = editingId === tag.id;
             const linked = tag.postCount > 0;
@@ -134,10 +134,10 @@ export function TagManagerDialog({
                     }}
                   />
                 ) : (
-                  <span className='grow text-body-sm'>{tag.name}</span>
+                  <span className='grow text-sm'>{tag.name}</span>
                 )}
 
-                <span className='shrink-0 text-body-sm text-muted-foreground'>
+                <span className='shrink-0 text-sm text-blog-muted-foreground'>
                   글 {tag.postCount}편
                 </span>
 
@@ -213,7 +213,7 @@ export function TagManagerDialog({
         </ul>
 
         {tags.length === 0 ? (
-          <p className='text-body-sm text-muted-foreground'>
+          <p className='text-sm text-blog-muted-foreground'>
             아직 태그가 없다. 위에서 하나 만들어 보자.
           </p>
         ) : null}
