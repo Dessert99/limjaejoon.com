@@ -1,6 +1,7 @@
 import { headers } from 'next/headers';
-import { SITE_URL } from '@/config/site';
 import { fetchJson, type HttpFetchOptions } from './core';
+
+const SITE_URL = 'https://www.limjaejoon.com';
 
 const getRequestOrigin = async (): Promise<string> => {
   const headerStore = await headers();

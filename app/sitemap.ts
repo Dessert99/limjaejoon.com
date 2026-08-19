@@ -1,7 +1,8 @@
 import { getPostSitemapEntries } from '@/views/blog/server/posts';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
-import { SITE_URL } from '@/config/site';
 import type { MetadataRoute } from 'next';
+
+const SITE_URL = 'https://www.limjaejoon.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getPostSitemapEntries(createSupabaseStaticClient());
