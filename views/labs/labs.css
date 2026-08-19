@@ -1,4 +1,24 @@
 @theme static {
-  --color-labs-background: var(--color-stone-950);
-  --color-labs-foreground: var(--color-stone-50);
+  --color-labs-sky: #e3f2fd;
+  --color-labs-ground: #764737;
+
+  --color-labs-pine-25: #363e3a;
+  --color-labs-pine-50: #2f4138;
+  --color-labs-pine-75: #274335;
+  --color-labs-pine-100: #1d4533;
+
+  --color-labs-cream-25: #efece9;
+  --color-labs-cream-50: #f2ebe6;
+  --color-labs-cream-75: #f4ebe3;
+  --color-labs-cream-100: #f7eae0;
+
+  --color-labs-peach-25: #e3d9d3;
+  --color-labs-peach-50: #ead7cb;
+  --color-labs-peach-75: #f2d4c2;
+  --color-labs-peach-100: #f9d2ba;
+
+  --color-labs-bark-25: #483c38;
+  --color-labs-bark-50: #503931;
+  --color-labs-bark-75: #57352a;
+  --color-labs-bark-100: #5e3122;
 }
