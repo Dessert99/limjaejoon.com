@@ -5,14 +5,6 @@ import { gsap, useGSAP } from '@/lib/motion/gsap';
 
 const GREETING = `안녕하세요.\n프론트엔드 개발자,\n임재준입니다.`;
 
-const TYPING = { duration: 2, ease: 'none' } as const;
-
-const SWEEP = { duration: 1.2, ease: 'power2.inOut' } as const;
-
-const HOLD = 0.5;
-
-const CURVE = { flat: '0% 0% 0% 0%', bottom: '0% 0% 50% 50%' } as const;
-
 let played = false;
 
 const OVERLAY_CLASS =
@@ -49,7 +41,8 @@ export function IntroOverlay() {
         gsap
           .timeline()
           .to(typed, {
-            ...TYPING,
+            duration: 2,
+            ease: 'none',
             chars: GREETING.length,
             onUpdate: () => {
               text.textContent = GREETING.slice(0, Math.round(typed.chars));
@@ -57,13 +50,14 @@ export function IntroOverlay() {
           })
           .fromTo(
             root,
-            { borderRadius: CURVE.flat },
+            { borderRadius: '0% 0% 0% 0%' },
             {
               yPercent: -100,
-              borderRadius: CURVE.bottom,
-              ...SWEEP,
+              borderRadius: '0% 0% 50% 50%',
+              duration: 1.2,
+              ease: 'power2.inOut',
             },
-            `+=${HOLD}`
+            '+=0.5'
           );
       });
 

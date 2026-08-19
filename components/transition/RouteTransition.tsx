@@ -6,14 +6,6 @@ import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { routeLabel } from './routeLabel';
 
-const SWEEP = { duration: 1, ease: 'power2.inOut' } as const;
-
-const CURVE = {
-  flat: '0% 0% 0% 0%',
-  bottom: '0% 0% 50% 50%',
-  top: '50% 50% 0% 0%',
-} as const;
-
 const CURTAIN_CLASS =
   'fixed inset-x-0 bottom-full z-(--z-transition) flex h-dvh items-center justify-center bg-root-background';
 
@@ -56,11 +48,12 @@ export function RouteTransition({ children }: { children: ReactNode }) {
 
     const tween = gsap.fromTo(
       curtain,
-      { borderRadius: CURVE.bottom },
+      { borderRadius: '0% 0% 50% 50%' },
       {
-        ...SWEEP,
+        duration: 1,
+        ease: 'power2.inOut',
         yPercent: 100,
-        borderRadius: CURVE.flat,
+        borderRadius: '0% 0% 0% 0%',
         onComplete: () => {
           setPhase('navigating');
           router.push(hrefRef.current);
@@ -86,11 +79,12 @@ export function RouteTransition({ children }: { children: ReactNode }) {
 
     const tween = gsap.fromTo(
       curtain,
-      { borderRadius: CURVE.flat },
+      { borderRadius: '0% 0% 0% 0%' },
       {
-        ...SWEEP,
+        duration: 1,
+        ease: 'power2.inOut',
         yPercent: 200,
-        borderRadius: CURVE.top,
+        borderRadius: '50% 50% 0% 0%',
         onComplete: () => {
           gsap.set(curtain, { yPercent: 0 });
           setPhase('idle');
