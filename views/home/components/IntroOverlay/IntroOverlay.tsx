@@ -37,6 +37,8 @@ export function IntroOverlay() {
 
       media.add('(prefers-reduced-motion: no-preference)', () => {
         const typed = { chars: 0 };
+        const track = document.querySelector('[data-marquee-track]');
+        const panels = document.querySelectorAll('[data-glass-panel]');
 
         gsap
           .timeline()
@@ -55,9 +57,27 @@ export function IntroOverlay() {
               yPercent: -100,
               borderRadius: '0% 0% 50% 50%',
               duration: 1.2,
-              ease: 'power2.inOut',
+              ease: 'power3.inOut',
             },
             '+=0.5'
+          )
+          // 끝의 '<' 숫자를 키우면 머퀴가 커튼을 더 늦게 따라 올라온다
+          .from(
+            track,
+            { yPercent: 120, duration: 1, ease: 'power3.out' },
+            '<0.2'
+          )
+          // back.out 괄호 안 숫자를 키우면 패널이 더 크게 튄다
+          .from(
+            panels,
+            {
+              scale: 0.4,
+              opacity: 0,
+              duration: 0.7,
+              ease: 'back.out(1)',
+              stagger: 0.12,
+            },
+            '<0.35'
           );
       });
 
