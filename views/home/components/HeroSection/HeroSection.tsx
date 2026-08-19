@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { HeroNav } from '../HeroNav/HeroNav';
 import { HeroPanel } from '../HeroPanel/HeroPanel';
 import { HeroMarquee } from './HeroMarquee';
 
@@ -26,7 +27,9 @@ export function HeroSection() {
         className={FADE_CLASS}
       />
 
-      <div className='z-(--z-content) flex flex-1 justify-end p-home-gutter pe-16'>
+      <div className='z-(--z-content) flex flex-1 flex-col items-end justify-between p-home-gutter pe-16'>
+        <HeroNav />
+
         <HeroPanel />
       </div>
 
