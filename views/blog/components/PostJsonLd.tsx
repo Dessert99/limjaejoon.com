@@ -1,5 +1,3 @@
-import { SITE, SITE_URL } from '@/config/site';
-import { OG_IMAGE_PATH } from '@/lib/seo';
 import type { Post } from '../lib/post.types';
 
 export function PostJsonLd({ post }: { post: Post }) {
@@ -10,10 +8,14 @@ export function PostJsonLd({ post }: { post: Post }) {
     description: post.description,
     datePublished: post.published_at,
     dateModified: post.updated_at,
-    author: { '@type': 'Person', name: SITE.name, url: SITE_URL },
+    author: {
+      '@type': 'Person',
+      name: '재준',
+      url: 'https://www.limjaejoon.com',
+    },
     keywords: post.tags,
-    image: `${SITE_URL}${OG_IMAGE_PATH}`,
-    mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+    image: 'https://www.limjaejoon.com/opengraph-image.png',
+    mainEntityOfPage: `https://www.limjaejoon.com/blog/${post.slug}`,
   };
 
   return (

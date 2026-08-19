@@ -1,5 +1,4 @@
 import { Badge } from '@/views/blog/components/ui/badge';
-import { SITE_OPEN_GRAPH } from '@/lib/seo';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
 import { PostAdminActions } from '@/views/blog/components/PostAdminActions/PostAdminActions';
 import { PostContent } from '@/views/blog/components/PostContent';
@@ -55,13 +54,21 @@ export const generateMetadata = async (
     description: post.description,
     alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
-      ...SITE_OPEN_GRAPH,
       type: 'article',
+      locale: 'ko_KR',
       title: post.title,
       description: post.description,
       url: `/blog/${post.slug}`,
       publishedTime: post.published_at ?? undefined,
       tags: [...post.tags],
+      images: [
+        {
+          url: '/opengraph-image.png',
+          width: 1200,
+          height: 630,
+          alt: 'limjaejoon blog',
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
