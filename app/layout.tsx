@@ -1,5 +1,6 @@
 import '@/styles/global.css';
 import { SITE, SITE_URL } from '@/config/site';
+import { SITE_OPEN_GRAPH } from '@/lib/seo';
 import { pretendard } from '@/styles/fonts';
 import { RouteTransition } from '@/components/transition/RouteTransition';
 import type { Metadata } from 'next';
@@ -12,15 +13,15 @@ export const metadata: Metadata = {
     default: pageTitle,
     template: `%s | ${SITE.name}`,
   },
+  description: SITE.description,
   openGraph: {
+    ...SITE_OPEN_GRAPH,
     type: 'website',
-    locale: 'ko_KR',
     url: SITE_URL,
-    siteName: SITE.name,
     title: pageTitle,
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: pageTitle,
   },
 };

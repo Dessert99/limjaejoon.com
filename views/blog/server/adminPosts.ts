@@ -126,7 +126,7 @@ export const updateAdminPost = async (
 ): Promise<Post> => {
   const { data, error } = await client
     .from('posts')
-    .update(toColumns(input))
+    .update({ ...toColumns(input), updated_at: new Date().toISOString() })
     .eq('id', id)
     .select('*')
     .single();

@@ -61,6 +61,21 @@ export const getPostSlugs = async (
   );
 };
 
+export const getPostSitemapEntries = async (
+  client: SupabaseClient<Database>
+): Promise<{ slug: string; updated_at: string }[]> => {
+  const { data, error } = await client
+    .from('posts')
+    .select('slug, updated_at')
+    .order('published_at', { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+};
+
 export const getPostBySlug = async (
   client: SupabaseClient<Database>,
   slug: string

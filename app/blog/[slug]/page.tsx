@@ -1,7 +1,9 @@
 import { Badge } from '@/components/ui/badge';
+import { SITE_OPEN_GRAPH } from '@/lib/seo';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
 import { PostAdminActions } from '@/views/blog/components/PostAdminActions/PostAdminActions';
 import { PostContent } from '@/views/blog/components/PostContent';
+import { PostJsonLd } from '@/views/blog/components/PostJsonLd';
 import { PostNav } from '@/views/blog/components/PostNav/PostNav';
 import { PostToc } from '@/views/blog/components/PostToc/PostToc';
 import { extractHeadings } from '@/views/blog/lib/extractHeadings';
@@ -51,7 +53,9 @@ export const generateMetadata = async (
   return {
     title: post.title,
     description: post.description,
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
+      ...SITE_OPEN_GRAPH,
       type: 'article',
       title: post.title,
       description: post.description,
@@ -60,7 +64,7 @@ export const generateMetadata = async (
       tags: [...post.tags],
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title: post.title,
       description: post.description,
     },
@@ -86,6 +90,8 @@ export default async function BlogPostPage(context: RouteContext) {
     <main className='grow pt-section-sm pb-section'>
       <div className='mx-auto max-w-wide px-gutter'>
         <article>
+          <PostJsonLd post={post} />
+
           <header className={COLUMN}>
             <h1 className='text-3xl font-semibold break-keep sm:text-4xl'>
               {post.title}

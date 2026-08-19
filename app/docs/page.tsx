@@ -1,9 +1,11 @@
+import { buildPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: '소개',
   description: '어떤 문제를 어떻게 풀어 왔는지',
-};
+  path: '/docs',
+});
 
 export default function DocsPage() {
   return (

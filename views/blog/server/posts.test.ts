@@ -1,7 +1,12 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 import type { Database } from '@/lib/supabase/database.types';
-import { getPostBySlug, getPosts, getPostSlugs } from './posts';
+import {
+  getPostBySlug,
+  getPosts,
+  getPostSitemapEntries,
+  getPostSlugs,
+} from './posts';
 
 const listRows = [
   {
@@ -147,6 +152,14 @@ describe('post fetchers', () => {
     expect(from).toHaveBeenCalledWith('posts');
     expect(select).toHaveBeenCalledWith('slug');
     expect(order).toHaveBeenCalledWith('published_at', { ascending: false });
+  });
+
+  it('사이트맵용으로 slug 와 수정 시각을 함께 조회한다', async () => {
+    const rows = [{ slug: 'newer-post', updated_at: '2026-04-03T00:00:00Z' }];
+    const { client, select } = makeSlugClient({ data: rows, error: null });
+
+    await expect(getPostSitemapEntries(client)).resolves.toEqual(rows);
+    expect(select).toHaveBeenCalledWith('slug, updated_at');
   });
 
   it('Supabase 쿼리 에러는 호출 측으로 전파한다', async () => {
