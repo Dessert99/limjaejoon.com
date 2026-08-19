@@ -1,5 +1,11 @@
-import { SITE_ROUTES } from '@/config/site';
 import { TransitionLink } from '@/components/transition/TransitionLink';
+
+const ROUTES = [
+  { label: 'Home', href: '/' },
+  { label: 'Docs', href: '/docs' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Labs', href: '/lab' },
+] as const;
 
 const NAV_CLASS =
   'sticky top-0 z-(--z-sticky) flex items-center gap-6 border-b border-docs-border bg-docs-card px-docs-gutter py-4';
@@ -17,7 +23,7 @@ export function DocsNav() {
       className={NAV_CLASS}>
       <span className={BRAND_CLASS}>docs</span>
 
-      {SITE_ROUTES.map((route) => {
+      {ROUTES.map((route) => {
         return (
           <TransitionLink
             key={route.href}

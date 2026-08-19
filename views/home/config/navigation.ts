@@ -1,5 +1,5 @@
-import { SITE_ROUTES } from '@/config/site';
-
-export const SITE_NAV = SITE_ROUTES.filter((route) => {
-  return route.href !== '/';
-});
+export const SITE_NAV = [
+  { label: 'Docs', href: '/docs' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Labs', href: '/lab' },
+] as const;
