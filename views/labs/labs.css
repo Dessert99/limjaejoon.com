@@ -1,0 +1,4 @@
+@theme static {
+  --color-labs-background: var(--color-stone-950);
+  --color-labs-foreground: var(--color-stone-50);
+}
