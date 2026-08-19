@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import { HERO } from '../../config/hero';
+import { HeroNav } from '../HeroNav/HeroNav';
+import { HeroPanel } from '../HeroPanel/HeroPanel';
 import { HeroMarquee } from './HeroMarquee';
 
 const TITLE_ID = 'hero-title';
@@ -13,8 +14,8 @@ export function HeroSection() {
       aria-labelledby={TITLE_ID}
       className='relative flex min-h-svh flex-col justify-end overflow-hidden pb-6'>
       <Image
-        src={HERO.portrait.src}
-        alt={HERO.portrait.alt}
+        src='/images/meme.jpeg'
+        alt='유럽 구도심 골목에 선 임재준'
         fill
         priority
         sizes='100vw'
@@ -26,8 +27,14 @@ export function HeroSection() {
         className={FADE_CLASS}
       />
 
+      <div className='z-(--z-content) flex flex-1 flex-col items-end justify-between p-home-gutter pe-16'>
+        <HeroNav />
+
+        <HeroPanel />
+      </div>
+
       <HeroMarquee
-        text={HERO.headline}
+        text='DESIGN ENGINEER'
         titleId={TITLE_ID}
       />
     </section>

@@ -1,16 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { INTRO_GREETING } from '../../config/intro';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
 
-const TYPING = { duration: 2, ease: 'none' } as const;
-
-const SWEEP = { duration: 1.2, ease: 'power2.inOut' } as const;
-
-const HOLD = 0.5;
-
-const CURVE = { flat: '0% 0% 0% 0%', bottom: '0% 0% 50% 50%' } as const;
+const GREETING = `안녕하세요.\n프론트엔드 개발자,\n임재준입니다.`;
 
 let played = false;
 
@@ -48,24 +41,23 @@ export function IntroOverlay() {
         gsap
           .timeline()
           .to(typed, {
-            ...TYPING,
-            chars: INTRO_GREETING.length,
+            duration: 2,
+            ease: 'none',
+            chars: GREETING.length,
             onUpdate: () => {
-              text.textContent = INTRO_GREETING.slice(
-                0,
-                Math.round(typed.chars)
-              );
+              text.textContent = GREETING.slice(0, Math.round(typed.chars));
             },
           })
           .fromTo(
             root,
-            { borderRadius: CURVE.flat },
+            { borderRadius: '0% 0% 0% 0%' },
             {
               yPercent: -100,
-              borderRadius: CURVE.bottom,
-              ...SWEEP,
+              borderRadius: '0% 0% 50% 50%',
+              duration: 1.2,
+              ease: 'power2.inOut',
             },
-            `+=${HOLD}`
+            '+=0.5'
           );
       });
 

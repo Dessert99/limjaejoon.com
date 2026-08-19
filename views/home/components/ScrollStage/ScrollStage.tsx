@@ -3,8 +3,6 @@
 import { useRef, type ReactNode } from 'react';
 import { ScrollSmoother, gsap, useGSAP } from '@/lib/motion/gsap';
 
-const SMOOTH = 1.2;
-
 export function ScrollStage({ children }: { children: ReactNode }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -13,7 +11,7 @@ export function ScrollStage({ children }: { children: ReactNode }) {
       const media = gsap.matchMedia();
 
       media.add('(prefers-reduced-motion: no-preference)', () => {
-        ScrollSmoother.create({ smooth: SMOOTH, effects: true });
+        ScrollSmoother.create({ smooth: 1.2, effects: true });
       });
 
       return () => {
