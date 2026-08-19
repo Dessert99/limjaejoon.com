@@ -1,11 +1,25 @@
-import { buildPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = buildPageMetadata({
-  title: '소개',
-  description: '어떤 문제를 어떻게 풀어 왔는지',
-  path: '/docs',
-});
+export const metadata: Metadata = {
+  title: 'jaejoon docs',
+  description: '재준 닷컴의 모든 것',
+  alternates: { canonical: '/docs' },
+  openGraph: {
+    type: 'website',
+    locale: 'ko_KR',
+    url: '/docs',
+    title: 'jaejoon docs',
+    description: '재준 닷컴의 모든 것',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'limjaejoon docs',
+      },
+    ],
+  },
+};
 
 export default function DocsPage() {
   return (

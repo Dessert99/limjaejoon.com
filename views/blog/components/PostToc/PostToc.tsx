@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { PostHeading } from '../../lib/extractHeadings';
-import { cn } from '@/lib/utils';
+import { clsx } from 'clsx';
 
 const ACTIVE_BAND = '-96px 0px -70% 0px';
 
@@ -69,11 +69,11 @@ function TocList({
         return (
           <li
             key={heading.id}
-            className={cn(heading.depth === 3 && 'ps-4')}>
+            className={heading.depth === 3 ? 'ps-4' : undefined}>
             <a
               href={`#${heading.id}`}
               aria-current={active ? 'location' : undefined}
-              className={cn(
+              className={clsx(
                 'block break-keep transition-colors duration-200 ease-in-out',
                 active
                   ? 'text-blog-primary'
@@ -129,7 +129,7 @@ export function PostToc({
 
       <div
         id='post-toc-list'
-        className={cn(
+        className={clsx(
           'mt-4 lg:max-h-[calc(100svh-12rem)] lg:overflow-y-auto',
           !open && 'hidden lg:block'
         )}>
