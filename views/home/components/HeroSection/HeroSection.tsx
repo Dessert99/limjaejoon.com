@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { HERO } from '../../config/hero';
 import { HeroPanel } from '../HeroPanel/HeroPanel';
 import { HeroMarquee } from './HeroMarquee';
 
@@ -14,8 +13,8 @@ export function HeroSection() {
       aria-labelledby={TITLE_ID}
       className='relative flex min-h-svh flex-col justify-end overflow-hidden pb-6'>
       <Image
-        src={HERO.portrait.src}
-        alt={HERO.portrait.alt}
+        src='/images/meme.jpeg'
+        alt='유럽 구도심 골목에 선 임재준'
         fill
         priority
         sizes='100vw'
@@ -32,7 +31,7 @@ export function HeroSection() {
       </div>
 
       <HeroMarquee
-        text={HERO.headline}
+        text='DESIGN ENGINEER'
         titleId={TITLE_ID}
       />
     </section>

@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { INTRO_GREETING } from '../../config/intro';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
+
+const GREETING = `안녕하세요.\n프론트엔드 개발자,\n임재준입니다.`;
 
 const TYPING = { duration: 2, ease: 'none' } as const;
 
@@ -49,12 +50,9 @@ export function IntroOverlay() {
           .timeline()
           .to(typed, {
             ...TYPING,
-            chars: INTRO_GREETING.length,
+            chars: GREETING.length,
             onUpdate: () => {
-              text.textContent = INTRO_GREETING.slice(
-                0,
-                Math.round(typed.chars)
-              );
+              text.textContent = GREETING.slice(0, Math.round(typed.chars));
             },
           })
           .fromTo(
