@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { HERO } from '../../config/hero';
+import { HeroPanel } from '../HeroPanel/HeroPanel';
 import { HeroMarquee } from './HeroMarquee';
 
 const TITLE_ID = 'hero-title';
@@ -25,6 +26,10 @@ export function HeroSection() {
         aria-hidden='true'
         className={FADE_CLASS}
       />
+
+      <div className='z-(--z-content) flex flex-1 justify-end p-home-gutter pe-16'>
+        <HeroPanel />
+      </div>
 
       <HeroMarquee
         text={HERO.headline}

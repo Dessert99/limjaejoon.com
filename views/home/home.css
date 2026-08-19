@@ -2,6 +2,10 @@
   --color-home-background: var(--color-stone-950);
   --color-home-foreground: var(--color-stone-50);
 
+  --color-home-glass: color-mix(in oklab, var(--color-home-foreground) 18%, transparent);
+  --color-home-glass-border: color-mix(in oklab, var(--color-home-foreground) 26%, transparent);
+  --color-home-glass-shadow: color-mix(in oklab, var(--color-home-background) 20%, transparent);
+
   --spacing-home-gutter: clamp(1.25rem, 4vw, 3rem);
 
   --text-home-intro: clamp(2.5rem, 2rem + 2.5vw, 5rem);
