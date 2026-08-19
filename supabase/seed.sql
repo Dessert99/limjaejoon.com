@@ -1,4 +1,3 @@
--- db reset 시 마이그레이션 이후 자동 실행되는 더미 데이터 (학습용)
 insert into public.users (email, display_name) values
   ('jaejoon@limjaejoon.com', '임재준'),
   ('ada@example.com', 'Ada Lovelace'),
@@ -50,7 +49,6 @@ insert into public.tags (name) values
   ('MDX'),
   ('Blog');
 
--- 태그는 글과 따로 서므로 연결도 따로 넣는다 — slug·name 으로 이어 id 를 손으로 적지 않는다
 insert into public.post_tags (post_id, tag_id)
 select posts.id, tags.id
 from (values
@@ -61,7 +59,3 @@ from (values
 ) as link(slug, name)
 join public.posts on posts.slug = link.slug
 join public.tags on tags.name = link.name;
-
--- 어드민 계정 부트스트랩은 seed.sql 에 두지 않는다. 이 파일은 `db push --include-seed`·`db reset --linked`
--- 로 원격에서도 실행될 수 있어, 공개 레포의 고정 비밀번호 어드민이 프로덕션에 생길 위험이 있다.
--- 로컬 어드민은 원격에 닿을 수 없는 별도 경로로만 만든다: `npm run auth:seed-admin-local` (supabase/seed-local-admin.sql).

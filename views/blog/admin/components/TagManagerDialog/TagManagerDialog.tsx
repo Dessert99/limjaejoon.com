@@ -1,6 +1,5 @@
 'use client';
 
-/** 태그 관리 모달 — 글을 쓰다 태그가 아쉬울 때 그 자리에서 고친다 */
 import { useState } from 'react';
 import type { TagWithUsage } from '../../../lib/tag.types';
 import {
@@ -46,7 +45,6 @@ export function TagManagerDialog({
     setEditingName(tag.name);
   };
 
-  // 실패했는데 편집을 닫거나 입력을 비우면 친 값이 사라진다 — 중복 이름 409 에서 바로 겪는다
   const commitEditing = async () => {
     if (!editingId || !editingName.trim()) {
       return;
@@ -179,7 +177,6 @@ export function TagManagerDialog({
 
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        {/* 비활성은 편의일 뿐이다 — 억지로 눌러도 FK 가 거부한다 */}
                         <Button
                           type='button'
                           size='sm'

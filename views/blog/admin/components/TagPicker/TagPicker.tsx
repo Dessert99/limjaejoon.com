@@ -1,6 +1,5 @@
 'use client';
 
-/** 글의 태그 선택 — 등록된 것만 고른다. 새로 필요하면 옆의 관리 모달에서 만든다 */
 import type { TagWithUsage } from '../../../lib/tag.types';
 import { TagManagerDialog } from '../TagManagerDialog/TagManagerDialog';
 import { Badge } from '@/components/ui/badge';

@@ -1,4 +1,3 @@
-/** 커튼 라벨 테스트 — 어떤 경로가 와도 표시할 이름이 나온다는 계약을 검증한다 */
 import { describe, expect, it } from 'vitest';
 import { routeLabel } from './routeLabel';
 

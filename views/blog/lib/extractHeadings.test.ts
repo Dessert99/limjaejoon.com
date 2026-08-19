@@ -1,4 +1,3 @@
-/** extractHeadings 테스트 — 목차 항목과 rehype-slug 호환 슬러그 계약을 검증한다 */
 import GithubSlugger from 'github-slugger';
 import { describe, expect, it } from 'vitest';
 import { extractHeadings } from './extractHeadings';
@@ -54,7 +53,6 @@ describe('extractHeadings', () => {
   });
 
   it('슬러그는 rehype-slug 와 같은 구현으로 만든다', () => {
-    // 앵커가 맞으려면 목차와 본문이 같은 규칙으로 id 를 지어야 한다
     const text = 'Next.js 16 & Tailwind v4';
     const slugger = new GithubSlugger();
 

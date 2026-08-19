@@ -1,6 +1,5 @@
 'use client';
 
-/** 글 편집 폼 상태 — plain state 로 관리한다(useSignIn 과 같은 방식, RHF 미사용) */
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { deletePost } from './deletePost';
@@ -16,7 +15,6 @@ const readMessage = (error: unknown): string => {
   return error instanceof Error ? error.message : '요청에 실패했다';
 };
 
-/** 편집 대상이 있으면 수정, 없으면 새 글로 동작한다 */
 export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
   const router = useRouter();
   const [draft, setDraft] = useState<PostDraft>(initial?.draft ?? EMPTY_DRAFT);
@@ -40,7 +38,6 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
       const destination = await action();
 
       router.push(destination);
-      // 목적지의 서버 컴포넌트가 방금 바뀐 내용을 다시 읽게 한다
       router.refresh();
     } catch (caught) {
       setError(readMessage(caught));
@@ -56,14 +53,11 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
         initial?.id
       );
 
-      // 응답의 slug 를 쓴다 — 폼에 친 값이 아니라 서버가 실제로 저장한 값이다
       return `/blog/${post.slug}`;
     });
   };
 
-  /** 글을 지운다 — 되돌릴 수 없어 호출 측이 확인 단계를 거친 뒤에만 부른다 */
   const remove = async () => {
-    // 새 글에는 지울 대상이 없다
     if (!initial) {
       return;
     }
@@ -75,7 +69,6 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
     });
   };
 
-  /** 이미지를 올리고 본문 커서 자리에 Markdown 문법으로 끼운다 */
   const insertImage = async (file: File, at: number) => {
     setPending(true);
     setError(null);

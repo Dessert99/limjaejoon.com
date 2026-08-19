@@ -3,7 +3,6 @@ import { cleanup } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll } from 'vitest';
 import { server } from '@/lib/mocks/server';
 
-// MSW 목 서버: 테스트 전체에서 켜고, 핸들링 안 된 요청은 에러로 드러낸다.
 beforeAll(() => {
   return server.listen({ onUnhandledRequest: 'error' });
 });
@@ -14,14 +13,10 @@ afterAll(() => {
   return server.close();
 });
 
-// globals:false 라 RTL 자동 cleanup 이 안 걸린다 — 각 테스트 후 수동 언마운트.
 afterEach(() => {
   cleanup();
 });
 
-// jsdom 에는 matchMedia 가 없다 — gsap.matchMedia() 가 마운트 단계에서 터진다.
-// 전부 false 로 답해 (prefers-reduced-motion: no-preference) 가 안 걸리게 한다
-// — 테스트는 마크업 계약만 보고 애니메이션 생성은 브라우저 몫으로 남긴다.
 globalThis.matchMedia = ((query: string) => {
   return {
     matches: false,
@@ -37,9 +32,6 @@ globalThis.matchMedia = ((query: string) => {
   };
 }) as unknown as typeof matchMedia;
 
-// jsdom 에는 IntersectionObserver 가 없다 — 목차의 활성 절 추적이 마운트 단계에서 터진다.
-// 아무것도 관찰하지 않는 빈 구현이다: 교차 판정은 브라우저 몫이고, 판정을 받은 뒤의 규칙만
-// 테스트가 직접 콜백을 불러 검증한다(PostToc.test.tsx 가 이 전역을 자기 것으로 덮는다).
 globalThis.IntersectionObserver = class {
   readonly root = null;
   readonly rootMargin = '';
@@ -52,8 +44,6 @@ globalThis.IntersectionObserver = class {
   }
 } as unknown as typeof IntersectionObserver;
 
-// jsdom 29 에는 dialog 의 showModal·close 가 없다 — open 속성만 토글하는 최소 폴리필로 대체한다.
-// 포커스 가둠·Escape·backdrop 은 브라우저가 하는 일이라 흉내 내지 않는다 — 실제 브라우저에서 눈으로 본다.
 const dialogPrototype = globalThis.HTMLDialogElement?.prototype;
 
 if (dialogPrototype && typeof dialogPrototype.showModal !== 'function') {

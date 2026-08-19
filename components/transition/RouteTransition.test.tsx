@@ -1,4 +1,3 @@
-/** 라우트 전환 커튼 테스트 — 어떤 이동이 커튼을 타고 어떤 이동이 그냥 흐르는지 검증한다 */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';

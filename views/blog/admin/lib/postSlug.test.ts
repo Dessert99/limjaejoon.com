@@ -1,4 +1,3 @@
-/** postSlug 테스트 — 날짜와 주제가 slug 로 합쳐지고 다시 갈라지는 왕복이 계약이다 */
 import { describe, expect, it } from 'vitest';
 import { composeSlug, parseSlug, toPublishedAt } from './postSlug';
 
@@ -14,7 +13,6 @@ describe('composeSlug', () => {
   });
 
   it('주제가 비면 날짜만 남긴다', () => {
-    // 주제를 아직 안 정했어도 slug 가 깨진 문자열이 되면 안 된다
     expect(composeSlug('2026-08-29', '')).toBe('2026-08-29');
   });
 
@@ -39,7 +37,6 @@ describe('parseSlug', () => {
   });
 
   it('날짜로 시작하지 않으면 전부 주제로 본다', () => {
-    // 규칙 밖에서 만들어진 옛 slug 를 편집해도 값이 사라지면 안 된다
     expect(parseSlug('hello-world')).toEqual({
       date: '',
       topic: 'hello-world',
@@ -57,7 +54,6 @@ describe('toPublishedAt', () => {
   });
 
   it('날짜가 비면 빈 문자열을 돌려준다', () => {
-    // 비면 저장 시각으로 메우는 건 toUpsertInput 의 몫이라 여기서 정하지 않는다
     expect(toPublishedAt('')).toBe('');
   });
 });

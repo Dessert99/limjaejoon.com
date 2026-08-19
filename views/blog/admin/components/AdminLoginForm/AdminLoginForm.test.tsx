@@ -1,4 +1,3 @@
-/** AdminLoginForm 테스트 — 제출이 로그인을 시도하고, 실패는 폼에 머무는지 검증한다 */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -15,7 +14,6 @@ vi.mock('next/navigation', () => {
   };
 });
 
-// browser client 를 갈아 끼워 실제 signIn·useSignIn 을 그대로 태운다
 vi.mock('@/lib/supabase/client', () => {
   return {
     createSupabaseBrowserClient: () => {

@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Database } from '@/lib/supabase/database.types';
 import { getPostBySlug, getPosts, getPostSlugs } from './posts';
 
-/** 조인이 실제로 돌려주는 모양 — 연결마다 tags 한 겹이 딸려 온다 */
 const listRows = [
   {
     id: '1',
@@ -102,7 +101,6 @@ describe('post fetchers', () => {
 
     const posts = await getPosts(client);
 
-    // 조인 순서는 보장되지 않아 정렬한다 — 안 하면 정적 HTML 이 빌드마다 흔들린다
     expect(posts[0].tags).toEqual(['Next.js', 'Supabase']);
     expect(posts).not.toHaveProperty('0.post_tags.0.tags');
   });

@@ -1,6 +1,5 @@
 'use client';
 
-/** 브라우저 세션으로 운영자 여부를 본다 — 버튼 노출용일 뿐이고, 인가는 API 가드와 RLS 가 집행한다 */
 import type { User } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { isAdmin } from '@/lib/auth/isAdmin';
@@ -16,7 +15,6 @@ const toClaims = (user: User): SessionClaims => {
   };
 };
 
-/** 처음엔 늘 false 다 — 서버 렌더 결과에 운영자 UI 가 섞이지 않아야 정적 HTML 이 한 벌로 유지된다 */
 export const useIsAdmin = (): boolean => {
   const [admin, setAdmin] = useState(false);
 
@@ -30,7 +28,6 @@ export const useIsAdmin = (): boolean => {
       }
     });
 
-    // 로그인·로그아웃이 다른 탭에서 일어나도 버튼이 따라오게 구독한다
     const { data: subscription } = client.auth.onAuthStateChange(
       (_event, session) => {
         setAdmin(session?.user ? isAdmin(toClaims(session.user)) : false);

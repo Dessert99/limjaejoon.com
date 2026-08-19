@@ -1,4 +1,3 @@
-/** ShowcaseButton 테스트 — 역할 분기와 장식 레이어의 접근성 배선을 검증한다 */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ShowcaseButton } from './ShowcaseButton';
@@ -14,7 +13,6 @@ describe('ShowcaseButton', () => {
   });
 
   it('type 을 undefined 로 넘겨도 button 을 유지한다', () => {
-    // 속성이 지워지면 form 안에서 브라우저 기본값 submit 로 되살아난다
     render(<ShowcaseButton type={undefined}>연락하기</ShowcaseButton>);
 
     expect(screen.getByRole('button', { name: '연락하기' })).toHaveAttribute(

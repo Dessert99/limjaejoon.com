@@ -1,6 +1,5 @@
 'use client';
 
-/** 어드민 로그인 폼 — 여기는 입구일 뿐이고, 인가의 집행자는 (protected) layout 과 RLS 다 */
 import { Button } from '@/components/ui/button';
 import { useSignIn } from '../../lib/useSignIn';
 
@@ -56,7 +55,6 @@ export function AdminLoginForm() {
         />
       </div>
 
-      {/* 실패는 폼에 머문다 — 원인은 Supabase 문구를 그대로 보여준다(운영자 본인만 보는 화면) */}
       {error ? (
         <p
           role='alert'

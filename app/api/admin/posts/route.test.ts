@@ -9,7 +9,6 @@ vi.mock('@/lib/auth/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 
-// 실제 revalidatePath 는 Next 요청 컨텍스트 밖에서 터진다
 vi.mock('@/views/blog/server/revalidate', () => {
   return { revalidatePublicPosts: vi.fn() };
 });
@@ -70,7 +69,6 @@ describe('POST /api/admin/posts', () => {
   });
 
   it('태그를 하나도 안 고르면 400 으로 막는다', async () => {
-    // 조인으로 옮기면서 "글에 태그 최소 1개" 를 DB 에서 지킬 자리가 사라졌다
     vi.mocked(requireAdmin).mockResolvedValue({
       client: {} as never,
       error: null,
@@ -95,7 +93,6 @@ describe('POST /api/admin/posts', () => {
     expect(createAdminPost).toHaveBeenCalledWith(client, input);
     await expect(response.json()).resolves.toEqual({ post });
     expect(response.status).toBe(201);
-    // 재검증이 빠지면 저장은 되는데 공개 목록에만 안 뜬다
     expect(revalidatePublicPosts).toHaveBeenCalled();
   });
 

@@ -1,6 +1,4 @@
-/* 모션 토큰과 감쇠 가드 — 이 파일은 어떤 엘리먼트의 transform 도 소유하지 않는다(소유권은 각 Effect 컴포넌트) */
 
-/* easing 은 Tailwind 네임스페이스가 있어 ease-reveal 이 자동 생성된다 */
 @theme static {
   --ease-linear: var(--ds-ease-linear);
   --ease-standard: var(--ds-ease-standard);
@@ -10,8 +8,6 @@
   --ease-cinematic: var(--ds-ease-cinematic);
 }
 
-/* duration 은 네임스페이스가 없다 — @utility 로 이름을 붙여 JSX 가 --ds-* 를 직접 물지 않게 한다 */
-/* --tw-duration 도 같이 채운다 — transition 유틸리티가 그 변수를 읽어, 안 채우면 hover:transition 류에 되밀린다 */
 @utility duration-instant {
   --tw-duration: var(--ds-duration-100);
   transition-duration: var(--ds-duration-100);
@@ -37,18 +33,15 @@
   transition-duration: var(--ds-duration-1200);
 }
 
-/* GSAP 모션은 여기 안 걸린다 — gsap.matchMedia 가 감쇠에서 생성 자체를 막는다 */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    /* 애니메이션은 늦추는 게 아니라 끈다 — fill:both 를 1ms 로 끝내면 끝 상태가 굳어 밀린 자리에서 멈춘다 */
     animation-name: none !important;
     transition-duration: 1ms !important;
     transition-delay: 0ms !important;
   }
 
-  /* Next 가 <html> 에 거는 부드러운 스크롤도 여기서 되돌린다 */
   [data-scroll-behavior='smooth'] {
     scroll-behavior: auto !important;
   }

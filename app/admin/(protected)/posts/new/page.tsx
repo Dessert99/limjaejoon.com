@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-// 그대로 re-export 하지 않는다 — page 의 default export 는 params·searchParams 외의 prop 을 받을 수 없다
 export default async function Page() {
   const client = await createSupabaseServerClient();
 

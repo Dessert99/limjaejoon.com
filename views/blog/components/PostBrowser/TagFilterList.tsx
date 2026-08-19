@@ -1,6 +1,5 @@
 'use client';
 
-/** 태그 칩 목록 — 데스크톱 사이드바와 모바일 시트가 같은 것을 쓴다 */
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
@@ -11,7 +10,6 @@ type TagFilterListProps = {
   className?: string;
 };
 
-/** 태그를 켜고 끄는 칩 줄을 그린다 — 배치는 className 으로 감싸는 쪽이 정한다 */
 export function TagFilterList({
   tags,
   selected,

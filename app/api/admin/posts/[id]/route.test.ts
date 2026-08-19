@@ -84,7 +84,6 @@ describe('PATCH /api/admin/posts/[id]', () => {
     expect(updateAdminPost).toHaveBeenCalledWith(client, '1', input);
     await expect(response.json()).resolves.toEqual({ post });
     expect(response.status).toBe(200);
-    // 재검증이 빠지면 저장은 되는데 공개 화면만 옛 내용으로 남는다
     expect(revalidatePublicPosts).toHaveBeenCalled();
   });
 

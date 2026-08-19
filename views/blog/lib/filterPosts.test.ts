@@ -1,4 +1,3 @@
-/** filterPosts 테스트 — 목록을 좁히는 세 조건이 겹칠 때의 계약을 검증한다 */
 import { describe, expect, it } from 'vitest';
 import type { PostListItem } from './post.types';
 import { filterPosts } from './filterPosts';
@@ -45,7 +44,6 @@ describe('filterPosts', () => {
         return item.id;
       })
     ).toEqual(['a']);
-    // 하나만 가진 글은 떨어진다 — 겹치는 태그를 넓히는 OR 가 아니라 좁히는 AND 다
     expect(filterPosts(POSTS, { tags: ['Supabase', 'GSAP'] })).toHaveLength(0);
   });
 
@@ -71,7 +69,6 @@ describe('filterPosts', () => {
   });
 
   it('띄어쓰기를 무시하고 견준다', () => {
-    // 붙여 쳐도, 띄어 쳐도, 원문과 다르게 끊어 쳐도 같은 글이 걸린다
     const posts = [post('d', { title: 'React Fiber' })];
 
     expect(filterPosts(posts, { q: 'Reactfiber' })).toHaveLength(1);
@@ -80,7 +77,6 @@ describe('filterPosts', () => {
   });
 
   it('필드 경계를 넘는 검색어는 걸리지 않는다', () => {
-    // 제목 끝과 설명 첫 글자가 이어 붙어 없는 말이 만들어지면 안 된다
     const posts = [
       post('d', { title: 'Zod', description: 'TypeScript 런타임' }),
     ];

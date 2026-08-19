@@ -1,4 +1,3 @@
-/** 모션 프리셋 테스트 — 컴포넌트 사이 시차가 무한정 밀리지 않는다는 계약을 검증한다 */
 import { describe, expect, it } from 'vitest';
 import { STAGGER_MAX_STEPS, staggerIndex } from './motionPreset';
 

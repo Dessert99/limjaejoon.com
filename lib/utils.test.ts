@@ -1,4 +1,3 @@
-/** cn 테스트 — tailwind-merge 가 우리 토큰 이름을 어떤 그룹으로 보는지가 계약이다 */
 import { describe, expect, it } from 'vitest';
 import { cn } from './utils';
 

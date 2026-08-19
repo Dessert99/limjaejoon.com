@@ -5,7 +5,6 @@ export const metadata: Metadata = {
   description: '어떤 문제를 어떻게 풀어 왔는지',
 };
 
-/** About — 홈의 Introduction 이 요약이라면 이쪽이 상세. 지금은 라우트만 세운다 */
 export default function DocsPage() {
   return (
     <main className='grow bg-background py-section text-foreground'>

@@ -1,4 +1,3 @@
-/** PostToc 테스트 — 제목을 앵커로 잇고, 교차 판정을 받은 뒤 어느 절을 짚는지가 계약이다 */
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -11,7 +10,6 @@ const HEADINGS: PostHeading[] = [
   { depth: 2, text: '타입 추론', id: 'infer' },
 ];
 
-/** 관찰 대상이 띠에 들었는지 알리는 콜백 — 브라우저가 부르는 자리를 테스트가 대신 부른다 */
 type Notify = (states: Record<string, boolean>) => void;
 
 let notify: Notify;
@@ -48,7 +46,6 @@ beforeEach(() => {
   };
 });
 
-/** 본문 제목이 실제로 문서에 있어야 목차가 그 요소를 찾아 관찰한다 */
 const renderToc = (headings: PostHeading[] = HEADINGS) => {
   return render(
     <>
@@ -110,7 +107,6 @@ describe('PostToc', () => {
   it('띠가 비어도 직전에 짚던 절을 그대로 둔다', () => {
     renderToc();
     notify({ infer: true });
-    // 긴 절 한가운데라 제목이 하나도 띠에 없는 순간 — 여기서 표시가 사라지면 위치를 잃는다
     notify({ infer: false });
 
     expect(screen.getByRole('link', { name: '타입 추론' })).toHaveAttribute(

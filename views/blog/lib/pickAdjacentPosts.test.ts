@@ -1,4 +1,3 @@
-/** pickAdjacentPosts 테스트 — 발행 순서에서 앞뒤를 고르는 계약을 검증한다 */
 import { describe, expect, it } from 'vitest';
 import type { PostListItem } from './post.types';
 import { pickAdjacentPosts } from './pickAdjacentPosts';
@@ -14,7 +13,6 @@ const post = (id: string): PostListItem => {
   };
 };
 
-// 최신 발행일 순 — 배열 뒤쪽이 과거다
 const POSTS: PostListItem[] = [post('new'), post('mid'), post('old')];
 
 describe('pickAdjacentPosts', () => {

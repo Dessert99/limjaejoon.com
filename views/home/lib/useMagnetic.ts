@@ -1,21 +1,14 @@
 'use client';
 
-// 'use client' 는 사실 진술이다 — 포인터 이벤트와 gsap 을 쓰므로 서버 그래프에 딸려 들어가면 안 된다.
-/** 자석 훅 — 커서를 따라 요소를 끌고, 벗어나면 탄성으로 되돌린다. 대상의 x·y 만 소유한다 */
 import { useRef, type PointerEventHandler, type RefObject } from 'react';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
 
-/** 커서 오프셋에 곱하는 비율 — 1 이면 커서에 붙어 버려 누르려는 손에서 도망간다 */
-/* 내보내는 이유는 하나다 — 자석과 나란히 움직여야 하는 요소가 같은 값을 써야 어긋나지 않는다 */
 export const MAGNETIC_PULL = 0.35;
 
-/** 추종 — 짧아야 손끝에 붙은 느낌이 난다. 같이 움직이는 요소도 이 감속을 써야 한 덩어리로 읽힌다 */
 export const MAGNETIC_FOLLOW = { duration: 0.4, ease: 'power3.out' } as const;
 
-/** 복귀 — elastic 이 제자리에서 한 번 더 흔들려 자석이 놓인 느낌을 만든다 */
 const RETURN = { duration: 1.1, ease: 'elastic.out(1, 0.32)' } as const;
 
-/** 소비자가 요소에 그대로 펼쳐 넣는 한 벌 */
 export type Magnetic<T extends HTMLElement> = {
   ref: RefObject<T | null>;
   onPointerEnter: PointerEventHandler<T>;
@@ -23,7 +16,6 @@ export type Magnetic<T extends HTMLElement> = {
   onPointerLeave: PointerEventHandler<T>;
 };
 
-/** 버튼·링크에 펼쳐 넣으면 자석이 된다 — 감쇠·터치 환경에서는 아무 일도 하지 않는다 */
 export const useMagnetic = <T extends HTMLElement>(): Magnetic<T> => {
   const ref = useRef<T>(null);
   const followRef = useRef<{ x: gsap.QuickToFunc; y: gsap.QuickToFunc } | null>(
@@ -36,7 +28,6 @@ export const useMagnetic = <T extends HTMLElement>(): Magnetic<T> => {
     const element = ref.current;
     const media = gsap.matchMedia();
 
-    // hover 도 함께 묻는다 — 커서가 없는 기기에서는 끌려간 자리에서 그대로 굳는다
     media.add(
       '(prefers-reduced-motion: no-preference) and (hover: hover)',
       () => {
@@ -49,7 +40,6 @@ export const useMagnetic = <T extends HTMLElement>(): Magnetic<T> => {
     );
 
     return () => {
-      // 핸들러가 만드는 트윈은 이 컨텍스트 밖에서 태어난다 — 여기서 끊지 않으면 사라진 요소를 계속 민다
       if (element) {
         gsap.killTweensOf(element);
       }
@@ -68,7 +58,6 @@ export const useMagnetic = <T extends HTMLElement>(): Magnetic<T> => {
       returnRef.current?.kill();
       returnRef.current = null;
 
-      // 들어올 때마다 새로 만든다 — 복귀 트윈이 overwrite 로 죽인 quickTo 는 되살아나지 않는다
       followRef.current = {
         x: gsap.quickTo(event.currentTarget, 'x', MAGNETIC_FOLLOW),
         y: gsap.quickTo(event.currentTarget, 'y', MAGNETIC_FOLLOW),
@@ -82,7 +71,6 @@ export const useMagnetic = <T extends HTMLElement>(): Magnetic<T> => {
         return;
       }
 
-      // 이미 끌려간 자리를 기준으로 다시 잰다 — 되먹임이 걸려 실제 이동량은 PULL/(1+PULL) 로 수렴한다
       const box = event.currentTarget.getBoundingClientRect();
 
       follow.x((event.clientX - (box.left + box.width / 2)) * MAGNETIC_PULL);
@@ -96,7 +84,6 @@ export const useMagnetic = <T extends HTMLElement>(): Magnetic<T> => {
 
       followRef.current = null;
 
-      // overwrite 로 추종 트윈을 끊는다 — 안 끊으면 마지막 커서 자리와 원점을 두 트윈이 번갈아 쓴다
       returnRef.current = gsap.to(event.currentTarget, {
         x: 0,
         y: 0,

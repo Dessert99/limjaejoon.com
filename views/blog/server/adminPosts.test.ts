@@ -32,7 +32,6 @@ type Result = { data: unknown; error: unknown };
 
 type Call = { table: string; op: string; payload?: unknown };
 
-/** 저장이 posts·post_tags·tags 를 오가므로 테이블별로 결과가 갈리는 가짜가 필요하다 */
 const makeClient = (results: Record<string, Result> = {}) => {
   const calls: Call[] = [];
 
@@ -88,7 +87,6 @@ describe('admin post helpers', () => {
 
     const post = await createAdminPost(client, input);
 
-    // tag_ids 는 posts 의 컬럼이 아니다 — 그대로 넘기면 PostgREST 가 거부한다
     expect(calls).toContainEqual({
       table: 'posts',
       op: 'insert',
@@ -112,7 +110,6 @@ describe('admin post helpers', () => {
   });
 
   it('연결 삽입이 실패하면 방금 만든 글을 되돌린다', async () => {
-    // 되돌리지 않으면 slug unique 탓에 재저장이 409 로 막혀 복구할 방법이 사라진다
     const { client, calls } = makeClient({
       'posts.insert': { data: row, error: null },
       'post_tags.insert': { data: null, error: new Error('link failed') },
@@ -146,7 +143,6 @@ describe('admin post helpers', () => {
   });
 
   it('수정이 실패해도 글을 되돌리지 않는다', async () => {
-    // .update() 라 재시도가 그대로 성립한다 — 보상 삭제를 넣으면 멀쩡한 글을 지운다
     const { client, calls } = makeClient({
       'posts.update': { data: row, error: null },
       'post_tags.insert': { data: null, error: new Error('link failed') },
@@ -172,7 +168,6 @@ describe('admin post helpers', () => {
   });
 
   it('지울 글이 없으면 false 를 돌려준다', async () => {
-    // 없는 id 로 delete 해도 Supabase 는 성공이라 응답한다 — 지운 행 수로만 구분된다
     const { client } = makeClient({
       'posts.delete': { data: [], error: null },
     });

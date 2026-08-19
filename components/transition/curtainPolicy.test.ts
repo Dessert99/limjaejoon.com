@@ -1,4 +1,3 @@
-/** 커튼 정책 테스트 — 어떤 이동이 커튼을 타는지 가리는 계약을 검증한다 */
 import { describe, expect, it } from 'vitest';
 import { shouldCurtain } from './curtainPolicy';
 

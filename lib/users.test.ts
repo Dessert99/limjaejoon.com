@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Database } from '@/lib/supabase/database.types';
 import { getUsers, type User } from './users';
 
-// supabase 쿼리 빌더 체인(from→select→order)을 흉내내 네트워크 없이 fetcher 만 검증
 const makeClient = (result: { data: User[] | null; error: unknown }) => {
   const order = vi.fn().mockResolvedValue(result);
   const select = vi.fn(() => {

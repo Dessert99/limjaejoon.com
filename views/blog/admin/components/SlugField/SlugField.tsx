@@ -1,6 +1,5 @@
 'use client';
 
-/** 주소 짓기 — 고른 날짜와 친 주제를 합쳐 `2026-08-29-react` 꼴의 slug 를 만든다 */
 import { CalendarIcon } from 'lucide-react';
 import { composeSlug } from '../../lib/postSlug';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-// 문자열↔Date 를 손으로 만든다 — new Date('2026-08-29') 는 UTC 로 읽혀 서쪽 시간대에서 하루 앞 날짜로 보인다
 const toDate = (value: string): Date | undefined => {
   const [year, month, day] = value.split('-').map(Number);
 
@@ -34,7 +32,6 @@ type SlugFieldProps = {
   onTopicChange: (topic: string) => void;
 };
 
-/** 날짜와 주제를 따로 받고, 합쳐진 결과를 그 자리에서 보여준다 */
 export function SlugField({
   date,
   topic,
@@ -83,7 +80,6 @@ export function SlugField({
         />
       </div>
 
-      {/* 합쳐진 결과를 그대로 보여준다 — 주제를 눕히는 규칙이 있어 친 그대로 주소가 되지 않는다 */}
       <p className='text-body-sm text-muted-foreground'>
         /blog/<span className='text-foreground'>{slug || '…'}</span>
       </p>

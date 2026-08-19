@@ -1,4 +1,3 @@
-/** HeroSection 테스트 — 페이지 유일의 h1 과 마퀴 복사본의 노출 계약을 검증한다 */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { HERO } from '../../config/hero';

@@ -2,7 +2,6 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 import { getSessionClaims } from './session';
 
-// auth.getClaims() 만 흉내내 네트워크 없이 매핑을 검증한다
 const makeClient = (result: unknown) => {
   const getClaims = vi.fn().mockResolvedValue(result);
   return { auth: { getClaims } } as unknown as SupabaseClient;

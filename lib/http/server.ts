@@ -1,4 +1,3 @@
-/** 서버에서 우리 앱 Route Handler 를 호출하는 HTTP 래퍼 */
 import { headers } from 'next/headers';
 import { SITE_URL } from '@/config/site';
 import { fetchJson, type HttpFetchOptions } from './core';
@@ -26,7 +25,6 @@ const resolveServerUrl = async (path: string | URL): Promise<string | URL> => {
   return `${origin}${path}`;
 };
 
-/** server fetch 기본값 — 상대 경로를 현재 요청 origin 의 절대 URL 로 바꾼다 */
 export const serverFetchJson = async <T>(
   path: string | URL,
   init: HttpFetchOptions = {},

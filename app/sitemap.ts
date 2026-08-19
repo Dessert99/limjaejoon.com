@@ -3,7 +3,6 @@ import { createSupabaseStaticClient } from '@/lib/supabase/static';
 import { SITE_URL } from '@/config/site';
 import type { MetadataRoute } from 'next';
 
-/** 존재하는 public route 와 발행된 글만 sitemap 에 노출한다 */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const today = new Date().toISOString().split('T')[0];
   const slugs = await getPostSlugs(createSupabaseStaticClient());

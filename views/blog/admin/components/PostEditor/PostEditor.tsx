@@ -1,6 +1,5 @@
 'use client';
 
-/** 글 편집 — 신규와 수정이 같은 폼을 쓴다(차이는 초기값과 저장 대상뿐이다) */
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import type { TagWithUsage } from '../../../lib/tag.types';
@@ -27,7 +26,6 @@ import { MarkdownPreview } from '../MarkdownPreview/MarkdownPreview';
 import { SlugField } from '../SlugField/SlugField';
 import { TagPicker } from '../TagPicker/TagPicker';
 
-/** 오늘 — 새 글의 기본 날짜 */
 const today = (): string => {
   const now = new Date();
   const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -87,7 +85,6 @@ export function PostEditor({
   const changeTags = (next: TagWithUsage[]) => {
     setTags(next);
 
-    // 모달에서 지운 태그가 선택에 남으면 없는 tag_id 로 저장이 터지고, 재동기화가 delete-then-insert 라 멀쩡한 연결까지 날아간다
     const alive = new Set(
       next.map((tag) => {
         return tag.id;
@@ -102,7 +99,6 @@ export function PostEditor({
     );
   };
 
-  // 친 그대로를 들고 있는다 — slug 에서 되읽으면 눕히는 규칙 탓에 공백을 칠 수 없다
   const parsed = parseSlug(initial?.draft.slug ?? '');
   const [date, setDate] = useState(parsed.date || today());
   const [topic, setTopic] = useState(parsed.topic);
@@ -110,7 +106,6 @@ export function PostEditor({
   const changeDate = (next: string) => {
     setDate(next);
     setField('slug', composeSlug(next, topic));
-    // 날짜 하나가 주소와 발행일을 함께 정한다 — 입력이 둘이면 어긋난 채 저장될 수 있다
     setField('publishedAt', toPublishedAt(next));
   };
 
@@ -176,7 +171,6 @@ export function PostEditor({
           </div>
         </div>
 
-        {/* 실패는 화면에 머문다 — 원인은 서버 문구를 그대로 보여준다(운영자 본인만 보는 화면) */}
         {error ? (
           <p
             role='alert'
@@ -251,7 +245,6 @@ export function PostEditor({
                     return;
                   }
 
-                  // 업로드 URL 은 본문 커서 자리에 꽂는다 — 끝에 붙이면 긴 글에서 매번 찾아 옮겨야 한다
                   void insertImage(
                     file,
                     bodyRef.current?.selectionStart ??
@@ -281,7 +274,6 @@ export function PostEditor({
             />
           </TabsContent>
 
-          {/* 공개 화면과 같은 폭으로 그린다 — 여기서 좁으면 줄바꿈이 실제와 달라 보인다 */}
           <TabsContent value='preview'>
             <div className='rounded-md border border-border p-6'>
               <div className='max-w-[54rem]'>

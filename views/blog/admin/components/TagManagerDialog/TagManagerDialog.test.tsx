@@ -1,4 +1,3 @@
-/** TagManagerDialog 테스트 — 태그를 고치고 지우는 계약이 부모에게 그대로 전달되는지 검증한다 */
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -89,7 +88,6 @@ describe('TagManagerDialog', () => {
     await user.click(screen.getByRole('button', { name: '확인' }));
 
     expect(renameTag).toHaveBeenCalledWith('tag-a', 'Preact');
-    // 글 수는 서버만 안다 — 낙관적으로 깁지 않고 다시 읽는다
     expect(onTagsChange).toHaveBeenCalledWith(next);
   });
 
@@ -124,7 +122,6 @@ describe('TagManagerDialog', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       '이미 있는 태그다'
     );
-    // 지우면 중복 이름 409 를 만날 때마다 처음부터 다시 쳐야 한다
     expect(screen.getByPlaceholderText('새 태그 이름')).toHaveValue('React');
   });
 

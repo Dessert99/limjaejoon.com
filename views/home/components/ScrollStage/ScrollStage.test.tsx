@@ -1,4 +1,3 @@
-/** ScrollStage 테스트 — ScrollSmoother 가 요구하는 두 겹 구조와 children 통과를 검증한다 */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ScrollStage } from './ScrollStage';
@@ -15,7 +14,6 @@ describe('ScrollStage', () => {
   });
 
   it('ScrollSmoother 가 요구하는 두 겹을 그린다', () => {
-    // 이 ID 는 GSAP 기본값이라 옵션으로 넘기지 않는다 — 이름이 틀리면 관성이 조용히 안 걸린다
     const { container } = render(
       <ScrollStage>
         <p>콘텐츠</p>
@@ -31,7 +29,6 @@ describe('ScrollStage', () => {
   });
 
   it('새 랜드마크를 만들지 않는다', () => {
-    // 무대는 div 두 겹이다 — 랜드마크가 생기면 홈의 접근성 트리가 통째로 바뀐다
     const { container } = render(
       <ScrollStage>
         <main>본문</main>

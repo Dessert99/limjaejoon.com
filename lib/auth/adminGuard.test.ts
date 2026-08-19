@@ -46,7 +46,6 @@ describe('requireAdmin', () => {
       data: { user: { id: '1', app_metadata: { role: 'admin' } } },
       error: null,
     });
-    // request.url 은 내부 호스트(internal-host:3000)지만 프록시가 넘긴 공개 호스트는 limjaejoon.com
     const { error } = await requireAdmin(
       req('https://limjaejoon.com', {
         host: 'internal-host:3000',
@@ -115,7 +114,6 @@ describe('mapWriteError', () => {
     expect(mapWriteError({ code: '23505' }).status).toBe(409);
   });
   it('foreign_key_violation 은 409 다', () => {
-    // 연결된 글이 있는 태그를 지우는 정상적인 거부다 — 500 이면 장애로 보인다
     expect(mapWriteError({ code: '23503' }).status).toBe(409);
   });
   it('RLS 거부(42501)는 403 이다', () => {

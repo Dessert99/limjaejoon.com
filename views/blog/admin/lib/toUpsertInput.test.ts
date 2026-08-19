@@ -1,4 +1,3 @@
-/** toUpsertInput 테스트 — 폼 값이 저장 계약으로 정확히 접히는지 검증한다 */
 import { describe, expect, it } from 'vitest';
 import { EMPTY_DRAFT, toUpsertInput, type PostDraft } from './toUpsertInput';
 
@@ -20,7 +19,6 @@ describe('toUpsertInput', () => {
   });
 
   it('발행일을 비워 두면 지금 시각을 박는다', () => {
-    // 정렬 기준이라 비면 목록에서 자리를 못 잡는다
     expect(toUpsertInput(draft(), NOW).published_at).toBe(NOW);
   });
 

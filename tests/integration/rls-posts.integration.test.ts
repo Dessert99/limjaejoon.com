@@ -1,4 +1,3 @@
-/** posts 테이블 RLS 정책 통합 테스트 — anon/non-admin/admin 세 주체의 실제 Postgres 응답을 검증한다 */
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   createAnonClient,
@@ -39,7 +38,6 @@ describe('posts RLS 정책', () => {
   });
 
   describe('anon 사용자', () => {
-    // 초안 개념이 없어 읽기는 전부 열려 있다 — 경계는 이제 쓰기에만 선다
     it('글을 SELECT 할 수 있다', async () => {
       const { data, error } = await createAnonClient()
         .from('posts')
@@ -71,7 +69,6 @@ describe('posts RLS 정책', () => {
         .eq('slug', postSlug)
         .select('slug');
 
-      // 정책이 행을 가려 0건 삭제로 끝나거나 에러로 막히거나 — 지워지지만 않으면 된다
       expect(error ?? data).not.toEqual([{ slug: postSlug }]);
     });
   });

@@ -1,6 +1,5 @@
 'use client';
 
-/** 목록 필터 — 조건은 URL 이 갖고, 거르는 일은 filterPosts 에 맡긴다 */
 import { Fragment } from 'react';
 import { filterPosts } from '../../lib/filterPosts';
 import { type PostListItem } from '../../lib/post.types';
@@ -21,7 +20,6 @@ type PostBrowserProps = {
   tags: string[];
 };
 
-/** 발행 글을 검색어·태그·시리즈로 좁혀 보여준다 */
 export function PostBrowser({ posts, tags }: PostBrowserProps) {
   const [filters, setFilters] = useUrlFilters();
 
@@ -29,7 +27,6 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
     setFilters({ ...filters, ...patch });
   };
 
-  /** 켜진 태그는 빼고 꺼진 태그는 더한다 — 남은 태그끼리는 AND 로 겹쳐 목록이 더 좁아진다 */
   const toggleTag = (tag: string) => {
     update({
       tags: filters.tags.includes(tag)
@@ -45,12 +42,10 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
 
   return (
     <div className='grid gap-4 lg:grid-cols-[13rem_1fr] lg:gap-grid-gap'>
-      {/* 같은 목록을 폭에 따라 갈아 끼운다 — CSS 로만 갈라야 정적 HTML 한 벌에 태그가 다 남는다 */}
       {tags.length > 0 ? (
         <>
           <aside className='hidden lg:sticky lg:top-8 lg:block lg:self-start'>
             <h2 className='text-label text-muted-foreground uppercase'>태그</h2>
-            {/* 태그가 화면보다 길면 여기서만 스크롤한다 — 아니면 아래쪽 태그를 보려고 글 목록을 통째로 내려야 한다 */}
             <TagFilterList
               tags={tags}
               selected={filters.tags}
