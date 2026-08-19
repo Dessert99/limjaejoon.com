@@ -6,6 +6,12 @@
   --color-home-glass-border: color-mix(in oklab, var(--color-home-foreground) 26%, transparent);
   --color-home-glass-shadow: color-mix(in oklab, var(--color-home-background) 20%, transparent);
 
+  --color-home-github: #181717;
+  --color-home-linkedin: #0a66c2;
+  --color-home-instagram-start: #833ab4;
+  --color-home-instagram-middle: #fd1d1d;
+  --color-home-instagram-end: #fcb045;
+
   --spacing-home-gutter: clamp(1.25rem, 4vw, 3rem);
 
   --text-home-intro: clamp(2.5rem, 2rem + 2.5vw, 5rem);
