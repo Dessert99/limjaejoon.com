@@ -8,5 +8,11 @@ type GlassPanelProps = {
 };
 
 export function GlassPanel({ children }: GlassPanelProps) {
-  return <div className={PANEL_CLASS}>{children}</div>;
+  return (
+    <div
+      data-glass-panel
+      className={PANEL_CLASS}>
+      {children}
+    </div>
+  );
 }
