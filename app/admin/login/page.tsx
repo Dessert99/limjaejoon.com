@@ -8,12 +8,10 @@ export const metadata: Metadata = {
 
 export default function AdminLoginPage() {
   return (
-    <div
-      data-surface='light'
-      className='flex min-h-svh flex-col justify-center bg-background text-foreground'>
-      <main className='py-section'>
-        <div className='mx-auto max-w-sm px-gutter'>
-          <h1 className='text-statement'>어드민</h1>
+    <div className='flex min-h-svh flex-col justify-center bg-blog-background text-blog-foreground scheme-light'>
+      <main className='py-blog-section'>
+        <div className='mx-auto max-w-sm px-blog-gutter'>
+          <h1 className='text-blog-statement'>어드민</h1>
           <AdminLoginForm />
         </div>
       </main>

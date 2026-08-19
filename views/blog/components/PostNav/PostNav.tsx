@@ -16,13 +16,13 @@ function PostNavLink({
     <Link
       href={`/blog/${post.slug}`}
       className={cn(
-        'group flex h-full flex-col gap-2 rounded-md border border-border p-4 transition-colors duration-quick ease-standard hover:border-input',
+        'group flex h-full flex-col gap-2 rounded-lg border border-blog-border p-4 transition-colors duration-200 ease-in-out hover:border-blog-input',
         align === 'end' && 'sm:items-end sm:text-end'
       )}>
-      <span className='text-label text-muted-foreground uppercase'>
+      <span className='text-xs tracking-widest text-blog-muted-foreground uppercase'>
         {label}
       </span>
-      <span className='text-body break-keep transition-colors duration-quick ease-standard group-hover:text-primary'>
+      <span className='text-base break-keep transition-colors duration-200 ease-in-out group-hover:text-blog-primary'>
         {post.title}
       </span>
     </Link>
@@ -37,7 +37,7 @@ export function PostNav({ previous, next }: AdjacentPosts) {
   return (
     <nav
       aria-label='앞뒤 글'
-      className='mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2'>
+      className='mt-16 grid gap-4 border-t border-blog-border pt-8 sm:grid-cols-2'>
       {previous ? (
         <PostNavLink
           post={previous}

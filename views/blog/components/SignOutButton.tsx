@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/views/blog/components/ui/button';
 import { signOut } from '@/lib/auth/signOut';
 
 export function SignOutButton() {

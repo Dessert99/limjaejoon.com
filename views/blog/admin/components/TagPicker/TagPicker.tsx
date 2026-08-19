@@ -2,8 +2,8 @@
 
 import type { TagWithUsage } from '../../../lib/tag.types';
 import { TagManagerDialog } from '../TagManagerDialog/TagManagerDialog';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
+import { Badge } from '@/views/blog/components/ui/badge';
+import { Label } from '@/views/blog/components/ui/label';
 
 type TagPickerProps = {
   tags: TagWithUsage[];
@@ -67,7 +67,7 @@ export function TagPicker({
           })}
         </ul>
       ) : (
-        <p className='text-body-sm text-muted-foreground'>
+        <p className='text-sm text-blog-muted-foreground'>
           등록된 태그가 없다. 태그 관리에서 하나 만들어야 글을 저장할 수 있다.
         </p>
       )}

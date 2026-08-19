@@ -1,0 +1,46 @@
+@theme static {
+  --color-root-background: var(--color-stone-950);
+  --color-root-foreground: var(--color-stone-50);
+
+  --text-curtain: clamp(2.5rem, 2rem + 2.5vw, 5rem);
+  --text-curtain--line-height: 1.05;
+  --text-curtain--letter-spacing: -0.02em;
+}
+
+:root {
+  --z-base: 0;
+  --z-content: 10;
+  --z-sticky: 100;
+  --z-overlay: 300;
+  --z-transition: 400;
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--color-root-background);
+    color: var(--color-root-foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-name: none !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  [data-scroll-behavior='smooth'] {
+    scroll-behavior: auto !important;
+  }
+}

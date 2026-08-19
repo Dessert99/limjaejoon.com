@@ -2,15 +2,15 @@
 
 import { CalendarIcon } from 'lucide-react';
 import { composeSlug } from '../../lib/postSlug';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/views/blog/components/ui/button';
+import { Calendar } from '@/views/blog/components/ui/calendar';
+import { Input } from '@/views/blog/components/ui/input';
+import { Label } from '@/views/blog/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from '@/views/blog/components/ui/popover';
 
 const toDate = (value: string): Date | undefined => {
   const [year, month, day] = value.split('-').map(Number);
@@ -80,8 +80,8 @@ export function SlugField({
         />
       </div>
 
-      <p className='text-body-sm text-muted-foreground'>
-        /blog/<span className='text-foreground'>{slug || '…'}</span>
+      <p className='text-sm text-blog-muted-foreground'>
+        /blog/<span className='text-blog-foreground'>{slug || '…'}</span>
       </p>
     </div>
   );

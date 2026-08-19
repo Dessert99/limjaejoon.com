@@ -16,13 +16,13 @@ const ITEM = { duration: 0.55, ease: 'power3.out', stagger: 0.06 } as const;
 const ITEM_OFFSET = 0.35;
 
 const SCRIM_CLASS =
-  'invisible fixed inset-0 z-(--ds-z-overlay) bg-inverse/60 opacity-0';
+  'invisible fixed inset-0 z-(--z-overlay) bg-home-inverse/60 opacity-0';
 
 const PANEL_CLASS =
-  'invisible fixed inset-y-0 right-0 z-(--ds-z-overlay) flex w-[min(24rem,85vw)] flex-col justify-center bg-card px-gutter opacity-0';
+  'invisible fixed inset-y-0 right-0 z-(--z-overlay) flex w-[min(24rem,85vw)] flex-col justify-center bg-home-card px-home-gutter opacity-0';
 
 const ITEM_CLASS =
-  'inline-block py-2 text-statement text-foreground transition-colors duration-quick ease-standard hover:text-primary';
+  'inline-block py-2 text-home-statement text-home-foreground transition-colors duration-200 ease-in-out hover:text-home-primary';
 
 type SideMenuProps = {
   panelId: string;

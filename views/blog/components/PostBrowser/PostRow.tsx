@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { formatPublishedAt } from '../../lib/formatPublishedAt';
 import { type PostListItem } from '../../lib/post.types';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/views/blog/components/ui/badge';
 
 const CHIP_CLASS = 'cursor-pointer';
 
@@ -18,15 +18,15 @@ export function PostRow({ post, onSelectTag }: PostRowProps) {
       <Link
         href={`/blog/${post.slug}`}
         className='group block'>
-        <h3 className='line-clamp-2 text-body-lg wrap-anywhere break-keep transition-colors duration-quick ease-standard group-hover:text-primary sm:text-body-xl'>
+        <h3 className='line-clamp-2 text-lg wrap-anywhere break-keep transition-colors duration-200 ease-in-out group-hover:text-blog-primary sm:text-xl'>
           {post.title}
         </h3>
-        <p className='mt-2 line-clamp-2 min-h-[2lh] text-body wrap-anywhere break-keep text-muted-foreground'>
+        <p className='mt-2 line-clamp-2 min-h-[2lh] text-base wrap-anywhere break-keep text-blog-muted-foreground'>
           {post.description}
         </p>
       </Link>
 
-      <div className='mt-4 flex flex-col gap-2 text-body-sm text-muted-foreground'>
+      <div className='mt-4 flex flex-col gap-2 text-sm text-blog-muted-foreground'>
         {publishedAt ? (
           <time dateTime={post.published_at ?? undefined}>{publishedAt}</time>
         ) : null}

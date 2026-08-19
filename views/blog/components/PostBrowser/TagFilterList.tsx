@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/views/blog/components/ui/badge';
 
 type TagFilterListProps = {
   tags: string[];

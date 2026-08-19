@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { INTRO_GREETING } from '../../config/intro';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
-import { MOTION } from '../../lib/motionPreset';
 
 const TYPING = { duration: 2, ease: 'none' } as const;
+
+const SWEEP = { duration: 1.2, ease: 'power2.inOut' } as const;
 
 const HOLD = 0.5;
 
@@ -14,10 +15,10 @@ const CURVE = { flat: '0% 0% 0% 0%', bottom: '0% 0% 50% 50%' } as const;
 let played = false;
 
 const OVERLAY_CLASS =
-  'fixed inset-0 z-(--ds-z-transition) flex items-center justify-center bg-background px-gutter motion-reduce:hidden';
+  'fixed inset-0 z-(--z-transition) flex items-center justify-center bg-home-background px-home-gutter motion-reduce:hidden';
 
 const TEXT_CLASS =
-  'font-display text-section text-foreground text-balance whitespace-pre-line text-center';
+  'font-display text-home-intro text-home-foreground text-balance whitespace-pre-line text-center';
 
 export function IntroOverlay() {
   const [visible] = useState(() => {
@@ -62,8 +63,7 @@ export function IntroOverlay() {
             {
               yPercent: -100,
               borderRadius: CURVE.bottom,
-              duration: MOTION.duration.cinematic,
-              ease: MOTION.ease.cinematic,
+              ...SWEEP,
             },
             `+=${HOLD}`
           );

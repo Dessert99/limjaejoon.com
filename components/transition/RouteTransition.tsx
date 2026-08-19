@@ -15,9 +15,9 @@ const CURVE = {
 } as const;
 
 const CURTAIN_CLASS =
-  'fixed inset-x-0 bottom-full z-(--ds-z-transition) flex h-dvh items-center justify-center bg-background';
+  'fixed inset-x-0 bottom-full z-(--z-transition) flex h-dvh items-center justify-center bg-root-background';
 
-const LABEL_CLASS = 'font-display text-section text-foreground';
+const LABEL_CLASS = 'font-display text-curtain text-root-foreground';
 
 type Phase = 'idle' | 'covering' | 'navigating';
 

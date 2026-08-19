@@ -3,9 +3,9 @@
 import { Fragment } from 'react';
 import { filterPosts } from '../../lib/filterPosts';
 import { type PostListItem } from '../../lib/post.types';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
+import { Button } from '@/views/blog/components/ui/button';
+import { Input } from '@/views/blog/components/ui/input';
+import { Separator } from '@/views/blog/components/ui/separator';
 import {
   EMPTY_FILTERS,
   useUrlFilters,
@@ -41,11 +41,11 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
   const hasFilter = Boolean(filters.q || filters.tags.length > 0);
 
   return (
-    <div className='grid gap-4 lg:grid-cols-[13rem_1fr] lg:gap-grid-gap'>
+    <div className='grid gap-4 lg:grid-cols-[13rem_1fr] lg:gap-blog-grid-gap'>
       {tags.length > 0 ? (
         <>
           <aside className='hidden lg:sticky lg:top-8 lg:block lg:self-start'>
-            <h2 className='text-label text-muted-foreground uppercase'>태그</h2>
+            <h2 className='text-xs tracking-widest text-blog-muted-foreground uppercase'>태그</h2>
             <TagFilterList
               tags={tags}
               selected={filters.tags}
@@ -85,7 +85,7 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
         <div className='mt-8 flex items-baseline justify-between gap-4'>
           <h2
             id='post-list-heading'
-            className='text-label text-muted-foreground uppercase'>
+            className='text-xs tracking-widest text-blog-muted-foreground uppercase'>
             글 {visible.length}편
           </h2>
 
@@ -117,7 +117,7 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
             })}
           </div>
         ) : (
-          <p className='mt-6 text-body text-muted-foreground'>
+          <p className='mt-6 text-base text-blog-muted-foreground'>
             조건에 맞는 글이 없다. 조건을 지우고 다시 찾아보자.
           </p>
         )}

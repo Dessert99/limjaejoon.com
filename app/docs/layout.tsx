@@ -3,13 +3,9 @@ import type { ReactNode } from 'react';
 
 export default function DocsLayout({ children }: { children: ReactNode }) {
   return (
-    <>
+    <div className='flex min-h-svh flex-col bg-docs-background scheme-light'>
       <DocsNav />
-      <div
-        data-surface='light'
-        className='flex min-h-svh flex-col bg-background'>
-        {children}
-      </div>
-    </>
+      {children}
+    </div>
   );
 }

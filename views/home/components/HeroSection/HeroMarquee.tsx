@@ -62,7 +62,7 @@ export function HeroMarquee({ text, titleId }: HeroMarqueeProps) {
   return (
     <div
       ref={rootRef}
-      className='relative overflow-hidden text-foreground mix-blend-difference'>
+      className='relative overflow-hidden text-home-foreground mix-blend-difference'>
       <div
         data-marquee-track
         className='flex w-max'>

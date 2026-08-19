@@ -1,10 +1,10 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/views/blog/components/ui/button';
 import { useSignIn } from '../../lib/useSignIn';
 
 const FIELD_CLASS =
-  'text-body w-full rounded-md border border-border bg-card px-4 py-2 text-foreground';
+  'text-base w-full rounded-lg border border-blog-border bg-blog-card px-4 py-2 text-blog-foreground';
 
 export function AdminLoginForm() {
   const { email, setEmail, password, setPassword, error, pending, submit } =
@@ -20,7 +20,7 @@ export function AdminLoginForm() {
       <div className='flex flex-col gap-2'>
         <label
           htmlFor='admin-email'
-          className='text-body-sm text-muted-foreground'>
+          className='text-sm text-blog-muted-foreground'>
           이메일
         </label>
         <input
@@ -39,7 +39,7 @@ export function AdminLoginForm() {
       <div className='flex flex-col gap-2'>
         <label
           htmlFor='admin-password'
-          className='text-body-sm text-muted-foreground'>
+          className='text-sm text-blog-muted-foreground'>
           비밀번호
         </label>
         <input
@@ -58,7 +58,7 @@ export function AdminLoginForm() {
       {error ? (
         <p
           role='alert'
-          className='text-body-sm text-destructive'>
+          className='text-sm text-blog-destructive'>
           {error}
         </p>
       ) : null}
