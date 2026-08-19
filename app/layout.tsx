@@ -15,8 +15,6 @@ export const metadata: Metadata = {
     type: 'website',
     // og:locale. 미리보기를 읽는 쪽에 알려주는 언어·지역
     locale: 'ko_KR',
-    // og:site_name. 노션 멘션처럼 좁은 미리보기에서 제목 앞에 붙는 사이트 이름
-    siteName: 'limjaejoon',
     // og:url. 공유된 링크가 가리키는 정본 주소
     url: 'https://www.limjaejoon.com',
     // og:title. 카톡·노션 미리보기 카드의 굵은 첫 줄
