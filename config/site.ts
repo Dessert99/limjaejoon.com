@@ -1,4 +1,4 @@
-export const SITE_URL = 'https://limjaejoon.com';
+export const SITE_URL = 'https://www.limjaejoon.com';
 
 export const EMAIL = 'lsjh1234@naver.com';
 

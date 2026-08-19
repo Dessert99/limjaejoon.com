@@ -34,7 +34,7 @@ describe('PostJsonLd', () => {
       datePublished: '2026-04-03T00:00:00Z',
       dateModified: '2026-04-05T00:00:00Z',
       keywords: ['Next.js', 'Supabase'],
-      mainEntityOfPage: 'https://limjaejoon.com/blog/newer-post',
+      mainEntityOfPage: 'https://www.limjaejoon.com/blog/newer-post',
     });
   });
 
