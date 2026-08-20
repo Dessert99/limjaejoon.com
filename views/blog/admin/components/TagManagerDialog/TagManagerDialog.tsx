@@ -30,6 +30,7 @@ type TagManagerDialogProps = {
   onTagsChange: (tags: TagWithUsage[]) => void;
 };
 
+/** 태그를 만들고 이름을 고치고 지우는 대화상자. 글이 붙은 태그는 지울 수 없다. */
 export function TagManagerDialog({
   tags,
   onTagsChange,
@@ -45,6 +46,7 @@ export function TagManagerDialog({
     setEditingName(tag.name);
   };
 
+  // 이름 고치기가 실패하면 편집 상태를 유지해 고친 값을 다시 쓰지 않게 한다
   const commitEditing = async () => {
     if (!editingId || !editingName.trim()) {
       return;
@@ -181,6 +183,7 @@ export function TagManagerDialog({
                           type='button'
                           size='sm'
                           variant='outline'
+                          // 글이 붙은 태그는 DB가 어차피 막으므로 버튼부터 잠근다
                           disabled={pending || linked}>
                           삭제
                         </Button>

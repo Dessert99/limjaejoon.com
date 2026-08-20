@@ -26,14 +26,17 @@ import { MarkdownPreview } from '../MarkdownPreview/MarkdownPreview';
 import { SlugField } from '../SlugField/SlugField';
 import { TagPicker } from '../TagPicker/TagPicker';
 
+/** 오늘 날짜를 주소용 YYYY-MM-DD로 만든다. */
 const today = (): string => {
   const now = new Date();
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
 
+  // toISOString은 UTC라 밤에 쓰면 어제가 된다. 로컬 날짜를 직접 조립한다
   return `${now.getFullYear()}-${month}-${day}`;
 };
 
+/** 라벨 붙은 한 줄 입력칸. 제목·설명처럼 단순한 필드가 쓴다. */
 function Field({
   id,
   label,
@@ -62,6 +65,7 @@ function Field({
   );
 }
 
+/** 글 작성·수정 화면. 위쪽은 메타 정보, 아래쪽은 본문 작성과 미리보기 탭이다. */
 export function PostEditor({
   initial,
   tags: initialTags,
@@ -82,6 +86,7 @@ export function PostEditor({
   const bodyRef = useRef<HTMLTextAreaElement>(null);
   const [tags, setTags] = useState(initialTags);
 
+  // 관리 대화상자에서 태그가 지워지면 이 글에 남은 선택도 같이 떨어내야 한다
   const changeTags = (next: TagWithUsage[]) => {
     setTags(next);
 
@@ -103,6 +108,7 @@ export function PostEditor({
   const [date, setDate] = useState(parsed.date || today());
   const [topic, setTopic] = useState(parsed.topic);
 
+  // 날짜는 주소와 발행일 둘 다를 움직인다
   const changeDate = (next: string) => {
     setDate(next);
     setField('slug', composeSlug(next, topic));
@@ -245,11 +251,13 @@ export function PostEditor({
                     return;
                   }
 
+                  // 커서 자리에 넣고, 커서가 없으면 글 끝에 붙인다
                   void insertImage(
                     file,
                     bodyRef.current?.selectionStart ??
                       draft.contentMarkdown.length
                   );
+                  // 같은 파일을 다시 골라도 change가 나도록 값을 비운다
                   event.target.value = '';
                 }}
               />
@@ -266,6 +274,7 @@ export function PostEditor({
               id='post-body'
               ref={bodyRef}
               value={draft.contentMarkdown}
+              // 28줄은 한 화면에 꽉 차는 높이. 줄이면 긴 글에서 스크롤이 잦아진다
               rows={28}
               className='font-mono text-sm'
               onChange={(event) => {
@@ -276,6 +285,7 @@ export function PostEditor({
 
           <TabsContent value='preview'>
             <div className='rounded-lg border border-blog-border p-6'>
+              {/* 실제 글과 같은 본문 폭이라야 미리보기에서 줄바꿈이 어긋나지 않는다 */}
               <div className='max-w-[54rem]'>
                 <MarkdownPreview markdown={draft.contentMarkdown} />
               </div>

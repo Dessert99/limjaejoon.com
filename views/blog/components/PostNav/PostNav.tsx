@@ -3,6 +3,7 @@ import type { AdjacentPosts } from '../../lib/pickAdjacentPosts';
 import type { PostListItem } from '../../lib/post.types';
 import { clsx } from 'clsx';
 
+/** 앞뒤 글 카드 한 장. 다음 글은 오른쪽 끝에 붙어 방향이 드러난다. */
 function PostNavLink({
   post,
   label,
@@ -29,6 +30,7 @@ function PostNavLink({
   );
 }
 
+/** 글 아래 앞뒤 글 내비. 양쪽 다 없으면 통째로 감춘다. */
 export function PostNav({ previous, next }: AdjacentPosts) {
   if (!previous && !next) {
     return null;
@@ -44,6 +46,7 @@ export function PostNav({ previous, next }: AdjacentPosts) {
           label='이전 글'
         />
       ) : (
+        // 이전 글이 없어도 빈 칸을 세워야 다음 글이 오른쪽 자리를 지킨다
         <div className='hidden sm:block' />
       )}
 
