@@ -3,25 +3,6 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import type { RefObject } from 'react';
 import { MathUtils } from 'three';
-import { CLIFF } from '../../config/cliff';
-
-const FALL_DEPTH = 46;
-const FALL_PITCH = 1.15;
-const FALL_RUN = 8;
-
-// 세로 fov 절반의 tan. 화면 NDC와 월드 거리를 잇는 환산 계수다
-const HALF_FOV_TAN = Math.tan(MathUtils.degToRad(CLIFF.fov) / 2);
-
-// 소실점을 화면 중앙 위로 올리려면 카메라가 그만큼 아래를 봐야 한다
-const PITCH = Math.atan(HALF_FOV_TAN * CLIFF.vanishY);
-
-/** 절벽 가장자리가 화면 하단 1:3 지점에 찍히도록 카메라를 지면 쪽으로 민 거리. */
-function lateralOffset(aspect: number) {
-  return (
-    (0.5 * HALF_FOV_TAN * aspect * CLIFF.eye) /
-    (Math.sin(PITCH) + HALF_FOV_TAN * Math.cos(PITCH))
-  );
-}
 
 /** 스크롤 진행률을 절벽 위 전진과 낙하로 바꿔 카메라에 먹인다. */
 export function CameraRig({ scroll }: { scroll: RefObject<number> }) {
@@ -31,19 +12,25 @@ export function CameraRig({ scroll }: { scroll: RefObject<number> }) {
 
   useFrame(({ camera }) => {
     const progress = scroll.current;
-    const walk = Math.min(1, progress / CLIFF.fallStart);
-    const fall = Math.max(
-      0,
-      (progress - CLIFF.fallStart) / (1 - CLIFF.fallStart)
-    );
+    // 0.86에서 절벽이 끝난다. 키우면 더 오래 걷고 낙하는 짧고 급해진다
+    const walk = Math.min(1, progress / 0.86);
+    const fall = Math.max(0, (progress - 0.86) / (1 - 0.86));
 
-    // 화면 비율이 바뀌면 1:3도 깨지므로 매 프레임 다시 맞춘다
-    camera.position.x = CLIFF.edgeX + lateralOffset(size.width / size.height);
-    // 낙하 중에도 앞으로 더 나가야 발을 헛디딘 관성이 산다
-    camera.position.z = -(CLIFF.length * walk + FALL_RUN * fall);
-    // 제곱으로 떨어뜨려야 중력처럼 가속한다
-    camera.position.y = CLIFF.eye - FALL_DEPTH * fall * fall;
-    camera.rotation.x = -(PITCH + FALL_PITCH * fall);
+    // 화면 NDC와 월드 거리를 잇는 환산 계수. 55는 Canvas의 fov와 같아야 하고, 키우면 원근이 과장된다
+    const halfFovTan = Math.tan(MathUtils.degToRad(55) / 2);
+    // 0.12를 키우면 소실점이 화면 위로 올라가고 카메라는 그만큼 더 아래를 본다
+    const pitch = Math.atan(halfFovTan * 0.12);
+
+    // 눈높이 1.6인 카메라를 밀어 절벽 가장자리를 화면 하단 1:3에 붙인다. 1.6을 낮추면 시야가 지면에 눌린다
+    camera.position.x =
+      (0.5 * halfFovTan * (size.width / size.height) * 1.6) /
+      (Math.sin(pitch) + halfFovTan * Math.cos(pitch));
+    // 130은 걷는 거리, 8은 헛디딘 관성. 8을 0으로 두면 발밑에서 수직으로 떨어진다
+    camera.position.z = -(130 * walk + 8 * fall);
+    // 눈높이 1.6에서 제곱으로 꺼져 중력처럼 가속한다. 46을 키우면 더 깊고 빠르게 떨어진다
+    camera.position.y = 1.6 - 46 * fall * fall;
+    // 낙하 끝에 1.15rad만큼 고개가 꺾인다. 키우면 발밑을 넘어 절벽 아래를 정면으로 본다
+    camera.rotation.x = -(pitch + 1.15 * fall);
   });
 
   return null;

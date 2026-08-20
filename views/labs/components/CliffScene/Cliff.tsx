@@ -3,14 +3,6 @@
 import { Cloud, Clouds } from '@react-three/drei';
 import { useMemo } from 'react';
 import { MeshBasicMaterial } from 'three';
-import { CLIFF } from '../../config/cliff';
-
-const CLOUDS = [
-  { seed: 1, position: [-11, -7, -28], bounds: [13, 3, 13], volume: 9 },
-  { seed: 2, position: [-18, -13, -68], bounds: [16, 4, 16], volume: 11 },
-  { seed: 3, position: [-9, -5, -104], bounds: [12, 3, 12], volume: 8 },
-  { seed: 4, position: [24, 7, -92], bounds: [15, 4, 15], volume: 9 },
-] as const;
 
 function token(name: string) {
   return getComputedStyle(document.documentElement)
@@ -34,36 +26,56 @@ export function Cliff() {
         attach='background'
         args={[palette.sky]}
       />
+      {/* 25부터 흐려져 120에서 하늘색에 묻힌다. 둘을 좁히면 안개가 짙어져 절벽이 짧아 보인다 */}
       <fog
         attach='fog'
-        args={[palette.sky, CLIFF.fogNear, CLIFF.fogFar]}
+        args={[palette.sky, 25, 120]}
       />
 
+      {/* x=0이 낭떠러지라 폭의 절반만큼 밀고, 카메라 시작점 뒤로 6만큼 더 깐다 */}
       <mesh
         rotation-x={-Math.PI / 2}
-        position={[
-          CLIFF.edgeX + CLIFF.width / 2,
-          0,
-          (CLIFF.behind - CLIFF.length) / 2,
-        ]}>
-        <planeGeometry args={[CLIFF.width, CLIFF.length + CLIFF.behind]} />
+        position={[60 / 2, 0, (6 - 130) / 2]}>
+        {/* 60을 줄이면 오른쪽 끝이 화면에 들어오고, 130을 줄이면 다 걷기 전에 지면이 끝난다 */}
+        <planeGeometry args={[60, 130 + 6]} />
         <meshBasicMaterial color={palette.ground} />
       </mesh>
 
+      {/* 낭떠러지 아래 구름. y를 더 내리면 절벽이 높아 보이고, z는 카메라가 지나칠 순간을 정한다 */}
       <Clouds material={MeshBasicMaterial}>
-        {CLOUDS.map((cloud) => {
-          return (
-            <Cloud
-              key={cloud.seed}
-              seed={cloud.seed}
-              position={cloud.position}
-              bounds={cloud.bounds}
-              volume={cloud.volume}
-              color='#ffffff'
-              opacity={0.55}
-            />
-          );
-        })}
+        {/* bounds는 퍼지는 범위, volume은 뭉게짐. opacity를 올리면 아래가 가려져 깊이감이 준다 */}
+        <Cloud
+          seed={1}
+          position={[-11, -7, -28]}
+          bounds={[13, 3, 13]}
+          volume={9}
+          color='#ffffff'
+          opacity={0.55}
+        />
+        <Cloud
+          seed={2}
+          position={[-18, -13, -68]}
+          bounds={[16, 4, 16]}
+          volume={11}
+          color='#ffffff'
+          opacity={0.55}
+        />
+        <Cloud
+          seed={3}
+          position={[-9, -5, -104]}
+          bounds={[12, 3, 12]}
+          volume={8}
+          color='#ffffff'
+          opacity={0.55}
+        />
+        <Cloud
+          seed={4}
+          position={[24, 7, -92]}
+          bounds={[15, 4, 15]}
+          volume={9}
+          color='#ffffff'
+          opacity={0.55}
+        />
       </Clouds>
     </>
   );
