@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
 
+/** 인트로 커튼이 걷히면 관성 스크롤 무대 위의 히어로가 드러난다. */
 export default function HomePage() {
   return (
     <>
