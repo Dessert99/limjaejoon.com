@@ -27,7 +27,7 @@ export function HeroSection() {
         className={FADE_CLASS}
       />
 
-      <div className='z-(--z-content) flex flex-1 flex-col items-end justify-between p-home-gutter'>
+      <div className='z-(--z-content) flex flex-1 flex-col items-center justify-between p-home-gutter sm:items-end'>
         <HeroNav />
 
         <HeroPanel />

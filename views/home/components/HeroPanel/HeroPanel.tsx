@@ -9,7 +9,7 @@ export function HeroPanel() {
     <GlassPanel>
       <section
         aria-labelledby={CONTACT_TITLE_ID}
-        className='flex items-center justify-between gap-10'>
+        className='flex items-center justify-between gap-4 sm:gap-10'>
         <h2
           id={CONTACT_TITLE_ID}
           className='text-xs tracking-widest uppercase opacity-60'>

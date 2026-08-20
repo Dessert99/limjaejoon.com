@@ -6,7 +6,7 @@ export function HeroNav() {
   return (
     <GlassPanel>
       <nav aria-label='주요 메뉴'>
-        <ul className='flex items-center gap-10'>
+        <ul className='flex items-center gap-6 sm:gap-10'>
           {SITE_NAV.map((item) => {
             return (
               <NavItem
