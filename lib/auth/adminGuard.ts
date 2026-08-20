@@ -31,7 +31,10 @@ const isSameOrigin = (request: Request): boolean => {
 export const requireAdmin = async (
   request: Request
 ): Promise<RequireAdminResult> => {
-  if (!isSameOrigin(request)) {
+  // 브라우저가 GET에는 Origin을 안 붙인다. 읽기는 CSRF로 바뀌는 게 없어 검사에서 뺀다
+  const writes = request.method !== 'GET' && request.method !== 'HEAD';
+
+  if (writes && !isSameOrigin(request)) {
     return {
       client: null,
       error: NextResponse.json({ message: 'Forbidden' }, { status: 403 }),
