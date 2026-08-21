@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { deletePost } from './deletePost';
 import { savePost } from './savePost';
 import { uploadPostImage } from './uploadPostImage';
@@ -10,6 +10,14 @@ import { toUpsertInput, type PostDraft } from '../lib/toUpsertInput';
 /** 서버가 준 메시지를 그대로 보여주고, 정체 모를 오류만 기본 문구로 덮는다. */
 const readMessage = (error: unknown): string => {
   return error instanceof Error ? error.message : '요청에 실패했다';
+};
+
+/** 클립보드 캡처는 죄다 image.png라, 나중에 어느 글 것인지 알아보게 슬러그로 새로 짓는다. */
+const imageName = (slug: string, seq: number): string => {
+  // 슬러그에 남는 한글은 버킷 경로에서 인코딩돼 읽기 힘들어진다
+  const base = slug.replace(/[^a-z0-9-]/gi, '') || 'post';
+
+  return `${base}-${seq}`;
 };
 
 /** 글 편집 화면의 상태와 저장·삭제·이미지 삽입을 한데 묶는다. initial이 없으면 새 글이다. */
@@ -27,6 +35,7 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
   );
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const seq = useRef(0);
 
   const setField = <K extends keyof PostDraft>(
     key: K,
@@ -83,7 +92,12 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
     setError(null);
 
     try {
-      const url = await uploadPostImage(file);
+      seq.current += 1;
+
+      const url = await uploadPostImage(
+        file,
+        imageName(draft.slug, seq.current)
+      );
       // 앞뒤 줄바꿈이 있어야 문단 한가운데 끼어도 이미지가 제 줄에 선다
       const snippet = `\n![${file.name}](${url})\n`;
 
