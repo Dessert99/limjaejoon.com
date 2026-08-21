@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import type { TagWithUsage } from '../../../lib/tag.types';
 import { composeSlug, parseSlug, toPublishedAt } from '../../lib/postSlug';
 import { type PostDraft } from '../../lib/toUpsertInput';
@@ -28,7 +28,6 @@ import {
 } from '@/views/blog/components/ui/tabs';
 import { Textarea } from '@/views/blog/components/ui/textarea';
 import { MarkdownPreview } from '../MarkdownPreview/MarkdownPreview';
-import { toggleImageRow } from '../../lib/toggleImageRow';
 import { SlugField } from '../SlugField/SlugField';
 import { TagPicker } from '../TagPicker/TagPicker';
 
@@ -96,7 +95,6 @@ export function PostEditor({
     insertImages,
     isEditing,
   } = usePostEditor(initial);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
   const [tags, setTags] = useState(initialTags);
 
   // 관리 대화상자에서 태그가 지워지면 이 글에 남은 선택도 같이 떨어내야 한다
@@ -114,24 +112,6 @@ export function PostEditor({
       draft.tags.filter((id) => {
         return alive.has(id);
       })
-    );
-  };
-
-  // 고른 만큼만 감싸고 나머지 본문은 그대로 되붙인다
-  const wrapSelection = () => {
-    const body = bodyRef.current;
-
-    if (!body || body.selectionStart === body.selectionEnd) {
-      return;
-    }
-
-    const { selectionStart, selectionEnd, value } = body;
-
-    setField(
-      'contentMarkdown',
-      value.slice(0, selectionStart) +
-        toggleImageRow(value.slice(selectionStart, selectionEnd)) +
-        value.slice(selectionEnd)
     );
   };
 
@@ -263,18 +243,9 @@ export function PostEditor({
               <TabsTrigger value='preview'>미리보기</TabsTrigger>
             </TabsList>
 
-            <div className='flex flex-wrap items-center gap-3'>
-              <p className='text-sm text-blog-muted-foreground'>
-                이미지는 본문에 붙여넣거나 끌어다 놓는다
-              </p>
-
-              <Button
-                variant='outline'
-                size='sm'
-                onClick={wrapSelection}>
-                나란히
-              </Button>
-            </div>
+            <p className='text-sm text-blog-muted-foreground'>
+              이미지는 본문에 붙여넣거나 끌어다 놓는다
+            </p>
           </div>
 
           <TabsContent value='write'>
@@ -285,7 +256,6 @@ export function PostEditor({
             </Label>
             <Textarea
               id='post-body'
-              ref={bodyRef}
               value={draft.contentMarkdown}
               // 28줄은 한 화면에 꽉 차는 높이. 줄이면 긴 글에서 스크롤이 잦아진다
               rows={28}
