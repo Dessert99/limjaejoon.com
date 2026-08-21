@@ -35,6 +35,7 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
   );
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [uploads, setUploads] = useState(0);
   const seq = useRef(0);
 
   const setField = <K extends keyof PostDraft>(
@@ -87,44 +88,78 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
     });
   };
 
-  const insertImage = async (file: File, at: number) => {
-    setPending(true);
-    setError(null);
+  /** 토큰이 있던 자리를 결과로 갈아 끼운다. */
+  const replaceToken = (token: string, snippet: string) => {
+    setDraft((current) => {
+      return {
+        ...current,
+        contentMarkdown: current.contentMarkdown.replace(token, snippet),
+      };
+    });
+  };
 
-    try {
+  const insertImages = async (files: File[], at: number) => {
+    const items = files.map((file) => {
       seq.current += 1;
 
-      const url = await uploadPostImage(
+      return {
         file,
-        imageName(draft.slug, seq.current)
-      );
-      // 앞뒤 줄바꿈이 있어야 문단 한가운데 끼어도 이미지가 제 줄에 선다
-      const snippet = `\n![${file.name}](${url})\n`;
+        name: imageName(draft.slug, seq.current),
+        // 커서로 되짚으면 올리는 동안 타이핑했을 때 자리가 밀린다. 토큰으로 되찾는다
+        token: `<!-- 올리는 중 ${seq.current} -->`,
+      };
+    });
 
-      setDraft((current) => {
-        return {
-          ...current,
-          contentMarkdown:
-            current.contentMarkdown.slice(0, at) +
-            snippet +
-            current.contentMarkdown.slice(at),
-        };
-      });
-    } catch (caught) {
-      setError(readMessage(caught));
-    } finally {
-      setPending(false);
-    }
+    setDraft((current) => {
+      const tokens = items
+        .map((item) => {
+          return item.token;
+        })
+        .join('\n');
+
+      return {
+        ...current,
+        // 앞뒤 줄바꿈이 있어야 문단 한가운데 끼어도 이미지가 제 줄에 선다
+        contentMarkdown:
+          current.contentMarkdown.slice(0, at) +
+          `\n${tokens}\n` +
+          current.contentMarkdown.slice(at),
+      };
+    });
+
+    setError(null);
+    setUploads((count) => {
+      return count + items.length;
+    });
+
+    await Promise.all(
+      items.map(async (item) => {
+        try {
+          const url = await uploadPostImage(item.file, item.name);
+
+          replaceToken(item.token, `<img src="${url}" alt="" />`);
+        } catch (caught) {
+          // 실패한 자리를 비워야 본문에 주석만 남지 않는다
+          replaceToken(item.token, '');
+          setError(readMessage(caught));
+        } finally {
+          setUploads((count) => {
+            return count - 1;
+          });
+        }
+      })
+    );
   };
 
   return {
     draft,
     setField,
     error,
-    pending,
+    // 올리는 중에 저장하면 본문에 토큰이 그대로 굳는다
+    pending: pending || uploads > 0,
     save,
     remove,
-    insertImage,
+    insertImages,
     isEditing: Boolean(initial),
   };
 };

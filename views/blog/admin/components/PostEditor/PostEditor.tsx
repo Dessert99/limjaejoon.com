@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import type { TagWithUsage } from '../../../lib/tag.types';
 import { composeSlug, parseSlug, toPublishedAt } from '../../lib/postSlug';
 import { type PostDraft } from '../../lib/toUpsertInput';
@@ -20,11 +20,23 @@ import {
 import { Button, buttonVariants } from '@/views/blog/components/ui/button';
 import { Input } from '@/views/blog/components/ui/input';
 import { Label } from '@/views/blog/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/views/blog/components/ui/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/views/blog/components/ui/tabs';
 import { Textarea } from '@/views/blog/components/ui/textarea';
 import { MarkdownPreview } from '../MarkdownPreview/MarkdownPreview';
 import { SlugField } from '../SlugField/SlugField';
 import { TagPicker } from '../TagPicker/TagPicker';
+
+/** 붙여넣기·드롭에 딸려 온 것 중 이미지만 고른다. */
+const imagesFrom = (files: FileList): File[] => {
+  return Array.from(files).filter((file) => {
+    return file.type.startsWith('image/');
+  });
+};
 
 /** 오늘 날짜를 주소용 YYYY-MM-DD로 만든다. */
 const today = (): string => {
@@ -80,10 +92,9 @@ export function PostEditor({
     pending,
     save,
     remove,
-    insertImage,
+    insertImages,
     isEditing,
   } = usePostEditor(initial);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
   const [tags, setTags] = useState(initialTags);
 
   // 관리 대화상자에서 태그가 지워지면 이 글에 남은 선택도 같이 떨어내야 한다
@@ -232,36 +243,9 @@ export function PostEditor({
               <TabsTrigger value='preview'>미리보기</TabsTrigger>
             </TabsList>
 
-            <div className='flex items-center gap-2'>
-              <Label
-                htmlFor='post-image'
-                className='text-blog-muted-foreground'>
-                이미지 삽입
-              </Label>
-              <Input
-                id='post-image'
-                type='file'
-                accept='image/jpeg,image/png,image/webp,image/avif'
-                disabled={pending}
-                className='w-auto'
-                onChange={(event) => {
-                  const file = event.target.files?.[0];
-
-                  if (!file) {
-                    return;
-                  }
-
-                  // 커서 자리에 넣고, 커서가 없으면 글 끝에 붙인다
-                  void insertImage(
-                    file,
-                    bodyRef.current?.selectionStart ??
-                      draft.contentMarkdown.length
-                  );
-                  // 같은 파일을 다시 골라도 change가 나도록 값을 비운다
-                  event.target.value = '';
-                }}
-              />
-            </div>
+            <p className='text-sm text-blog-muted-foreground'>
+              이미지는 본문에 붙여넣거나 끌어다 놓는다
+            </p>
           </div>
 
           <TabsContent value='write'>
@@ -272,13 +256,34 @@ export function PostEditor({
             </Label>
             <Textarea
               id='post-body'
-              ref={bodyRef}
               value={draft.contentMarkdown}
               // 28줄은 한 화면에 꽉 차는 높이. 줄이면 긴 글에서 스크롤이 잦아진다
               rows={28}
               className='font-mono text-sm'
               onChange={(event) => {
                 setField('contentMarkdown', event.target.value);
+              }}
+              onPaste={(event) => {
+                const files = imagesFrom(event.clipboardData.files);
+
+                // 이미지가 없으면 막지 않는다. 마크다운 문서 붙여넣기가 그대로 지나가야 한다
+                if (files.length === 0) {
+                  return;
+                }
+
+                event.preventDefault();
+                void insertImages(files, event.currentTarget.selectionStart);
+              }}
+              onDrop={(event) => {
+                const files = imagesFrom(event.dataTransfer.files);
+
+                if (files.length === 0) {
+                  return;
+                }
+
+                event.preventDefault();
+                // 끄는 동안 브라우저가 캐럿을 옮겨둔다. 그 자리가 놓으려는 자리다
+                void insertImages(files, event.currentTarget.selectionStart);
               }}
             />
           </TabsContent>
