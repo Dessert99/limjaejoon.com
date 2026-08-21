@@ -1,4 +1,5 @@
 import rehypeShikiFromHighlighter from '@shikijs/rehype/core';
+import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import { createHighlighterCoreSync, type ShikiTransformer } from 'shiki/core';
@@ -32,8 +33,10 @@ const dropPreStyle: ShikiTransformer = {
 /** 본문 마크다운 확장. 표·체크박스 같은 GitHub 문법을 받아준다. */
 export const REMARK_PLUGINS: PluggableList = [remarkGfm];
 
-/** 제목에 앵커 id를 박고 코드 블록을 하이라이트한다. 본문과 미리보기가 같이 쓴다. */
+/** 직접 쓴 태그를 살리고 제목에 앵커 id를 박고 코드 블록을 하이라이트한다. 본문과 미리보기가 같이 쓴다. */
 export const REHYPE_PLUGINS: PluggableList = [
+  // 본문에 직접 쓴 태그를 살린다. 글쓴이가 관리자뿐이라 새니타이즈 없이 그대로 통과시킨다
+  rehypeRaw,
   // 목차 링크가 걸릴 id를 여기서 만든다. extractHeadings의 슬러그 규칙과 같아야 한다
   rehypeSlug,
   [
