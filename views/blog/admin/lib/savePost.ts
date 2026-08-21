@@ -2,6 +2,7 @@ import type { Post } from '../../lib/post.types';
 import type { UpsertPostInput } from '../../lib/post.types';
 import { clientFetchJson } from '@/lib/http/client';
 
+/** 글 저장. id가 있으면 수정, 없으면 새 글이다. */
 export const savePost = async (
   input: UpsertPostInput,
   id?: string

@@ -12,12 +12,15 @@ import {
   PopoverTrigger,
 } from '@/views/blog/components/ui/popover';
 
+/** 달력이 읽을 Date로 바꾼다. 비었거나 깨진 값이면 아무 날도 안 고른 상태다. */
 const toDate = (value: string): Date | undefined => {
   const [year, month, day] = value.split('-').map(Number);
 
+  // UTC로 파싱하는 new Date('2026-08-20')과 달리 이건 로컬 자정이라 달력 칸이 하루 밀리지 않는다
   return year && month && day ? new Date(year, month - 1, day) : undefined;
 };
 
+/** 고른 날짜를 주소에 쓸 YYYY-MM-DD로 바꾼다. */
 const toValue = (date: Date): string => {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -32,6 +35,7 @@ type SlugFieldProps = {
   onTopicChange: (topic: string) => void;
 };
 
+/** 날짜와 주제로 글 주소를 만든다. 만들어질 주소를 아래에 미리 보여준다. */
 export function SlugField({
   date,
   topic,

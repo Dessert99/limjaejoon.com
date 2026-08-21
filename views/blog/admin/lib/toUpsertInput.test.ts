@@ -1,10 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { EMPTY_DRAFT, toUpsertInput, type PostDraft } from './toUpsertInput';
+import { toUpsertInput, type PostDraft } from './toUpsertInput';
 
 const NOW = '2026-08-06T00:00:00.000Z';
 
 const draft = (overrides: Partial<PostDraft> = {}): PostDraft => {
-  return { ...EMPTY_DRAFT, title: '제목', slug: 'slug', ...overrides };
+  return {
+    title: '제목',
+    slug: 'slug',
+    description: '',
+    tags: [],
+    publishedAt: '',
+    contentMarkdown: '',
+    ...overrides,
+  };
 };
 
 describe('toUpsertInput', () => {
