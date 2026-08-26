@@ -1,3 +1,4 @@
+import { LabsStage } from '@/views/labs/components/LabsStage/LabsStage';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -22,5 +23,9 @@ export const metadata: Metadata = {
 };
 
 export default function LabsPage() {
-  return <main className='min-h-svh' />;
+  return (
+    <main className='h-svh'>
+      <LabsStage />
+    </main>
+  );
 }
