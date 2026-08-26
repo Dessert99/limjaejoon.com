@@ -5,6 +5,7 @@
   --color-home-glass: color-mix(in oklab, var(--color-home-foreground) 18%, transparent);
   --color-home-glass-border: color-mix(in oklab, var(--color-home-foreground) 26%, transparent);
   --color-home-glass-shadow: color-mix(in oklab, var(--color-home-background) 20%, transparent);
+  --color-home-tech-halo: color-mix(in oklab, var(--color-home-foreground) 70%, transparent);
 
   --color-home-github: #181717;
   --color-home-linkedin: #0a66c2;
