@@ -1,4 +1,3 @@
-import { CliffScene } from '@/views/labs/components/CliffScene/CliffScene';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -23,9 +22,5 @@ export const metadata: Metadata = {
 };
 
 export default function LabsPage() {
-  return (
-    <main>
-      <CliffScene />
-    </main>
-  );
+  return <main className='min-h-svh' />;
 }
