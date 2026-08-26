@@ -60,6 +60,10 @@ export function DayCounter({ days }: { days: number }) {
   return (
     // tabular-nums라야 자릿수가 바뀌어도 숫자 폭이 흔들리지 않는다
     <p className='font-display text-6xl font-medium tracking-tight tabular-nums sm:text-8xl'>
+      <span className='mr-3 text-base font-normal opacity-50 sm:text-xl'>
+        개발을 시작한지
+      </span>
+
       <span ref={numberRef}>{days.toLocaleString('ko-KR')}</span>
 
       <span className='ml-3 text-2xl sm:text-4xl'>일</span>
