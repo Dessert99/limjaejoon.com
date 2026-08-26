@@ -8,6 +8,7 @@ type NavItemProps = {
   label: string;
 };
 
+/** 마우스를 따라 끌려오고, 호버하면 색이 반전되는 메뉴 링크. */
 export function NavItem({ href, label }: NavItemProps) {
   const magnetRef = useMagnet<HTMLAnchorElement>();
 

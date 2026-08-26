@@ -3,16 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
 
-const GREETING = `안녕하세요.\n프론트엔드 개발자,\n임재준입니다.`;
-
+// 탭이 살아 있는 동안 기억해, 홈으로 되돌아왔을 때 인트로를 두 번 재생하지 않는다
 let played = false;
 
-const OVERLAY_CLASS =
-  'fixed inset-0 z-(--z-transition) flex items-center justify-center bg-home-background px-home-gutter motion-reduce:hidden';
-
-const TEXT_CLASS =
-  'font-display text-home-intro text-home-foreground text-balance whitespace-pre-line text-center';
-
+/** 첫 방문에서 인사말을 타이핑한 뒤 커튼처럼 걷히며 히어로를 여는 막. */
 export function IntroOverlay() {
   const [visible] = useState(() => {
     return !played;
@@ -36,20 +30,24 @@ export function IntroOverlay() {
       const media = gsap.matchMedia();
 
       media.add('(prefers-reduced-motion: no-preference)', () => {
+        const greeting = `안녕하세요.\n프론트엔드 개발자,\n임재준입니다.`;
         const typed = { chars: 0 };
+        // 커튼이 걷히는 순간 히어로도 이어 움직이도록 막 바깥 요소를 미리 잡아둔다
         const track = document.querySelector('[data-marquee-track]');
         const panels = document.querySelectorAll('[data-glass-panel]');
 
         gsap
           .timeline()
+          // 숫자 하나를 글자 수까지 밀어 타이핑을 흉내낸다. duration 2를 줄이면 급하게 쳐진다
           .to(typed, {
             duration: 2,
             ease: 'none',
-            chars: GREETING.length,
+            chars: greeting.length,
             onUpdate: () => {
-              text.textContent = GREETING.slice(0, Math.round(typed.chars));
+              text.textContent = greeting.slice(0, Math.round(typed.chars));
             },
           })
+          // 다 읽을 틈으로 0.5초를 준 뒤, 아래쪽이 50%로 둥글게 말리며 위로 빠진다
           .fromTo(
             root,
             { borderRadius: '0% 0% 0% 0%' },
@@ -75,6 +73,7 @@ export function IntroOverlay() {
               opacity: 0,
               duration: 0.7,
               ease: 'back.out(1)',
+              // stagger를 키우면 패널이 하나씩 또렷하게 떨어져 등장한다
               stagger: 0.12,
             },
             '<0.35'
@@ -94,6 +93,7 @@ export function IntroOverlay() {
 
   return (
     <>
+      {/* JS가 죽으면 커튼이 걷히지 못해 화면을 영영 덮으므로, CSS만으로 먼저 치운다 */}
       <noscript>
         <style>{'[data-intro-overlay]{display:none}'}</style>
       </noscript>
@@ -103,10 +103,10 @@ export function IntroOverlay() {
         data-intro-overlay=''
         data-testid='intro-overlay'
         aria-hidden='true'
-        className={OVERLAY_CLASS}>
+        className='fixed inset-0 z-(--z-transition) flex items-center justify-center bg-home-background px-home-gutter motion-reduce:hidden'>
         <span
           ref={textRef}
-          className={TEXT_CLASS}
+          className='text-center font-display text-home-intro text-balance whitespace-pre-line text-home-foreground'
         />
       </div>
     </>
