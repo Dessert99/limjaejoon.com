@@ -13,8 +13,9 @@ export function ScrollStage({ children }: { children: ReactNode }) {
 
       media.add('(prefers-reduced-motion: no-preference)', () => {
         // smooth 1.2가 스크롤을 따라잡는 데 쓰는 초. 키우면 더 미끄럽고 늦게 멈춘다
+        // speed 0.5는 휠 한 번이 굴리는 거리 배수. 줄이면 천천히 내려가고 키우면 성큼 뛴다
         // effects를 끄면 자식의 data-speed 패럴랙스가 함께 죽는다
-        ScrollSmoother.create({ smooth: 1.2, effects: true });
+        ScrollSmoother.create({ smooth: 1.2, speed: 0.5, effects: true });
       });
 
       return () => {
