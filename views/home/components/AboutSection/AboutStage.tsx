@@ -3,7 +3,7 @@
 import { useRef, type ReactNode } from 'react';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
 
-/** 어바웃 판을 화면에 박아둔 채, 스크롤로 로고 판을 지운 뒤 문구를 상단에 앉힌다. */
+/** 어바웃 판을 화면에 박아둔 채, 스크롤로 로고 판을 지우고 일수 문구를 오므려 없앤 그 자리에서 활동 이력을 그려 내린다. */
 export function AboutStage({ children }: { children: ReactNode }) {
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -11,15 +11,16 @@ export function AboutStage({ children }: { children: ReactNode }) {
     () => {
       const select = gsap.utils.selector(sectionRef);
       const badge = select('[data-day-badge]')[0];
-      const anchor = select('[data-day-anchor]')[0];
+      const list = select('[data-timeline-list]')[0];
+      const firstNode = select('[data-timeline-node]')[0];
 
-      if (!badge || !anchor) {
+      if (!badge || !list || !firstNode) {
         return;
       }
 
       const media = gsap.matchMedia();
 
-      // 모션을 줄여달라는 기기에서는 판이 박히지 않아, 문구도 로고도 처음 자리에 그대로 있는다
+      // 모션을 줄여달라는 기기에서는 판이 박히지 않아, 문구도 로고도 이력도 처음 자리에 그대로 있는다
       media.add('(prefers-reduced-motion: no-preference)', () => {
         const timeline = gsap.timeline({
           // 스크롤에 그대로 매달리는 연출이라, 가속이 붙으면 손끝과 화면이 어긋나 보인다
@@ -28,12 +29,12 @@ export function AboutStage({ children }: { children: ReactNode }) {
             trigger: sectionRef.current,
             // 판 윗변이 화면 꼭대기에 닿는 순간 붙잡는다
             start: 'top top',
-            // 붙잡힌 채 굴릴 스크롤 거리가 화면 높이의 2.4배. 키우면 단계 하나하나가 느긋해진다
-            end: '+=240%',
+            // 붙잡힌 채 굴릴 스크롤 거리가 화면 높이의 5.8배. 마디가 5개라 이만큼은 돼야 한 마디씩 눈에 들어온다
+            end: '+=580%',
             pin: true,
             // 1이라 손을 떼도 1초쯤 더 따라와, 스크롤이 튈 때 화면이 같이 튀지 않는다
             scrub: 1,
-            // 창 크기가 바뀌면 상단 자리표까지 남은 거리를 다시 잰다
+            // 창 크기가 바뀌면 타임라인을 얼마나 내려 시작할지 다시 잰다
             invalidateOnRefresh: true,
           },
         });
@@ -58,25 +59,60 @@ export function AboutStage({ children }: { children: ReactNode }) {
           .to(
             badge,
             {
-              // 자리표까지 남은 거리를 그때그때 재서 간다. 화면이 바뀌어 자리가 옮겨져도 따라간다
-              x: () => {
-                const box = badge.getBoundingClientRect();
-
-                return (
-                  anchor.getBoundingClientRect().left -
-                  (box.left + box.width / 2)
-                );
-              },
-              y: () => {
-                return (
-                  anchor.getBoundingClientRect().top -
-                  badge.getBoundingClientRect().top
-                );
-              },
-              // 1이 날아가는 데 쓰는 시간. 줄이면 문구가 훅 빨려 올라간다
-              duration: 1,
+              scale: 0,
+              // 왼쪽 끝을 붙박아 오므려야 첫 원이 설 그 점으로 정확히 빨려 들어간다
+              transformOrigin: 'left center',
+              // back.in(2.4)라 한 번 부풀었다 꺼져, 첫 원이 뜰 때와 정확히 뒤집힌 '뿅'이 된다
+              ease: 'back.in(2.4)',
+              duration: 0.5,
             },
             3.6
+          )
+          // 문구가 4.1에 꺼지고 4.2에 첫 마디가 그 자리에 선다. 여기서부터 마디 하나가 1.2씩 차지한다
+          .fromTo(
+            select('[data-timeline-node]'),
+            { scale: 0 },
+            {
+              scale: 1,
+              // back.out(2.4)라 목표 크기를 한 번 넘겼다 돌아와 '뿅' 하고 튄다. 낮추면 튐이 잦아든다
+              ease: 'back.out(2.4)',
+              duration: 0.4,
+              // each 1.2가 마디 하나에 주는 스크롤 몫. 앞 마디의 줄기가 다 내려온 순간 다음 원이 선다
+              stagger: { each: 1.2 },
+            },
+            4.2
+          )
+          // 원이 다 서고 나서 가지가 뻗는다
+          .fromTo(
+            select('[data-timeline-branch]'),
+            { scaleX: 0 },
+            { scaleX: 1, duration: 0.3, stagger: { each: 1.2 } },
+            4.6
+          )
+          // 가지가 절반쯤 뻗었을 때 문구가 따라 붙어, 가지가 문구를 끌고 오는 것처럼 보인다
+          .fromTo(
+            select('[data-timeline-copy]'),
+            { opacity: 0, x: -16 },
+            { opacity: 1, x: 0, duration: 0.45, stagger: { each: 1.2 } },
+            4.75
+          )
+          // 줄기는 위에서 아래로 자란다. 0.5가 다음 원에 닿기까지 걸리는 시간
+          .fromTo(
+            select('[data-timeline-stem]'),
+            { scaleY: 0 },
+            { scaleY: 1, duration: 0.5, stagger: { each: 1.2 } },
+            4.9
+          )
+          // 판을 내려 시작해야 첫 원이 문구가 꺼진 화면 한가운데에 선다. 다 그리는 동안 y 0으로 돌아와 전체가 가운데 놓인다
+          .fromTo(
+            list,
+            {
+              y: () => {
+                return list.offsetHeight / 2 - firstNode.offsetHeight / 2;
+              },
+            },
+            { y: 0, duration: 4.6 },
+            4.2
           );
       });
 
@@ -92,12 +128,6 @@ export function AboutStage({ children }: { children: ReactNode }) {
       ref={sectionRef}
       aria-labelledby='about-title'
       className='relative isolate flex min-h-svh flex-col items-center justify-center gap-6 overflow-hidden bg-home-background px-home-gutter py-24 text-center text-home-foreground'>
-      {/* 문구가 날아가 앉을 자리. 크기가 없어 레이아웃엔 안 잡히고 좌표만 준다 */}
-      <span
-        data-day-anchor
-        className='absolute top-home-gutter left-1/2'
-      />
-
       {children}
     </section>
   );
