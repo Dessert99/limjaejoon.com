@@ -15,8 +15,6 @@ export const revalidate = 86400;
 export default function HomePage() {
   return (
     <>
-      <IntroOverlay />
-
       <ScrollStage>
         <main>
           <HeroSection />
@@ -24,6 +22,9 @@ export default function HomePage() {
           <AboutSection />
         </main>
       </ScrollStage>
+
+      {/* 커튼이 스무더를 잡아 세우려면 스무더가 먼저 만들어져 있어야 한다 */}
+      <IntroOverlay />
     </>
   );
 }

@@ -1,15 +1,15 @@
+import { AboutStage } from './AboutStage';
+import { ActivityTimeline } from './ActivityTimeline';
 import { countDevDays } from './countDevDays';
 import { DayCounter } from './DayCounter';
 import { TechGrid } from './TechGrid';
 
-/** 히어로 다음 한 판. 기술 로고 판 위에서 개발을 시작한 날부터 오늘까지 흐른 일수를 센다. */
+/** 히어로 다음 한 판. 기술 로고 판 위에서 일수를 세고, 로고가 걷히면 활동 이력이 그 자리를 이어받는다. */
 export function AboutSection() {
   const days = countDevDays();
 
   return (
-    <section
-      aria-labelledby='about-title'
-      className='relative isolate flex min-h-svh flex-col items-center justify-center gap-6 overflow-hidden bg-home-background px-home-gutter py-24 text-center text-home-foreground'>
+    <AboutStage>
       <h2
         id='about-title'
         className='sr-only'>
@@ -19,6 +19,8 @@ export function AboutSection() {
       <TechGrid />
 
       <DayCounter days={days} />
-    </section>
+
+      <ActivityTimeline />
+    </AboutStage>
   );
 }

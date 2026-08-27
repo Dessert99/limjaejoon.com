@@ -59,7 +59,10 @@ export function DayCounter({ days }: { days: number }) {
 
   return (
     // tabular-nums라야 자릿수가 바뀌어도 숫자 폭이 흔들리지 않는다
-    <p className='font-display text-6xl font-medium tracking-tight tabular-nums sm:text-8xl'>
+    // ml이 왼쪽 끝을 첫 타임라인 원의 한가운데에 얹는다. 축을 옮기면 이 값도 같이 옮겨야 문구와 원이 어긋나지 않는다
+    <p
+      data-day-badge
+      className='ml-[1.375rem] self-start font-display text-6xl font-medium tracking-tight tabular-nums sm:ml-[calc(12%+2rem)] sm:text-8xl lg:ml-[calc(16%+3rem)]'>
       <span className='mr-3 text-base font-normal opacity-50 sm:text-xl'>
         개발을 시작한지
       </span>
