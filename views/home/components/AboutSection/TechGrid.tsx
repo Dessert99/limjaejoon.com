@@ -64,7 +64,7 @@ export function TechGrid() {
     <ul
       ref={gridRef}
       aria-label='써온 기술'
-      className='absolute inset-0 -z-10 grid auto-rows-fr grid-cols-4 place-items-center p-home-gutter sm:grid-cols-6 lg:grid-cols-8'>
+      className='absolute inset-0 -z-10 grid auto-rows-fr grid-cols-4 p-home-gutter sm:grid-cols-6 lg:grid-cols-8'>
       {[
         siHtml5,
         siCss,
@@ -92,7 +92,11 @@ export function TechGrid() {
         siDocker,
       ].map((icon) => {
         return (
-          <li key={icon.slug}>
+          // 후광과 번짐이 span 밖으로 나가 있어, 칸을 통째로 채운 이 li를 잘라야 자국이 안 남는다
+          <li
+            key={icon.slug}
+            data-tech-slot
+            className='grid place-items-center'>
             <span
               data-tech-cell
               // -inset-3이 후광 크기, blur-lg가 번지는 정도. 키우면 로고가 하얀 안개 위에 뜬 것처럼 멀어진다

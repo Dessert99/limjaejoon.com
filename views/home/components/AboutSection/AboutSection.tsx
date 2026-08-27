@@ -1,3 +1,4 @@
+import { AboutStage } from './AboutStage';
 import { countDevDays } from './countDevDays';
 import { DayCounter } from './DayCounter';
 import { TechGrid } from './TechGrid';
@@ -7,9 +8,7 @@ export function AboutSection() {
   const days = countDevDays();
 
   return (
-    <section
-      aria-labelledby='about-title'
-      className='relative isolate flex min-h-svh flex-col items-center justify-center gap-6 overflow-hidden bg-home-background px-home-gutter py-24 text-center text-home-foreground'>
+    <AboutStage>
       <h2
         id='about-title'
         className='sr-only'>
@@ -19,6 +18,6 @@ export function AboutSection() {
       <TechGrid />
 
       <DayCounter days={days} />
-    </section>
+    </AboutStage>
   );
 }
