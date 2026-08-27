@@ -59,22 +59,16 @@ export function DayCounter({ days }: { days: number }) {
 
   return (
     // tabular-nums라야 자릿수가 바뀌어도 숫자 폭이 흔들리지 않는다
-    <p className='font-display text-6xl font-medium tracking-tight tabular-nums sm:text-8xl'>
-      {/* inline-block이라야 clip-path가 걸린다. 인라인 상자에는 안 먹는다 */}
-      <span
-        data-day-label
-        className='mr-3 inline-block text-base font-normal opacity-50 sm:text-xl'>
+    <p
+      data-day-badge
+      className='font-display text-6xl font-medium tracking-tight tabular-nums sm:text-8xl'>
+      <span className='mr-3 text-base font-normal opacity-50 sm:text-xl'>
         개발을 시작한지
       </span>
 
-      {/* 숫자와 '일'이 좌상단으로 함께 날아가야 해서 한 상자에 묶는다 */}
-      <span
-        data-day-badge
-        className='inline-block'>
-        <span ref={numberRef}>{days.toLocaleString('ko-KR')}</span>
+      <span ref={numberRef}>{days.toLocaleString('ko-KR')}</span>
 
-        <span className='ml-3 text-2xl sm:text-4xl'>일</span>
-      </span>
+      <span className='ml-3 text-2xl sm:text-4xl'>일</span>
     </p>
   );
 }
