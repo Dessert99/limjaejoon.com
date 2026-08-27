@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ScrollSmoother, gsap, useGSAP } from '@/lib/motion/gsap';
+import { gsap, useGSAP } from '@/lib/motion/gsap';
 
 // 탭이 살아 있는 동안 기억해, 홈으로 되돌아왔을 때 인트로를 두 번 재생하지 않는다
 let played = false;
@@ -35,15 +35,13 @@ export function IntroOverlay() {
         // 커튼이 걷히는 순간 히어로도 이어 움직이도록 막 바깥 요소를 미리 잡아둔다
         const track = document.querySelector('[data-marquee-track]');
         const panels = document.querySelectorAll('[data-glass-panel]');
-        // 커튼 뒤에서 스크롤이 흐르면 히어로 등장 연출이 화면 밖에서 소진되므로, 인트로 동안 휠·터치를 막는다
-        const smoother = ScrollSmoother.get();
-
-        smoother?.paused(true);
+        // 커튼 뒤에서 스크롤이 흐르면 히어로 등장 연출이 화면 밖에서 소진되는데, 터치 기기엔 스무더가 없어 문서를 직접 잠근다
+        document.documentElement.style.overflow = 'hidden';
 
         gsap
           .timeline({
             onComplete: () => {
-              smoother?.paused(false);
+              document.documentElement.style.overflow = '';
             },
           })
           // 숫자 하나를 글자 수까지 밀어 타이핑을 흉내낸다. duration 1.2를 줄이면 급하게 쳐진다
