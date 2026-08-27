@@ -1,4 +1,3 @@
-
 const DATED_SLUG = /^(\d{4}-\d{2}-\d{2})-(.+)$/;
 
 export const composeSlug = (date: string, topic: string): string => {

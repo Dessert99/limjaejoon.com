@@ -1,4 +1,3 @@
-
 const FORMATTER = new Intl.DateTimeFormat('ko-KR', {
   year: 'numeric',
   month: 'long',

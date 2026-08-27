@@ -1,4 +1,3 @@
-
 const HOME_LABEL = 'home';
 
 export function routeLabel(href: string): string {

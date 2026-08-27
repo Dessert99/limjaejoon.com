@@ -1,4 +1,3 @@
-
 type EnvSource = Record<string, string | undefined>;
 
 type SupabaseTarget = 'local' | 'remote';

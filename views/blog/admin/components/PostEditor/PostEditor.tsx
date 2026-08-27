@@ -20,7 +20,12 @@ import {
 import { Button, buttonVariants } from '@/views/blog/components/ui/button';
 import { Input } from '@/views/blog/components/ui/input';
 import { Label } from '@/views/blog/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/views/blog/components/ui/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/views/blog/components/ui/tabs';
 import { Textarea } from '@/views/blog/components/ui/textarea';
 import { MarkdownPreview } from '../MarkdownPreview/MarkdownPreview';
 import { SlugField } from '../SlugField/SlugField';
