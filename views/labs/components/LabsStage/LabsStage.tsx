@@ -1,12 +1,18 @@
 'use client';
 
+import { gsap } from '@/lib/motion/gsap';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-/** 모눈 바닥과 유리 상자로 실험실을 꾸미고 그 안에 표본을 세우는 3D 무대. */
+/** 모눈 바닥과 유리 상자로 실험실을 꾸미고, 열매를 눌러 라우트를 여는 3D 무대. */
 export function LabsStage() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -51,11 +57,11 @@ export function LabsStage() {
     // 잔격자 위에 겹쳐 긋는 굵은 격자 — 칸 수를 줄이면 굵은 선이 드문드문해진다
     scene.add(new THREE.GridHelper(20, 10, '#1d4533', '#1d4533'));
 
-    // 표본을 가두는 유리 상자 [가로, 높이, 깊이]
+    // 나무를 가두는 유리 상자 [가로, 높이, 깊이]
     const roomGeometry = new THREE.BoxGeometry(20, 20, 20);
     const room = new THREE.Mesh(
       roomGeometry,
-      // opacity를 키울수록 유리가 뿌예져 안의 표본이 흐려진다
+      // opacity를 키울수록 유리가 뿌예져 안의 나무가 흐려진다
       new THREE.MeshBasicMaterial({
         color: '#f7eae0',
         transparent: true,
@@ -74,15 +80,16 @@ export function LabsStage() {
       )
     );
 
-    const specimen = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
-      // roughness를 0에 가깝게 줄이면 젖은 듯 반질해지고, 1에 가까우면 분필처럼 무광이 된다
-      new THREE.MeshStandardMaterial({ color: '#5e3122', roughness: 0.6 })
+    // 라우트 하나를 여는 열매 [반지름, 가로 분할, 세로 분할] — 분할을 줄이면 각진 저폴리가 된다
+    const fruit = new THREE.Mesh(
+      new THREE.SphereGeometry(0.28, 24, 16),
+      new THREE.MeshStandardMaterial({ color: '#f9d2ba', roughness: 0.4 })
     );
-    specimen.position.y = 0.5;
-    scene.add(specimen);
+    // 열매가 매달린 자리 — 옮기면 아래 카메라 초점도 같이 옮겨야 화면 왼쪽에 남는다
+    fruit.position.set(1.2, 1.6, 0);
+    scene.add(fruit);
 
-    // 드래그로 카메라를 궤도 회전 — 이동은 막고 표본 높이를 보게 해 시선이 바닥으로 쏠리지 않게 한다
+    // 드래그로 카메라를 궤도 회전 — 이동은 막고 나무 높이를 보게 해 시선이 바닥으로 쏠리지 않게 한다
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enablePan = false;
     controls.enableDamping = true;
@@ -95,6 +102,41 @@ export function LabsStage() {
     controls.minDistance = 5;
     // 20짜리 상자 안에 카메라가 있어서, 이보다 키우면 벽을 뚫고 나간다
     controls.maxDistance = 15;
+
+    cameraRef.current = camera;
+    controlsRef.current = controls;
+
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    const pressed = new THREE.Vector2();
+
+    const handlePointerDown = (event: PointerEvent): void => {
+      pressed.set(event.clientX, event.clientY);
+    };
+
+    const handleClick = (event: MouseEvent): void => {
+      // 궤도 회전으로 드래그한 끝에도 click이 뜨므로, 손이 4px 안쪽으로 머물렀을 때만 클릭으로 친다
+      if (
+        Math.hypot(event.clientX - pressed.x, event.clientY - pressed.y) > 4
+      ) {
+        return;
+      }
+
+      const bounds = renderer.domElement.getBoundingClientRect();
+      // 화면 픽셀을 캔버스 한가운데가 0인 -1~1 좌표로 옮겨야 레이캐스터가 읽는다
+      pointer.set(
+        ((event.clientX - bounds.left) / bounds.width) * 2 - 1,
+        -((event.clientY - bounds.top) / bounds.height) * 2 + 1
+      );
+      raycaster.setFromCamera(pointer, camera);
+
+      if (raycaster.intersectObject(fruit).length > 0) {
+        router.push('/labs/sample');
+      }
+    };
+
+    renderer.domElement.addEventListener('pointerdown', handlePointerDown);
+    renderer.domElement.addEventListener('click', handleClick);
 
     // 매 프레임 다시 그린다 — 관성이 잦아드는 동안에도 갱신돼야 해서 controls.update()가 여기 들어간다
     renderer.setAnimationLoop(() => {
@@ -112,8 +154,12 @@ export function LabsStage() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      renderer.domElement.removeEventListener('pointerdown', handlePointerDown);
+      renderer.domElement.removeEventListener('click', handleClick);
       renderer.setAnimationLoop(null);
       controls.dispose();
+      cameraRef.current = null;
+      controlsRef.current = null;
       // GPU에 올라간 자원은 참조가 끊겨도 반환되지 않아 직접 반납한다
       scene.traverse((object) => {
         if (
@@ -132,7 +178,43 @@ export function LabsStage() {
       renderer.dispose();
       container.removeChild(renderer.domElement);
     };
-  }, []);
+  }, [router]);
+
+  useEffect(() => {
+    const camera = cameraRef.current;
+    const controls = controlsRef.current;
+
+    if (!camera || !controls) {
+      return;
+    }
+
+    // 본문이 열리면 열매보다 오른쪽을 본다 — 초점을 오른쪽으로 밀어야 열매가 패널을 피해 왼쪽에 남는다
+    const focus =
+      pathname === '/labs'
+        ? new THREE.Vector3(0, 1.5, 0)
+        : new THREE.Vector3(2.6, 1.6, 0);
+    // 카메라를 초점과 같은 만큼 민다 — 상대 위치가 그대로라 사용자가 돌려둔 각도와 거리를 안 건드린다
+    const shift = focus.clone().sub(controls.target);
+
+    const timeline = gsap.timeline({
+      // duration을 키우면 열매까지 느긋하게 미끄러지고, 줄이면 툭 끊기듯 붙는다
+      defaults: { duration: 1.2, ease: 'power2.inOut' },
+    });
+    timeline.to(controls.target, { x: focus.x, y: focus.y, z: focus.z }, 0);
+    timeline.to(
+      camera.position,
+      {
+        x: camera.position.x + shift.x,
+        y: camera.position.y + shift.y,
+        z: camera.position.z + shift.z,
+      },
+      0
+    );
+
+    return () => {
+      timeline.kill();
+    };
+  }, [pathname]);
 
   return (
     <div
