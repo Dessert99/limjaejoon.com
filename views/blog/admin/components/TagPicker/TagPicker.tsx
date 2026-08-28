@@ -12,6 +12,7 @@ type TagPickerProps = {
   onTagsChange: (tags: TagWithUsage[]) => void;
 };
 
+/** 글에 붙일 태그를 고른다. 관리 대화상자에서 태그를 만들고 지울 수도 있다. */
 export function TagPicker({
   tags,
   selected,

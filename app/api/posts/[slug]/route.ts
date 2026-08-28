@@ -8,6 +8,7 @@ type RouteContext = {
   }>;
 };
 
+/** 주소로 글 한 편. 없으면 404다. */
 export const GET = async (_request: Request, context: RouteContext) => {
   const { slug } = await context.params;
   const client = await createSupabaseServerClient();

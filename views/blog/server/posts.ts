@@ -3,18 +3,16 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/lib/supabase/database.types';
 import type { Post, PostListItem } from '../lib/post.types';
 
-const TAGS_JOIN = 'post_tags(tags(name))';
-
-const POST_LIST_SELECT = `id, slug, title, description, published_at, ${TAGS_JOIN}`;
-
 type TagsJoin = { post_tags: { tags: { name: string } | null }[] };
 
+/** 조인으로 딸려 온 post_tags 중첩을 태그 이름 배열로 눌러 화면이 쓰기 좋게 만든다. */
 const foldTags = <T>(row: T & TagsJoin): T & { tags: string[] } => {
   const { post_tags: links, ...rest } = row;
 
   return {
     ...rest,
     tags: links
+      // 조인이 태그를 못 읽어 오면 null이 섞인다. 이름 없는 링크는 버린다
       .map((link) => {
         return link.tags?.name;
       })
@@ -25,12 +23,13 @@ const foldTags = <T>(row: T & TagsJoin): T & { tags: string[] } => {
   } as T & { tags: string[] };
 };
 
+/** 발행 최신순 글 목록. 본문은 빼고 목록·검색에 필요한 열만 가져온다. */
 export const getPosts = async (
   client: SupabaseClient<Database>
 ): Promise<PostListItem[]> => {
   const { data, error } = await client
     .from('posts')
-    .select(POST_LIST_SELECT)
+    .select('id, slug, title, description, published_at, post_tags(tags(name))')
     .order('published_at', { ascending: false });
 
   if (error) {
@@ -42,6 +41,7 @@ export const getPosts = async (
   ).map(foldTags);
 };
 
+/** 정적 경로를 만들 때 쓸 주소 목록. */
 export const getPostSlugs = async (
   client: SupabaseClient<Database>
 ): Promise<string[]> => {
@@ -61,6 +61,7 @@ export const getPostSlugs = async (
   );
 };
 
+/** 사이트맵 항목. 수정일이 있어야 크롤러가 다시 읽을 글을 고른다. */
 export const getPostSitemapEntries = async (
   client: SupabaseClient<Database>
 ): Promise<{ slug: string; updated_at: string }[]> => {
@@ -76,13 +77,14 @@ export const getPostSitemapEntries = async (
   return data ?? [];
 };
 
+/** 주소로 글 한 편. 없으면 null이라 페이지가 404로 넘긴다. */
 export const getPostBySlug = async (
   client: SupabaseClient<Database>,
   slug: string
 ): Promise<Post | null> => {
   const { data, error } = await client
     .from('posts')
-    .select(`*, ${TAGS_JOIN}`)
+    .select('*, post_tags(tags(name))')
     .eq('slug', slug)
     .maybeSingle();
 

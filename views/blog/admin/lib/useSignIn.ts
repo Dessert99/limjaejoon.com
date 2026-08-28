@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from '@/lib/auth/signIn';
 
-const ADMIN_HOME = '/blog';
-
+/** 관리자 로그인 폼 상태. 성공하면 블로그로 보낸다. */
 export const useSignIn = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -21,12 +20,13 @@ export const useSignIn = () => {
 
     setPending(false);
 
+    // 실패해도 입력값은 남겨야 오타 한 글자만 고쳐 다시 넣을 수 있다
     if (result.error) {
       setError(result.error);
       return;
     }
 
-    router.push(ADMIN_HOME);
+    router.push('/blog');
   };
 
   return { email, setEmail, password, setPassword, error, pending, submit };

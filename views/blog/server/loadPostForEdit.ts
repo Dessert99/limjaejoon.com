@@ -2,6 +2,7 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/lib/supabase/database.types';
 
+/** 편집 화면이 쓸 글 원본. 태그는 이름이 아니라 선택 상태를 맞출 id로 편다. */
 export const loadPostForEdit = async (
   client: SupabaseClient<Database>,
   id: string

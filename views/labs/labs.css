@@ -1,8 +1,6 @@
 @theme static {
   --color-labs-sky: #e3f2fd;
   --color-labs-ground: #764737;
-  /* 낙하 끝 암전용. 순검정 대신 팔레트에 붙는 흑갈색을 쓴다 */
-  --color-labs-void: #140b06;
 
   --color-labs-pine-25: #363e3a;
   --color-labs-pine-50: #2f4138;

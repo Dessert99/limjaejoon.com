@@ -3,9 +3,7 @@
 import { Button } from '@/views/blog/components/ui/button';
 import { useSignIn } from '../../lib/useSignIn';
 
-const FIELD_CLASS =
-  'text-base w-full rounded-lg border border-blog-border bg-blog-card px-4 py-2 text-blog-foreground';
-
+/** 관리자 로그인 폼. 이메일·비밀번호만 받고 나머지는 Supabase가 맡는다. */
 export function AdminLoginForm() {
   const { email, setEmail, password, setPassword, error, pending, submit } =
     useSignIn();
@@ -26,13 +24,14 @@ export function AdminLoginForm() {
         <input
           id='admin-email'
           type='email'
+          // 비밀번호 관리자가 계정을 알아보게 하는 값이라 email이 아니라 username이다
           autoComplete='username'
           required
           value={email}
           onChange={(event) => {
             setEmail(event.target.value);
           }}
-          className={FIELD_CLASS}
+          className='w-full rounded-lg border border-blog-border bg-blog-card px-4 py-2 text-base text-blog-foreground'
         />
       </div>
 
@@ -51,7 +50,7 @@ export function AdminLoginForm() {
           onChange={(event) => {
             setPassword(event.target.value);
           }}
-          className={FIELD_CLASS}
+          className='w-full rounded-lg border border-blog-border bg-blog-card px-4 py-2 text-base text-blog-foreground'
         />
       </div>
 

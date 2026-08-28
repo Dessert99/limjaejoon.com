@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import type { TagWithUsage } from '../../../lib/tag.types';
 import { composeSlug, parseSlug, toPublishedAt } from '../../lib/postSlug';
 import { type PostDraft } from '../../lib/toUpsertInput';
@@ -31,14 +31,24 @@ import { MarkdownPreview } from '../MarkdownPreview/MarkdownPreview';
 import { SlugField } from '../SlugField/SlugField';
 import { TagPicker } from '../TagPicker/TagPicker';
 
+/** 붙여넣기·드롭에 딸려 온 것 중 이미지만 고른다. */
+const imagesFrom = (files: FileList): File[] => {
+  return Array.from(files).filter((file) => {
+    return file.type.startsWith('image/');
+  });
+};
+
+/** 오늘 날짜를 주소용 YYYY-MM-DD로 만든다. */
 const today = (): string => {
   const now = new Date();
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
 
+  // toISOString은 UTC라 밤에 쓰면 어제가 된다. 로컬 날짜를 직접 조립한다
   return `${now.getFullYear()}-${month}-${day}`;
 };
 
+/** 라벨 붙은 한 줄 입력칸. 제목·설명처럼 단순한 필드가 쓴다. */
 function Field({
   id,
   label,
@@ -67,6 +77,7 @@ function Field({
   );
 }
 
+/** 글 작성·수정 화면. 위쪽은 메타 정보, 아래쪽은 본문 작성과 미리보기 탭이다. */
 export function PostEditor({
   initial,
   tags: initialTags,
@@ -81,12 +92,12 @@ export function PostEditor({
     pending,
     save,
     remove,
-    insertImage,
+    insertImages,
     isEditing,
   } = usePostEditor(initial);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
   const [tags, setTags] = useState(initialTags);
 
+  // 관리 대화상자에서 태그가 지워지면 이 글에 남은 선택도 같이 떨어내야 한다
   const changeTags = (next: TagWithUsage[]) => {
     setTags(next);
 
@@ -108,6 +119,7 @@ export function PostEditor({
   const [date, setDate] = useState(parsed.date || today());
   const [topic, setTopic] = useState(parsed.topic);
 
+  // 날짜는 주소와 발행일 둘 다를 움직인다
   const changeDate = (next: string) => {
     setDate(next);
     setField('slug', composeSlug(next, topic));
@@ -231,34 +243,9 @@ export function PostEditor({
               <TabsTrigger value='preview'>미리보기</TabsTrigger>
             </TabsList>
 
-            <div className='flex items-center gap-2'>
-              <Label
-                htmlFor='post-image'
-                className='text-blog-muted-foreground'>
-                이미지 삽입
-              </Label>
-              <Input
-                id='post-image'
-                type='file'
-                accept='image/jpeg,image/png,image/webp,image/avif'
-                disabled={pending}
-                className='w-auto'
-                onChange={(event) => {
-                  const file = event.target.files?.[0];
-
-                  if (!file) {
-                    return;
-                  }
-
-                  void insertImage(
-                    file,
-                    bodyRef.current?.selectionStart ??
-                      draft.contentMarkdown.length
-                  );
-                  event.target.value = '';
-                }}
-              />
-            </div>
+            <p className='text-sm text-blog-muted-foreground'>
+              이미지는 본문에 붙여넣거나 끌어다 놓는다
+            </p>
           </div>
 
           <TabsContent value='write'>
@@ -269,18 +256,41 @@ export function PostEditor({
             </Label>
             <Textarea
               id='post-body'
-              ref={bodyRef}
               value={draft.contentMarkdown}
+              // 28줄은 한 화면에 꽉 차는 높이. 줄이면 긴 글에서 스크롤이 잦아진다
               rows={28}
               className='font-mono text-sm'
               onChange={(event) => {
                 setField('contentMarkdown', event.target.value);
+              }}
+              onPaste={(event) => {
+                const files = imagesFrom(event.clipboardData.files);
+
+                // 이미지가 없으면 막지 않는다. 마크다운 문서 붙여넣기가 그대로 지나가야 한다
+                if (files.length === 0) {
+                  return;
+                }
+
+                event.preventDefault();
+                void insertImages(files, event.currentTarget.selectionStart);
+              }}
+              onDrop={(event) => {
+                const files = imagesFrom(event.dataTransfer.files);
+
+                if (files.length === 0) {
+                  return;
+                }
+
+                event.preventDefault();
+                // 끄는 동안 브라우저가 캐럿을 옮겨둔다. 그 자리가 놓으려는 자리다
+                void insertImages(files, event.currentTarget.selectionStart);
               }}
             />
           </TabsContent>
 
           <TabsContent value='preview'>
             <div className='rounded-lg border border-blog-border p-6'>
+              {/* 실제 글과 같은 본문 폭이라야 미리보기에서 줄바꿈이 어긋나지 않는다 */}
               <div className='max-w-[54rem]'>
                 <MarkdownPreview markdown={draft.contentMarkdown} />
               </div>

@@ -5,6 +5,7 @@ import { useIsAdmin } from '@/lib/auth/useIsAdmin';
 import { SignOutButton } from './SignOutButton';
 import { buttonVariants } from '@/views/blog/components/ui/button';
 
+/** 목록 위 관리자 전용 버튼. 관리자가 아니면 아무것도 그리지 않는다. */
 export function BlogAdminActions() {
   const admin = useIsAdmin();
 
