@@ -38,8 +38,15 @@ export function LogoScene({
     // 원점의 로고에서 7만큼 물러나 본다. 멀어지면 화면 속 로고가 작아진다
     camera.position.set(0, 0, 7);
 
-    // alpha가 있어야 캔버스 뒤의 밝은 바닥이 그대로 비친다
-    const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+    let renderer: WebGLRenderer;
+
+    try {
+      // alpha가 있어야 캔버스 뒤의 밝은 바닥이 그대로 비친다
+      renderer = new WebGLRenderer({ antialias: true, alpha: true });
+    } catch {
+      // WebGL을 못 여는 환경에서는 3D만 건너뛴다. 여기서 던지면 판 전체가 함께 죽는다
+      return;
+    }
 
     // 상한 2를 올리면 모서리가 선명해지는 대신 고해상도 화면에서 프레임이 떨어진다
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
