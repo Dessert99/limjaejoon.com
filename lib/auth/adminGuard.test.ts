@@ -24,6 +24,18 @@ describe('requireAdmin', () => {
     expect(error?.status).toBe(403);
   });
 
+  it('GET 은 Origin 이 없어도 통과한다', async () => {
+    getUser.mockResolvedValueOnce({
+      data: { user: { id: '1', app_metadata: { role: 'admin' } } },
+      error: null,
+    });
+    const request = new Request('https://limjaejoon.com/api/admin/tags', {
+      method: 'GET',
+    });
+    const { error } = await requireAdmin(request);
+    expect(error).toBeNull();
+  });
+
   it('Origin 이 파싱 불가능하면 403 이다', async () => {
     const { error } = await requireAdmin(
       req('null', { host: 'limjaejoon.com' })

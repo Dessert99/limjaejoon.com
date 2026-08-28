@@ -18,6 +18,7 @@ type TagFilterSheetProps = {
   matchCount: number;
 };
 
+/** 좁은 화면용 태그 필터. 아래에서 올라오는 시트로 같은 목록을 보여준다. */
 export function TagFilterSheet({
   tags,
   selected,
@@ -44,6 +45,7 @@ export function TagFilterSheet({
         className='max-h-[80svh]'>
         <SheetHeader>
           <SheetTitle>태그</SheetTitle>
+          {/* 태그를 누를 때마다 몇 편이 남는지 스크린 리더가 읽어준다 */}
           <SheetDescription aria-live='polite'>
             글 {matchCount}편
           </SheetDescription>

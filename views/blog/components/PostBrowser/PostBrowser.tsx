@@ -6,11 +6,7 @@ import { type PostListItem } from '../../lib/post.types';
 import { Button } from '@/views/blog/components/ui/button';
 import { Input } from '@/views/blog/components/ui/input';
 import { Separator } from '@/views/blog/components/ui/separator';
-import {
-  EMPTY_FILTERS,
-  useUrlFilters,
-  type UrlFilters,
-} from '../../lib/useUrlFilters';
+import { useUrlFilters, type UrlFilters } from '../../lib/useUrlFilters';
 import { PostRow } from './PostRow';
 import { TagFilterList } from './TagFilterList';
 import { TagFilterSheet } from './TagFilterSheet';
@@ -20,6 +16,7 @@ type PostBrowserProps = {
   tags: string[];
 };
 
+/** 글 목록과 검색·태그 필터. 서버가 준 전체 글을 브라우저에서 걸러 보여준다. */
 export function PostBrowser({ posts, tags }: PostBrowserProps) {
   const [filters, setFilters] = useUrlFilters();
 
@@ -27,6 +24,7 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
     setFilters({ ...filters, ...patch });
   };
 
+  // 같은 태그를 다시 누르면 조건에서 빠진다
   const toggleTag = (tag: string) => {
     update({
       tags: filters.tags.includes(tag)
@@ -44,12 +42,14 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
     <div className='grid gap-4 lg:grid-cols-[13rem_1fr] lg:gap-blog-grid-gap'>
       {tags.length > 0 ? (
         <>
+          {/* 같은 필터를 넓은 화면은 왼쪽 기둥으로, 좁은 화면은 시트로 보여준다 */}
           <aside className='hidden lg:sticky lg:top-8 lg:block lg:self-start'>
             <h2 className='text-xs tracking-widest text-blog-muted-foreground uppercase'>태그</h2>
             <TagFilterList
               tags={tags}
               selected={filters.tags}
               onToggle={toggleTag}
+              // 8rem은 위아래 여백 몫. 줄이면 태그 기둥이 길어져 화면 밖으로 넘친다
               className='mt-4 lg:max-h-[calc(100svh-8rem)] lg:flex-col lg:flex-nowrap lg:items-start lg:overflow-y-auto lg:overscroll-contain lg:pr-2'
             />
           </aside>
@@ -95,7 +95,7 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
               size='sm'
               className='h-auto p-0'
               onClick={() => {
-                setFilters(EMPTY_FILTERS);
+                setFilters({ q: '', tags: [] });
               }}>
               조건 지우기
             </Button>

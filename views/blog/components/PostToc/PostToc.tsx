@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import type { PostHeading } from '../../lib/extractHeadings';
 import { clsx } from 'clsx';
 
-const ACTIVE_BAND = '-96px 0px -70% 0px';
-
+/** 지금 화면 위쪽에 들어온 제목을 골라 목차에서 짚어준다. */
 function useActiveHeading(headingIds: string[]): string | null {
   const [activeId, setActiveId] = useState<string | null>(null);
+  // 배열은 렌더마다 새 참조라 문자열로 눌러야 옵저버가 매번 다시 붙지 않는다
   const key = headingIds.join('|');
 
   useEffect(() => {
@@ -31,6 +31,7 @@ function useActiveHeading(headingIds: string[]): string | null {
           inBand.set(entry.target.id, entry.isIntersecting);
         });
 
+        // 밴드 안에 여러 제목이 겹치면 본문 순서상 가장 위의 것을 잡는다
         const current = elements.find((element) => {
           return inBand.get(element.id);
         });
@@ -39,7 +40,8 @@ function useActiveHeading(headingIds: string[]): string | null {
           setActiveId(current.id);
         }
       },
-      { rootMargin: ACTIVE_BAND }
+      // 화면 위 96px(내비 높이)부터 아래 30%까지만 감지 밴드다. 밴드를 넓히면 여러 제목이 겹쳐 잡힌다
+      { rootMargin: '-96px 0px -70% 0px' }
     );
 
     elements.forEach((element) => {
@@ -54,6 +56,7 @@ function useActiveHeading(headingIds: string[]): string | null {
   return activeId;
 }
 
+/** 목차 항목들. h3은 한 단 들여 h2 아래임을 보인다. */
 function TocList({
   headings,
   activeId,
@@ -88,6 +91,7 @@ function TocList({
   );
 }
 
+/** 글 목차. 넓은 화면에서는 옆에 붙고, 좁은 화면에서는 버튼으로 접힌다. */
 export function PostToc({
   headings,
   className,
@@ -102,6 +106,7 @@ export function PostToc({
     })
   );
 
+  // 제목이 하나도 없는 짧은 글에서 빈 목차 껍데기만 남는 걸 막는다
   if (headings.length === 0) {
     return null;
   }
@@ -130,7 +135,9 @@ export function PostToc({
       <div
         id='post-toc-list'
         className={clsx(
+          // 12rem은 내비와 위아래 여백 몫. 줄이면 목차가 길어져 화면 밖으로 넘친다
           'mt-4 lg:max-h-[calc(100svh-12rem)] lg:overflow-y-auto',
+          // 넓은 화면에서는 접힘 상태와 무관하게 늘 펼쳐 둔다
           !open && 'hidden lg:block'
         )}>
         <TocList

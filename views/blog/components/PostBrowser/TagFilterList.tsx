@@ -10,6 +10,7 @@ type TagFilterListProps = {
   className?: string;
 };
 
+/** 태그 칩 목록. 고른 태그는 채워진 배지로 바뀐다. */
 export function TagFilterList({
   tags,
   selected,
