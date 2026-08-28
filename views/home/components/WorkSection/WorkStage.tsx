@@ -1,7 +1,8 @@
 'use client';
 
 import { useRef, type ReactNode } from 'react';
-import { ExtrudedLogo, type LogoControl } from './ExtrudedLogo';
+import { CubeModel } from './CubeModel';
+import { LogoRig, type LogoControl } from './LogoRig';
 import { LogoScene } from './LogoScene';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
 
@@ -93,24 +94,25 @@ export function WorkStage({ children }: { children: ReactNode }) {
       aria-labelledby='work-title'
       className='relative isolate min-h-svh overflow-hidden text-home-chapter-foreground'>
       <LogoScene>
-        {/* relief 6은 다 선 뒤 층 사이 간격(SVG 좌표). 벌리면 카드 더미처럼 두꺼워져 얼굴이 앞으로 떠오른다 */}
-        {/* spread 260은 조립 전 층이 카메라 쪽으로 튀어나온 거리. 키우면 더 멀리서 날아와 붙는다 */}
+        {/* 아직 조각이 하나뿐이라 relief는 아무것도 하지 않는다. 조각을 늘리면 그때부터 겹 사이를 벌린다 */}
+        {/* spread 1.5는 모이기 전 조각이 카메라 쪽으로 튀어나온 거리. 키우면 더 멀리서 날아와 붙는다 */}
         {/* enterSpin -0.9는 들어올 때 비스듬히 선 각(rad). 0이면 정면 그대로 커지기만 한다 */}
-        <ExtrudedLogo
-          src='/images/work/forA.svg'
+        <LogoRig
           control={team}
-          relief={6}
-          spread={260}
-          enterSpin={-0.9}
-        />
-        {/* 층이 둘뿐이라 relief 26으로 두께(18)보다 크게 벌려야, 마크가 바탕에서 떨어져 뜬다 */}
-        <ExtrudedLogo
-          src='/images/work/pagelabs.svg'
+          relief={0}
+          spread={1.5}
+          enterSpin={-0.9}>
+          <CubeModel color='#232323' />
+        </LogoRig>
+
+        {/* 반대로 돌려 들어와야 두 활동이 같은 등장을 두 번 하지 않는다 */}
+        <LogoRig
           control={startup}
-          relief={26}
-          spread={140}
-          enterSpin={1.1}
-        />
+          relief={0}
+          spread={0.9}
+          enterSpin={1.1}>
+          <CubeModel color='#111111' />
+        </LogoRig>
       </LogoScene>
 
       {children}
