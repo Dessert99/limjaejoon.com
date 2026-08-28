@@ -1,9 +1,8 @@
 'use client';
 
 import { useRef, type ReactNode } from 'react';
-import { CubeModel } from './CubeModel';
-import { LogoRig, type LogoControl } from './LogoRig';
 import { LogoScene } from './LogoScene';
+import { type LogoControl } from './logoRig';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
 
 /** 워크 판을 화면에 박아둔 채, 로고를 층층이 조립해 세우고 설명을 붙였다가, 통째로 돌려 꺼뜨리고 다음 활동에 자리를 넘긴다. */
@@ -93,27 +92,10 @@ export function WorkStage({ children }: { children: ReactNode }) {
       ref={sectionRef}
       aria-labelledby='work-title'
       className='relative isolate min-h-svh overflow-hidden text-home-chapter-foreground'>
-      <LogoScene>
-        {/* 아직 조각이 하나뿐이라 relief는 아무것도 하지 않는다. 조각을 늘리면 그때부터 겹 사이를 벌린다 */}
-        {/* spread 1.5는 모이기 전 조각이 카메라 쪽으로 튀어나온 거리. 키우면 더 멀리서 날아와 붙는다 */}
-        {/* enterSpin -0.9는 들어올 때 비스듬히 선 각(rad). 0이면 정면 그대로 커지기만 한다 */}
-        <LogoRig
-          control={team}
-          relief={0}
-          spread={1.5}
-          enterSpin={-0.9}>
-          <CubeModel color='#232323' />
-        </LogoRig>
-
-        {/* 반대로 돌려 들어와야 두 활동이 같은 등장을 두 번 하지 않는다 */}
-        <LogoRig
-          control={startup}
-          relief={0}
-          spread={0.9}
-          enterSpin={1.1}>
-          <CubeModel color='#111111' />
-        </LogoRig>
-      </LogoScene>
+      <LogoScene
+        team={team}
+        startup={startup}
+      />
 
       {children}
     </section>
