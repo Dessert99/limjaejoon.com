@@ -1,7 +1,9 @@
 import { AboutSection } from '@/views/home/components/AboutSection/AboutSection';
+import { ChapterBloom } from '@/views/home/components/ChapterBloom/ChapterBloom';
 import { HeroSection } from '@/views/home/components/HeroSection/HeroSection';
 import { IntroOverlay } from '@/views/home/components/IntroOverlay/IntroOverlay';
 import { ScrollStage } from '@/views/home/components/ScrollStage/ScrollStage';
+import { WorkSection } from '@/views/home/components/WorkSection/WorkSection';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -15,11 +17,16 @@ export const revalidate = 86400;
 export default function HomePage() {
   return (
     <>
+      {/* 무대 바깥에 먼저 깔아야 스무더의 transform에 끌려다니지 않는다 */}
+      <ChapterBloom />
+
       <ScrollStage>
         <main>
           <HeroSection />
 
           <AboutSection />
+
+          <WorkSection />
         </main>
       </ScrollStage>
 

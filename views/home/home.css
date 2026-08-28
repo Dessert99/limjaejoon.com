@@ -24,6 +24,10 @@
   );
   --color-home-logo-plate: var(--color-white);
 
+  /* 어바웃까지가 어두운 챕터, 워크부터가 밝은 챕터다. 판이 열리며 이 두 색으로 갈아탄다 */
+  --color-home-chapter: var(--color-white);
+  --color-home-chapter-foreground: var(--color-stone-950);
+
   --color-home-github: #181717;
   --color-home-linkedin: #0a66c2;
   --color-home-instagram-start: #833ab4;
