@@ -13,10 +13,7 @@ import { highlightCss } from '../../lib/markdownPlugins';
 
 type LabChild = ReactElement<{ label?: string; children?: ReactNode }>;
 
-// CSS 안에서는 이 태그들만 마크다운이 만든 것이다. 나머지 태그는 syntax: "<angle>" 같은 값이 잘린 것
-const MARKDOWN_TAG = /^(?:p|em|strong|code|a|br)$/;
-
-/** 자식 트리에서 텍스트만 긁어모은다. CSS에 빈 줄이 있어 문단으로 쪼개져도 살아남는다. */
+/** 자식 트리에서 CSS 원문을 되돌린다. remarkCssLab 덕에 여기 오는 태그는 잘린 CSS 값뿐이다. */
 const textOf = (node: ReactNode): string => {
   if (typeof node === 'string') {
     return node;
@@ -27,14 +24,12 @@ const textOf = (node: ReactNode): string => {
   }
 
   if (isValidElement<{ children?: ReactNode }>(node)) {
-    // <image>만은 HTML 파서가 img로 바꿔 버린다. CSS 안에 img가 나올 일은 이것뿐이다
+    // syntax: "<angle>" 같은 값을 HTML 파서가 태그로 읽는다. <image>만은 img로 개명까지 한다
     const tag = node.type === 'img' ? 'image' : node.type;
 
-    // 마크다운이 만든 태그면 빈 줄에서 쪼갠 문단이다. 사라진 줄바꿈을 되돌린다
-    const restored =
-      typeof tag === 'string' && !MARKDOWN_TAG.test(tag) ? `<${tag}>` : '\n';
-
-    return restored + textOf(node.props.children);
+    return (
+      (typeof tag === 'string' ? `<${tag}>` : '') + textOf(node.props.children)
+    );
   }
 
   return '';

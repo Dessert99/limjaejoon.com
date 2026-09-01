@@ -45,7 +45,23 @@ description: 블로그 본문에 CSS를 단계로 쌓아 보여주는 인터랙�
 
 `<css-html>` 안은 평범한 HTML, `<css-step>` 안은 평범한 CSS다. `::before`, `:hover`, `:has()`, `@media`, `@keyframes`, `@property`, CSS 변수 전부 그대로 쓴다. `<style>` 태그는 쓰지 않는다 — `<css-step>`이 그 역할이다.
 
-빈 줄을 넣어도 괜찮다. uiverse 같은 데서 복사한 CSS를 손질 없이 그대로 붙일 수 있다.
+**들여쓰기·줄바꿈·빈 줄을 원문 그대로 쓴다.** uiverse처럼 여러 줄로 펼쳐진 CSS를 손질 없이 복사해 붙이면 된다.
+
+```
+<css-step label="1">
+@media (min-width: 40rem) {
+    .btn {
+        padding: 2em;
+    }
+
+    .btn:hover {
+        opacity: 1;
+    }
+}
+</css-step>
+```
+
+한 줄로 압축하든 4칸으로 펼치든 결과는 같고, 코드 패널에도 쓴 모양 그대로 나온다. `remarkCssLab` 플러그인이 이 구간을 원본 문자열에서 되살리기 때문이다 — 안 그러면 마크다운이 빈 줄에서 블록을 끊고 뒷부분을 문단·코드블록으로 재해석해서, 쓴 적 없는 `<p>`·`<pre>`가 CSS에 섞인다.
 
 ## 규칙 5개
 
