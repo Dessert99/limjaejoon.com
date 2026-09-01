@@ -1,3 +1,4 @@
+/** 히어로 패널에 아이콘 타일로 늘어놓는 외부 연락처. */
 export const CONTACT = [
   { label: 'GitHub', href: 'https://github.com/Dessert99', icon: 'github' },
   {

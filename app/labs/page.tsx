@@ -1,4 +1,3 @@
-import { CliffScene } from '@/views/labs/components/CliffScene/CliffScene';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -23,9 +22,6 @@ export const metadata: Metadata = {
 };
 
 export default function LabsPage() {
-  return (
-    <main>
-      <CliffScene />
-    </main>
-  );
+  // 무대는 layout이 깔아두므로, 열매를 아직 안 고른 이 라우트는 본문이 없다
+  return null;
 }
