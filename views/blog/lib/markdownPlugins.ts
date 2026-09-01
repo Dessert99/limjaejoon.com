@@ -2,7 +2,6 @@ import rehypeShikiFromHighlighter from '@shikijs/rehype/core';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
-import { remarkCssLab } from './remarkCssLab';
 import { createHighlighterCoreSync, type ShikiTransformer } from 'shiki/core';
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
 import bash from 'shiki/langs/bash.mjs';
@@ -31,17 +30,8 @@ const dropPreStyle: ShikiTransformer = {
   },
 };
 
-/** css-lab 코드 패널용. 본문 코드블록과 같은 하이라이터라 색이 어긋나지 않는다. */
-export const highlightCss = (code: string): string => {
-  return highlighter.codeToHtml(code, {
-    lang: 'css',
-    theme: 'github-light',
-    transformers: [dropPreStyle],
-  });
-};
-
 /** 본문 마크다운 확장. 표·체크박스 같은 GitHub 문법을 받아준다. */
-export const REMARK_PLUGINS: PluggableList = [remarkGfm, remarkCssLab];
+export const REMARK_PLUGINS: PluggableList = [remarkGfm];
 
 /** 직접 쓴 태그를 살리고 제목에 앵커 id를 박고 코드 블록을 하이라이트한다. 본문과 미리보기가 같이 쓴다. */
 export const REHYPE_PLUGINS: PluggableList = [
