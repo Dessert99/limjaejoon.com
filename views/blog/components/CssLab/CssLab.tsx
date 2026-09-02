@@ -42,12 +42,14 @@ const childrenOfType = (children: ReactNode, tag: string): LabChild[] => {
   });
 };
 
-/** 본문에 쓴 <css-lab>. 단계 라디오·무대·현재 단계 CSS를 함께 낸다. 전환은 CSS가 하고 JS는 안 돈다. */
+/** 본문에 쓴 <css-lab>. 단계 라디오·무대·현재 단계 CSS(code="off"면 생략)를 낸다. 전환은 CSS가 하고 JS는 안 돈다. */
 export function CssLab({
   id,
+  code,
   children,
 }: {
   id?: string;
+  code?: string;
   children?: ReactNode;
 }) {
   const stage = childrenOfType(children, 'css-html')[0];
@@ -66,7 +68,7 @@ export function CssLab({
 
   // id는 거들 뿐이다. 안 적어도, 겹쳐 적어도 내용이 다르면 다른 id가 나온다
   const labId = cssLabId(
-    JSON.stringify([id, steps, textOf(stage?.props.children)])
+    JSON.stringify([id, code, steps, textOf(stage?.props.children)])
   );
 
   return (
@@ -101,16 +103,17 @@ export function CssLab({
         {stage?.props.children}
       </div>
 
-      {steps.map((step, index) => {
-        return (
-          <div
-            key={index}
-            data-step={index}
-            className='css-lab-code border-t border-blog-border [&_pre]:rounded-none [&_pre]:whitespace-pre-wrap'
-            dangerouslySetInnerHTML={{ __html: highlightCss(step.css) }}
-          />
-        );
-      })}
+      {code !== 'off' &&
+        steps.map((step, index) => {
+          return (
+            <div
+              key={index}
+              data-step={index}
+              className='css-lab-code border-t border-blog-border [&_pre]:rounded-none [&_pre]:whitespace-pre-wrap'
+              dangerouslySetInnerHTML={{ __html: highlightCss(step.css) }}
+            />
+          );
+        })}
     </div>
   );
 }
