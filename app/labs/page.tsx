@@ -22,6 +22,5 @@ export const metadata: Metadata = {
 };
 
 export default function LabsPage() {
-  // 무대는 layout이 깔아두므로, 열매를 아직 안 고른 이 라우트는 본문이 없다
   return null;
 }
