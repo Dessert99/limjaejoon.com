@@ -24,7 +24,7 @@ export function ContactItem({ href, label, icon }: ContactItemProps) {
         target='_blank'
         rel='noreferrer'
         aria-label={label}
-        className='group relative flex size-12 items-center justify-center overflow-hidden rounded-2xl border-2 border-home-glass-border'>
+        className='group relative flex size-12 items-center justify-center overflow-hidden rounded-2xl border-2 border-home-foreground/25'>
         {/* origin이 bottom에서 top으로 뒤집혀 들어올 때는 차오르고 나갈 때는 위로 걷힌다 */}
         <span
           aria-hidden='true'

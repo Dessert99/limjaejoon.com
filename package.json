@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "vitest run --config vitest.integration.config.ts",
-    "ci": "npm run lint && npm run type-check && npm run test && npm run build",
+    "check": "npm run format:check && npm run lint && npm run type-check",
+    "ci": "npm run check && npm run test && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:types": "supabase gen types typescript --local > lib/supabase/database.types.ts",
@@ -20,8 +21,6 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
-    "@react-three/drei": "^10.7.8",
-    "@react-three/fiber": "^9.7.0",
     "@shikijs/rehype": "^4.4.2",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.1",

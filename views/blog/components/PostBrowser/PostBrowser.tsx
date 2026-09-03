@@ -44,7 +44,9 @@ export function PostBrowser({ posts, tags }: PostBrowserProps) {
         <>
           {/* 같은 필터를 넓은 화면은 왼쪽 기둥으로, 좁은 화면은 시트로 보여준다 */}
           <aside className='hidden lg:sticky lg:top-8 lg:block lg:self-start'>
-            <h2 className='text-xs tracking-widest text-blog-muted-foreground uppercase'>태그</h2>
+            <h2 className='text-xs tracking-widest text-blog-muted-foreground uppercase'>
+              태그
+            </h2>
             <TagFilterList
               tags={tags}
               selected={filters.tags}

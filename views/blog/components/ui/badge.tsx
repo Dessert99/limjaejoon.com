@@ -9,14 +9,16 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-blog-primary text-blog-primary-foreground [a&]:hover:bg-blog-primary/90',
+        default:
+          'bg-blog-primary text-blog-primary-foreground [a&]:hover:bg-blog-primary/90',
         secondary:
           'bg-blog-secondary text-blog-secondary-foreground [a&]:hover:bg-blog-secondary/90',
         destructive:
           'bg-blog-destructive text-blog-destructive-foreground focus-visible:ring-blog-destructive/20 [a&]:hover:bg-blog-destructive/90',
         outline:
           'border-blog-border text-blog-foreground [a&]:hover:bg-blog-accent [a&]:hover:text-blog-accent-foreground',
-        ghost: '[a&]:hover:bg-blog-accent [a&]:hover:text-blog-accent-foreground',
+        ghost:
+          '[a&]:hover:bg-blog-accent [a&]:hover:text-blog-accent-foreground',
         link: 'text-blog-primary underline-offset-4 [a&]:hover:underline',
       },
     },
