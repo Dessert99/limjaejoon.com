@@ -291,7 +291,7 @@ export function PostEditor({
           <TabsContent value='preview'>
             <div className='rounded-lg border border-blog-border p-6'>
               {/* 실제 글과 같은 본문 폭이라야 미리보기에서 줄바꿈이 어긋나지 않는다 */}
-              <div className='max-w-[54rem]'>
+              <div className='max-w-[48rem]'>
                 <MarkdownPreview markdown={draft.contentMarkdown} />
               </div>
             </div>
