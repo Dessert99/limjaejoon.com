@@ -101,7 +101,7 @@ export default async function BlogPostPage(context: RouteContext) {
         <article>
           <PostJsonLd post={post} />
 
-          <header className='max-w-[54rem]'>
+          <header className='mx-auto max-w-[48rem]'>
             <h1 className='text-3xl font-semibold break-keep sm:text-4xl'>
               {post.title}
             </h1>
@@ -131,21 +131,23 @@ export default async function BlogPostPage(context: RouteContext) {
             <PostAdminActions id={post.id} />
           </header>
 
-          {/* 본문 54rem·목차 15rem. 본문 폭을 키우면 한 줄이 길어져 읽는 눈이 돌아오기 힘들어진다 */}
-          <div className='gap-x-grid-gap mt-12 grid lg:grid-cols-[minmax(0,54rem)_15rem] lg:justify-between'>
+          {/* 본문 48rem. 키우면 한 줄이 길어져 읽는 눈이 돌아오기 힘들어진다 */}
+          {/* 좌우 1fr을 같은 폭으로 비워야 본문이 화면 정중앙에 온다. 그냥 1fr이면 목차 글자가 대칭을 깬다 */}
+          <div className='mt-12 grid gap-x-blog-grid-gap xl:grid-cols-[minmax(0,1fr)_minmax(0,48rem)_minmax(0,1fr)]'>
             {/* 마크업은 목차가 먼저라 좁은 화면에서 위로 오고, 넓어지면 col-start로 오른쪽에 붙는다 */}
             <PostToc
               headings={headings}
-              className='mb-8 lg:sticky lg:top-24 lg:col-start-2 lg:row-start-1 lg:mb-0 lg:self-start'
+              className='mb-8 xl:sticky xl:top-24 xl:col-start-3 xl:row-start-1 xl:mb-0 xl:self-start'
             />
 
-            <div className='min-w-0 lg:col-start-1 lg:row-start-1'>
+            {/* w-full이 빠지면 mx-auto가 stretch를 꺼 본문이 쪼그라들고, min-w-0이 빠지면 긴 코드 블록이 폭을 밀어낸다 */}
+            <div className='mx-auto w-full max-w-[48rem] min-w-0 xl:col-start-2 xl:row-start-1'>
               <PostContent markdown={post.content_markdown} />
             </div>
           </div>
         </article>
 
-        <div className='max-w-[54rem]'>
+        <div className='mx-auto max-w-[48rem]'>
           <PostNav
             previous={previous}
             next={next}
