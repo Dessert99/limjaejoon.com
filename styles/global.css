@@ -5,7 +5,6 @@
 @import '../views/home/home.css';
 @import '../views/blog/blog.css';
 @import '../views/blog/prose.css';
-@import '../views/docs/docs.css';
 @import '../views/labs/labs.css';
 
 /* tailwind가 탐색 시작할 위치 명시. global.css가 Tailwind의 진입 파일이고 */
