@@ -10,7 +10,7 @@ export function GlassPanel({ children }: GlassPanelProps) {
     // data 속성은 IntroOverlay가 커튼 뒤 패널들을 찾아 튀어오르게 하는 표식이다
     <div
       data-glass-panel
-      className='rounded-3xl border-2 border-home-glass-border bg-home-glass p-6 text-home-foreground shadow-2xl shadow-home-glass-shadow backdrop-blur-xl'>
+      className='home-glass-grain home-glass-rim relative rounded-3xl bg-home-glass p-6 text-home-foreground shadow-2xl inset-shadow-home-glass-edge shadow-home-glass-shadow backdrop-blur-xl backdrop-saturate-150'>
       {children}
     </div>
   );
