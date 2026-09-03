@@ -1,3 +1,4 @@
+import { SpaceStage } from '@/views/labs/components/SpaceStage/SpaceStage';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -22,6 +23,14 @@ export const metadata: Metadata = {
 };
 
 export default function LabsPage() {
-  // 무대는 layout이 깔아두므로, 열매를 아직 안 고른 이 라우트는 본문이 없다
-  return null;
+  return (
+    <div className='relative h-svh bg-labs-void text-labs-star'>
+      {/* 위쪽만 남색으로 들뜬 하늘 — at 좌표를 옮기면 은하수가 걸린 방향이 바뀐다 */}
+      <div className='absolute inset-0 bg-radial-[at_50%_0%] from-labs-deep to-transparent to-55%' />
+
+      <div className='absolute inset-0'>
+        <SpaceStage />
+      </div>
+    </div>
+  );
 }

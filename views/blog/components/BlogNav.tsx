@@ -13,7 +13,6 @@ export function BlogNav() {
 
       {[
         { label: 'Home', href: '/' },
-        { label: 'Docs', href: '/docs' },
         { label: 'Blog', href: '/blog' },
         { label: 'Labs', href: '/labs' },
       ].map((route) => {
