@@ -53,5 +53,18 @@ export const buildCssLabStyle = (
 
       return `#${labId}:has(#${labId}-${index}:checked) ${code} { display: block; }`;
     }),
+    // 코드가 넘쳐야 스크롤 타임라인이 산다. 짧으면 애니메이션째로 죽어서 마스크도 안 걸리라고 키프레임 안에 넣었다
+    `@supports (animation-timeline: scroll()) {
+  #${labId} .css-lab-code pre {
+    animation: ${labId}-fade linear both;
+    animation-timeline: scroll(self);
+  }
+
+  /* 2rem을 키우면 잘린 쪽이 더 길게 흐려지고, 줄이면 칼로 자른 듯 끊긴다. 마스크를 2rem 밀어둬 시작은 아래만, 끝은 위만 흐려진다 */
+  @keyframes ${labId}-fade {
+    from { mask: linear-gradient(transparent, #000 2rem, #000 calc(100% - 2rem), transparent) 0 -2rem / 100% calc(100% + 2rem) no-repeat; }
+    to { mask: linear-gradient(transparent, #000 2rem, #000 calc(100% - 2rem), transparent) 0 0 / 100% calc(100% + 2rem) no-repeat; }
+  }
+}`,
   ].join('\n');
 };
