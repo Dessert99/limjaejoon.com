@@ -110,7 +110,8 @@ export function CssLab({
               key={index}
               data-step={index}
               // pre의 h를 키우면 한 번에 보이는 코드 줄이 늘고, 줄이면 단계를 오갈 때 패널이 덜 출렁인다
-              className='css-lab-code border-t border-blog-border [&_pre]:h-64 [&_pre]:overflow-y-auto [&_pre]:rounded-none [&_pre]:whitespace-pre-wrap'
+              // 스크롤 쪽 끝을 마스크로 지우면 이 검정이 비쳐, 아직 볼 코드가 남았다고 알린다
+              className='css-lab-code border-t border-blog-border bg-blog-overlay [&_pre]:h-64 [&_pre]:overflow-y-auto [&_pre]:rounded-none [&_pre]:whitespace-pre-wrap'
               dangerouslySetInnerHTML={{ __html: highlightCss(step.css) }}
             />
           );
