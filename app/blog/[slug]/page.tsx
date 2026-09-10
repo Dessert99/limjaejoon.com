@@ -2,6 +2,7 @@ import { Badge } from '@/views/blog/components/ui/badge';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
 import { PostAdminActions } from '@/views/blog/components/PostAdminActions/PostAdminActions';
 import { PostContent } from '@/views/blog/components/PostContent';
+import { PostComments } from '@/views/blog/components/PostComments';
 import { PostJsonLd } from '@/views/blog/components/PostJsonLd';
 import { PostNav } from '@/views/blog/components/PostNav/PostNav';
 import { PostToc } from '@/views/blog/components/PostToc/PostToc';
@@ -152,6 +153,9 @@ export default async function BlogPostPage(context: RouteContext) {
             previous={previous}
             next={next}
           />
+          <div className='mt-16 border-t border-blog-border pt-8'>
+            <PostComments postId={post.id} />
+          </div>
         </div>
       </div>
     </main>
