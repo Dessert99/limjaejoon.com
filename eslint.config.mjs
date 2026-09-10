@@ -8,14 +8,12 @@ const ROUTE_OWNER = [
   ['views/blog/', 'blog'],
   ['app/blog/', 'blog'],
   ['app/admin/', 'blog'],
-  ['views/docs/', 'docs'],
-  ['app/docs/', 'docs'],
   ['views/lab/', 'lab'],
   ['app/lab/', 'lab'],
   ['components/', 'root'],
 ];
 
-const ROUTES = ['root', 'home', 'blog', 'docs', 'lab'];
+const ROUTES = ['root', 'home', 'blog', 'lab'];
 const UTIL =
   '(?:bg|text-shadow|text|border-[trblxyse]|border|ring-offset|inset-ring|ring|inset-shadow|shadow|fill|stroke|from|via|to|outline|decoration|divide|caret|accent|max-w|p[xytblrse]?|m[xytblrse]?|gap|space-[xy])';
 const SEMANTIC =

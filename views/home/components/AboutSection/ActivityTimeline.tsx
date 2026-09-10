@@ -51,6 +51,7 @@ export function ActivityTimeline() {
           return (
             <li
               key={activity.period}
+              data-timeline-item
               className='grid grid-cols-[auto_1fr] gap-x-4 sm:gap-x-6 lg:gap-x-8'>
               <div className='flex flex-col items-center'>
                 {/* 원 안을 이미지로 채우려면 부모가 크기를 쥐고 있어야 해서 relative를 준다 */}

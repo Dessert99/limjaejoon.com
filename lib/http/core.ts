@@ -1,4 +1,3 @@
-
 export type HttpFetchOptions = RequestInit & {
   next?: {
     revalidate?: number | false;

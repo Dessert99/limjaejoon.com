@@ -2,7 +2,6 @@ module.exports = {
   plugins: ['prettier-plugin-tailwindcss'],
   tailwindStylesheet: './styles/global.css',
 
-
   printWidth: 80,
 
   tabWidth: 2,

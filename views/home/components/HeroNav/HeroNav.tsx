@@ -8,7 +8,6 @@ export function HeroNav() {
       <nav aria-label='주요 메뉴'>
         <ul className='flex items-center gap-6 sm:gap-10'>
           {[
-            { label: 'Docs', href: '/docs' },
             { label: 'Blog', href: '/blog' },
             { label: 'Labs', href: '/labs' },
           ].map((item) => {

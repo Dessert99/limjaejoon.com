@@ -10,11 +10,16 @@ export function AboutStage({ children }: { children: ReactNode }) {
   useGSAP(
     () => {
       const select = gsap.utils.selector(sectionRef);
+      const stage = sectionRef.current;
       const badge = select('[data-day-badge]')[0];
       const list = select('[data-timeline-list]')[0];
-      const firstNode = select('[data-timeline-node]')[0];
+      const items = select('[data-timeline-item]');
+      const nodes = select('[data-timeline-node]');
+      const firstNode = nodes[0];
+      const lastItem = items.at(-1);
+      const lastNode = nodes.at(-1);
 
-      if (!badge || !list || !firstNode) {
+      if (!stage || !badge || !list || !firstNode || !lastItem || !lastNode) {
         return;
       }
 
@@ -29,8 +34,8 @@ export function AboutStage({ children }: { children: ReactNode }) {
             trigger: sectionRef.current,
             // 판 윗변이 화면 꼭대기에 닿는 순간 붙잡는다
             start: 'top top',
-            // 붙잡힌 채 굴릴 스크롤 거리가 화면 높이의 5.8배. 마디가 5개라 이만큼은 돼야 한 마디씩 눈에 들어온다
-            end: '+=580%',
+            // 붙잡힌 채 굴릴 스크롤 거리가 화면 높이의 6.9배. 마디 5개를 하나씩 세우고 다시 말아 없애는 데 이만큼이 든다
+            end: '+=690%',
             pin: true,
             // 1이라 손을 떼도 1초쯤 더 따라와, 스크롤이 튈 때 화면이 같이 튀지 않는다
             scrub: 1,
@@ -113,7 +118,67 @@ export function AboutStage({ children }: { children: ReactNode }) {
             },
             { y: 0, duration: 4.6 },
             4.2
-          );
+          )
+          // 마지막 문구가 10.0에 끝난다. 여기서부터가 판을 비우고 다음 섹션에 넘기는 퇴장
+          // 문구가 먼저 빠져야 남은 원들만 굴러 내려가는 게 보인다
+          .to(
+            select('[data-timeline-copy]'),
+            { opacity: 0, x: -16, duration: 0.3, stagger: { each: 0.06 } },
+            10.2
+          )
+          // 가지와 줄기는 그린 방향 그대로 제 원 쪽으로 되말려 들어간다
+          .to(
+            select('[data-timeline-branch]'),
+            { scaleX: 0, duration: 0.3, stagger: { each: 0.06 } },
+            10.2
+          )
+          .to(
+            select('[data-timeline-stem]'),
+            { scaleY: 0, duration: 0.3, stagger: { each: 0.06 } },
+            10.2
+          )
+          // 줄기를 오므려도 transform이라 아래 마디를 끌어당기지 못한다. 마디마다 y를 직접 줘야 한 점에 포개진다
+          // 마지막 마디 자리로 모아야 DOM 순서상 그 마디가 맨 위에 남아, 더미가 로고 하나로 보인다
+          .to(
+            items,
+            {
+              y: (index, item: HTMLElement) => {
+                return lastItem.offsetTop - item.offsetTop;
+              },
+              // power2.in이라 굴러갈수록 빨라져 마지막에 탁 포개진다
+              ease: 'power2.in',
+              duration: 0.6,
+              // each 0.08이 마디가 넘어가는 시차. 맨 위부터 차례로 떨어져 아래로 말리는 것처럼 보인다
+              stagger: { each: 0.08 },
+            },
+            10.5
+          )
+          // 포개진 더미를 판 한가운데로 끌어와 거기서 꺼뜨린다. 다음 섹션 첫 판이 같은 자리에서 튀어나온다
+          .to(
+            list,
+            {
+              x: () => {
+                return (
+                  stage.offsetWidth / 2 -
+                  (lastNode.getBoundingClientRect().left -
+                    stage.getBoundingClientRect().left +
+                    lastNode.offsetWidth / 2)
+                );
+              },
+              y: () => {
+                return (
+                  stage.offsetHeight / 2 -
+                  (lastNode.getBoundingClientRect().top -
+                    stage.getBoundingClientRect().top +
+                    lastNode.offsetHeight / 2)
+                );
+              },
+              duration: 0.5,
+            },
+            11.3
+          )
+          // back.in(2.4)라 한 번 부풀었다 꺼진다. 배지가 첫 원으로 바뀔 때 쓴 그 '뿅'을 되돌려준다
+          .to(nodes, { scale: 0, ease: 'back.in(2.4)', duration: 0.4 }, 11.5);
       });
 
       return () => {
