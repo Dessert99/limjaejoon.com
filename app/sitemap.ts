@@ -2,7 +2,7 @@ import { getPostSitemapEntries } from '@/views/blog/server/posts';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
 import type { MetadataRoute } from 'next';
 
-/** 크롤러가 읽을 사이트맵. 고정 페이지 셋에 글 주소를 이어 붙인다. */
+/** 크롤러가 읽을 사이트맵. 고정 페이지에 글 주소를 이어 붙인다. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getPostSitemapEntries(createSupabaseStaticClient());
 
