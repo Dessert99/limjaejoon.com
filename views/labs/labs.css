@@ -1,5 +1,9 @@
 @theme static {
-  --color-labs-void: #05070f;
-  --color-labs-deep: #0b1026;
-  --color-labs-star: #e8eeff;
+  --color-labs-background: var(--color-white);
+  --color-labs-foreground: var(--color-zinc-950);
+  --color-labs-muted: var(--color-zinc-600);
+  --color-labs-primary: var(--color-zinc-700);
+  --color-labs-card: var(--color-zinc-50);
+  --color-labs-border: var(--color-zinc-200);
+  --spacing-labs-gutter: clamp(1.25rem, 4vw, 3rem);
 }
