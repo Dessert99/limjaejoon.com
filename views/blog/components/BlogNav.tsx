@@ -14,7 +14,6 @@ export function BlogNav() {
       {[
         { label: 'Home', href: '/' },
         { label: 'Blog', href: '/blog' },
-        { label: 'Labs', href: '/labs' },
       ].map((route) => {
         return (
           <TransitionLink
