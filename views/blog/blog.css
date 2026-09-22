@@ -16,6 +16,7 @@
   --color-blog-destructive: var(--color-red-800);
   --color-blog-destructive-foreground: var(--color-white);
   --color-blog-overlay: var(--color-black);
+  --color-blog-inverse: var(--color-zinc-900);
   --color-blog-border: var(--color-zinc-200);
   --color-blog-input: var(--color-zinc-400);
   --color-blog-ring: var(--color-yellow-700);
