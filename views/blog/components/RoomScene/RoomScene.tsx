@@ -1,111 +1,140 @@
 'use client';
 
-import { ScreenQuad, useTexture } from '@react-three/drei';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
-import { MathUtils, Vector2, type ShaderMaterial } from 'three';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useState } from 'react';
+import { type PerspectiveCamera } from 'three';
+import { Backdrop } from './Backdrop';
+import { BookPile } from './BookPile';
+import { fitCover } from './fitCover';
 
-useTexture.preload([
-  '/images/blog-background.jpg',
-  '/images/blog-background-depth.png',
-]);
+/** 카메라 화각을 배경 이미지의 잘림에 맞춰 책 크기가 그림과 어긋나지 않게 한다. */
+function Stage() {
+  useFrame(({ camera, viewport }) => {
+    const perspective = camera as PerspectiveCamera;
+    // 44는 원본 사진의 세로 화각. 화면이 넓어 위아래가 잘리면 그만큼 화각도 줄여야 책 크기가 그림과 맞는다
+    const fov = 44 * fitCover(viewport.width / viewport.height)[1];
 
-const vertex = /* glsl */ `
-  varying vec2 vUv;
-  void main() {
-    vUv = position.xy * 0.5 + 0.5;
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-  }
-`;
-
-const fragment = /* glsl */ `
-  uniform sampler2D map;
-  uniform sampler2D depthMap;
-  uniform vec2 cover;
-  uniform vec2 offset;
-  varying vec2 vUv;
-  void main() {
-    vec2 uv = (vUv - 0.5) * cover + 0.5;
-    // 창밖은 깊이가 0에 가까워 창살과 따로 밀리며 찢어진다. 0.3(벽 깊이)으로 바닥을 깔아 벽과 함께 움직이게 한다
-    // 깊이 0.5를 축으로 앞(테이블)과 뒤(벽)가 반대로 밀려 입체감이 난다
-    float depth = max(texture2D(depthMap, uv).r, 0.3);
-    gl_FragColor = texture2D(map, uv + (depth - 0.5) * offset);
-  }
-`;
-
-function Backdrop() {
-  const [map, depthMap] = useTexture([
-    '/images/blog-background.jpg',
-    '/images/blog-background-depth.png',
-  ]);
-  const material = useRef<ShaderMaterial>(null);
-  const still = useRef<boolean | null>(null);
-  const { width, height } = useThree((state) => {
-    return state.viewport;
-  });
-  // 렌더마다 새 객체를 넘기면 material이 uniform을 갈아 끼워 offset이 0으로 튄다
-  const uniforms = useMemo(() => {
-    return {
-      map: { value: map },
-      depthMap: { value: depthMap },
-      cover: { value: new Vector2(1, 1) },
-      offset: { value: new Vector2() },
-    };
-  }, [map, depthMap]);
-
-  // object-cover와 같은 계산. 화면이 이미지보다 넓으면 세로를, 좁으면 가로를 잘라낸다
-  // 1.04는 시차로 밀려도 가장자리가 비지 않게 미리 당겨 두는 여유. 키우면 이미지가 더 크게 잘린다
-  const imageAspect = 1536 / 1024;
-  const viewAspect = width / height;
-  const cover =
-    viewAspect > imageAspect
-      ? [1 / 1.04, imageAspect / viewAspect / 1.04]
-      : [viewAspect / imageAspect / 1.04, 1 / 1.04];
-
-  useFrame(({ pointer }, delta) => {
-    if (!material.current) {
-      return;
+    if (perspective.fov !== fov) {
+      perspective.fov = fov;
+      perspective.updateProjectionMatrix();
     }
-
-    // 모션을 줄여달라는 기기에선 시차를 0에 묶어 그냥 이미지가 된다
-    still.current ??= matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const { offset } = material.current.uniforms;
-
-    // 0.02는 마우스를 끝까지 보냈을 때 밀리는 최대 폭(uv 단위). 키우면 흔들림이 커지고 사물 경계가 찢어진다
-    // 감쇠 4는 따라붙는 속도. 키우면 마우스에 즉각 붙고 줄이면 느긋하게 흘러온다
-    offset.value.x = MathUtils.damp(
-      offset.value.x,
-      still.current ? 0 : pointer.x * 0.02,
-      4,
-      delta
-    );
-    offset.value.y = MathUtils.damp(
-      offset.value.y,
-      still.current ? 0 : pointer.y * 0.02,
-      4,
-      delta
-    );
   });
 
-  return (
-    <ScreenQuad>
-      <shaderMaterial
-        ref={material}
-        vertexShader={vertex}
-        fragmentShader={fragment}
-        uniforms={uniforms}
-        uniforms-cover-value={cover}
-      />
-    </ScreenQuad>
-  );
+  return null;
 }
 
-/** 블로그 홈 배경. 원본 이미지를 그대로 쓰고 깊이 맵으로 마우스에 따라 시차만 준다. */
+/** 블로그 홈. 방 이미지 위에 분류별 3D 책 더미를 얹어 대주제로 가는 문으로 쓴다. */
 export function RoomScene() {
+  const [spreadGroup, setSpreadGroup] = useState<string | null>(null);
+
   return (
-    <Canvas>
+    // 카메라는 테이블 면(y=0)에서 0.55m 위, 3° 아래를 본다. 사진 속 시점과 맞춘 값이라 바꾸면 책이 테이블에서 뜬다
+    <Canvas
+      camera={{
+        fov: 44,
+        position: [0, 0.55, 0],
+        rotation: [-0.052, 0, 0],
+        near: 0.1,
+        far: 20,
+      }}
+      onPointerMissed={() => {
+        setSpreadGroup(null);
+      }}>
       <Backdrop />
+      <Stage />
+      {/* 방 전체를 은은하게. 올리면 책 옆면 그늘이 옅어져 두께가 안 보인다 */}
+      <ambientLight intensity={0.6} />
+      {/* 오른쪽 벽난로 쪽에서 오는 따뜻한 주광. 책 표지에 사진과 같은 방향의 빛이 든다 */}
+      <directionalLight
+        position={[3, 2, 1]}
+        color='#ffc98a'
+        intensity={1.8}
+      />
+      {/* 왼쪽 창에서 오는 차가운 보조광. 끄면 책등 쪽이 배경에 묻힌다 */}
+      <directionalLight
+        position={[-3, 2, 1]}
+        color='#8fa6ff'
+        intensity={0.5}
+      />
+      {/* 같은 group끼리 한 더미. href의 태그명은 DB 태그와 글자 그대로 같아야 목록이 걸린다 */}
+      <BookPile
+        topics={[
+          {
+            title: 'HTML/CSS',
+            group: '프론트엔드',
+            href: '/blog/posts?tag=CSS',
+            color: '#b3541e',
+          },
+          {
+            title: 'JavaScript',
+            group: '프론트엔드',
+            href: '/blog/posts?tag=JavaScript',
+            color: '#8a7418',
+          },
+          {
+            title: 'TypeScript',
+            group: '프론트엔드',
+            href: '/blog/posts?tag=TypeScript',
+            color: '#2f5f9e',
+          },
+          {
+            title: 'React',
+            group: '프론트엔드',
+            href: '/blog/posts?tag=React',
+            color: '#1d4e6b',
+          },
+          {
+            title: 'Next.js',
+            group: '프론트엔드',
+            href: '/blog/posts?tag=Next.js',
+            color: '#1f1f22',
+          },
+          {
+            title: 'React Native',
+            group: '프론트엔드',
+            href: '/blog/posts?tag=React%20Native',
+            color: '#3a2f6b',
+          },
+          {
+            title: 'Node.js',
+            group: '백엔드',
+            href: '/blog/posts?tag=Node.js',
+            color: '#2f5a3a',
+          },
+          {
+            title: 'NestJS',
+            group: '백엔드',
+            href: '/blog/posts?tag=NestJS',
+            color: '#7a2136',
+          },
+          {
+            title: 'Docker',
+            group: '인프라',
+            href: '/blog/posts?tag=Docker',
+            color: '#1f5c8a',
+          },
+          {
+            title: 'Kubernetes',
+            group: '인프라',
+            href: '/blog/posts?tag=Kubernetes',
+            color: '#2c4f8f',
+          },
+          {
+            title: '네트워크',
+            group: 'CS',
+            href: '/blog/posts?tag=%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC',
+            color: '#4a4a52',
+          },
+          {
+            title: '운영체제',
+            group: 'CS',
+            href: '/blog/posts?tag=%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C',
+            color: '#5c4630',
+          },
+        ]}
+        spreadGroup={spreadGroup}
+        onSpread={setSpreadGroup}
+      />
     </Canvas>
   );
 }
