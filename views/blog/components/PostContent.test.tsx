@@ -5,7 +5,12 @@ import { PostContent } from './PostContent';
 
 describe('PostContent', () => {
   it('Markdown 제목을 시맨틱 태그로 그린다', () => {
-    render(<PostContent markdown={'## 배경\n\n본문 한 줄.'} />);
+    render(
+      <PostContent
+        markdown={'## 배경\n\n본문 한 줄.'}
+        posts={[]}
+      />
+    );
 
     expect(
       screen.getByRole('heading', { level: 2, name: '배경' })
@@ -15,7 +20,12 @@ describe('PostContent', () => {
 
   it('제목 id 가 목차 슬러그와 맞는다', () => {
     const markdown = '## Next.js 16 & Tailwind v4\n';
-    const { container } = render(<PostContent markdown={markdown} />);
+    const { container } = render(
+      <PostContent
+        markdown={markdown}
+        posts={[]}
+      />
+    );
 
     expect(container.querySelector('h2')).toHaveAttribute(
       'id',
@@ -26,7 +36,12 @@ describe('PostContent', () => {
   it('GFM 표를 table 로 그린다', () => {
     const markdown = '| 열 |\n| --- |\n| 값 |\n';
 
-    render(<PostContent markdown={markdown} />);
+    render(
+      <PostContent
+        markdown={markdown}
+        posts={[]}
+      />
+    );
 
     expect(screen.getByRole('table')).toBeInTheDocument();
   });
@@ -45,7 +60,10 @@ describe('PostContent', () => {
     '%s 코드 블록에 색을 입힌다',
     (lang, code) => {
       const { container } = render(
-        <PostContent markdown={`\`\`\`${lang}\n${code}\n\`\`\``} />
+        <PostContent
+          markdown={`\`\`\`${lang}\n${code}\n\`\`\``}
+          posts={[]}
+        />
       );
 
       const pre = container.querySelector('pre');
@@ -57,7 +75,10 @@ describe('PostContent', () => {
 
   it('언어를 안 적은 코드 블록도 같은 조판을 탄다', () => {
     const { container } = render(
-      <PostContent markdown={'```\n그냥 글자\n```'} />
+      <PostContent
+        markdown={'```\n그냥 글자\n```'}
+        posts={[]}
+      />
     );
 
     expect(container.querySelector('pre')).toHaveClass('shiki');
@@ -65,7 +86,10 @@ describe('PostContent', () => {
 
   it('안 실은 언어를 만나도 터지지 않고 같은 조판으로 떨어진다', () => {
     const { container } = render(
-      <PostContent markdown={'```brainfuck\n+++++\n```'} />
+      <PostContent
+        markdown={'```brainfuck\n+++++\n```'}
+        posts={[]}
+      />
     );
 
     expect(container.querySelector('pre')).toHaveClass('shiki');
@@ -73,7 +97,10 @@ describe('PostContent', () => {
 
   it('pre 에 인라인 style 을 남기지 않는다', () => {
     const { container } = render(
-      <PostContent markdown={'```tsx\nconst answer = 42;\n```'} />
+      <PostContent
+        markdown={'```tsx\nconst answer = 42;\n```'}
+        posts={[]}
+      />
     );
 
     expect(container.querySelector('pre')).not.toHaveAttribute('style');

@@ -20,6 +20,8 @@
   --color-blog-border: var(--color-zinc-200);
   --color-blog-input: var(--color-zinc-400);
   --color-blog-ring: var(--color-yellow-700);
+  --color-blog-chip: var(--color-zinc-700);
+  --color-blog-chip-hover: var(--color-zinc-600);
 
   --spacing-blog-gutter: clamp(1.25rem, 4vw, 3rem);
   --spacing-blog-section: clamp(6rem, 12vw, 12rem);

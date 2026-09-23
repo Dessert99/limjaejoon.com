@@ -7,7 +7,11 @@ import { PostJsonLd } from '@/views/blog/components/PostJsonLd';
 import { PostToc } from '@/views/blog/components/PostToc/PostToc';
 import { extractHeadings } from '@/views/blog/lib/extractHeadings';
 import { formatPublishedAt } from '@/views/blog/lib/formatPublishedAt';
-import { getPostBySlug, getPostSlugs } from '@/views/blog/server/posts';
+import {
+  getPostBySlug,
+  getPostSlugs,
+  getPosts,
+} from '@/views/blog/server/posts';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -20,6 +24,10 @@ type RouteContext = {
 // generateMetadata와 페이지가 같은 글을 두 번 안 읽도록 요청 단위로 캐시한다
 const loadPost = cache(async (slug: string) => {
   return getPostBySlug(createSupabaseStaticClient(), slug);
+});
+
+const loadPublishedPosts = cache(async () => {
+  return getPosts(createSupabaseStaticClient());
 });
 
 /** 발행된 글 주소를 미리 뽑아 상세 페이지를 빌드 때 정적으로 만든다. */
@@ -80,6 +88,7 @@ export default async function BlogPostPage(context: RouteContext) {
     notFound();
   }
 
+  const posts = await loadPublishedPosts();
   const headings = extractHeadings(post.content_markdown);
   const publishedAt = formatPublishedAt(post.published_at);
 
@@ -132,7 +141,10 @@ export default async function BlogPostPage(context: RouteContext) {
 
             {/* w-full이 빠지면 mx-auto가 stretch를 꺼 본문이 쪼그라들고, min-w-0이 빠지면 긴 코드 블록이 폭을 밀어낸다 */}
             <div className='mx-auto w-full max-w-[48rem] min-w-0 xl:col-start-2 xl:row-start-1'>
-              <PostContent markdown={post.content_markdown} />
+              <PostContent
+                markdown={post.content_markdown}
+                posts={posts}
+              />
             </div>
           </div>
         </article>
