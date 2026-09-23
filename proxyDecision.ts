@@ -14,7 +14,7 @@ export const decideRedirect = (
 
   // 이미 관리자면 로그인 화면에 머물 이유가 없다
   if (isLogin && admin) {
-    return '/blog';
+    return '/library';
   }
 
   return null;

@@ -8,6 +8,7 @@ const ROUTE_OWNER = [
   ['views/blog/', 'blog'],
   ['app/blog/', 'blog'],
   ['app/admin/', 'blog'],
+  ['app/library/', 'blog'],
   ['views/lab/', 'lab'],
   ['app/lab/', 'lab'],
   ['components/', 'root'],

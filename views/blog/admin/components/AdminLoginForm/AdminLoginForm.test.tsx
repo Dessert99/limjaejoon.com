@@ -54,7 +54,7 @@ describe('AdminLoginForm', () => {
     render(<AdminLoginForm />);
     await fillAndSubmit();
 
-    expect(push).toHaveBeenCalledWith('/blog');
+    expect(push).toHaveBeenCalledWith('/library');
   });
 
   it('실패하면 폼에 머물고 사유를 보여준다', async () => {

@@ -35,7 +35,7 @@ export default function LabsPage() {
         </span>
         {[
           { label: 'Home', href: '/' },
-          { label: 'Blog', href: '/blog' },
+          { label: 'Blog', href: '/library' },
           { label: 'Labs', href: '/labs' },
         ].map((route) => {
           return (

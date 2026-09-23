@@ -18,7 +18,7 @@ export function SignOutButton() {
       onClick={() => {
         setPending(true);
         void signOut().then(() => {
-          router.replace('/blog');
+          router.replace('/library');
           // replace만으로는 캐시된 관리자 화면이 남아서 서버에서 다시 받아온다
           router.refresh();
         });

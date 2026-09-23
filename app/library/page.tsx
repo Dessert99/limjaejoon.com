@@ -5,15 +5,15 @@ import { RoomScene } from '@/views/blog/components/RoomScene/RoomScene';
 import { getBooks } from '@/views/blog/server/books';
 import { getPosts } from '@/views/blog/server/posts';
 
-/** 목록 페이지 메타. canonical을 /blog로 못 박아 필터가 붙은 주소가 따로 색인되지 않게 한다. */
+/** 서재 페이지 메타. canonical을 /library로 못 박아 필터가 붙은 주소가 따로 색인되지 않게 한다. */
 export const metadata: Metadata = {
   title: 'jaejoon blog',
   description: '지금까지 쌓아온 개발 지식 모음',
-  alternates: { canonical: '/blog' },
+  alternates: { canonical: '/library' },
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
-    url: '/blog',
+    url: '/library',
     title: 'jaejoon blog',
     description: '지금까지 쌓아온 개발 지식 모음',
     images: [

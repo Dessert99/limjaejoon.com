@@ -121,7 +121,7 @@ export function PostEditor({
 
           <div className='flex flex-wrap items-center gap-3'>
             <Link
-              href='/blog'
+              href='/library'
               className={buttonVariants({ variant: 'outline', size: 'sm' })}>
               블로그
             </Link>
