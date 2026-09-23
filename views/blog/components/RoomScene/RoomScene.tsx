@@ -3,6 +3,7 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useState } from 'react';
 import { type PerspectiveCamera } from 'three';
+import type { Book } from '../../lib/book.types';
 import { Backdrop } from './Backdrop';
 import { BookPile } from './BookPile';
 import { fitCover } from './fitCover';
@@ -23,8 +24,8 @@ function Stage() {
   return null;
 }
 
-/** 블로그 홈. 방 이미지 위에 분류별 3D 책 더미를 얹어 대주제로 가는 문으로 쓴다. */
-export function RoomScene() {
+/** 블로그 홈. 방 이미지 위에 분류별 3D 책 더미를 얹어 책(대주제)의 글 목록으로 가는 문으로 쓴다. */
+export function RoomScene({ books }: { books: Book[] }) {
   const [spreadGroup, setSpreadGroup] = useState<string | null>(null);
 
   return (
@@ -56,82 +57,15 @@ export function RoomScene() {
         color='#8fa6ff'
         intensity={0.5}
       />
-      {/* 같은 group끼리 한 더미. href의 태그명은 DB 태그와 글자 그대로 같아야 목록이 걸린다 */}
       <BookPile
-        topics={[
-          {
-            title: 'HTML/CSS',
-            group: '프론트엔드',
-            href: '/blog/posts?tag=CSS',
-            color: '#b3541e',
-          },
-          {
-            title: 'JavaScript',
-            group: '프론트엔드',
-            href: '/blog/posts?tag=JavaScript',
-            color: '#8a7418',
-          },
-          {
-            title: 'TypeScript',
-            group: '프론트엔드',
-            href: '/blog/posts?tag=TypeScript',
-            color: '#2f5f9e',
-          },
-          {
-            title: 'React',
-            group: '프론트엔드',
-            href: '/blog/posts?tag=React',
-            color: '#1d4e6b',
-          },
-          {
-            title: 'Next.js',
-            group: '프론트엔드',
-            href: '/blog/posts?tag=Next.js',
-            color: '#1f1f22',
-          },
-          {
-            title: 'React Native',
-            group: '프론트엔드',
-            href: '/blog/posts?tag=React%20Native',
-            color: '#3a2f6b',
-          },
-          {
-            title: 'Node.js',
-            group: '백엔드',
-            href: '/blog/posts?tag=Node.js',
-            color: '#2f5a3a',
-          },
-          {
-            title: 'NestJS',
-            group: '백엔드',
-            href: '/blog/posts?tag=NestJS',
-            color: '#7a2136',
-          },
-          {
-            title: 'Docker',
-            group: '인프라',
-            href: '/blog/posts?tag=Docker',
-            color: '#1f5c8a',
-          },
-          {
-            title: 'Kubernetes',
-            group: '인프라',
-            href: '/blog/posts?tag=Kubernetes',
-            color: '#2c4f8f',
-          },
-          {
-            title: '네트워크',
-            group: 'CS',
-            href: '/blog/posts?tag=%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC',
-            color: '#4a4a52',
-          },
-          {
-            title: '운영체제',
-            group: 'CS',
-            href: '/blog/posts?tag=%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C',
-            color: '#5c4630',
-          },
-        ]}
+        topics={books.map((book) => {
+          return {
+            title: book.title,
+            group: book.category,
+            href: `/blog/posts?book=${book.slug}`,
+            color: book.color,
+          };
+        })}
         spreadGroup={spreadGroup}
         onSpread={setSpreadGroup}
       />

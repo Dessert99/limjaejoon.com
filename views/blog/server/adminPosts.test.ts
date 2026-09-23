@@ -12,7 +12,8 @@ const input: UpsertPostInput = {
   title: '새 글',
   slug: 'new-post',
   description: '새 글 설명',
-  tag_ids: ['tag-a', 'tag-b'],
+  kind: 'concept',
+  book_id: 'book-1',
   published_at: '2026-07-09T00:00:00Z',
   content_markdown: '# 새 글',
 };
@@ -22,10 +23,13 @@ const row = {
   title: '새 글',
   slug: 'new-post',
   description: '새 글 설명',
+  kind: 'concept',
+  book_id: 'book-1',
   published_at: '2026-07-09T00:00:00Z',
   content_markdown: '# 새 글',
   created_at: '2026-07-09T00:00:00Z',
   updated_at: '2026-07-09T00:00:00Z',
+  books: { slug: 'nextjs', title: 'Next.js' },
 };
 
 type Result = { data: unknown; error: unknown };
@@ -42,9 +46,6 @@ const makeClient = (results: Record<string, Result> = {}) => {
         return self;
       }),
       eq: vi.fn(() => {
-        return self;
-      }),
-      in: vi.fn(() => {
         return self;
       }),
       single: vi.fn().mockResolvedValue(result),
@@ -76,13 +77,10 @@ const makeClient = (results: Record<string, Result> = {}) => {
   return { client, calls, from };
 };
 
-const tagNames = { data: [{ name: 'B' }, { name: 'A' }], error: null };
-
 describe('admin post helpers', () => {
-  it('글 컬럼과 태그 연결을 따로 쓴다', async () => {
+  it('갈래와 책을 글 컬럼으로 함께 쓴다', async () => {
     const { client, calls } = makeClient({
       'posts.insert': { data: row, error: null },
-      'tags.select': tagNames,
     });
 
     const post = await createAdminPost(client, input);
@@ -94,68 +92,43 @@ describe('admin post helpers', () => {
         title: '새 글',
         slug: 'new-post',
         description: '새 글 설명',
+        kind: 'concept',
+        book_id: 'book-1',
         published_at: '2026-07-09T00:00:00Z',
         content_markdown: '# 새 글',
       },
     });
-    expect(calls).toContainEqual({
-      table: 'post_tags',
-      op: 'insert',
-      payload: [
-        { post_id: '1', tag_id: 'tag-a' },
-        { post_id: '1', tag_id: 'tag-b' },
-      ],
-    });
-    expect(post.tags).toEqual(['A', 'B']);
+    expect(post.book).toEqual({ slug: 'nextjs', title: 'Next.js' });
+    expect(post).not.toHaveProperty('books');
   });
 
-  it('연결 삽입이 실패하면 방금 만든 글을 되돌린다', async () => {
+  it('이야기는 책을 골랐어도 book_id 를 비운다', async () => {
     const { client, calls } = makeClient({
-      'posts.insert': { data: row, error: null },
-      'post_tags.insert': { data: null, error: new Error('link failed') },
+      'posts.insert': { data: { ...row, books: null }, error: null },
     });
 
-    await expect(createAdminPost(client, input)).rejects.toThrow('link failed');
-    expect(calls).toContainEqual({
-      table: 'posts',
-      op: 'delete',
-      payload: undefined,
+    await createAdminPost(client, { ...input, kind: 'story' });
+
+    const insert = calls.find((call) => {
+      return call.op === 'insert';
     });
+
+    expect(insert?.payload).toMatchObject({ kind: 'story', book_id: null });
   });
 
-  it('수정은 연결을 통째로 갈아끼운다', async () => {
+  it('수정은 updated_at 을 찍어 같이 보낸다', async () => {
     const { client, calls } = makeClient({
       'posts.update': { data: row, error: null },
-      'tags.select': tagNames,
     });
 
     await updateAdminPost(client, '1', input);
 
-    const postTagsOps = calls
-      .filter((call) => {
-        return call.table === 'post_tags';
-      })
-      .map((call) => {
-        return call.op;
-      });
-
-    expect(postTagsOps).toEqual(['delete', 'insert']);
-  });
-
-  it('수정이 실패해도 글을 되돌리지 않는다', async () => {
-    const { client, calls } = makeClient({
-      'posts.update': { data: row, error: null },
-      'post_tags.insert': { data: null, error: new Error('link failed') },
+    const update = calls.find((call) => {
+      return call.op === 'update';
     });
 
-    await expect(updateAdminPost(client, '1', input)).rejects.toThrow(
-      'link failed'
-    );
-    expect(
-      calls.some((call) => {
-        return call.table === 'posts' && call.op === 'delete';
-      })
-    ).toBe(false);
+    expect(update?.payload).toMatchObject({ book_id: 'book-1' });
+    expect(update?.payload).toHaveProperty('updated_at');
   });
 
   it('admin 글을 삭제하면 true 를 돌려준다', async () => {

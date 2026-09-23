@@ -1,4 +1,4 @@
-import { getTags } from '@/views/blog/server/tags';
+import { getBooks } from '@/views/blog/server/books';
 import { PostEditor } from '@/views/blog/admin/components/PostEditor/PostEditor';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { Metadata } from 'next';
@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/** 새 글 작성 화면. 태그 목록을 서버에서 받아 편집기에 넘긴다. */
+/** 새 글 작성 화면. 책 목록을 서버에서 받아 편집기에 넘긴다. */
 export default async function Page() {
   const client = await createSupabaseServerClient();
 
-  return <PostEditor tags={await getTags(client)} />;
+  return <PostEditor books={await getBooks(client)} />;
 }

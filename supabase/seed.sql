@@ -8,7 +8,9 @@ insert into public.posts (
   title,
   description,
   content_markdown,
-  published_at
+  published_at,
+  kind,
+  book_id
 ) values
   (
     'hello-post',
@@ -22,9 +24,12 @@ insert into public.posts (
 
 - 목록 화면에 제목과 설명이 보이는지
 - 상세 화면에서 Markdown 본문이 렌더링되는지
-- 태그가 `post_tags` 조인을 거쳐 목록·상세에 함께 실리는지
+- 책이 `books` 조인을 거쳐 목록·상세에 함께 실리는지
 $$,
-    '2026-04-03T00:00:00Z'
+    '2026-04-03T00:00:00Z',
+    'concept',
+    -- 책은 마이그레이션이 넣어 두므로 slug로 찾아 쓴다
+    (select id from public.books where slug = 'nextjs')
   ),
   (
     'second-post',
@@ -38,24 +43,9 @@ $$,
 
 1. `/blog` 목록에서 두 개의 글이 보인다.
 2. `/blog/second-post` 상세 페이지로 이동할 수 있다.
-3. 태그와 발행일이 함께 표시된다.
+3. 갈래와 발행일이 함께 표시된다.
 $$,
-    '2026-04-02T00:00:00Z'
+    '2026-04-02T00:00:00Z',
+    'story',
+    null
   );
-
-insert into public.tags (name) values
-  ('Next.js'),
-  ('Supabase'),
-  ('MDX'),
-  ('Blog');
-
-insert into public.post_tags (post_id, tag_id)
-select posts.id, tags.id
-from (values
-  ('hello-post', 'Next.js'),
-  ('hello-post', 'Supabase'),
-  ('second-post', 'MDX'),
-  ('second-post', 'Blog')
-) as link(slug, name)
-join public.posts on posts.slug = link.slug
-join public.tags on tags.name = link.name;

@@ -21,7 +21,8 @@ const input = {
   title: '새 글',
   slug: 'new-post',
   description: '새 글 설명',
-  tag_ids: ['tag-a'],
+  kind: 'concept',
+  book_id: 'book-a',
   published_at: '2026-07-09T00:00:00Z',
   content_markdown: '# 새 글',
 };
@@ -33,7 +34,7 @@ const post = {
   description: input.description,
   published_at: input.published_at,
   content_markdown: input.content_markdown,
-  tags: ['Next.js'],
+  book: { slug: 'nextjs', title: 'Next.js' },
   created_at: '2026-07-09T00:00:00Z',
   updated_at: '2026-07-09T00:00:00Z',
 };
@@ -68,13 +69,13 @@ describe('POST /api/admin/posts', () => {
     expect(createAdminPost).not.toHaveBeenCalled();
   });
 
-  it('태그를 하나도 안 고르면 400 으로 막는다', async () => {
+  it('개념 글인데 책을 안 고르면 400 으로 막는다', async () => {
     vi.mocked(requireAdmin).mockResolvedValue({
       client: {} as never,
       error: null,
     });
 
-    const response = await POST(request({ ...input, tag_ids: [] }));
+    const response = await POST(request({ ...input, book_id: null }));
 
     expect(response.status).toBe(400);
     expect(createAdminPost).not.toHaveBeenCalled();

@@ -15,6 +15,7 @@ import {
   getPosts,
 } from '@/views/blog/server/posts';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
@@ -62,7 +63,7 @@ export const generateMetadata = async (
       description: post.description,
       url: `/blog/${post.slug}`,
       publishedTime: post.published_at ?? undefined,
-      tags: [...post.tags],
+      tags: post.book ? [post.book.title] : [],
       images: [
         {
           url: '/opengraph-image.png',
@@ -118,15 +119,17 @@ export default async function BlogPostPage(context: RouteContext) {
                 </time>
               ) : null}
 
-              {post.tags.map((tag) => {
-                return (
-                  <Badge
-                    key={tag}
-                    variant='secondary'>
-                    #{tag}
-                  </Badge>
-                );
-              })}
+              <Badge
+                asChild={Boolean(post.book)}
+                variant='secondary'>
+                {post.book ? (
+                  <Link href={`/blog/posts?book=${post.book.slug}`}>
+                    {post.book.title}
+                  </Link>
+                ) : (
+                  '이야기'
+                )}
+              </Badge>
             </div>
 
             <PostAdminActions id={post.id} />

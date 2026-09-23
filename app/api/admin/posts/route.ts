@@ -13,10 +13,10 @@ export const POST = async (request: Request) => {
 
   const input = (await request.json()) as UpsertPostInput;
 
-  // 태그 없는 글은 목록 필터에서 영영 안 잡히므로 저장 전에 막는다
-  if (input.tag_ids.length === 0) {
+  // 책 없는 개념 글은 어느 더미에서도 못 찾으므로 저장 전에 막는다
+  if (input.kind === 'concept' && !input.book_id) {
     return NextResponse.json(
-      { message: '태그를 하나 이상 골라야 한다' },
+      { message: '개념 글은 책을 골라야 한다' },
       { status: 400 }
     );
   }

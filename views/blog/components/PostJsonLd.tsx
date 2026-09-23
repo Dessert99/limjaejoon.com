@@ -14,7 +14,7 @@ export function PostJsonLd({ post }: { post: Post }) {
       name: '재준',
       url: 'https://www.limjaejoon.com',
     },
-    keywords: post.tags,
+    keywords: post.book ? [post.book.title] : [],
     image: 'https://www.limjaejoon.com/opengraph-image.png',
     mainEntityOfPage: `https://www.limjaejoon.com/blog/${post.slug}`,
   };

@@ -2,7 +2,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PostEditor } from '@/views/blog/admin/components/PostEditor/PostEditor';
 import { toDraft } from '@/views/blog/admin/lib/toUpsertInput';
 import { loadPostForEdit } from '@/views/blog/server/loadPostForEdit';
-import { getTags } from '@/views/blog/server/tags';
+import { getBooks } from '@/views/blog/server/books';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -20,16 +20,16 @@ type RouteContext = {
 export default async function EditPostPage(context: RouteContext) {
   const { id } = await context.params;
   const client = await createSupabaseServerClient();
-  const loaded = await loadPostForEdit(client, id);
+  const post = await loadPostForEdit(client, id);
 
-  if (!loaded) {
+  if (!post) {
     notFound();
   }
 
   return (
     <PostEditor
-      initial={{ id, draft: toDraft(loaded.post, loaded.tagIds) }}
-      tags={await getTags(client)}
+      initial={{ id, draft: toDraft(post) }}
+      books={await getBooks(client)}
     />
   );
 }
