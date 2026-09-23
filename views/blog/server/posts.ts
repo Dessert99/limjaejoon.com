@@ -13,7 +13,7 @@ const foldBook = <T>(row: T & BookJoin): T & { book: BookRef | null } => {
   return { ...rest, book: books } as T & { book: BookRef | null };
 };
 
-/** 발행 최신순 글 목록. 본문은 빼고 목록·검색에 필요한 열만 가져온다. */
+/** 발행 최신순 글 목록. 본문은 빼고 목록에 필요한 열만 가져온다. */
 export const getPosts = async (
   client: SupabaseClient<Database>
 ): Promise<PostListItem[]> => {

@@ -9,7 +9,7 @@ export type Post = Database['public']['Tables']['posts']['Row'] & {
   book: BookRef | null;
 };
 
-/** 목록·검색에 필요한 만큼만 담은 글. 본문 마크다운은 빼서 페이로드를 줄인다. */
+/** 목록에 필요한 만큼만 담은 글. 본문 마크다운은 빼서 페이로드를 줄인다. */
 export type PostListItem = Pick<
   Post,
   'id' | 'slug' | 'title' | 'description' | 'kind' | 'book' | 'published_at'
