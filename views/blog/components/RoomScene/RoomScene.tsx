@@ -37,6 +37,8 @@ export function RoomScene({
 }) {
   const [spreadGroup, setSpreadGroup] = useState<string | null>(null);
   const [openSlug, setOpenSlug] = useBookParam();
+  // 목록은 책이 카메라 앞에 도착한 뒤에 뜬다
+  const [arrived, setArrived] = useState(false);
   const openBook = books.find((book) => {
     return book.slug === openSlug;
   });
@@ -82,17 +84,22 @@ export function RoomScene({
           })}
           // 주소로 책이 열린 채 들어오면 그 책의 더미도 펼쳐 둬야 방과 목록이 어긋나지 않는다
           spreadGroup={spreadGroup ?? openBook?.category ?? null}
+          openSlug={openSlug}
           onSpread={setSpreadGroup}
           onOpen={setOpenSlug}
+          onArrive={() => {
+            setArrived(true);
+          }}
         />
       </Canvas>
       <BookPanel
-        book={openBook}
+        book={arrived ? openBook : undefined}
         posts={posts.filter((post) => {
           return post.book?.slug === openSlug;
         })}
         onClose={() => {
           // 닫아도 방금 보던 더미는 펼친 채 남겨 옆 책으로 바로 옮겨 갈 수 있게 한다
+          setArrived(false);
           setSpreadGroup(openBook?.category ?? null);
           setOpenSlug('');
         }}

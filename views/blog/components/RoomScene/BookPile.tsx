@@ -15,6 +15,15 @@ export type BookTopic = {
   color: string;
 };
 
+/** 테이블 위 책 한 권의 자리와 기울기. slot이 x·z, body가 y와 회전을 맡는다. */
+type Pose = {
+  x: number;
+  z: number;
+  y: number;
+  rotationX: number;
+  rotationY: number;
+};
+
 // 책 한 권의 가로·두께·세로(m). 키우면 화면에 들어가는 권수가 준다
 const [width, thickness, height] = [0.18, 0.03, 0.25];
 // 표지판 두께. 키우면 하드커버처럼 두툼해지고 줄이면 페이퍼백에 가까워진다
@@ -32,17 +41,21 @@ const lean = 1.0;
 const restingY =
   (thickness / 2) * Math.cos(lean) + (height / 2) * Math.sin(lean);
 
-/** 테이블 위 분류별 책 더미. 앞에서 뒤로 대각선으로 놓이고, 더미를 누르면 그 분류가 앞쪽에 줄지어 펼쳐지며, 책을 누르면 그 책이 열린다. */
+/** 테이블 위 분류별 책 더미. 앞에서 뒤로 대각선으로 놓이고, 더미를 누르면 그 분류가 앞쪽에 줄지어 펼쳐지며, 책을 누르면 그 책이 카메라 앞으로 날아온다. */
 export function BookPile({
   topics,
   spreadGroup,
+  openSlug,
   onSpread,
   onOpen,
+  onArrive,
 }: {
   topics: BookTopic[];
   spreadGroup: string | null;
+  openSlug: string;
   onSpread: (group: string) => void;
   onOpen: (slug: string) => void;
+  onArrive: () => void;
 }) {
   const aspect = useThree((state) => {
     return state.viewport.aspect;
@@ -51,6 +64,15 @@ export function BookPile({
   const bodies = useRef<(Group | null)[]>([]);
   const shadows = useRef<(Group | null)[]>([]);
   const labels = useRef<(Mesh | null)[]>([]);
+  // 책마다 지금 배치에서 테이블 위 제자리. 날아간 책이 돌아올 곳이다
+  const homes = useRef<Pose[]>([]);
+  const flight = useRef<{
+    tween: gsap.core.Tween;
+    index: number;
+    from: Pose;
+  } | null>(null);
+  // 테이블을 떠나 있는 책. 더미 배치 트윈이 이 책을 테이블로 끌어내리지 않게 비켜 간다
+  const flying = useRef('');
 
   const groups = useMemo(() => {
     return [
@@ -208,6 +230,12 @@ export function BookPile({
               rotationY: (layer % 2 ? 1 : -1) * 0.1,
             };
 
+        homes.current[index] = target;
+
+        if (topic.slug === flying.current) {
+          return;
+        }
+
         // 더미 상한을 넘는 책은 펼칠 때만 보인다
         body.visible = spread || layer < pileCap;
 
@@ -254,6 +282,82 @@ export function BookPile({
         groups,
       ],
     }
+  );
+
+  // 주소의 책을 따라 움직인다. 클릭과 공유 링크가 같은 길을 타고, 책이 닫히면 같은 궤적을 거꾸로 돌아간다
+  useGSAP(
+    () => {
+      if (!openSlug) {
+        if (flight.current) {
+          // 링크로 들어오면 접힌 더미에서 떠났으므로, 돌아갈 곳을 지금 배치의 제자리로 바꿔 끼운다
+          Object.assign(
+            flight.current.from,
+            homes.current[flight.current.index]
+          );
+          flight.current.tween.reverse();
+        }
+        return;
+      }
+
+      const index = topics.findIndex((topic) => {
+        return topic.slug === openSlug;
+      });
+      const slot = slots.current[index];
+      const body = bodies.current[index];
+      const shadow = shadows.current[index];
+
+      if (!slot || !body || !shadow) {
+        return;
+      }
+
+      // 펼치는 트윈이 아직 돌고 있으면 날아가는 책을 붙잡아 끌어당긴다
+      gsap.killTweensOf([slot.position, body.position, body.rotation]);
+      flying.current = openSlug;
+
+      const from: Pose = {
+        x: slot.position.x,
+        z: slot.position.z,
+        y: body.position.y,
+        rotationX: body.rotation.x,
+        rotationY: body.rotation.y,
+      };
+      // 카메라(높이 0.55) 앞 0.55m. 줄이면 책이 화면을 더 채우고, 키우면 작게 멈춘다
+      const distance = 0.55;
+      // 카메라가 3° 내려다보므로 시선 중심 높이에 세우고 그만큼 눕혀야 표지가 정면으로 선다
+      const arrivalY = 0.55 - distance * Math.tan(0.052);
+      const faceX = Math.PI / 2 - 0.052;
+      const progress = { p: 0 };
+
+      const tween = gsap.to(progress, {
+        p: 1,
+        // 1.5초. 줄이면 휙 날아오고, 키우면 두 바퀴가 느긋하게 읽힌다
+        duration: 1.5,
+        // 천천히 떠서 천천히 내려앉는다. out 계열로 바꾸면 확 튀어나와 끝에서 오래 감속한다
+        ease: 'sine.inOut',
+        onUpdate: () => {
+          const { p } = progress;
+
+          slot.position.x = from.x * (1 - p);
+          slot.position.z = from.z + (-distance - from.z) * p;
+          // 0.22m 높이의 호. 키우면 더 높이 솟았다 내려오고, 0이면 곧장 직선으로 온다
+          body.position.y =
+            from.y + (arrivalY - from.y) * p + 0.22 * Math.sin(Math.PI * p);
+          body.rotation.x = from.rotationX + (faceX - from.rotationX) * p;
+          body.rotation.y = from.rotationY * (1 - p);
+          // 세로축으로 두 바퀴. 정수 바퀴여야 표지가 정면으로 멈추고, 늘리면 도는 게 빨라져 표지가 번쩍인다
+          slot.rotation.y = 2 * Math.PI * 2 * p;
+          // 테이블을 떠난 책 밑에 그늘이 남으면 안 된다
+          shadow.visible = p === 0;
+        },
+        onComplete: onArrive,
+        onReverseComplete: () => {
+          flying.current = '';
+        },
+      });
+
+      flight.current = { tween, index, from };
+    },
+    { dependencies: [openSlug] }
   );
 
   const hover = (event: { stopPropagation: () => void }) => {
@@ -344,6 +448,11 @@ export function BookPile({
               onPointerOut={unhover}
               onClick={(event) => {
                 event.stopPropagation();
+
+                // 책 한 권이 테이블을 떠나 있는 동안(돌아오는 중 포함)에는 다른 책을 받지 않는다
+                if (flying.current) {
+                  return;
+                }
 
                 if (topic.group === spreadGroup) {
                   document.body.style.cursor = '';
