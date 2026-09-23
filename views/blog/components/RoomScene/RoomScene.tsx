@@ -116,6 +116,8 @@ export function RoomScene({
               group: book.category,
               slug: book.slug,
               color: book.color,
+              // 마이그레이션 전 DB에는 logo 열이 없어 undefined가 온다. 로고 없는 표지로 둔다
+              logo: book.logo ?? null,
             };
           })}
           // 주소로 책이 열린 채 들어오면 그 책의 더미도 펼쳐 둬야 방과 목록이 어긋나지 않는다

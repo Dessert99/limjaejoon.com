@@ -13,6 +13,7 @@ export type BookTopic = {
   title: string;
   group: string;
   color: string;
+  logo: string | null;
 };
 
 /** 테이블 위 책 한 권의 자리와 기울기. slot이 x·z, body가 y와 회전을 맡는다. */
@@ -60,6 +61,9 @@ export function BookPile({
   const aspect = useThree((state) => {
     return state.viewport.aspect;
   });
+  const invalidate = useThree((state) => {
+    return state.invalidate;
+  });
   const slots = useRef<(Group | null)[]>([]);
   const bodies = useRef<(Group | null)[]>([]);
   const shadows = useRef<(Group | null)[]>([]);
@@ -87,9 +91,10 @@ export function BookPile({
   }, [topics]);
   const covers = useMemo(() => {
     return topics.map((topic) => {
-      return drawBookCover(topic.title, topic.color);
+      // 로고는 늦게 받아져 표지를 다시 그리므로, 멈춰 있는 방에 한 프레임 그려 달라고 한다
+      return drawBookCover(topic.title, topic.color, topic.logo, invalidate);
     });
-  }, [topics]);
+  }, [topics, invalidate]);
   const labelTextures = useMemo(() => {
     return groups.map((group) => {
       return drawLabel(group);
