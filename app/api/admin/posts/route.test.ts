@@ -32,6 +32,8 @@ const post = {
   title: input.title,
   slug: input.slug,
   description: input.description,
+  kind: input.kind,
+  book_id: input.book_id,
   published_at: input.published_at,
   content_markdown: input.content_markdown,
   book: { slug: 'nextjs', title: 'Next.js' },
