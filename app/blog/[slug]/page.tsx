@@ -4,16 +4,10 @@ import { PostAdminActions } from '@/views/blog/components/PostAdminActions/PostA
 import { PostContent } from '@/views/blog/components/PostContent';
 import { PostComments } from '@/views/blog/components/PostComments';
 import { PostJsonLd } from '@/views/blog/components/PostJsonLd';
-import { PostNav } from '@/views/blog/components/PostNav/PostNav';
 import { PostToc } from '@/views/blog/components/PostToc/PostToc';
 import { extractHeadings } from '@/views/blog/lib/extractHeadings';
 import { formatPublishedAt } from '@/views/blog/lib/formatPublishedAt';
-import { pickAdjacentPosts } from '@/views/blog/lib/pickAdjacentPosts';
-import {
-  getPostBySlug,
-  getPostSlugs,
-  getPosts,
-} from '@/views/blog/server/posts';
+import { getPostBySlug, getPostSlugs } from '@/views/blog/server/posts';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -26,10 +20,6 @@ type RouteContext = {
 // generateMetadata와 페이지가 같은 글을 두 번 안 읽도록 요청 단위로 캐시한다
 const loadPost = cache(async (slug: string) => {
   return getPostBySlug(createSupabaseStaticClient(), slug);
-});
-
-const loadPublishedPosts = cache(async () => {
-  return getPosts(createSupabaseStaticClient());
 });
 
 /** 발행된 글 주소를 미리 뽑아 상세 페이지를 빌드 때 정적으로 만든다. */
@@ -90,10 +80,6 @@ export default async function BlogPostPage(context: RouteContext) {
     notFound();
   }
 
-  const { previous, next } = pickAdjacentPosts(
-    await loadPublishedPosts(),
-    post
-  );
   const headings = extractHeadings(post.content_markdown);
   const publishedAt = formatPublishedAt(post.published_at);
 
@@ -152,10 +138,6 @@ export default async function BlogPostPage(context: RouteContext) {
         </article>
 
         <div className='mx-auto max-w-[48rem]'>
-          <PostNav
-            previous={previous}
-            next={next}
-          />
           <div className='mt-16 border-t border-blog-border pt-8'>
             <PostComments postId={post.id} />
           </div>
