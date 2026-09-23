@@ -23,6 +23,8 @@ describe('posts RLS 정책', () => {
       title: 'Integration post',
       description: 'integration test fixture',
       content_markdown: 'body',
+      // 개념 글은 책이 있어야 하므로 픽스처는 책 없는 이야기로 넣는다
+      kind: 'story',
       published_at: new Date().toISOString(),
     });
 
@@ -107,6 +109,7 @@ describe('posts RLS 정책', () => {
         title: 'admin insert',
         description: 'integration test fixture',
         content_markdown: 'body',
+        kind: 'story',
       });
 
       try {
@@ -138,6 +141,7 @@ describe('posts RLS 정책', () => {
         title: 'admin delete target',
         description: 'integration test fixture',
         content_markdown: 'body',
+        kind: 'story',
       });
 
       const { data, error } = await admin

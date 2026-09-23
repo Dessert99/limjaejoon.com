@@ -2,10 +2,10 @@
 
 import { useCallback, useSyncExternalStore } from 'react';
 
-/** 지금 걸린 목록 조건. 검색어는 하나, 태그는 여러 개다. */
+/** 지금 걸린 목록 조건. 검색어 하나, 책 하나다. */
 export type UrlFilters = {
   q: string;
-  tags: string[];
+  book: string;
 };
 
 const listeners = new Set<() => void>();
@@ -40,7 +40,7 @@ const getServerSnapshot = () => {
   return '';
 };
 
-/** 검색어·태그 필터를 주소창에 담아 공유·새로고침에도 살아남게 한다. */
+/** 검색어·책 필터를 주소창에 담아 공유·새로고침에도 살아남게 한다. */
 export const useUrlFilters = (): [UrlFilters, (next: UrlFilters) => void] => {
   const search = useSyncExternalStore(
     subscribe,
@@ -50,7 +50,7 @@ export const useUrlFilters = (): [UrlFilters, (next: UrlFilters) => void] => {
   const params = new URLSearchParams(search);
   const filters: UrlFilters = {
     q: params.get('q') ?? '',
-    tags: params.getAll('tag'),
+    book: params.get('book') ?? '',
   };
 
   const setFilters = useCallback((next: UrlFilters) => {
@@ -60,9 +60,9 @@ export const useUrlFilters = (): [UrlFilters, (next: UrlFilters) => void] => {
     if (next.q) {
       nextParams.set('q', next.q);
     }
-    next.tags.forEach((tag) => {
-      nextParams.append('tag', tag);
-    });
+    if (next.book) {
+      nextParams.set('book', next.book);
+    }
     const nextSearch = nextParams.toString();
 
     // push가 아니라 replace라 타이핑 한 글자마다 뒤로 가기 기록이 쌓이지 않는다

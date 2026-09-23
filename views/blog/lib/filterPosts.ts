@@ -5,7 +5,7 @@ const squash = (value: string): string => {
   return value.toLowerCase().replace(/\s+/g, '');
 };
 
-/** 고른 태그를 모두 가진 글 중에서 검색어가 제목·설명·태그에 걸리는 것만 남긴다. */
+/** 고른 책의 글 중에서 검색어가 제목·설명·책 제목에 걸리는 것만 남긴다. */
 export const filterPosts = (
   posts: PostListItem[],
   params: PostSearchParams
@@ -13,14 +13,7 @@ export const filterPosts = (
   const term = squash(params.q ?? '');
 
   return posts.filter((post) => {
-    const required = params.tags ?? [];
-
-    // 태그는 좁히는 조건이라 하나라도 빠지면 탈락시킨다
-    if (
-      !required.every((tag) => {
-        return post.tags.includes(tag);
-      })
-    ) {
+    if (params.book && post.book?.slug !== params.book) {
       return false;
     }
 
@@ -28,8 +21,10 @@ export const filterPosts = (
       return true;
     }
 
-    return [post.title, post.description, ...post.tags].some((field) => {
-      return squash(field).includes(term);
-    });
+    return [post.title, post.description, post.book?.title ?? ''].some(
+      (field) => {
+        return squash(field).includes(term);
+      }
+    );
   });
 };

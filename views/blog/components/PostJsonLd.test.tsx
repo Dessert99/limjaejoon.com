@@ -12,7 +12,9 @@ const post: Post = {
   published_at: '2026-04-03T00:00:00Z',
   created_at: '2026-04-03T00:00:00Z',
   updated_at: '2026-04-05T00:00:00Z',
-  tags: ['Next.js', 'Supabase'],
+  kind: 'concept',
+  book_id: 'book-1',
+  book: { slug: 'nextjs', title: 'Next.js' },
 };
 
 const parse = (container: HTMLElement) => {
@@ -33,7 +35,7 @@ describe('PostJsonLd', () => {
       description: '최근 글',
       datePublished: '2026-04-03T00:00:00Z',
       dateModified: '2026-04-05T00:00:00Z',
-      keywords: ['Next.js', 'Supabase'],
+      keywords: ['Next.js'],
       mainEntityOfPage: 'https://www.limjaejoon.com/blog/newer-post',
     });
   });

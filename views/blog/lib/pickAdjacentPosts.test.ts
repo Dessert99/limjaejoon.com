@@ -8,7 +8,8 @@ const post = (id: string): PostListItem => {
     slug: id,
     title: `제목 ${id}`,
     description: `설명 ${id}`,
-    tags: [],
+    kind: 'concept',
+    book: null,
     published_at: '2026-08-01T00:00:00Z',
   };
 };

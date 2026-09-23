@@ -14,21 +14,24 @@ const listRows = [
     slug: 'newer-post',
     title: '새 글',
     description: '최근 글',
+    kind: 'concept',
     published_at: '2026-04-03T00:00:00Z',
-    post_tags: [{ tags: { name: 'Supabase' } }, { tags: { name: 'Next.js' } }],
+    books: { slug: 'nextjs', title: 'Next.js' },
   },
   {
     id: '2',
     slug: 'older-post',
     title: '이전 글',
     description: '이전 글',
+    kind: 'story',
     published_at: '2026-04-02T00:00:00Z',
-    post_tags: [],
+    books: null,
   },
 ];
 
 const detailRow = {
   ...listRows[0],
+  book_id: 'book-1',
   content_markdown: '# 새 글\n\n본문입니다.',
   created_at: '2026-04-03T00:00:00Z',
   updated_at: '2026-04-03T00:00:00Z',
@@ -96,29 +99,29 @@ describe('post fetchers', () => {
 
     expect(from).toHaveBeenCalledWith('posts');
     expect(select).toHaveBeenCalledWith(
-      'id, slug, title, description, published_at, post_tags(tags(name))'
+      'id, slug, title, description, kind, published_at, books(slug, title)'
     );
     expect(order).toHaveBeenCalledWith('published_at', { ascending: false });
   });
 
-  it('조인 결과를 태그 이름 배열로 되접는다', async () => {
+  it('조인 결과를 book 하나로 되접는다', async () => {
     const { client } = makeListClient({ data: listRows, error: null });
 
     const posts = await getPosts(client);
 
-    expect(posts[0].tags).toEqual(['Next.js', 'Supabase']);
-    expect(posts).not.toHaveProperty('0.post_tags.0.tags');
+    expect(posts[0].book).toEqual({ slug: 'nextjs', title: 'Next.js' });
+    expect(posts[0]).not.toHaveProperty('books');
   });
 
-  it('연결이 없는 글은 빈 태그 배열이 된다', async () => {
+  it('책 없는 이야기는 book 이 null 이다', async () => {
     const { client } = makeListClient({ data: listRows, error: null });
 
     const posts = await getPosts(client);
 
-    expect(posts[1].tags).toEqual([]);
+    expect(posts[1].book).toBeNull();
   });
 
-  it('slug 로 글 상세를 조회하고 태그를 되접는다', async () => {
+  it('slug 로 글 상세를 조회하고 책을 되접는다', async () => {
     const { client, select, eq } = makeDetailClient({
       data: detailRow,
       error: null,
@@ -126,9 +129,9 @@ describe('post fetchers', () => {
 
     const post = await getPostBySlug(client, 'newer-post');
 
-    expect(select).toHaveBeenCalledWith('*, post_tags(tags(name))');
+    expect(select).toHaveBeenCalledWith('*, books(slug, title)');
     expect(eq).toHaveBeenCalledWith('slug', 'newer-post');
-    expect(post?.tags).toEqual(['Next.js', 'Supabase']);
+    expect(post?.book).toEqual({ slug: 'nextjs', title: 'Next.js' });
     expect(post?.content_markdown).toBe('# 새 글\n\n본문입니다.');
   });
 

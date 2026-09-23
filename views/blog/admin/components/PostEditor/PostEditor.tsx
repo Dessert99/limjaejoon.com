@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import type { TagWithUsage } from '../../../lib/tag.types';
+import type { Book } from '../../../lib/book.types';
 import { composeSlug, parseSlug, toPublishedAt } from '../../lib/postSlug';
 import { type PostDraft } from '../../lib/toUpsertInput';
 import { usePostEditor } from '../../lib/usePostEditor';
@@ -29,7 +29,7 @@ import {
 import { Textarea } from '@/views/blog/components/ui/textarea';
 import { MarkdownPreview } from '../MarkdownPreview/MarkdownPreview';
 import { SlugField } from '../SlugField/SlugField';
-import { TagPicker } from '../TagPicker/TagPicker';
+import { BookPicker } from '../BookPicker/BookPicker';
 
 /** 붙여넣기·드롭에 딸려 온 것 중 이미지만 고른다. */
 const imagesFrom = (files: FileList): File[] => {
@@ -80,10 +80,10 @@ function Field({
 /** 글 작성·수정 화면. 위쪽은 메타 정보, 아래쪽은 본문 작성과 미리보기 탭이다. */
 export function PostEditor({
   initial,
-  tags: initialTags,
+  books,
 }: {
   initial?: { id: string; draft: PostDraft };
-  tags: TagWithUsage[];
+  books: Book[];
 }) {
   const {
     draft,
@@ -95,26 +95,6 @@ export function PostEditor({
     insertImages,
     isEditing,
   } = usePostEditor(initial);
-  const [tags, setTags] = useState(initialTags);
-
-  // 관리 대화상자에서 태그가 지워지면 이 글에 남은 선택도 같이 떨어내야 한다
-  const changeTags = (next: TagWithUsage[]) => {
-    setTags(next);
-
-    const alive = new Set(
-      next.map((tag) => {
-        return tag.id;
-      })
-    );
-
-    setField(
-      'tags',
-      draft.tags.filter((id) => {
-        return alive.has(id);
-      })
-    );
-  };
-
   const parsed = parseSlug(initial?.draft.slug ?? '');
   const [date, setDate] = useState(parsed.date || today());
   const [topic, setTopic] = useState(parsed.topic);
@@ -224,13 +204,16 @@ export function PostEditor({
             />
           </div>
 
-          <TagPicker
-            tags={tags}
-            selected={draft.tags}
-            onSelectedChange={(ids) => {
-              setField('tags', ids);
+          <BookPicker
+            books={books}
+            kind={draft.kind}
+            bookId={draft.bookId}
+            onKindChange={(kind) => {
+              setField('kind', kind);
             }}
-            onTagsChange={changeTags}
+            onBookChange={(id) => {
+              setField('bookId', id);
+            }}
           />
         </div>
 

@@ -1,26 +1,16 @@
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/lib/supabase/database.types';
+import type { BookRef } from '../lib/book.types';
 import type { Post, PostListItem } from '../lib/post.types';
 
-type TagsJoin = { post_tags: { tags: { name: string } | null }[] };
+type BookJoin = { books: BookRef | null };
 
-/** 조인으로 딸려 온 post_tags 중첩을 태그 이름 배열로 눌러 화면이 쓰기 좋게 만든다. */
-const foldTags = <T>(row: T & TagsJoin): T & { tags: string[] } => {
-  const { post_tags: links, ...rest } = row;
+/** 조인으로 딸려 온 books 중첩을 book 하나로 눌러 화면이 쓰기 좋게 만든다. */
+const foldBook = <T>(row: T & BookJoin): T & { book: BookRef | null } => {
+  const { books, ...rest } = row;
 
-  return {
-    ...rest,
-    tags: links
-      // 조인이 태그를 못 읽어 오면 null이 섞인다. 이름 없는 링크는 버린다
-      .map((link) => {
-        return link.tags?.name;
-      })
-      .filter((name): name is string => {
-        return Boolean(name);
-      })
-      .sort(),
-  } as T & { tags: string[] };
+  return { ...rest, book: books } as T & { book: BookRef | null };
 };
 
 /** 발행 최신순 글 목록. 본문은 빼고 목록·검색에 필요한 열만 가져온다. */
@@ -29,7 +19,9 @@ export const getPosts = async (
 ): Promise<PostListItem[]> => {
   const { data, error } = await client
     .from('posts')
-    .select('id, slug, title, description, published_at, post_tags(tags(name))')
+    .select(
+      'id, slug, title, description, kind, published_at, books(slug, title)'
+    )
     .order('published_at', { ascending: false });
 
   if (error) {
@@ -37,8 +29,8 @@ export const getPosts = async (
   }
 
   return (
-    (data ?? []) as unknown as (Omit<PostListItem, 'tags'> & TagsJoin)[]
-  ).map(foldTags);
+    (data ?? []) as unknown as (Omit<PostListItem, 'book'> & BookJoin)[]
+  ).map(foldBook);
 };
 
 /** 정적 경로를 만들 때 쓸 주소 목록. */
@@ -84,7 +76,7 @@ export const getPostBySlug = async (
 ): Promise<Post | null> => {
   const { data, error } = await client
     .from('posts')
-    .select('*, post_tags(tags(name))')
+    .select('*, books(slug, title)')
     .eq('slug', slug)
     .maybeSingle();
 
@@ -96,5 +88,5 @@ export const getPostBySlug = async (
     return null;
   }
 
-  return foldTags(data as unknown as Omit<Post, 'tags'> & TagsJoin);
+  return foldBook(data as unknown as Omit<Post, 'book'> & BookJoin);
 };

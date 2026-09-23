@@ -5,11 +5,11 @@ import { Badge } from '@/views/blog/components/ui/badge';
 
 type PostRowProps = {
   post: PostListItem;
-  onSelectTag: (tag: string) => void;
+  onSelectBook: (slug: string) => void;
 };
 
-/** 목록의 글 한 줄. 태그를 누르면 그 태그로 목록이 좁혀진다. */
-export function PostRow({ post, onSelectTag }: PostRowProps) {
+/** 목록의 글 한 줄. 책을 누르면 그 책으로 목록이 좁혀지고, 이야기는 표시만 한다. */
+export function PostRow({ post, onSelectBook }: PostRowProps) {
   const publishedAt = formatPublishedAt(post.published_at);
 
   return (
@@ -32,23 +32,22 @@ export function PostRow({ post, onSelectTag }: PostRowProps) {
         ) : null}
 
         <div className='flex flex-wrap gap-2'>
-          {post.tags.map((tag) => {
-            return (
-              <Badge
-                key={tag}
-                asChild
-                variant='secondary'>
-                <button
-                  type='button'
-                  className='cursor-pointer'
-                  onClick={() => {
-                    onSelectTag(tag);
-                  }}>
-                  #{tag}
-                </button>
-              </Badge>
-            );
-          })}
+          {post.book ? (
+            <Badge
+              asChild
+              variant='secondary'>
+              <button
+                type='button'
+                className='cursor-pointer'
+                onClick={() => {
+                  onSelectBook(post.book!.slug);
+                }}>
+                {post.book.title}
+              </button>
+            </Badge>
+          ) : (
+            <Badge variant='secondary'>이야기</Badge>
+          )}
         </div>
       </div>
     </article>

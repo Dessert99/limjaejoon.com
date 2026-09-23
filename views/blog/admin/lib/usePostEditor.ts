@@ -28,7 +28,8 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
       title: '',
       slug: '',
       description: '',
-      tags: [],
+      kind: 'concept',
+      bookId: '',
       publishedAt: '',
       contentMarkdown: '',
     }

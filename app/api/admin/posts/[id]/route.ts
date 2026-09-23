@@ -13,7 +13,7 @@ type RouteContext = {
   }>;
 };
 
-/** 글을 고친다. 태그 연결도 보낸 목록으로 맞춘다. */
+/** 글을 고친다. */
 export const PATCH = async (request: Request, context: RouteContext) => {
   const guard = await requireAdmin(request);
   if (guard.error) {
@@ -23,10 +23,10 @@ export const PATCH = async (request: Request, context: RouteContext) => {
   const { id } = await context.params;
   const input = (await request.json()) as UpsertPostInput;
 
-  // 태그 없는 글은 목록 필터에서 영영 안 잡히므로 저장 전에 막는다
-  if (input.tag_ids.length === 0) {
+  // 책 없는 개념 글은 어느 더미에서도 못 찾으므로 저장 전에 막는다
+  if (input.kind === 'concept' && !input.book_id) {
     return NextResponse.json(
-      { message: '태그를 하나 이상 골라야 한다' },
+      { message: '개념 글은 책을 골라야 한다' },
       { status: 400 }
     );
   }

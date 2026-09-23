@@ -8,7 +8,8 @@ const draft = (overrides: Partial<PostDraft> = {}): PostDraft => {
     title: '제목',
     slug: 'slug',
     description: '',
-    tags: [],
+    kind: 'concept',
+    bookId: '',
     publishedAt: '',
     contentMarkdown: '',
     ...overrides,
@@ -16,14 +17,25 @@ const draft = (overrides: Partial<PostDraft> = {}): PostDraft => {
 };
 
 describe('toUpsertInput', () => {
-  it('고른 태그 id 를 tag_ids 로 넘긴다', () => {
-    const input = toUpsertInput(draft({ tags: ['tag-a', 'tag-b'] }), NOW);
+  it('고른 책 id 를 book_id 로 넘긴다', () => {
+    const input = toUpsertInput(draft({ bookId: 'book-a' }), NOW);
 
-    expect(input.tag_ids).toEqual(['tag-a', 'tag-b']);
+    expect(input.kind).toBe('concept');
+    expect(input.book_id).toBe('book-a');
   });
 
-  it('태그를 안 고르면 tag_ids 가 빈 배열이다 (거부는 저장 라우트가 한다)', () => {
-    expect(toUpsertInput(draft(), NOW).tag_ids).toEqual([]);
+  it('개념 글인데 책을 안 고르면 book_id 가 null 이다 (거부는 저장 라우트가 한다)', () => {
+    expect(toUpsertInput(draft(), NOW).book_id).toBeNull();
+  });
+
+  it('이야기는 책을 골랐어도 book_id 를 비운다', () => {
+    const input = toUpsertInput(
+      draft({ kind: 'story', bookId: 'book-a' }),
+      NOW
+    );
+
+    expect(input.kind).toBe('story');
+    expect(input.book_id).toBeNull();
   });
 
   it('발행일을 비워 두면 지금 시각을 박는다', () => {

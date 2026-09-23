@@ -7,6 +7,11 @@ export type Json =
   | Json[];
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: '14.5';
+  };
   graphql_public: {
     Tables: {
       [_ in never]: never;
@@ -34,86 +39,82 @@ export type Database = {
   };
   public: {
     Tables: {
-      post_tags: {
+      books: {
         Row: {
-          post_id: string;
-          tag_id: string;
+          category: string;
+          color: string;
+          created_at: string;
+          id: string;
+          slug: string;
+          sort_order: number;
+          title: string;
         };
         Insert: {
-          post_id: string;
-          tag_id: string;
+          category: string;
+          color: string;
+          created_at?: string;
+          id?: string;
+          slug: string;
+          sort_order: number;
+          title: string;
         };
         Update: {
-          post_id?: string;
-          tag_id?: string;
+          category?: string;
+          color?: string;
+          created_at?: string;
+          id?: string;
+          slug?: string;
+          sort_order?: number;
+          title?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'post_tags_post_id_fkey';
-            columns: ['post_id'];
-            isOneToOne: false;
-            referencedRelation: 'posts';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'post_tags_tag_id_fkey';
-            columns: ['tag_id'];
-            isOneToOne: false;
-            referencedRelation: 'tags';
-            referencedColumns: ['id'];
-          },
-        ];
+        Relationships: [];
       };
       posts: {
         Row: {
+          book_id: string | null;
           content_markdown: string;
           created_at: string;
           description: string;
           id: string;
+          kind: string;
           published_at: string;
           slug: string;
           title: string;
           updated_at: string;
         };
         Insert: {
+          book_id?: string | null;
           content_markdown: string;
           created_at?: string;
           description: string;
           id?: string;
+          kind?: string;
           published_at?: string;
           slug: string;
           title: string;
           updated_at?: string;
         };
         Update: {
+          book_id?: string | null;
           content_markdown?: string;
           created_at?: string;
           description?: string;
           id?: string;
+          kind?: string;
           published_at?: string;
           slug?: string;
           title?: string;
           updated_at?: string;
         };
-        Relationships: [];
-      };
-      tags: {
-        Row: {
-          created_at: string;
-          id: string;
-          name: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          name: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          name?: string;
-        };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'posts_book_id_fkey';
+            columns: ['book_id'];
+            isOneToOne: false;
+            referencedRelation: 'books';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       users: {
         Row: {

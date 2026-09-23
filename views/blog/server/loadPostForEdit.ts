@@ -2,14 +2,14 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/lib/supabase/database.types';
 
-/** 편집 화면이 쓸 글 원본. 태그는 이름이 아니라 선택 상태를 맞출 id로 편다. */
+/** 편집 화면이 쓸 글 원본. 없으면 null이라 페이지가 404로 넘긴다. */
 export const loadPostForEdit = async (
   client: SupabaseClient<Database>,
   id: string
 ) => {
   const { data, error } = await client
     .from('posts')
-    .select('*, post_tags(tag_id)')
+    .select('*')
     .eq('id', id)
     .maybeSingle();
 
@@ -17,14 +17,5 @@ export const loadPostForEdit = async (
     throw error;
   }
 
-  if (!data) {
-    return null;
-  }
-
-  return {
-    post: data,
-    tagIds: data.post_tags.map((link) => {
-      return link.tag_id;
-    }),
-  };
+  return data;
 };

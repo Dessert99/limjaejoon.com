@@ -24,7 +24,8 @@ const input = {
   title: '수정 글',
   slug: 'updated-post',
   description: '수정 글 설명',
-  tag_ids: ['tag-a'],
+  kind: 'concept',
+  book_id: 'book-a',
   published_at: '2026-07-09T00:00:00Z',
   content_markdown: '# 수정 글',
 };
@@ -32,7 +33,7 @@ const input = {
 const post = {
   id: '1',
   ...input,
-  tags: ['Next.js'],
+  book: { slug: 'nextjs', title: 'Next.js' },
   created_at: '2026-07-09T00:00:00Z',
   updated_at: '2026-07-09T00:00:00Z',
 };
