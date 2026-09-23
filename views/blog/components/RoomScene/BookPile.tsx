@@ -1,7 +1,7 @@
 'use client';
 
 import { useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { type Group, type Mesh, type MeshBasicMaterial } from 'three';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
 import { drawBookCover, drawLabel, drawPageEdges } from './bookCover';
@@ -73,6 +73,8 @@ export function BookPile({
   } | null>(null);
   // 테이블을 떠나 있는 책. 더미 배치 트윈이 이 책을 테이블로 끌어내리지 않게 비켜 간다
   const flying = useRef('');
+  // 책이 테이블에 내려앉을 때마다 올려 더미 배치를 다시 돌린다
+  const [landings, setLandings] = useState(0);
 
   const groups = useMemo(() => {
     return [
@@ -280,6 +282,7 @@ export function BookPile({
         columns,
         topics,
         groups,
+        landings,
       ],
     }
   );
@@ -352,6 +355,10 @@ export function BookPile({
         onComplete: onArrive,
         onReverseComplete: () => {
           flying.current = '';
+          // 돌아오는 사이 더미가 접히거나 펼쳐졌으면 비켜 있던 이 책만 옛 자리에 남으므로 배치를 다시 맞춘다
+          setLandings((count) => {
+            return count + 1;
+          });
         },
       });
 
