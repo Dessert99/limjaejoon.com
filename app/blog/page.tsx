@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
+import { BlogAdminActions } from '@/views/blog/components/BlogAdminActions';
 import { RoomScene } from '@/views/blog/components/RoomScene/RoomScene';
 import { getBooks } from '@/views/blog/server/books';
+import { getPosts } from '@/views/blog/server/posts';
 
 /** 목록 페이지 메타. canonical을 /blog로 못 박아 필터가 붙은 주소가 따로 색인되지 않게 한다. */
 export const metadata: Metadata = {
@@ -25,16 +27,27 @@ export const metadata: Metadata = {
   },
 };
 
-/** 블로그 홈. 3D 방 하나가 화면을 채우고, 테이블 위 책 더미가 책별 글 목록으로 이어진다. */
+/** 블로그 홈. 3D 방 하나가 화면을 채우고, 테이블 위 책을 열면 그 책의 글 목록이 방 위에 뜬다. */
 export default async function BlogPage() {
-  const books = await getBooks(createSupabaseStaticClient());
+  const client = createSupabaseStaticClient();
+  const [books, posts] = await Promise.all([
+    getBooks(client),
+    getPosts(client),
+  ]);
 
   return (
     // bg-blog-inverse는 방이 뜨기 전 잠깐 보이는 바닥색. 방의 어두운 톤과 맞춰 깜빡임을 줄인다
     <main className='relative grow bg-blog-inverse'>
       {/* grow로 늘어난 높이는 자식이 %로 못 받으므로 absolute로 main을 꽉 채운다 */}
       <div className='absolute inset-0'>
-        <RoomScene books={books} />
+        <RoomScene
+          books={books}
+          posts={posts}
+        />
+      </div>
+      {/* 방 위에 떠야 캔버스에 가리지 않는다 */}
+      <div className='absolute top-4 right-4'>
+        <BlogAdminActions />
       </div>
     </main>
   );

@@ -4,12 +4,6 @@ import type { BookRef } from './book.types';
 /** 글의 갈래. concept는 책 한 권에 속한 개념 정리, story는 책 없는 회고·에세이다. */
 export type PostKind = 'concept' | 'story';
 
-/** 목록에서 걸 수 있는 조건. 주소창의 q·book 파라미터와 같은 모양이다. */
-export type PostSearchParams = {
-  q?: string;
-  book?: string;
-};
-
 /** 글 한 편. DB 행에 책 요약을 접어 붙인 형태다. 이야기는 책이 null이다. */
 export type Post = Database['public']['Tables']['posts']['Row'] & {
   book: BookRef | null;

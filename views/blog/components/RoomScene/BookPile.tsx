@@ -1,18 +1,17 @@
 'use client';
 
 import { useThree } from '@react-three/fiber';
-import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';
 import { type Group, type Mesh, type MeshBasicMaterial } from 'three';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
 import { drawBookCover, drawLabel, drawPageEdges } from './bookCover';
 import { fitCover } from './fitCover';
 
-/** 책 한 권이 대표하는 대주제. group이 같은 책끼리 한 더미에 쌓이고, 클릭하면 href로 간다. */
+/** 책 한 권이 대표하는 대주제. group이 같은 책끼리 한 더미에 쌓이고, 클릭하면 slug로 열린다. */
 export type BookTopic = {
+  slug: string;
   title: string;
   group: string;
-  href: string;
   color: string;
 };
 
@@ -33,17 +32,18 @@ const lean = 1.0;
 const restingY =
   (thickness / 2) * Math.cos(lean) + (height / 2) * Math.sin(lean);
 
-/** 테이블 위 분류별 책 더미. 앞에서 뒤로 대각선으로 놓이고, 더미를 누르면 그 분류가 앞쪽에 줄지어 펼쳐지며, 책을 누르면 그 주제로 간다. */
+/** 테이블 위 분류별 책 더미. 앞에서 뒤로 대각선으로 놓이고, 더미를 누르면 그 분류가 앞쪽에 줄지어 펼쳐지며, 책을 누르면 그 책이 열린다. */
 export function BookPile({
   topics,
   spreadGroup,
   onSpread,
+  onOpen,
 }: {
   topics: BookTopic[];
   spreadGroup: string | null;
   onSpread: (group: string) => void;
+  onOpen: (slug: string) => void;
 }) {
-  const router = useRouter();
   const aspect = useThree((state) => {
     return state.viewport.aspect;
   });
@@ -347,7 +347,7 @@ export function BookPile({
 
                 if (topic.group === spreadGroup) {
                   document.body.style.cursor = '';
-                  router.push(topic.href);
+                  onOpen(topic.slug);
                 } else {
                   onSpread(topic.group);
                 }

@@ -123,7 +123,7 @@ export default async function BlogPostPage(context: RouteContext) {
                 asChild={Boolean(post.book)}
                 variant='secondary'>
                 {post.book ? (
-                  <Link href={`/blog/posts?book=${post.book.slug}`}>
+                  <Link href={`/blog?book=${post.book.slug}`}>
                     {post.book.title}
                   </Link>
                 ) : (
