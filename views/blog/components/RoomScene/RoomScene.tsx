@@ -8,7 +8,7 @@ import type { Book } from '../../lib/book.types';
 import { type PostListItem } from '../../lib/post.types';
 import { useBookParam } from '../../lib/useBookParam';
 import { Backdrop } from './Backdrop';
-import { BookPanel } from './BookPanel';
+import { BookModal } from './BookModal';
 import { BookPile } from './BookPile';
 import { fitCover } from './fitCover';
 
@@ -130,7 +130,7 @@ export function RoomScene({
           }}
         />
       </Canvas>
-      <BookPanel
+      <BookModal
         book={arrived ? openBook : undefined}
         posts={posts.filter((post) => {
           return post.book?.slug === openSlug;
