@@ -30,7 +30,10 @@ export const metadata: Metadata = {
 /** 글 목록 페이지. 빌드 때 정적으로 뽑고 필터는 클라이언트가 맡는다. */
 export default async function PostsPage() {
   const client = createSupabaseStaticClient();
-  const [posts, books] = await Promise.all([getPosts(client), getBooks(client)]);
+  const [posts, books] = await Promise.all([
+    getPosts(client),
+    getBooks(client),
+  ]);
 
   return (
     <main className='grow pt-blog-section-sm pb-blog-section'>
