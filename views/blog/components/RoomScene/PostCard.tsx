@@ -25,8 +25,10 @@ export function PostCard({ post }: { post: PostListItem }) {
     // 테두리 2px는 카드와 책 색 바탕의 경계선. 굵히면 카드가 틀처럼 도드라지고, 얇히면 흰 면이 바탕에 스민다
     // 뒤 흐림(blur-md 12px)은 워터마크가 글자 뒤로 비쳐 지저분해지지 않게 한다. 줄이면 로고 윤곽이 카드 안에 드러난다
     // 글자색 전환 300ms는 번지는 원(650ms)보다 짧아, 원이 글자에 닿기 전에 크림색으로 바뀌어 검은 글자가 책 색 위에 남지 않는다
+    // prefetch를 끈다. 서재 기준으로 미리 받은 글이 캐시에 남아, 나중에 본문 칩으로 그 글을 열면 피크 대신 페이지 이동이 된다
     <Link
       href={`/blog/${post.slug}`}
+      prefetch={false}
       onPointerEnter={trackPointer}
       onPointerLeave={trackPointer}
       className='group relative block h-full overflow-hidden rounded-xl border-2 border-blog-background/30 bg-blog-background/60 px-6 py-5 text-blog-foreground backdrop-blur-md transition-colors duration-300 hover:text-[#f5f1e8] focus-visible:text-[#f5f1e8] focus-visible:ring-2 focus-visible:ring-blog-ring focus-visible:outline-none'>

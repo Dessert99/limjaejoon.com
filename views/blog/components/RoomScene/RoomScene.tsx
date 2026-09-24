@@ -6,7 +6,7 @@ import { type PerspectiveCamera } from 'three';
 import { gsap } from '@/lib/motion/gsap';
 import type { Book } from '../../lib/book.types';
 import { type PostListItem } from '../../lib/post.types';
-import { useBookParam } from '../../lib/useBookParam';
+import { useLibraryHistory } from '../../lib/useLibraryHistory';
 import { Backdrop } from './Backdrop';
 import { BookModal } from './BookModal';
 import { BookPile } from './BookPile';
@@ -68,10 +68,23 @@ export function RoomScene({
   books: Book[];
   posts: PostListItem[];
 }) {
-  const [spreadGroup, setSpreadGroup] = useState<string | null>(null);
-  const [openSlug, setOpenSlug] = useBookParam();
+  const {
+    pile,
+    book: openSlug,
+    spread,
+    open,
+    close,
+    fold,
+  } = useLibraryHistory();
   // 목록은 책이 카메라 앞에 도착한 뒤에 뜬다
   const [arrived, setArrived] = useState(false);
+  const [arrivedSlug, setArrivedSlug] = useState(openSlug);
+
+  // 뒤로·앞으로 가기로 책이 바뀌면 이벤트 없이 주소만 바뀐다. 렌더 중에 도착을 되돌려야 새 책이 날아오기 전에 목록이 먼저 뜨지 않는다
+  if (arrivedSlug !== openSlug) {
+    setArrivedSlug(openSlug);
+    setArrived(false);
+  }
   const openBook = books.find((book) => {
     return book.slug === openSlug;
   });
@@ -89,9 +102,7 @@ export function RoomScene({
           near: 0.1,
           far: 20,
         }}
-        onPointerMissed={() => {
-          setSpreadGroup(null);
-        }}>
+        onPointerMissed={fold}>
         <Backdrop />
         <Stage />
         <RenderWhileTweening />
@@ -121,10 +132,10 @@ export function RoomScene({
             };
           })}
           // 주소로 책이 열린 채 들어오면 그 책의 더미도 펼쳐 둬야 방과 목록이 어긋나지 않는다
-          spreadGroup={spreadGroup ?? openBook?.category ?? null}
+          spreadGroup={pile ?? openBook?.category ?? null}
           openSlug={openSlug}
-          onSpread={setSpreadGroup}
-          onOpen={setOpenSlug}
+          onSpread={spread}
+          onOpen={open}
           onArrive={() => {
             setArrived(true);
           }}
@@ -137,9 +148,7 @@ export function RoomScene({
         })}
         onClose={() => {
           // 닫아도 방금 보던 더미는 펼친 채 남겨 옆 책으로 바로 옮겨 갈 수 있게 한다
-          setArrived(false);
-          setSpreadGroup(openBook?.category ?? null);
-          setOpenSlug('');
+          close(openBook?.category ?? null);
         }}
       />
     </>
