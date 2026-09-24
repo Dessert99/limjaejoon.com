@@ -35,3 +35,8 @@
   --text-blog-statement--line-height: 1.25;
   --text-blog-statement--letter-spacing: -0.01em;
 }
+
+/* 서재 트리의 펼침 판은 링크 위에 겹친다. radix 래퍼가 포인터를 먹으면 링크를 떠난 것으로 잡혀 판이 열렸다 닫히길 되풀이하고 클릭도 링크에 안 닿는다 */
+[data-radix-popper-content-wrapper]:has(> [data-library-tip]) {
+  pointer-events: none;
+}
