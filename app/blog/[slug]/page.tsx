@@ -81,7 +81,7 @@ export const generateMetadata = async (
   };
 };
 
-/** 글 상세 페이지. 넓은 화면은 서재 트리·본문·목차 3단이고, 좁은 화면에서는 트리를 숨기고 목차가 위로 접힌다. */
+/** 글 상세 페이지. 넓은 화면은 서재 트리·본문·목차 3단이고, 좁은 화면에서는 트리와 목차를 숨긴다. */
 export default async function BlogPostPage(context: RouteContext) {
   const { slug } = await context.params;
   const post = await loadPost(slug);
@@ -138,10 +138,10 @@ export default async function BlogPostPage(context: RouteContext) {
           {/* 본문 48rem. 키우면 한 줄이 길어져 읽는 눈이 돌아오기 힘들어진다 */}
           {/* 좌우 1fr을 같은 폭으로 비워야 본문이 화면 정중앙에 온다. 그냥 1fr이면 목차 글자가 대칭을 깬다 */}
           <div className='mt-12 grid gap-x-blog-grid-gap xl:grid-cols-[minmax(0,1fr)_minmax(0,48rem)_minmax(0,1fr)]'>
-            {/* 마크업은 목차가 먼저라 좁은 화면에서 위로 오고, 넓어지면 col-start로 오른쪽에 붙는다 */}
+            {/* 목차를 넓은 화면에서만 보여 좁은 화면에서는 본문으로 바로 이어진다 */}
             <PostToc
               headings={headings}
-              className='mb-8 xl:sticky xl:top-24 xl:col-start-3 xl:row-start-1 xl:mb-0 xl:self-start'
+              className='hidden xl:sticky xl:top-24 xl:col-start-3 xl:row-start-1 xl:block xl:self-start'
             />
 
             {/* 넓은 화면에서만 왼쪽 빈 칸에 붙는다. 12rem은 목차와 같은 내비·여백 몫이라, 줄이면 트리 끝이 화면 밖으로 넘친다 */}
