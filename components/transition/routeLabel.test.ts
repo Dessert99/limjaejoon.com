@@ -15,7 +15,7 @@ describe('routeLabel', () => {
   });
 
   it('쿼리와 해시는 이름에서 걷어낸다', () => {
-    expect(routeLabel('/blog?tag=react')).toBe('blog');
+    expect(routeLabel('/library?book=react')).toBe('library');
     expect(routeLabel('/blog/hello-world#intro')).toBe('blog');
   });
 });

@@ -73,11 +73,11 @@ export const requireAdmin = async (
 export const mapWriteError = (error: unknown): NextResponse => {
   const code = (error as { code?: string })?.code;
 
-  // 유니크 위반. 같은 주소나 같은 태그 이름이 이미 있다
+  // 유니크 위반. 같은 주소가 이미 있다
   if (code === '23505') {
     return NextResponse.json({ message: 'Conflict' }, { status: 409 });
   }
-  // 외래키 위반. 글이 붙은 태그를 지우려 했거나 없는 태그를 걸려 했다
+  // 외래키 위반. 글이 붙은 책을 지우려 했거나 없는 책을 걸려 했다
   if (code === '23503') {
     return NextResponse.json({ message: 'Conflict' }, { status: 409 });
   }

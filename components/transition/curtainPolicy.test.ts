@@ -13,6 +13,6 @@ describe('shouldCurtain', () => {
   });
 
   it('쿼리만 다른 이동도 같은 섹션으로 본다', () => {
-    expect(shouldCurtain('/blog/hello-world', '/blog?tag=react')).toBe(false);
+    expect(shouldCurtain('/library', '/library?book=react')).toBe(false);
   });
 });
