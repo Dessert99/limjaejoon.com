@@ -1,6 +1,6 @@
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
-import { PeekBackdrop } from '@/views/blog/components/PeekBackdrop';
 import { PeekHashScroll } from '@/views/blog/components/PeekHashScroll';
+import { PeekShell } from '@/views/blog/components/PeekShell';
 import { PostContent } from '@/views/blog/components/PostContent';
 import {
   getPostBySlug,
@@ -42,20 +42,14 @@ export default async function PostPeek({
   }
 
   return (
-    <>
-      <PeekBackdrop />
-      {/* 좁은 화면은 아래에서 올라오는 시트(높이 85svh), md부터 오른쪽에 붙어 A 위를 덮는 48rem 패널이다. 85를 키우면 A가 거의 안 보이고, 줄이면 읽을 칸이 좁아진다. 48rem은 A 본문 폭과 같아 B가 상세 페이지와 같은 줄 길이로 읽힌다 */}
-      <aside
-        aria-label='참고 글'
-        className='fixed inset-x-0 bottom-0 z-(--z-overlay) h-[85svh] overflow-y-auto rounded-t-2xl border-t border-blog-border bg-blog-background p-6 md:inset-y-0 md:right-0 md:left-auto md:h-auto md:w-3xl md:rounded-none md:border-t-0 md:border-l md:p-8'>
-        <h2 className='text-2xl font-semibold'>{post.title}</h2>
-        <PostContent
-          markdown={post.content_markdown}
-          posts={posts}
-          idPrefix='peek-'
-        />
-        <PeekHashScroll idPrefix='peek-' />
-      </aside>
-    </>
+    <PeekShell>
+      <h2 className='text-2xl font-semibold'>{post.title}</h2>
+      <PostContent
+        markdown={post.content_markdown}
+        posts={posts}
+        idPrefix='peek-'
+      />
+      <PeekHashScroll idPrefix='peek-' />
+    </PeekShell>
   );
 }

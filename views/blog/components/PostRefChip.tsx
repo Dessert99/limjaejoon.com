@@ -1,7 +1,10 @@
+'use client';
+
 import siteIcon from '@/app/icon.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { setPeekOrigin } from '../lib/peekOrigin';
 
 /** 본문 속 다른 글 링크. 글자 사이에 끼는 칩이고, 누르면 지금 글 위에 그 글이 피크로 뜬다. #소제목이 붙으면 그 자리로 연다. */
 export function PostRefChip({
@@ -19,6 +22,16 @@ export function PostRefChip({
     <Link
       href={href}
       scroll={false}
+      onClick={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+
+        // 누른 손끝에서 피크가 번진다. 키보드 Enter는 좌표가 없어(detail 0) 칩 가운데로 잡는다
+        setPeekOrigin(
+          event.detail > 0
+            ? { x: event.clientX, y: event.clientY }
+            : { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+        );
+      }}
       className='rounded-md bg-blog-chip box-decoration-clone px-1 py-0.5 text-[#f5f1e8]! no-underline! transition-colors hover:bg-blog-chip-hover'>
       {/* 1em이라 본문 글자 크기를 따라가고, -0.125em 내려야 한글 글자 몸통 가운데에 앉는다. 검은 로고라 invert로 뒤집어 어두운 면에서 보이게 한다 */}
       <Image
