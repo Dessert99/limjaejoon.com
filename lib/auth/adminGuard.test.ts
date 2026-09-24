@@ -29,7 +29,7 @@ describe('requireAdmin', () => {
       data: { user: { id: '1', app_metadata: { role: 'admin' } } },
       error: null,
     });
-    const request = new Request('https://limjaejoon.com/api/admin/tags', {
+    const request = new Request('https://limjaejoon.com/api/admin/posts', {
       method: 'GET',
     });
     const { error } = await requireAdmin(request);

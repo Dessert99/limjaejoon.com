@@ -85,7 +85,7 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
     await run(async () => {
       await deletePost(initial.id);
 
-      return '/blog';
+      return '/library';
     });
   };
 

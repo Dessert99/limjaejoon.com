@@ -1,14 +1,14 @@
 import { Badge } from '@/views/blog/components/ui/badge';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
+import { LibraryNav } from '@/views/blog/components/LibraryNav/LibraryNav';
 import { PostAdminActions } from '@/views/blog/components/PostAdminActions/PostAdminActions';
 import { PostContent } from '@/views/blog/components/PostContent';
 import { PostComments } from '@/views/blog/components/PostComments';
 import { PostJsonLd } from '@/views/blog/components/PostJsonLd';
-import { PostNav } from '@/views/blog/components/PostNav/PostNav';
 import { PostToc } from '@/views/blog/components/PostToc/PostToc';
 import { extractHeadings } from '@/views/blog/lib/extractHeadings';
 import { formatPublishedAt } from '@/views/blog/lib/formatPublishedAt';
-import { pickAdjacentPosts } from '@/views/blog/lib/pickAdjacentPosts';
+import { getBooks } from '@/views/blog/server/books';
 import {
   getPostBySlug,
   getPostSlugs,
@@ -81,7 +81,7 @@ export const generateMetadata = async (
   };
 };
 
-/** 글 상세 페이지. 본문 왼쪽·목차 오른쪽 2단이고 좁은 화면에서는 목차가 위로 접힌다. */
+/** 글 상세 페이지. 넓은 화면은 서재 트리·본문·목차 3단이고, 좁은 화면에서는 트리를 숨기고 목차가 위로 접힌다. */
 export default async function BlogPostPage(context: RouteContext) {
   const { slug } = await context.params;
   const post = await loadPost(slug);
@@ -90,10 +90,10 @@ export default async function BlogPostPage(context: RouteContext) {
     notFound();
   }
 
-  const { previous, next } = pickAdjacentPosts(
-    await loadPublishedPosts(),
-    post
-  );
+  const [posts, books] = await Promise.all([
+    loadPublishedPosts(),
+    getBooks(createSupabaseStaticClient()),
+  ]);
   const headings = extractHeadings(post.content_markdown);
   const publishedAt = formatPublishedAt(post.published_at);
 
@@ -123,7 +123,7 @@ export default async function BlogPostPage(context: RouteContext) {
                 asChild={Boolean(post.book)}
                 variant='secondary'>
                 {post.book ? (
-                  <Link href={`/blog/posts?book=${post.book.slug}`}>
+                  <Link href={`/library?book=${post.book.slug}`}>
                     {post.book.title}
                   </Link>
                 ) : (
@@ -144,18 +144,25 @@ export default async function BlogPostPage(context: RouteContext) {
               className='mb-8 xl:sticky xl:top-24 xl:col-start-3 xl:row-start-1 xl:mb-0 xl:self-start'
             />
 
+            {/* 넓은 화면에서만 왼쪽 빈 칸에 붙는다. 12rem은 목차와 같은 내비·여백 몫이라, 줄이면 트리 끝이 화면 밖으로 넘친다 */}
+            <LibraryNav
+              books={books}
+              posts={posts}
+              currentSlug={post.slug}
+              className='hidden xl:sticky xl:top-24 xl:col-start-1 xl:row-start-1 xl:block xl:max-h-[calc(100svh-12rem)] xl:self-start xl:overflow-y-auto'
+            />
+
             {/* w-full이 빠지면 mx-auto가 stretch를 꺼 본문이 쪼그라들고, min-w-0이 빠지면 긴 코드 블록이 폭을 밀어낸다 */}
             <div className='mx-auto w-full max-w-[48rem] min-w-0 xl:col-start-2 xl:row-start-1'>
-              <PostContent markdown={post.content_markdown} />
+              <PostContent
+                markdown={post.content_markdown}
+                posts={posts}
+              />
             </div>
           </div>
         </article>
 
         <div className='mx-auto max-w-[48rem]'>
-          <PostNav
-            previous={previous}
-            next={next}
-          />
           <div className='mt-16 border-t border-blog-border pt-8'>
             <PostComments postId={post.id} />
           </div>

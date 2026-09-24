@@ -11,7 +11,7 @@ describe('decideRedirect', () => {
   });
 
   it('권한 있는 사용자가 /admin/login 에 접근하면 /blog 로 보낸다', () => {
-    expect(decideRedirect('/admin/login', true, true)).toBe('/blog');
+    expect(decideRedirect('/admin/login', true, true)).toBe('/library');
   });
 
   it('권한 있는 사용자가 /admin/posts 에 접근하면 리다이렉트하지 않는다', () => {

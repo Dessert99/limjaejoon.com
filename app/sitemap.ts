@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: 'https://www.limjaejoon.com/blog',
+      url: 'https://www.limjaejoon.com/library',
       changeFrequency: 'weekly',
       priority: 0.8,
     },

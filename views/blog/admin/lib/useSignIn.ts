@@ -26,7 +26,7 @@ export const useSignIn = () => {
       return;
     }
 
-    router.push('/blog');
+    router.push('/library');
   };
 
   return { email, setEmail, password, setPassword, error, pending, submit };

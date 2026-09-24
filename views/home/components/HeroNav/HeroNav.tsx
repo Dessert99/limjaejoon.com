@@ -7,7 +7,7 @@ export function HeroNav() {
     <GlassPanel>
       <nav aria-label='주요 메뉴'>
         <ul className='flex items-center gap-6 sm:gap-10'>
-          {[{ label: 'Blog', href: '/blog' }].map((item) => {
+          {[{ label: 'Blog', href: '/library' }].map((item) => {
             return (
               <NavItem
                 key={item.href}

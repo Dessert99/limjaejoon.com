@@ -45,6 +45,7 @@ export type Database = {
           color: string;
           created_at: string;
           id: string;
+          logo: string | null;
           slug: string;
           sort_order: number;
           title: string;
@@ -54,6 +55,7 @@ export type Database = {
           color: string;
           created_at?: string;
           id?: string;
+          logo?: string | null;
           slug: string;
           sort_order: number;
           title: string;
@@ -63,6 +65,7 @@ export type Database = {
           color?: string;
           created_at?: string;
           id?: string;
+          logo?: string | null;
           slug?: string;
           sort_order?: number;
           title?: string;

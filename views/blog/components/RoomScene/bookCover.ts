@@ -17,8 +17,13 @@ const grain = (context: CanvasRenderingContext2D, strength: number) => {
   context.putImageData(image, 0, 0);
 };
 
-/** 제목과 바탕색만으로 책 표지를 캔버스에 그려 텍스처로 만든다. 이미지 파일 없이 주제만 늘려도 표지가 생긴다. */
-export const drawBookCover = (title: string, color: string): CanvasTexture => {
+/** 제목과 바탕색으로 책 표지를 캔버스에 그려 텍스처로 만든다. 로고가 있으면 받아진 뒤 가운데에 얹어 다시 그린다. */
+export const drawBookCover = (
+  title: string,
+  color: string,
+  logo: string | null,
+  onRepaint: () => void
+): CanvasTexture => {
   const canvas = document.createElement('canvas');
 
   // 표지 비율 3:4. 해상도를 올리면 글자가 또렷해지는 대신 텍스처 메모리가 는다
@@ -26,8 +31,16 @@ export const drawBookCover = (title: string, color: string): CanvasTexture => {
   canvas.height = 512;
 
   const context = canvas.getContext('2d');
+  const texture = new CanvasTexture(canvas);
 
-  if (context) {
+  // 캔버스 색은 sRGB라 그대로 두면 three가 선형으로 오해해 표지가 뿌옇게 뜬다
+  texture.colorSpace = SRGBColorSpace;
+
+  const paint = (image?: HTMLImageElement) => {
+    if (!context) {
+      return;
+    }
+
     context.fillStyle = color;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -57,14 +70,45 @@ export const drawBookCover = (title: string, color: string): CanvasTexture => {
     context.textBaseline = 'middle';
     context.fillText(title, 44, 62);
 
+    if (image) {
+      // 로고 한 변 160px. 키우면 표지를 꽉 채운 포스터가 되고, 줄이면 출판사 마크처럼 작아진다
+      const size = 160;
+      const tint = document.createElement('canvas');
+      const tintContext = tint.getContext('2d');
+
+      tint.width = size;
+      tint.height = size;
+
+      if (tintContext) {
+        // 브랜드 SVG는 검정이라 그대로 얹으면 표지에 구멍처럼 보인다. 제목과 같은 크림색으로 물들인다
+        tintContext.drawImage(image, 0, 0, size, size);
+        tintContext.globalCompositeOperation = 'source-in';
+        tintContext.fillStyle = '#f5f1e8';
+        tintContext.fillRect(0, 0, size, size);
+        // 0.85는 로고 진하기. 올리면 제목보다 로고가 먼저 눈에 들어오고, 내리면 표지에 찍힌 박처럼 가라앉는다
+        context.globalAlpha = 0.85;
+        // 띠 아래 남은 면(120~512)의 한가운데. 가로는 표지 중심 192, 세로는 316이 로고 중심이다
+        context.drawImage(tint, 192 - size / 2, 316 - size / 2);
+        context.globalAlpha = 1;
+      }
+    }
+
     // 12는 결의 세기. 키우면 거친 재생지, 줄이면 매끈한 코팅지가 된다
     grain(context, 12);
+  };
+
+  paint();
+
+  if (logo) {
+    const image = new Image();
+
+    image.onload = () => {
+      paint(image);
+      texture.needsUpdate = true;
+      onRepaint();
+    };
+    image.src = `/images/logos/${logo}.svg`;
   }
-
-  const texture = new CanvasTexture(canvas);
-
-  // 캔버스 색은 sRGB라 그대로 두면 three가 선형으로 오해해 표지가 뿌옇게 뜬다
-  texture.colorSpace = SRGBColorSpace;
 
   return texture;
 };
