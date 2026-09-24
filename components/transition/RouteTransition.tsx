@@ -35,7 +35,10 @@ export function RouteTransition({ children }: { children: ReactNode }) {
 
     hrefRef.current = href;
     fromPathRef.current = pathname;
-    setLabel(routeLabel(href));
+    const route = routeLabel(href);
+
+    // 서재 주소는 /library지만 메뉴 이름이 Blog라 커튼 글자도 blog로 맞춘다
+    setLabel(route === 'library' ? 'blog' : route);
     setPhase('covering');
   };
 
