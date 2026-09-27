@@ -14,6 +14,7 @@ import { BookModal } from './BookModal';
 import { BookPile } from './BookPile';
 import { fitCover } from './fitCover';
 import { leaveView } from './leaveView';
+import { WindowSign } from './WindowSign';
 
 /** 카메라 화각을 배경 이미지의 잘림에 맞춰 책 크기가 그림과 어긋나지 않게 한다. 창문으로 나갈 땐 배경과 같은 부분을 잘라 확대한다. */
 function Stage({ leave }: { leave: RefObject<{ progress: number }> }) {
@@ -56,8 +57,9 @@ function RenderWhileTweening() {
     let busy = false;
     const tick = () => {
       // 루트 타임라인에는 ScrollTrigger가 걸어 둔 멈춘 예약 트윈이 늘 남아 있어, 재생 중인 것만 센다
+      // 창문 SVG의 무한 반복(data 'dom')은 캔버스와 무관하니 빼야 방이 멈춰 있을 수 있다
       const now = gsap.globalTimeline.getChildren(false).some((child) => {
-        return child.isActive();
+        return child.isActive() && child.data !== 'dom';
       });
 
       // invalidate는 다음 rAF로 미뤄져 루프가 멈췄다 다시 도는 사이 한 프레임씩 걸러 그린다. 이 틱에서 바로 그린다
@@ -98,6 +100,7 @@ export function RoomScene({
   const startCurtain = useCurtainStart();
   // 창문으로 나가는 진행도. GSAP이 직접 돌리고 배경과 카메라가 매 프레임 읽는다
   const leave = useRef({ progress: 0 });
+  const [leaving, setLeaving] = useState(false);
   // 목록은 책이 카메라 앞에 도착한 뒤에 뜬다
   const [arrived, setArrived] = useState(false);
   const [arrivedSlug, setArrivedSlug] = useState(openSlug);
@@ -124,6 +127,7 @@ export function RoomScene({
       return;
     }
 
+    setLeaving(true);
     gsap
       .timeline()
       // 1.4초. 늘리면 창으로 천천히 걸어가고, 줄이면 확 빨려 든다. in 곡선이라 끝으로 갈수록 빨라진다
@@ -187,6 +191,8 @@ export function RoomScene({
           }}
         />
       </Canvas>
+      {/* 더미를 펼치거나 책을 열면 공중에 뜬 책 위로 선이 그려지므로, 방이 비어 있을 때만 창문 신호를 켠다 */}
+      {pile || openSlug || leaving ? null : <WindowSign />}
       <BookModal
         book={arrived ? openBook : undefined}
         posts={posts.filter((post) => {
