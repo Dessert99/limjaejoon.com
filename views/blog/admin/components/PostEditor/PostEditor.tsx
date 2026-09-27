@@ -30,6 +30,7 @@ import { Textarea } from '@/views/blog/components/ui/textarea';
 import { MarkdownPreview } from '../MarkdownPreview/MarkdownPreview';
 import { SlugField } from '../SlugField/SlugField';
 import { BookPicker } from '../BookPicker/BookPicker';
+import { WritingGuide } from '../WritingGuide/WritingGuide';
 
 /** 붙여넣기·드롭에 딸려 온 것 중 이미지만 고른다. */
 const imagesFrom = (files: FileList): File[] => {
@@ -175,6 +176,10 @@ export function PostEditor({
             {error}
           </p>
         ) : null}
+
+        <div className='mt-8'>
+          <WritingGuide />
+        </div>
 
         <div className='mt-8 grid gap-5 md:grid-cols-2'>
           <Field

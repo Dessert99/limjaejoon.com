@@ -2,7 +2,7 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/lib/supabase/database.types';
 import type { BookRef } from '../lib/book.types';
-import type { Post, PostListItem } from '../lib/post.types';
+import type { Post, PostKind, PostListItem } from '../lib/post.types';
 
 type BookJoin = { books: BookRef | null };
 
@@ -33,13 +33,15 @@ export const getPosts = async (
   ).map(foldBook);
 };
 
-/** 정적 경로를 만들 때 쓸 주소 목록. */
+/** 정적 경로를 만들 때 쓸 주소 목록. 개념은 /blog, 이야기는 /experience가 굽는다. */
 export const getPostSlugs = async (
-  client: SupabaseClient<Database>
+  client: SupabaseClient<Database>,
+  kind: PostKind
 ): Promise<string[]> => {
   const { data, error } = await client
     .from('posts')
     .select('slug')
+    .eq('kind', kind)
     .order('published_at', { ascending: false });
 
   if (error) {
@@ -53,13 +55,13 @@ export const getPostSlugs = async (
   );
 };
 
-/** 사이트맵 항목. 수정일이 있어야 크롤러가 다시 읽을 글을 고른다. */
+/** 사이트맵 항목. 수정일이 있어야 크롤러가 다시 읽을 글을 고르고, 갈래로 주소가 갈린다. */
 export const getPostSitemapEntries = async (
   client: SupabaseClient<Database>
-): Promise<{ slug: string; updated_at: string }[]> => {
+): Promise<{ slug: string; kind: string; updated_at: string }[]> => {
   const { data, error } = await client
     .from('posts')
-    .select('slug, updated_at')
+    .select('slug, kind, updated_at')
     .order('published_at', { ascending: false });
 
   if (error) {

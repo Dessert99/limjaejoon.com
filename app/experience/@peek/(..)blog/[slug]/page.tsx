@@ -10,12 +10,12 @@ import {
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-/** 피크를 미리 구우면서 /blog/(.)slug 주소로도 열려, B와 겹치는 빈약한 페이지가 색인되지 않게 막는다. */
+/** 피크 주소로도 열리는 빈약한 페이지가 글 상세와 겹쳐 색인되지 않게 막는다. */
 export const metadata: Metadata = {
   robots: { index: false },
 };
 
-/** 글마다 피크 하나라 상세 페이지와 같은 목록으로 미리 굽는다. */
+/** 회고가 칩으로 거는 건 개념 글이라 개념 글 목록으로 미리 굽는다. */
 export const generateStaticParams = async () => {
   const slugs = await getPostSlugs(createSupabaseStaticClient(), 'concept');
 
@@ -24,7 +24,7 @@ export const generateStaticParams = async () => {
   });
 };
 
-/** 글 안에서 다른 글로 넘어갈 때 페이지를 바꾸지 않고 옆에 띄우는 피크. */
+/** 회고 안에서 개념 글 칩을 누르면 창밖을 떠나지 않고 옆에 띄우는 피크. */
 export default async function PostPeek({
   params,
 }: {

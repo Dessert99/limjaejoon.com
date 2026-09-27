@@ -11,12 +11,12 @@ export function PostJsonLd({ post }: { post: Post }) {
     dateModified: post.updated_at,
     author: {
       '@type': 'Person',
-      name: '재준',
+      name: '임재준',
       url: 'https://www.limjaejoon.com',
     },
     keywords: post.book ? [post.book.title] : [],
     image: 'https://www.limjaejoon.com/opengraph-image.png',
-    mainEntityOfPage: `https://www.limjaejoon.com/blog/${post.slug}`,
+    mainEntityOfPage: `https://www.limjaejoon.com/${post.kind === 'story' ? 'experience' : 'blog'}/${post.slug}`,
   };
 
   return (

@@ -6,5 +6,6 @@ export const revalidatePublicPosts = () => {
   revalidatePath('/library');
   // 레이아웃째 지워야 글 상세와 그 글을 띄우는 피크가 같이 따라온다
   revalidatePath('/blog', 'layout');
+  revalidatePath('/experience', 'layout');
   revalidatePath('/sitemap.xml');
 };
