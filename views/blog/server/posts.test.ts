@@ -77,15 +77,21 @@ const makeDetailClient = (result: { data: unknown; error: unknown }) => {
 
 const makeSlugClient = (result: { data: unknown; error: unknown }) => {
   const order = vi.fn().mockResolvedValue(result);
+  const query = {
+    eq: vi.fn(() => {
+      return query;
+    }),
+    order,
+  };
   const select = vi.fn(() => {
-    return { order };
+    return query;
   });
   const from = vi.fn(() => {
     return { select };
   });
   const client = { from } as unknown as SupabaseClient<Database>;
 
-  return { client, from, select, order };
+  return { client, from, select, eq: query.eq, order };
 };
 
 describe('post fetchers', () => {
@@ -143,26 +149,33 @@ describe('post fetchers', () => {
 
   it('SSG 경로 생성을 위해 slug 목록을 조회한다', async () => {
     const rows = [{ slug: 'newer-post' }, { slug: 'older-post' }];
-    const { client, from, select, order } = makeSlugClient({
+    const { client, from, select, eq, order } = makeSlugClient({
       data: rows,
       error: null,
     });
 
-    await expect(getPostSlugs(client)).resolves.toEqual([
+    await expect(getPostSlugs(client, 'concept')).resolves.toEqual([
       'newer-post',
       'older-post',
     ]);
     expect(from).toHaveBeenCalledWith('posts');
     expect(select).toHaveBeenCalledWith('slug');
+    expect(eq).toHaveBeenCalledWith('kind', 'concept');
     expect(order).toHaveBeenCalledWith('published_at', { ascending: false });
   });
 
   it('사이트맵용으로 slug 와 수정 시각을 함께 조회한다', async () => {
-    const rows = [{ slug: 'newer-post', updated_at: '2026-04-03T00:00:00Z' }];
+    const rows = [
+      {
+        slug: 'newer-post',
+        kind: 'concept',
+        updated_at: '2026-04-03T00:00:00Z',
+      },
+    ];
     const { client, select } = makeSlugClient({ data: rows, error: null });
 
     await expect(getPostSitemapEntries(client)).resolves.toEqual(rows);
-    expect(select).toHaveBeenCalledWith('slug, updated_at');
+    expect(select).toHaveBeenCalledWith('slug, kind, updated_at');
   });
 
   it('Supabase 쿼리 에러는 호출 측으로 전파한다', async () => {

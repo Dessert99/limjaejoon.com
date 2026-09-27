@@ -16,7 +16,7 @@ export function PostJsonLd({ post }: { post: Post }) {
     },
     keywords: post.book ? [post.book.title] : [],
     image: 'https://www.limjaejoon.com/opengraph-image.png',
-    mainEntityOfPage: `https://www.limjaejoon.com/blog/${post.slug}`,
+    mainEntityOfPage: `https://www.limjaejoon.com/${post.kind === 'story' ? 'experience' : 'blog'}/${post.slug}`,
   };
 
   return (

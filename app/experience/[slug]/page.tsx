@@ -1,21 +1,18 @@
-import { Badge } from '@/views/blog/components/ui/badge';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
-import { LibraryNav } from '@/views/blog/components/LibraryNav/LibraryNav';
 import { PostAdminActions } from '@/views/blog/components/PostAdminActions/PostAdminActions';
 import { PostContent } from '@/views/blog/components/PostContent';
 import { PostComments } from '@/views/blog/components/PostComments';
 import { PostJsonLd } from '@/views/blog/components/PostJsonLd';
 import { PostToc } from '@/views/blog/components/PostToc/PostToc';
+import { StoryNav } from '@/views/blog/components/StoryNav/StoryNav';
 import { extractHeadings } from '@/views/blog/lib/extractHeadings';
 import { formatPublishedAt } from '@/views/blog/lib/formatPublishedAt';
-import { getBooks } from '@/views/blog/server/books';
 import {
   getPostBySlug,
   getPostSlugs,
   getPosts,
 } from '@/views/blog/server/posts';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { cache } from 'react';
 
@@ -28,20 +25,16 @@ const loadPost = cache(async (slug: string) => {
   return getPostBySlug(createSupabaseStaticClient(), slug);
 });
 
-const loadPublishedPosts = cache(async () => {
-  return getPosts(createSupabaseStaticClient());
-});
-
-/** 발행된 개념 글 주소를 미리 뽑아 상세 페이지를 빌드 때 정적으로 만든다. */
+/** 발행된 이야기 주소를 미리 뽑아 회고 상세를 빌드 때 정적으로 만든다. */
 export const generateStaticParams = async () => {
-  const slugs = await getPostSlugs(createSupabaseStaticClient(), 'concept');
+  const slugs = await getPostSlugs(createSupabaseStaticClient(), 'story');
 
   return slugs.map((slug) => {
     return { slug };
   });
 };
 
-/** 글 한 편의 제목·설명·OG 태그. 없는 글이면 빈 메타로 두고 페이지가 404를 낸다. */
+/** 회고 한 편의 제목·설명·OG 태그. 없는 글이면 빈 메타로 두고 페이지가 404를 낸다. */
 export const generateMetadata = async (
   context: RouteContext
 ): Promise<Metadata> => {
@@ -55,15 +48,14 @@ export const generateMetadata = async (
   return {
     title: post.title,
     description: post.description,
-    alternates: { canonical: `/blog/${post.slug}` },
+    alternates: { canonical: `/experience/${post.slug}` },
     openGraph: {
       type: 'article',
       locale: 'ko_KR',
       title: post.title,
       description: post.description,
-      url: `/blog/${post.slug}`,
+      url: `/experience/${post.slug}`,
       publishedTime: post.published_at ?? undefined,
-      tags: post.book ? [post.book.title] : [],
       images: [
         {
           url: '/opengraph-image.png',
@@ -81,8 +73,8 @@ export const generateMetadata = async (
   };
 };
 
-/** 글 상세 페이지. 넓은 화면은 서재 트리·본문·목차 3단이고, 좁은 화면에서는 트리와 목차를 숨긴다. */
-export default async function BlogPostPage(context: RouteContext) {
+/** 회고 상세. 본문은 개념 글과 같은 부품을 쓰고, 왼쪽 내비만 이야기 목록으로 바꾼다. */
+export default async function ExperiencePostPage(context: RouteContext) {
   const { slug } = await context.params;
   const post = await loadPost(slug);
 
@@ -90,15 +82,13 @@ export default async function BlogPostPage(context: RouteContext) {
     notFound();
   }
 
-  // 이야기는 창밖 공간의 글이다. 옛 /blog 주소로 들어와도 검색 순위를 잃지 않게 308로 옮긴다
-  if (post.kind === 'story') {
-    permanentRedirect(`/experience/${post.slug}`);
+  // 개념 글은 방 안의 글이다. 주소를 잘못 이어 붙여 들어와도 제자리로 보낸다
+  if (post.kind !== 'story') {
+    permanentRedirect(`/blog/${post.slug}`);
   }
 
-  const [posts, books] = await Promise.all([
-    loadPublishedPosts(),
-    getBooks(createSupabaseStaticClient()),
-  ]);
+  // 칩이 개념 글 제목을 찾아야 하므로 전체를 받고, 내비에는 이야기만 넘긴다
+  const posts = await getPosts(createSupabaseStaticClient());
   const headings = extractHeadings(post.content_markdown);
   const publishedAt = formatPublishedAt(post.published_at);
 
@@ -117,42 +107,28 @@ export default async function BlogPostPage(context: RouteContext) {
               {post.description}
             </p>
 
-            <div className='mt-6 flex flex-wrap items-center gap-3 text-sm text-blog-muted-foreground'>
-              {publishedAt ? (
-                <time dateTime={post.published_at ?? undefined}>
-                  {publishedAt}
-                </time>
-              ) : null}
-
-              <Badge
-                asChild={Boolean(post.book)}
-                variant='secondary'>
-                {post.book ? (
-                  <Link href={`/library?book=${post.book.slug}`}>
-                    {post.book.title}
-                  </Link>
-                ) : (
-                  '이야기'
-                )}
-              </Badge>
-            </div>
+            {publishedAt ? (
+              <time
+                dateTime={post.published_at ?? undefined}
+                className='mt-6 block text-sm text-blog-muted-foreground'>
+                {publishedAt}
+              </time>
+            ) : null}
 
             <PostAdminActions id={post.id} />
           </header>
 
-          {/* 본문 48rem. 키우면 한 줄이 길어져 읽는 눈이 돌아오기 힘들어진다 */}
-          {/* 좌우 1fr을 같은 폭으로 비워야 본문이 화면 정중앙에 온다. 그냥 1fr이면 목차 글자가 대칭을 깬다 */}
+          {/* 글 상세와 같은 3단. 좌우 1fr을 같은 폭으로 비워야 본문이 화면 정중앙에 온다 */}
           <div className='mt-12 grid gap-x-blog-grid-gap xl:grid-cols-[minmax(0,1fr)_minmax(0,48rem)_minmax(0,1fr)]'>
-            {/* 목차를 넓은 화면에서만 보여 좁은 화면에서는 본문으로 바로 이어진다 */}
             <PostToc
               headings={headings}
               className='hidden xl:sticky xl:top-24 xl:col-start-3 xl:row-start-1 xl:block xl:self-start'
             />
 
-            {/* 넓은 화면에서만 왼쪽 빈 칸에 붙는다. 12rem은 목차와 같은 내비·여백 몫이라, 줄이면 트리 끝이 화면 밖으로 넘친다 */}
-            <LibraryNav
-              books={books}
-              posts={posts}
+            <StoryNav
+              posts={posts.filter((item) => {
+                return item.kind === 'story';
+              })}
               currentSlug={post.slug}
               className='hidden xl:sticky xl:top-24 xl:col-start-1 xl:row-start-1 xl:block xl:max-h-[calc(100svh-12rem)] xl:self-start xl:overflow-y-auto'
             />

@@ -19,6 +19,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: 'https://www.limjaejoon.com/experience',
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
       url: 'https://www.limjaejoon.com/labs',
       changeFrequency: 'monthly',
       priority: 0.6,
@@ -26,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // lastModified가 있어야 크롤러가 고친 글만 골라 다시 읽는다
     ...posts.map((post) => {
       return {
-        url: `https://www.limjaejoon.com/blog/${post.slug}`,
+        url: `https://www.limjaejoon.com/${post.kind === 'story' ? 'experience' : 'blog'}/${post.slug}`,
         lastModified: post.updated_at,
         changeFrequency: 'monthly' as const,
         priority: 0.7,

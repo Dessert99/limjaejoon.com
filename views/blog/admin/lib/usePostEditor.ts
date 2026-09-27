@@ -73,7 +73,7 @@ export const usePostEditor = (initial?: { id: string; draft: PostDraft }) => {
         initial?.id
       );
 
-      return `/blog/${post.slug}`;
+      return `/${draft.kind === 'story' ? 'experience' : 'blog'}/${post.slug}`;
     });
   };
 
