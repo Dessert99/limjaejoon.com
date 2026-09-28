@@ -131,7 +131,16 @@ export function BookPile({
       (visibleWidth(depth) - width - 0.1) / Math.max(groups.length - 1, 1)
     );
   };
-  const depths = [1.6, 1.8, 2.0, 2.2, 2.5];
+  // 넓은 화면은 사진 위아래가 잘려 화면 아래 끝이 올라온다. 맨 앞 줄 앞 모서리가 그 안에 드는 깊이만 쓴다
+  // 여유 0.2m를 키우면 더미가 더 뒤로 물러나 작아지고, 줄이면 넓은 화면에서 맨 앞 더미 밑이 잘린다. 0.55·0.052는 카메라 높이·숙인 각이다
+  const fitsBelow = (depth: number) => {
+    const fov = 44 * fitCover(aspect)[1];
+
+    return (
+      Math.atan(0.55 / (depth - 0.2)) - 0.052 <= (fov / 2) * (Math.PI / 180)
+    );
+  };
+  const depths = [1.6, 1.8, 2.0, 2.2, 2.5].filter(fitsBelow);
   const diagonalDepth = depths.find((depth) => {
     return diagonalLateral(depth) >= minLateral;
   });
