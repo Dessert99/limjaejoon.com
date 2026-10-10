@@ -26,15 +26,14 @@ export function WritingGuide() {
         <div>
           <dt className='font-medium'>설명</dt>
           <dd className='text-blog-muted-foreground'>
-            첫 문장은 「X는 ~이다」 답, 둘째 문장은 다루는 범위. 「~를
-            정리한다」로만 끝내지 않는다.
+            글의 결론을 미리. 질문형 제목이면 답, 개념 소개면 정의. 「~를
+            다룬다」·「~를 정리한다」 같은 범위 소개는 쓰지 않는다.
           </dd>
           <dd className='text-blog-muted-foreground'>
             예){' '}
             <span className='text-blog-foreground'>
               Zod는 TypeScript 타입이 사라지는 런타임에 외부 데이터를 스키마로
-              검증하는 라이브러리다. z.object부터 refine·transform·pipe까지 주요
-              API를 예시로 정리한다.
+              검증하는 라이브러리다.
             </span>
           </dd>
         </div>
