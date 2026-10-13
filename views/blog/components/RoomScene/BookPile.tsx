@@ -168,13 +168,18 @@ export function BookPile({
 
   useGSAP(
     () => {
+      const pileZ = (index: number) => {
+        return -(frontDepth + index * pileStep);
+      };
+      // 화면 위치는 x/깊이라 월드 좌표로 가운데에 두면 가까운 앞 더미만 크게 밀려 줄이 왼쪽으로 쏠린다. 첫·끝 더미가 화면에서 대칭이 되게 오른쪽으로 민다
+      const reach = ((groups.length - 1) / 2) * lateral;
+      const shift =
+        (reach * (-pileZ(groups.length - 1) - frontDepth)) /
+        (-pileZ(groups.length - 1) + frontDepth);
       const pileX = (index: number) => {
         return zigzag
           ? (index % 2 ? 1 : -1) * lateral
-          : (index - (groups.length - 1) / 2) * lateral;
-      };
-      const pileZ = (index: number) => {
-        return -(frontDepth + index * pileStep);
+          : (index - (groups.length - 1) / 2) * lateral + shift;
       };
       // 펼치는 동안 다른 더미는 화면 밖으로 비켜 줄이 뻗을 자리를 비운다. 원래 있던 쪽으로 나간다
       const asideX = (index: number) => {
