@@ -81,11 +81,12 @@ description: 기술 개념을 학습용으로 설명하거나 블로그 글 초�
 - 그림은 처음 쓸 때 넣지 않는다. 사용자가 글을 보고 요청하면 2차로 넣는다.
 - 그림 하나는 본문 문장 하나가 말하는 구조나 흐름만 그리고, 그 번호 항목의 자식 블록으로 넣는다.
 - 그림 안의 숫자, 결과, 문구도 [근거 자료] 규칙을 따른다. 측정하지 않은 값을 넣었다면 그림 안에 예시라고 적는다.
-- scratchpad에 HTML로 그린 뒤 Chrome 헤드리스로 2배율 PNG를 뽑는다. 뽑은 PNG는 직접 열어 잘림과 어색한 줄바꿈이 없는지 확인한다.
+- scratchpad의 이번 그림 전용 폴더(`study-writing-fig-<YYYYMMDD-HHMM>/`)에 HTML로 그린 뒤 Chrome 헤드리스로 2배율 PNG를 뽑는다. 뽑은 PNG는 직접 열어 잘림과 어색한 줄바꿈이 없는지 확인한다.
     ```sh
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --window-size=1200,<높이> --screenshot=<이름>.png "file://<경로>/<이름>.html"
     ```
 - 노션에는 `notion-create-file-upload`로 업로드 주소를 받아 `curl`로 PNG를 올린 뒤, `<image src="file-upload://<id>"></image>`로 넣는다.
+- 노션 페이지를 fetch해 넣은 그림이 모두 이미지 블록으로 들어갔는지 확인한 뒤, 이번 그림 전용 폴더를 지운다.
 - 이미지가 든 줄은 `update_content`의 부분 치환에 매칭되지 않는다. 이미지를 바꾸거나 옮길 때는 `replace_content`로 페이지 전체를 쓰고, 그대로 둘 이미지는 fetch로 받은 `notion-file-block://` 주소를 그대로 옮긴다.
 - 사용자가 그림 모양을 여러 안 중에서 고르고 싶다고 하면 design-helper 스킬로 시안을 나란히 보여 준다.
 
