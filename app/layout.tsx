@@ -1,6 +1,7 @@
 import '@/styles/global.css';
 import { pretendard } from '@/styles/fonts';
 import { RouteTransition } from '@/components/transition/RouteTransition';
+import { InAppEscape } from '@/components/inapp/InAppEscape';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -52,6 +53,7 @@ export default function RootLayout({
       className={pretendard.variable}>
       <body>
         <RouteTransition>{children}</RouteTransition>
+        <InAppEscape />
       </body>
     </html>
   );
