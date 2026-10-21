@@ -38,7 +38,8 @@ for no, raw in enumerate(lines, 1):
             out.append(pad)
         else:
             blank()
-        out.append(pad + stripped)
+        # 노션은 tsx를 TypeScript로 저장해 ts로 돌려준다. 블로그 하이라이터는 tsx만 알아서 ts면 색이 빠진다
+        out.append(pad + re.sub(r'^```(ts|typescript)$', '```tsx', stripped))
         code_pad = pad
         continue
 
