@@ -7,6 +7,7 @@ workdir = sys.argv[1]
 lines = open(f'{workdir}/raw.md', encoding='utf-8').read().split('\n')
 out, refs, warns = [], [], []
 code_pad = None
+code_lines = []
 
 
 def blank():
@@ -23,15 +24,17 @@ for no, raw in enumerate(lines, 1):
 
     if code_pad is not None:
         if stripped == '```':
+            # 노션은 안쪽 줄을 0열로 주기도, 펜스 깊이로 들여 주기도 한다. 이미 들여 준 블록은 두 번 밀지 않는다
+            indented = all(l.startswith(code_pad) for l in code_lines if l.strip())
+            out.extend(l if indented and l else code_pad + l for l in code_lines)
             out.append(code_pad + '```')
             out.append(code_pad)
             code_pad = None
         else:
-            # 노션은 펜스만 들여쓰고 안쪽 줄은 0열로 준다. 펜스 깊이만큼 밀어야 목록 안에 남는다
-            out.append(code_pad + line if line else code_pad)
+            code_lines.append(line)
         continue
 
-    if stripped == '<empty-block/>':
+    if stripped in ('<empty-block/>', '<p />'):
         continue
     if stripped.startswith('```'):
         if pad:
@@ -41,11 +44,12 @@ for no, raw in enumerate(lines, 1):
         # 노션은 tsx를 TypeScript로 저장해 ts로 돌려준다. 블로그 하이라이터는 tsx만 알아서 ts면 색이 빠진다
         out.append(pad + re.sub(r'^```(ts|typescript)$', '```tsx', stripped))
         code_pad = pad
+        code_lines = []
         continue
 
-    image = re.fullmatch(r'!\[[^\]]*\]\((notion-file-block://[^)]+)\)', stripped)
+    image = re.fullmatch(r'!\[[^\]]*\]\((notion-file-block://[^)]+)\)|<image source="(notion-file-block://[^"]+)" />', stripped)
     if image:
-        refs.append(image.group(1))
+        refs.append(image.group(1) or image.group(2))
         blank()
         out.append(f'{pad}<img src="{{{{IMG:{len(refs)}}}}}" alt="" />')
         out.append('')
@@ -57,10 +61,13 @@ for no, raw in enumerate(lines, 1):
         out.append(line)
         out.append('')
         continue
-    if not pad and re.fullmatch(r'\[https?://[^\]]+\]\([^)]+\)|https?://\S+', stripped):
-        blank()
-        out.append(line)
-        out.append('')
+    link = r'\[https?://[^\]]+\]\([^)]+\)|https?://\S+'
+    # 노션은 이어진 링크 줄을 <br />로 한 줄에 붙여 주기도 한다. 블로그는 한 줄씩 문단이다
+    if not pad and all(re.fullmatch(link, part) for part in stripped.split('<br />')):
+        for part in stripped.split('<br />'):
+            blank()
+            out.append(part)
+            out.append('')
         continue
     if stripped.startswith('<'):
         warns.append(f'{no}: 변환 규칙이 없는 노션 블록 {stripped[:80]}')
