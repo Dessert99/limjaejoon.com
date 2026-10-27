@@ -34,6 +34,10 @@ for no, raw in enumerate(lines, 1):
             code_lines.append(line)
         continue
 
+    # 노션은 인라인 코드를 <code>로 준다. 안쪽 <Suspense> 같은 글자가 HTML 태그로 읽히지 않게 백틱으로 바꾼다
+    line = re.sub(r'<code>(.*?)</code>', r'`\1`', line)
+    stripped = line.strip()
+
     if stripped in ('<empty-block/>', '<p />'):
         continue
     if stripped.startswith('```'):
