@@ -1,4 +1,4 @@
-import { getPosts } from '@/views/blog/server/posts';
+import { getPosts } from '@/domains/posts/api/posts';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 

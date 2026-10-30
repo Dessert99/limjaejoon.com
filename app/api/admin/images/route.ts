@@ -1,4 +1,4 @@
-import { readPostImageBucket } from '@/config/env';
+import { readPostImageBucket } from '@/lib/env';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
 

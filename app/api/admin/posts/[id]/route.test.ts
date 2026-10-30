@@ -2,21 +2,21 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   deleteAdminPost,
   updateAdminPost,
-} from '@/views/blog/server/adminPosts';
+} from '@/domains/posts/api/adminPosts';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
-import { revalidatePublicPosts } from '@/views/blog/server/revalidate';
+import { revalidatePublicPosts } from '@/domains/posts/lib/revalidate';
 import { DELETE, PATCH } from './route';
 
 vi.mock('@/lib/auth/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 
-vi.mock('@/views/blog/server/revalidate', () => {
+vi.mock('@/domains/posts/lib/revalidate', () => {
   return { revalidatePublicPosts: vi.fn() };
 });
 
-vi.mock('@/views/blog/server/adminPosts', () => {
+vi.mock('@/domains/posts/api/adminPosts', () => {
   return { updateAdminPost: vi.fn(), deleteAdminPost: vi.fn() };
 });
 

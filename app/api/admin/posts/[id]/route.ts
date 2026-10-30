@@ -1,11 +1,11 @@
 import {
   deleteAdminPost,
   updateAdminPost,
-} from '@/views/blog/server/adminPosts';
-import type { UpsertPostInput } from '@/views/blog/lib/post.types';
+} from '@/domains/posts/api/adminPosts';
+import type { UpsertPostInput } from '@/domains/posts/types/post.types';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
-import { revalidatePublicPosts } from '@/views/blog/server/revalidate';
+import { revalidatePublicPosts } from '@/domains/posts/lib/revalidate';
 
 type RouteContext = {
   params: Promise<{

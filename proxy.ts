@@ -1,6 +1,6 @@
 import { isAdmin } from '@/lib/auth/isAdmin';
 import { getSessionClaims } from '@/lib/auth/session';
-import { readPublicEnv } from '@/config/env';
+import { readPublicEnv } from '@/lib/env';
 import type { Database } from '@/lib/supabase/database.types';
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';

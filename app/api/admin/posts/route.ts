@@ -1,8 +1,8 @@
-import { createAdminPost } from '@/views/blog/server/adminPosts';
-import type { UpsertPostInput } from '@/views/blog/lib/post.types';
+import { createAdminPost } from '@/domains/posts/api/adminPosts';
+import type { UpsertPostInput } from '@/domains/posts/types/post.types';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
-import { revalidatePublicPosts } from '@/views/blog/server/revalidate';
+import { revalidatePublicPosts } from '@/domains/posts/lib/revalidate';
 
 /** 새 글을 만든다. 관문을 통과한 클라이언트로 써야 RLS가 관리자 권한을 본다. */
 export const POST = async (request: Request) => {

@@ -1,4 +1,4 @@
-import { getPostSitemapEntries } from '@/views/blog/server/posts';
+import { getPostSitemapEntries } from '@/domains/posts/api/posts';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
 import type { MetadataRoute } from 'next';
 

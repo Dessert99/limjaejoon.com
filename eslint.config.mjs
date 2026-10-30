@@ -2,89 +2,6 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 
-const ROUTE_OWNER = [
-  ['views/home/', 'home'],
-  ['app/(home)/', 'home'],
-  ['views/blog/', 'blog'],
-  ['app/blog/', 'blog'],
-  ['app/admin/', 'blog'],
-  ['app/library/', 'blog'],
-  ['app/experience/', 'blog'],
-  ['views/lab/', 'lab'],
-  ['app/lab/', 'lab'],
-  ['components/', 'root'],
-];
-
-const ROUTES = ['root', 'home', 'blog', 'lab'];
-const UTIL =
-  '(?:bg|text-shadow|text|border-[trblxyse]|border|ring-offset|inset-ring|ring|inset-shadow|shadow|fill|stroke|from|via|to|outline|decoration|divide|caret|accent|max-w|p[xytblrse]?|m[xytblrse]?|gap|space-[xy])';
-const SEMANTIC =
-  '(?:card-foreground|popover-foreground|primary-foreground|secondary-foreground|muted-foreground|accent-foreground|destructive-foreground|background|foreground|card|popover|primary|secondary|muted|accent|destructive|border|input|ring|inverse|overlay)';
-const RAMP =
-  '(?:(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\\d{2,3}|white|black)';
-const RETIRED =
-  '(?:text-(?:body-sm|body-lg|body-xl|body|label|statement|section|project)' +
-  '|(?:p[xytblrse]?|m[xytblrse]?|gap|space-[xy])-(?:section-sm|section|gutter|grid-gap)' +
-  '|max-w-(?:content|wide)' +
-  '|duration-(?:instant|quick|standard|slow|cinematic)' +
-  '|ease-(?:standard|enter|exit|reveal|cinematic))';
-
-const routeTokensPlugin = {
-  rules: {
-    'route-tokens': {
-      meta: { type: 'problem', schema: [] },
-      create(context) {
-        const path = context.filename.replaceAll('\\', '/');
-        const owner = ROUTE_OWNER.find(([dir]) => {
-          return path.includes(dir);
-        })?.[1];
-        const foreign = ROUTES.filter((route) => {
-          return route !== owner;
-        });
-        const HEAD = '(?<![\\w-])';
-        const checks = [
-          {
-            re: new RegExp(`${HEAD}${UTIL}-(?:${foreign.join('|')})(?:-|\\b)`),
-            hint: `이 파일은 ${owner ?? '어느 라우트에도 속하지 않아'} 소유라 다른 라우트의 토큰을 쓸 수 없습니다.`,
-          },
-          {
-            re: new RegExp(`${HEAD}${UTIL}-${RAMP}\\b`),
-            hint: '원색 램프를 직접 쓰지 말고 라우트 semantic 토큰을 거치세요.',
-          },
-          {
-            re: new RegExp(`${HEAD}${UTIL}-${SEMANTIC}\\b`),
-            hint: `접두사가 없어 유틸리티가 생성되지 않습니다. ${owner ?? '라우트'} 접두사를 붙이세요.`,
-          },
-          {
-            re: new RegExp(`${HEAD}${RETIRED}\\b`),
-            hint: '폐기된 토큰입니다. Tailwind 기본값이나 라우트 토큰을 쓰세요.',
-          },
-        ];
-
-        const check = (node, value) => {
-          if (typeof value !== 'string') {
-            return;
-          }
-          for (const { re, hint } of checks) {
-            for (const hit of value.matchAll(new RegExp(re, 'g'))) {
-              context.report({ node, message: `${hit[0]} — ${hint}` });
-            }
-          }
-        };
-
-        return {
-          Literal(node) {
-            check(node, node.value);
-          },
-          TemplateElement(node) {
-            check(node, node.value.cooked);
-          },
-        };
-      },
-    },
-  },
-};
-
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
@@ -97,12 +14,7 @@ const eslintConfig = defineConfig([
   },
 
   {
-    files: [
-      'lib/**/*.ts',
-      'config/**/*.ts',
-      'views/**/lib/**/*.ts',
-      'views/**/server/**/*.ts',
-    ],
+    files: ['lib/**/*.ts', 'domains/**/*.ts'],
     rules: {
       'func-style': ['error', 'expression'],
     },
@@ -110,13 +22,7 @@ const eslintConfig = defineConfig([
 
   {
     files: ['**/*.tsx'],
-    ignores: [
-      'tests/**',
-      'e2e/**',
-      '**/*.spec.*',
-      '**/*.test.*',
-      '**/*.stories.*',
-    ],
+    ignores: ['tests/**', '**/*.test.*'],
     rules: {
       'react/function-component-definition': [
         'error',
@@ -132,40 +38,74 @@ const eslintConfig = defineConfig([
           selector: ':function FunctionDeclaration',
           message: '컴포넌트 내부 함수는 화살표 함수로 작성하세요 (#3).',
         },
+        ...[
+          'FunctionDeclaration[id.name=/^[a-z]/]:has(JSXElement)',
+          'FunctionDeclaration[id.name=/^[a-z]/]:has(JSXFragment)',
+          'VariableDeclarator[id.name=/^[a-z]/] > ArrowFunctionExpression:has(JSXElement)',
+          'VariableDeclarator[id.name=/^[a-z]/] > ArrowFunctionExpression:has(JSXFragment)',
+        ].map((selector) => {
+          return {
+            selector,
+            message:
+              'JSX 를 돌려주는 함수는 컴포넌트다. 대문자 이름의 파일로 나눈다.',
+          };
+        }),
       ],
     },
   },
 
   {
-    files: ['**/hooks/**/*.{ts,tsx}'],
-    ignores: ['tests/**', 'e2e/**', '**/*.spec.*', '**/*.test.*'],
+    files: ['lib/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/domains/**', '@/app/**'],
+              message: 'lib 는 위층(domains, app)을 import 하지 않는다.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  {
+    files: ['domains/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              // 사이트 아이콘처럼 Next 가 app/ 에 두라고 정한 이미지만 예외다
+              group: ['@/app/**', '!@/app/**/*.png'],
+              message: 'domains 는 app 을 import 하지 않는다.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  {
+    files: ['app/**/*.ts'],
+    ignores: ['**/route.ts', 'app/robots.ts', 'app/sitemap.ts', '**/*.test.ts'],
     rules: {
       'no-restricted-syntax': [
         'error',
         {
-          selector:
-            ':matches(Program, ExportNamedDeclaration) > VariableDeclaration > VariableDeclarator[id.name=/^use[A-Z]/] > :matches(ArrowFunctionExpression, FunctionExpression)',
+          selector: 'Program',
           message:
-            '커스텀 훅 최상위는 함수 선언문(function useX)으로 작성하세요 (#4).',
-        },
-        {
-          selector: ':function FunctionDeclaration',
-          message: '훅 내부 함수는 화살표 함수로 작성하세요 (#4).',
+            'app/ 에는 컴포넌트(.tsx)만 둔다. 한 파일만 쓰면 그 파일 안으로, 아니면 domains/ 나 lib/ 로 옮긴다.',
         },
       ],
     },
   },
 
   {
-    files: ['app/**/*.tsx', 'views/**/*.tsx', 'components/**/*.tsx'],
-    plugins: { ds: routeTokensPlugin },
-    rules: {
-      'ds/route-tokens': 'error',
-    },
-  },
-
-  {
-    files: ['views/blog/components/ui/*.tsx'],
+    files: ['components/ui/*.tsx'],
     rules: {
       curly: 'off',
       'arrow-body-style': 'off',
@@ -176,13 +116,7 @@ const eslintConfig = defineConfig([
     },
   },
 
-  globalIgnores([
-    '.next/**',
-    'out/**',
-    'build/**',
-    '.claude/**',
-    'next-env.d.ts',
-  ]),
+  globalIgnores(['.next/**', '.claude/**', 'next-env.d.ts']),
 ]);
 
 export default eslintConfig;

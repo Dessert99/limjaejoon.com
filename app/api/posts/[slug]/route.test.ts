@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getPostBySlug } from '@/views/blog/server/posts';
+import { getPostBySlug } from '@/domains/posts/api/posts';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { GET } from './route';
 
@@ -7,7 +7,7 @@ vi.mock('@/lib/supabase/server', () => {
   return { createSupabaseServerClient: vi.fn() };
 });
 
-vi.mock('@/views/blog/server/posts', () => {
+vi.mock('@/domains/posts/api/posts', () => {
   return { getPostBySlug: vi.fn() };
 });
 

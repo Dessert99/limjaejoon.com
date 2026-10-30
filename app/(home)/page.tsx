@@ -1,7 +1,7 @@
-import { AboutSection } from '@/views/home/components/AboutSection/AboutSection';
-import { HeroSection } from '@/views/home/components/HeroSection/HeroSection';
-import { IntroOverlay } from '@/views/home/components/IntroOverlay/IntroOverlay';
-import { ScrollStage } from '@/views/home/components/ScrollStage/ScrollStage';
+import { AboutSection } from './_components/AboutSection/AboutSection';
+import { HeroSection } from './_components/HeroSection/HeroSection';
+import { IntroOverlay } from './_components/IntroOverlay/IntroOverlay';
+import { ScrollStage } from './_components/ScrollStage/ScrollStage';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -1,7 +1,7 @@
 import '@/styles/global.css';
 import { pretendard } from '@/styles/fonts';
-import { RouteTransition } from '@/components/transition/RouteTransition';
-import { InAppEscape } from '@/components/inapp/InAppEscape';
+import { RouteTransition } from '@/domains/transition/ui/RouteTransition';
+import { InAppEscape } from './_components/inapp/InAppEscape';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

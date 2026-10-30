@@ -1,19 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createAdminPost } from '@/views/blog/server/adminPosts';
+import { createAdminPost } from '@/domains/posts/api/adminPosts';
 import { NextResponse } from 'next/server';
 import { mapWriteError, requireAdmin } from '@/lib/auth/adminGuard';
-import { revalidatePublicPosts } from '@/views/blog/server/revalidate';
+import { revalidatePublicPosts } from '@/domains/posts/lib/revalidate';
 import { POST } from './route';
 
 vi.mock('@/lib/auth/adminGuard', () => {
   return { requireAdmin: vi.fn(), mapWriteError: vi.fn() };
 });
 
-vi.mock('@/views/blog/server/revalidate', () => {
+vi.mock('@/domains/posts/lib/revalidate', () => {
   return { revalidatePublicPosts: vi.fn() };
 });
 
-vi.mock('@/views/blog/server/adminPosts', () => {
+vi.mock('@/domains/posts/api/adminPosts', () => {
   return { createAdminPost: vi.fn() };
 });
 

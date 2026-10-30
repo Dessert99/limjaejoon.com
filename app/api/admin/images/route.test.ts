@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { readPostImageBucket } from '@/config/env';
+import { readPostImageBucket } from '@/lib/env';
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/adminGuard';
 import { POST } from './route';
 
-vi.mock('@/config/env', () => {
+vi.mock('@/lib/env', () => {
   return { readPostImageBucket: vi.fn() };
 });
 

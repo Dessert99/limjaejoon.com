@@ -14,12 +14,11 @@ https://www.limjaejoon.com
 ## 프로젝트 구조
 
 ```
-app/               # Next.js App Router — 라우트 파일이 조립까지 끝낸다
-views/             # 라우트별 실체: components·lib·server·config·<route>.css
-components/        # 여러 라우트가 쓰는 UI (ui=shadcn, transition)
-lib/               # 라우트를 넘는 데이터·유틸 (supabase, auth, http, motion)
-config/            # site·env
-styles/            # primitive 토큰과 전역 진입점
+app/               # 라우트와 화면 부품(_components). tsx 만 둔다. (home)·(blog) 그룹이 토큰 주인
+domains/           # 대상별 코드 (posts, books, library, home, transition): api·lib·config·types·hooks·ui
+lib/               # 다른 사이트에도 쓸 수 있는 공용 (supabase, auth, http, motion, env)
+components/ui/     # shadcn
+styles/            # primitive 토큰, 전역 진입점, 라우트별 css(home·blog·prose)
 proxy.ts           # /admin optimistic redirect
 supabase/          # 마이그레이션·로컬 설정
 tests/integration/ # 실제 Supabase 를 쓰는 통합 테스트
