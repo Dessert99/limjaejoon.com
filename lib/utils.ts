@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { extendTailwindMerge } from 'tailwind-merge';
 
 const isViewToken = (value: string): boolean => {
-  return /^(?:blog|home|labs)(?:-|$)/.test(value);
+  return /^(?:blog|home)(?:-|$)/.test(value);
 };
 
 const twMerge = extendTailwindMerge({

@@ -23,11 +23,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
-    {
-      url: 'https://www.limjaejoon.com/labs',
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
     // lastModified가 있어야 크롤러가 고친 글만 골라 다시 읽는다
     ...posts.map((post) => {
       return {
