@@ -6,28 +6,9 @@ import { useMemo, useRef, type RefObject } from 'react';
 import { type Mesh, type ShaderMaterial, Vector2, Vector3 } from 'three';
 import { fitCover } from '@/domains/library/lib/fitCover';
 import { leaveView } from '@/domains/library/lib/leaveView';
+import { fragment, vertex } from '@/domains/library/lib/backdropShader';
 
 useTexture.preload('/images/blog-background.jpg');
-
-const vertex = /* glsl */ `
-  varying vec2 vUv;
-  void main() {
-    vUv = position.xy * 0.5 + 0.5;
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-  }
-`;
-
-const fragment = /* glsl */ `
-  uniform sampler2D map;
-  uniform vec2 cover;
-  uniform float zoom;
-  uniform vec2 center;
-  varying vec2 vUv;
-  void main() {
-    vec2 uv = (center + (vUv - 0.5) / zoom - 0.5) * cover + 0.5;
-    gl_FragColor = texture2D(map, uv);
-  }
-`;
 
 /** 원본 방 이미지를 object-cover로 화면에 덮는다. 창문을 누르면 나간다. */
 export function Backdrop({

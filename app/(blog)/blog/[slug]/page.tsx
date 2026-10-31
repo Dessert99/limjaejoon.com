@@ -1,36 +1,37 @@
 import { Badge } from '@/components/ui/badge';
+
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
+
 import { LibraryNav } from './_components/LibraryNav/LibraryNav';
+
 import { PostAdminActions } from '@/domains/posts/ui/PostAdminActions/PostAdminActions';
+
 import { PostContent } from '@/domains/posts/ui/PostContent';
+
 import { PostComments } from '@/domains/posts/ui/PostComments';
+
 import { PostJsonLd } from '@/domains/posts/ui/PostJsonLd';
+
 import { PostToc } from '@/domains/posts/ui/PostToc/PostToc';
+
 import { extractHeadings } from '@/domains/posts/lib/extractHeadings';
-import { formatPublishedAt } from '@/lib/formatPublishedAt';
+
+import { formatPublishedAt } from '@/lib/date';
+
 import { getBooks } from '@/domains/books/api/books';
-import {
-  getPostBySlug,
-  getPostSlugs,
-  getPosts,
-} from '@/domains/posts/api/posts';
+
+import { getPostSlugs } from '@/domains/posts/api/posts';
 import type { Metadata } from 'next';
+
 import Link from 'next/link';
+
 import { notFound, permanentRedirect } from 'next/navigation';
-import { cache } from 'react';
+
+import { loadPost, loadPublishedPosts } from '@/domains/posts/api/loadPost';
 
 type RouteContext = {
   params: Promise<{ slug: string }>;
 };
-
-// generateMetadata와 페이지가 같은 글을 두 번 안 읽도록 요청 단위로 캐시한다
-const loadPost = cache(async (slug: string) => {
-  return getPostBySlug(createSupabaseStaticClient(), slug);
-});
-
-const loadPublishedPosts = cache(async () => {
-  return getPosts(createSupabaseStaticClient());
-});
 
 /** 발행된 개념 글 주소를 미리 뽑아 상세 페이지를 빌드 때 정적으로 만든다. */
 export const generateStaticParams = async () => {

@@ -1,23 +1,22 @@
 'use client';
 
 import { gsap } from '@/lib/motion/gsap';
+
 import { usePathname, useRouter } from 'next/navigation';
+
 import type { ReactNode } from 'react';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+
+import { useEffect, useRef, useState } from 'react';
 import { routeLabel } from '@/domains/transition/lib/routeLabel';
 
-const CURTAIN_CLASS =
-  'fixed inset-x-0 bottom-full z-(--z-transition) flex h-dvh items-center justify-center bg-root-background';
+import {
+  CURTAIN_CLASS,
+  LABEL_CLASS,
+} from '@/domains/transition/config/curtain';
 
-const LABEL_CLASS = 'font-display text-curtain text-root-foreground';
+import type { Phase } from '@/domains/transition/types/transition.types';
 
-type Phase = 'idle' | 'covering' | 'navigating';
-
-const StartContext = createContext<((href: string) => void) | null>(null);
-
-export function useCurtainStart() {
-  return useContext(StartContext);
-}
+import { StartContext } from '@/domains/transition/hooks/useCurtainStart';
 
 export function RouteTransition({ children }: { children: ReactNode }) {
   const [phase, setPhase] = useState<Phase>('idle');

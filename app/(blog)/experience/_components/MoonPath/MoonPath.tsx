@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRef } from 'react';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
-import { formatPublishedAt } from '@/lib/formatPublishedAt';
+import { formatPublishedAt } from '@/lib/date';
 import type { PostListItem } from '@/domains/posts/types/post.types';
 
 /** 호수의 달빛 줄기를 시간 축 삼아 이야기 글을 위에서부터 최근순으로 양옆에 번갈아 매단다. 들어오면 빛 한 점이 길을 타고 내려가며 글을 하나씩 켠다. */

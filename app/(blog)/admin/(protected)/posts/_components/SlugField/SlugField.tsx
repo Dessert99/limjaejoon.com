@@ -11,22 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-
-/** 달력이 읽을 Date로 바꾼다. 비었거나 깨진 값이면 아무 날도 안 고른 상태다. */
-const toDate = (value: string): Date | undefined => {
-  const [year, month, day] = value.split('-').map(Number);
-
-  // UTC로 파싱하는 new Date('2026-08-20')과 달리 이건 로컬 자정이라 달력 칸이 하루 밀리지 않는다
-  return year && month && day ? new Date(year, month - 1, day) : undefined;
-};
-
-/** 고른 날짜를 주소에 쓸 YYYY-MM-DD로 바꾼다. */
-const toValue = (date: Date): string => {
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${date.getFullYear()}-${month}-${day}`;
-};
+import { parseDateValue, toDateValue } from '@/lib/date';
 
 type SlugFieldProps = {
   date: string;
@@ -63,10 +48,10 @@ export function SlugField({
             className='w-auto p-0'>
             <Calendar
               mode='single'
-              selected={toDate(date)}
+              selected={parseDateValue(date)}
               onSelect={(picked) => {
                 if (picked) {
-                  onDateChange(toValue(picked));
+                  onDateChange(toDateValue(picked));
                 }
               }}
             />

@@ -1,29 +1,31 @@
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
+
 import { PostAdminActions } from '@/domains/posts/ui/PostAdminActions/PostAdminActions';
+
 import { PostContent } from '@/domains/posts/ui/PostContent';
+
 import { PostComments } from '@/domains/posts/ui/PostComments';
+
 import { PostJsonLd } from '@/domains/posts/ui/PostJsonLd';
+
 import { PostToc } from '@/domains/posts/ui/PostToc/PostToc';
+
 import { StoryNav } from './_components/StoryNav/StoryNav';
+
 import { extractHeadings } from '@/domains/posts/lib/extractHeadings';
-import { formatPublishedAt } from '@/lib/formatPublishedAt';
-import {
-  getPostBySlug,
-  getPostSlugs,
-  getPosts,
-} from '@/domains/posts/api/posts';
+
+import { formatPublishedAt } from '@/lib/date';
+
+import { getPostSlugs, getPosts } from '@/domains/posts/api/posts';
 import type { Metadata } from 'next';
+
 import { notFound, permanentRedirect } from 'next/navigation';
-import { cache } from 'react';
+
+import { loadPost } from '@/domains/posts/api/loadPost';
 
 type RouteContext = {
   params: Promise<{ slug: string }>;
 };
-
-// generateMetadata와 페이지가 같은 글을 두 번 안 읽도록 요청 단위로 캐시한다
-const loadPost = cache(async (slug: string) => {
-  return getPostBySlug(createSupabaseStaticClient(), slug);
-});
 
 /** 발행된 이야기 주소를 미리 뽑아 회고 상세를 빌드 때 정적으로 만든다. */
 export const generateStaticParams = async () => {

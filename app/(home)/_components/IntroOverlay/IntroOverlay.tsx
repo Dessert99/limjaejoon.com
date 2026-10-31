@@ -2,20 +2,21 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { gsap, useGSAP } from '@/lib/motion/gsap';
-
-// 탭이 살아 있는 동안 기억해, 홈으로 되돌아왔을 때 인트로를 두 번 재생하지 않는다
-let played = false;
+import {
+  hasPlayedIntro,
+  markIntroPlayed,
+} from '@/domains/home/lib/introPlayed';
 
 /** 첫 방문에서 인사말을 타이핑한 뒤 커튼처럼 걷히며 히어로를 여는 막. */
 export function IntroOverlay() {
   const [visible] = useState(() => {
-    return !played;
+    return !hasPlayedIntro();
   });
   const rootRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    played = true;
+    markIntroPlayed();
   }, []);
 
   useGSAP(

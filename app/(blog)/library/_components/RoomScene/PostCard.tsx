@@ -1,20 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { type PointerEvent } from 'react';
-import { formatPublishedAt } from '@/lib/formatPublishedAt';
+
+import { formatPublishedAt } from '@/lib/date';
+
 import { type PostListItem } from '@/domains/posts/types/post.types';
 
-// 책 색 원의 중심. 들어온 자리에서 퍼지고 나간 자리로 오그라든다. 안에서 움직일 때는 안 적어, 덮인 뒤 보이지 않는 이동에 스타일 계산이 돌지 않게 한다
-const trackPointer = (event: PointerEvent<HTMLAnchorElement>) => {
-  const rect = event.currentTarget.getBoundingClientRect();
-
-  event.currentTarget.style.setProperty(
-    '--x',
-    `${event.clientX - rect.left}px`
-  );
-  event.currentTarget.style.setProperty('--y', `${event.clientY - rect.top}px`);
-};
+import { trackPointer } from '@/domains/library/lib/trackPointer';
 
 /** 책 모달의 글 카드. 흰 반투명 면이라 어떤 책 색 위에서도 같은 카드로 읽히고, 올리면 책 색이 스며들며 누르면 그 글로 간다. */
 export function PostCard({ post }: { post: PostListItem }) {

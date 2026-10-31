@@ -2,7 +2,8 @@
 
 import { useRef } from 'react';
 import { useMagnet } from '@/lib/motion/useMagnet';
-import { ContactIcon, type ContactIconName } from './ContactIcon';
+import { ContactIcon } from './ContactIcon';
+import type { ContactIconName } from '@/domains/home/types/contact.types';
 
 type ContactItemProps = {
   href: string;

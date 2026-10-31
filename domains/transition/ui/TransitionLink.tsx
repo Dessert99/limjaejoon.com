@@ -4,26 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ComponentPropsWithRef, MouseEvent } from 'react';
 import { shouldCurtain } from '@/domains/transition/lib/curtainPolicy';
-import { useCurtainStart } from './RouteTransition';
+import { useCurtainStart } from '@/domains/transition/hooks/useCurtainStart';
+import { isPlainNavigation } from '@/domains/transition/lib/isPlainNavigation';
 
 type TransitionLinkProps = Omit<ComponentPropsWithRef<typeof Link>, 'href'> & {
   href: string;
 };
-
-function isPlainNavigation(
-  event: MouseEvent<HTMLAnchorElement>,
-  href: string
-): boolean {
-  return (
-    href.startsWith('/') &&
-    event.button === 0 &&
-    !event.metaKey &&
-    !event.ctrlKey &&
-    !event.shiftKey &&
-    !event.altKey &&
-    !event.currentTarget.target
-  );
-}
 
 export function TransitionLink({
   href,
