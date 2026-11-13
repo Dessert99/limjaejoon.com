@@ -4,8 +4,6 @@ import { createSupabaseStaticClient } from '@/lib/supabase/static';
 
 import { LibraryNav } from './_components/LibraryNav/LibraryNav';
 
-import { PostAdminActions } from '@/domains/posts/ui/PostAdminActions/PostAdminActions';
-
 import { PostContent } from '@/domains/posts/ui/PostContent';
 
 import { PostComments } from '@/domains/posts/ui/PostComments';
@@ -137,8 +135,6 @@ export default async function BlogPostPage(context: RouteContext) {
                 )}
               </Badge>
             </div>
-
-            <PostAdminActions id={post.id} />
           </header>
 
           {/* 본문 48rem. 키우면 한 줄이 길어져 읽는 눈이 돌아오기 힘들어진다 */}

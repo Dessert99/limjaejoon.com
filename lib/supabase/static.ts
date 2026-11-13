@@ -1,10 +1,11 @@
+import 'server-only';
 import { createClient } from '@supabase/supabase-js';
-import { readPublicEnv } from '@/lib/env';
+import { readPublicEnv, readServiceRoleKey } from '@/lib/env';
 import type { Database } from './database.types';
 
-/** 빌드 때 쓰는 Supabase 클라이언트. 쿠키가 없어 익명 권한으로만 공개 글을 읽는다. */
+/** 공개 글을 서버에서 읽는 Supabase 클라이언트. anon이 테이블을 못 읽으므로 RLS를 건너뛰는 service role 키로 읽는다. */
 export const createSupabaseStaticClient = () => {
   const env = readPublicEnv();
 
-  return createClient<Database>(env.supabaseUrl, env.supabaseAnonKey);
+  return createClient<Database>(env.supabaseUrl, readServiceRoleKey());
 };

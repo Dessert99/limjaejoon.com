@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AdminLoginForm } from './AdminLoginForm';
 
 const push = vi.fn();
-const signInWithPassword = vi.fn();
+const signIn = vi.fn();
 
 vi.mock('next/navigation', () => {
   return {
@@ -14,10 +14,10 @@ vi.mock('next/navigation', () => {
   };
 });
 
-vi.mock('@/lib/supabase/client', () => {
+vi.mock('@/lib/auth/signIn', () => {
   return {
-    createSupabaseBrowserClient: () => {
-      return { auth: { signInWithPassword } };
+    signIn: (input: unknown) => {
+      return signIn(input);
     },
   };
 });
@@ -33,34 +33,32 @@ const fillAndSubmit = async () => {
 describe('AdminLoginForm', () => {
   beforeEach(() => {
     push.mockReset();
-    signInWithPassword.mockReset();
+    signIn.mockReset();
   });
 
   it('입력한 이메일·비밀번호로 로그인을 시도한다', async () => {
-    signInWithPassword.mockResolvedValue({ error: null });
+    signIn.mockResolvedValue({ error: null });
 
     render(<AdminLoginForm />);
     await fillAndSubmit();
 
-    expect(signInWithPassword).toHaveBeenCalledWith({
+    expect(signIn).toHaveBeenCalledWith({
       email: 'admin@example.com',
       password: 'secret',
     });
   });
 
   it('로그인에 성공하면 어드민 홈으로 보낸다', async () => {
-    signInWithPassword.mockResolvedValue({ error: null });
+    signIn.mockResolvedValue({ error: null });
 
     render(<AdminLoginForm />);
     await fillAndSubmit();
 
-    expect(push).toHaveBeenCalledWith('/library');
+    expect(push).toHaveBeenCalledWith('/admin');
   });
 
   it('실패하면 폼에 머물고 사유를 보여준다', async () => {
-    signInWithPassword.mockResolvedValue({
-      error: { message: 'Invalid login credentials' },
-    });
+    signIn.mockResolvedValue({ error: 'Invalid login credentials' });
 
     render(<AdminLoginForm />);
     await fillAndSubmit();

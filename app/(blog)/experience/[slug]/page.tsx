@@ -1,7 +1,5 @@
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
 
-import { PostAdminActions } from '@/domains/posts/ui/PostAdminActions/PostAdminActions';
-
 import { PostContent } from '@/domains/posts/ui/PostContent';
 
 import { PostComments } from '@/domains/posts/ui/PostComments';
@@ -116,8 +114,6 @@ export default async function ExperiencePostPage(context: RouteContext) {
                 {publishedAt}
               </time>
             ) : null}
-
-            <PostAdminActions id={post.id} />
           </header>
 
           {/* 글 상세와 같은 3단. 좌우 1fr을 같은 폭으로 비워야 본문이 화면 정중앙에 온다 */}

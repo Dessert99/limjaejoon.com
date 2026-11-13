@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { createSupabaseStaticClient } from '@/lib/supabase/static';
-import { BlogAdminActions } from './_components/BlogAdminActions';
 import { RoomScene } from './_components/RoomScene/RoomScene';
 import { getBooks } from '@/domains/books/api/books';
 import { getPosts } from '@/domains/posts/api/posts';
@@ -44,10 +43,6 @@ export default async function BlogPage() {
           books={books}
           posts={posts}
         />
-      </div>
-      {/* 방 위에 떠야 캔버스에 가리지 않는다 */}
-      <div className='absolute top-4 right-4'>
-        <BlogAdminActions />
       </div>
     </main>
   );

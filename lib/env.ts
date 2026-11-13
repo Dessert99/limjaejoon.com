@@ -7,7 +7,7 @@ type SupabaseEnvKeys = {
   postImageBucket: string;
 };
 
-/** 서버·브라우저가 함께 쓰는 Supabase 접속 정보. */
+/** 서버가 쓰는 Supabase 접속 정보. 브라우저 코드는 Supabase에 직접 붙지 않는다. */
 export type PublicEnv = {
   supabaseUrl: string;
   supabaseAnonKey: string;
@@ -60,7 +60,7 @@ const resolveSupabaseEnvKeys = (source: EnvSource): SupabaseEnvKeys => {
   throw new Error(`Unsupported Supabase target: ${target}`);
 };
 
-/** 브라우저에도 노출되는 접속 정보. anon 키라 RLS가 실제 권한을 정한다. */
+/** 서버가 사용자 세션으로 붙을 때 쓰는 접속 정보. anon 키라 RLS가 실제 권한을 정한다. */
 export const readPublicEnv = (source: EnvSource = process.env): PublicEnv => {
   const keys = resolveSupabaseEnvKeys(source);
 
@@ -68,6 +68,13 @@ export const readPublicEnv = (source: EnvSource = process.env): PublicEnv => {
     supabaseUrl: requireEnv(source, keys.url),
     supabaseAnonKey: requireEnv(source, keys.anonKey),
   };
+};
+
+/** RLS를 건너뛰는 service role 키. 새면 DB 전체가 열리므로 서버 코드만 읽는다. */
+export const readServiceRoleKey = (source: EnvSource = process.env): string => {
+  const keys = resolveSupabaseEnvKeys(source);
+
+  return requireEnv(source, keys.serviceRoleKey);
 };
 
 /** 본문 이미지를 올릴 스토리지 버킷 이름. */

@@ -40,15 +40,13 @@ describe('posts RLS 정책', () => {
   });
 
   describe('anon 사용자', () => {
-    it('글을 SELECT 할 수 있다', async () => {
-      const { data, error } = await createAnonClient()
+    it('글을 SELECT 하지 못한다', async () => {
+      const { error } = await createAnonClient()
         .from('posts')
         .select('slug')
-        .eq('slug', postSlug)
-        .maybeSingle();
+        .eq('slug', postSlug);
 
-      expect(error).toBeNull();
-      expect(data?.slug).toBe(postSlug);
+      expect(error).not.toBeNull();
     });
 
     it('INSERT 는 거부된다', async () => {
@@ -76,6 +74,17 @@ describe('posts RLS 정책', () => {
   });
 
   describe('non-admin 인증 사용자', () => {
+    it('SELECT 해도 글이 보이지 않는다', async () => {
+      const member = await signInTestUser(memberUser);
+      const { data, error } = await member
+        .from('posts')
+        .select('slug')
+        .eq('slug', postSlug);
+
+      expect(error).toBeNull();
+      expect(data).toEqual([]);
+    });
+
     it('INSERT 는 42501 로 거부된다', async () => {
       const member = await signInTestUser(memberUser);
       const { error } = await member.from('posts').insert({

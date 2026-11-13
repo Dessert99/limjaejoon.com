@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { signIn } from '@/lib/auth/signIn';
 
-/** 관리자 로그인 폼 상태. 성공하면 블로그로 보낸다. */
+/** 관리자 로그인 폼 상태. 성공하면 어드민 홈으로 보낸다. */
 export const useSignIn = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -24,7 +24,7 @@ export const useSignIn = () => {
       return;
     }
 
-    router.push('/library');
+    router.push('/admin');
   };
 
   return { email, setEmail, password, setPassword, error, pending, submit };

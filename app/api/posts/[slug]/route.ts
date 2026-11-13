@@ -1,5 +1,5 @@
 import { getPostBySlug } from '@/domains/posts/api/posts';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseStaticClient } from '@/lib/supabase/static';
 import { NextResponse } from 'next/server';
 
 type RouteContext = {
@@ -11,7 +11,7 @@ type RouteContext = {
 /** 주소로 글 한 편. 없으면 404다. */
 export const GET = async (_request: Request, context: RouteContext) => {
   const { slug } = await context.params;
-  const client = await createSupabaseServerClient();
+  const client = createSupabaseStaticClient();
   const post = await getPostBySlug(client, slug);
 
   if (!post) {

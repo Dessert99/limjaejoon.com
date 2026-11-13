@@ -38,14 +38,24 @@ describe('books RLS 정책', () => {
     await deleteTestUser(memberUser.id);
   });
 
-  it('anon 사용자는 책을 읽을 수 있다', async () => {
-    const { data, error } = await createAnonClient()
+  it('anon 사용자는 책을 읽지 못한다', async () => {
+    const { error } = await createAnonClient()
+      .from('books')
+      .select('slug')
+      .eq('slug', slug);
+
+    expect(error).not.toBeNull();
+  });
+
+  it('member 는 책을 읽어도 보이지 않는다', async () => {
+    const client = await signInTestUser(memberUser);
+    const { data, error } = await client
       .from('books')
       .select('slug')
       .eq('slug', slug);
 
     expect(error).toBeNull();
-    expect(data).toHaveLength(1);
+    expect(data).toEqual([]);
   });
 
   it('member 는 책을 만들 수 없다', async () => {

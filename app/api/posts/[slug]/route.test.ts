@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getPostBySlug } from '@/domains/posts/api/posts';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseStaticClient } from '@/lib/supabase/static';
 import { GET } from './route';
 
-vi.mock('@/lib/supabase/server', () => {
-  return { createSupabaseServerClient: vi.fn() };
+vi.mock('@/lib/supabase/static', () => {
+  return { createSupabaseStaticClient: vi.fn() };
 });
 
 vi.mock('@/domains/posts/api/posts', () => {
@@ -13,12 +13,12 @@ vi.mock('@/domains/posts/api/posts', () => {
 
 describe('GET /api/posts/[slug]', () => {
   beforeEach(() => {
-    vi.mocked(createSupabaseServerClient).mockReset();
+    vi.mocked(createSupabaseStaticClient).mockReset();
     vi.mocked(getPostBySlug).mockReset();
   });
 
   it('글이 없으면 404 JSON 을 반환한다', async () => {
-    vi.mocked(createSupabaseServerClient).mockResolvedValue({} as never);
+    vi.mocked(createSupabaseStaticClient).mockReturnValue({} as never);
     vi.mocked(getPostBySlug).mockResolvedValue(null);
 
     const response = await GET(new Request('https://limjaejoon.com'), {
